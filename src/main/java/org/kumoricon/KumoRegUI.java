@@ -59,8 +59,6 @@ public class KumoRegUI extends UI {
         Navigator navigator = new Navigator(this, viewContainer);
         navigator.setErrorView(new ErrorView());
         navigator.addProvider(viewProvider);
-        navigator.navigateTo("");
-
     }
 
 }
