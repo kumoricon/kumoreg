@@ -9,4 +9,7 @@ public class KumoregApplication {
     public static void main(String[] args) {
         SpringApplication.run(KumoregApplication.class, args);
     }
+
+
+
 }
