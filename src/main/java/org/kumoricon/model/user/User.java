@@ -12,6 +12,8 @@ import java.math.BigInteger;
 
 @Entity
 public class User implements Serializable {
+    public static final String DEFAULT_PASSWORD = "password";
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
@@ -39,7 +41,7 @@ public class User implements Serializable {
         this();
         setFirstName(firstName);
         setLastName(lastName);
-        setPassword("password");    // Default password
+        setPassword(DEFAULT_PASSWORD);
         setUsername(generateUserName(firstName, lastName));
     }
 
@@ -115,5 +117,10 @@ public class User implements Serializable {
     }
 
     public String toString() {
-        return String.format("%s (%s %s)", username, firstName, lastName); }
+        if (firstName != null && lastName != null) {
+            return String.format("%s (%s %s)", username, firstName, lastName);
+        } else {
+            return username;
+        }
+    }
 }

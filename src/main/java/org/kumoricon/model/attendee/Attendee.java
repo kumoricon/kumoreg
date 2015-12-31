@@ -3,9 +3,7 @@ package org.kumoricon.model.attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 @Entity
 public class Attendee implements Serializable {
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
     private String firstName;
     private String lastName;
@@ -27,7 +26,7 @@ public class Attendee implements Serializable {
     private LocalDate birthDate;
     private String emergencyContactFullName;
     private String emergencyContactPhone;
-    private Boolean parentIsEmergencyContact;             // is emergency contact same as parent?
+    private Boolean parentIsEmergencyContact;   // is emergency contact same as parent?
     private String parentFullName;
     private String parentPhone;
     private Boolean parentForm;                 // has parental consent form been received?

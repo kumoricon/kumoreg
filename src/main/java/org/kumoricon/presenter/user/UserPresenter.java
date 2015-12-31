@@ -3,6 +3,7 @@ package org.kumoricon.presenter.user;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
+import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
@@ -32,6 +33,7 @@ public class UserPresenter {
         if (user != null) {
             Navigator navigator = KumoRegUI.getCurrent().getNavigator();
             navigator.navigateTo(userView.VIEW_NAME + "/" + user.getId().toString());
+            userView.setRoleList(getAvailableRoles());
             userView.showUser(user);
         }
     }
@@ -48,6 +50,7 @@ public class UserPresenter {
         userView.showUserForm();
         KumoRegUI.getCurrent().getNavigator().navigateTo(userView.VIEW_NAME);
         User user = new User();
+        user.setPassword(user.DEFAULT_PASSWORD);
         userView.setRoleList(roleRepository.findAll());
         userView.showUser(user);
     }
@@ -76,6 +79,7 @@ public class UserPresenter {
         if (parameters != null) {
             Integer id = Integer.parseInt(parameters);
             User user = userRepository.findOne(id);
+            userView.setRoleList(roleRepository.findAll());
             userView.selectUser(user);
         }
     }
@@ -91,6 +95,8 @@ public class UserPresenter {
             Notification.show(e.getMessage());
         }
     }
+
+    public List<Role> getAvailableRoles() { return roleRepository.findAll(); }
 
     public UserView getUserView() { return userView; }
     public void setUserView(UserView userView) { this.userView = userView; }

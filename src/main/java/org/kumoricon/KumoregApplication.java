@@ -1,6 +1,8 @@
 package org.kumoricon;
 
 import javafx.application.Application;
+import org.kumoricon.model.role.Role;
+import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ public class KumoregApplication {
     }
 
     @Bean
-    public CommandLineRunner loadData(UserRepository repository) {
+    public CommandLineRunner loadUserData(UserRepository repository) {
         return (args) -> {
             // save a couple of users
             repository.save(new User("Jack", "Bauer"));
@@ -54,4 +56,40 @@ public class KumoregApplication {
             log.info("");
         };
     }
+
+    @Bean
+    public CommandLineRunner loadRoleData(RoleRepository repository) {
+        return (args) -> {
+            // save some roles
+            repository.save(new Role("Staff"));
+            repository.save(new Role("Coordinator"));
+            repository.save(new Role("Manager"));
+            repository.save(new Role("Ops"));
+            repository.save(new Role("Admin"));
+
+            // fetch all users
+            log.info("roles found with findAll():");
+            log.info("-------------------------------");
+            for (Role role : repository.findAll()) {
+                log.info(role.toString());
+            }
+            log.info("");
+
+            // fetch by ID
+            Role role = repository.findOne(1);
+            log.info("Role found with findOne(1):");
+            log.info("--------------------------------");
+            log.info(role.toString());
+            log.info("");
+
+            // fetch by name
+            log.info("user found with findByNameStartsWidthIgnoreCase('Admin'):");
+            log.info("--------------------------------------------");
+            for (Role admin : repository.findByNameStartsWithIgnoreCase("Admin")) {
+                log.info(admin.toString());
+            }
+            log.info("");
+        };
+    }
+
 }

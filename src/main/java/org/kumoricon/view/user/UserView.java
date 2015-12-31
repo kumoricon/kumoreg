@@ -91,7 +91,10 @@ public class UserView extends HorizontalLayout implements View {
         userList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
                 handler.userSelected((User)valueChangeEvent.getProperty().getValue()));
 
-        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> handler.addNewUser());
+        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
+            userList.select(null);
+            handler.addNewUser();
+        });
 
         return leftPanel;
     }
@@ -163,9 +166,11 @@ public class UserView extends HorizontalLayout implements View {
             btnResetPassword.setEnabled(true);
         }
         userBeanFieldGroup.setItemDataSource(user);
+        username.selectAll();
     }
 
     public void setRoleList(List<Role> roleList) {
+        role.clear();
         BeanItemContainer<Role> roleBeanItemContainer = new BeanItemContainer<>(Role.class, roleList);
         role.setContainerDataSource(roleBeanItemContainer);
     }
@@ -177,7 +182,7 @@ public class UserView extends HorizontalLayout implements View {
 
     public void selectUser(User user) {
         userList.select(user);
-        showUser(user);
+
     }
 
     public void clearSelection() {
