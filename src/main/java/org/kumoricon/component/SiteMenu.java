@@ -44,8 +44,8 @@ public class SiteMenu extends VerticalLayout {
         Layout tab2 = new VerticalLayout();
         tab2.setCaption("Reports");
         tab2.setIcon(FontAwesome.FILE_TEXT);
-        tab2.addComponent(buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, "attendance"));
-        tab2.addComponent(buttonFactory("Staff", FontAwesome.USERS, "staff"));
+        tab2.addComponent(buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, "attendanceReport"));
+        tab2.addComponent(buttonFactory("Staff", FontAwesome.USERS, "staffReport"));
         menu.addComponent(tab2);
 
         Layout tab3 = new VerticalLayout();
