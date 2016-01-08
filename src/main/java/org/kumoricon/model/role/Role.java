@@ -2,28 +2,25 @@ package org.kumoricon.model.role;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Role {
+@Table(name = "roles")
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
     @NotNull
     @Column(unique=true)
     private String name;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Right> rights;
-
-    private static String[] availableRights = {"Pre Reg Check In", "At Con Check In", "Attendee Search",
-            "Attendee Modify", "Set Manual Price", "Manage Pass Types", "Edit Notes", "Manage Staff", "Override",
-            "Reprint Badge"};
 
     public Role() {
         this.rights = new HashSet<Right>();
     }
-
 
     public Role(String name) {
         this();
@@ -44,10 +41,6 @@ public class Role {
 
     public String toString() {
         return name;
-    }
-
-    public String[] getAvailableRights() {
-        return availableRights;
     }
 
     public void clearRights() {

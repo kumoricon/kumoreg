@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.net.InetAddress;
 
 @Entity
+@Table(name = "computers")
 public class Computer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

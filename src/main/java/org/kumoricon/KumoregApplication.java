@@ -1,6 +1,8 @@
 package org.kumoricon;
 
 import javafx.application.Application;
+import org.kumoricon.model.role.Right;
+import org.kumoricon.model.role.RightRepository;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
@@ -49,8 +51,7 @@ public class KumoregApplication {
             // fetch users by last name
             log.info("user found with findByLastNameStartsWithIgnoreCase('Bauer'):");
             log.info("--------------------------------------------");
-            for (User bauer : repository
-                    .findByLastNameStartsWithIgnoreCase("Bauer")) {
+            for (User bauer : repository.findByLastNameStartsWithIgnoreCase("Bauer")) {
                 log.info(bauer.toString());
             }
             log.info("");
@@ -91,5 +92,33 @@ public class KumoregApplication {
             log.info("");
         };
     }
+
+    @Bean
+    public CommandLineRunner loadRightData(RightRepository repository) {
+        return (args) -> {
+            // save some roles
+            repository.save(new Right("viewAttendee"));
+            repository.save(new Right("editAttendee"));
+            repository.save(new Right("search"));
+            repository.save(new Right("import"));
+
+            // fetch all users
+            log.info("Rights found with findAll():");
+            log.info("-------------------------------");
+            for (Right right : repository.findAll()) {
+                log.info(right.toString());
+            }
+            log.info("");
+
+            // fetch by ID
+            Right right = repository.findOne(1);
+            log.info("Right found with findOne(1):");
+            log.info("--------------------------------");
+            log.info(right.toString());
+            log.info("");
+        };
+    }
+
+
 
 }

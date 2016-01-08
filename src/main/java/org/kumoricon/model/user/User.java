@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 @Entity
+@Table(name = "users")
 public class User implements Serializable {
     public static final String DEFAULT_PASSWORD = "password";
 

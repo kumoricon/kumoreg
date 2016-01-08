@@ -1,13 +1,11 @@
 package org.kumoricon.model.computer;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Entity
+@Table(name = "printers")
 public class Printer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

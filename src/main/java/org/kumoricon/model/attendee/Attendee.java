@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 @Entity
+@Table(name = "attendees")
 public class Attendee implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

@@ -1,13 +1,11 @@
 package org.kumoricon.model.badge;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "ageranges")
 public class AgeRange {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
