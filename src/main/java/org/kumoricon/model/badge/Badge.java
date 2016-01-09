@@ -18,7 +18,7 @@ public class Badge {
     private String stripeColor;
     private String stripeText;
     private boolean visible;
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AgeRange> ageRanges;
 
     public Badge() {
@@ -61,6 +61,23 @@ public class Badge {
             }
         }
         throw new ServiceException("Error: No valid age range found in badge {} for age {}".format(this.name, age));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Badge))
+            return false;
+        if (this.getId() == null) {
+            return this == other;
+        } else {
+            Badge o = (Badge) other;
+            return this.getId() == o.getId();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
     }
 
     public String toString() {

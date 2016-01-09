@@ -8,7 +8,11 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.KumoRegUI;
+import org.kumoricon.view.attendee.SearchView;
 import org.kumoricon.view.report.AttendeeReportView;
+import org.kumoricon.view.report.StaffReportView;
+import org.kumoricon.view.role.RoleView;
+import org.kumoricon.view.user.UserView;
 
 @SpringComponent
 @UIScope
@@ -28,14 +32,14 @@ public class SiteMenu extends VerticalLayout {
         reg.setIcon(FontAwesome.USERS);
         reg.addComponent(buttonFactory("At-Con Registration", FontAwesome.USER, "atcon"));
         reg.addComponent(buttonFactory("Pre-Reg Check In", FontAwesome.USER, "prereg"));
-        reg.addComponent(buttonFactory("Attendee Search", FontAwesome.SEARCH, "search"));
+        reg.addComponent(buttonFactory("Attendee Search", FontAwesome.SEARCH, SearchView.VIEW_NAME));
         menu.addComponent(reg);
 
         Layout tab1 = new VerticalLayout();
         tab1.setIcon(FontAwesome.GEARS);
         tab1.setCaption("Administration");
-        tab1.addComponent(buttonFactory("Users", FontAwesome.USER));
-        tab1.addComponent(buttonFactory("Roles", FontAwesome.GROUP));
+        tab1.addComponent(buttonFactory("Users", FontAwesome.USER, UserView.VIEW_NAME));
+        tab1.addComponent(buttonFactory("Roles", FontAwesome.GROUP, RoleView.VIEW_NAME));
         tab1.addComponent(buttonFactory("Badge Types", FontAwesome.BARCODE, "badges"));
         tab1.addComponent(buttonFactory("Computers", FontAwesome.DESKTOP, "computers"));
         tab1.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, "importAttendees"));
@@ -46,7 +50,7 @@ public class SiteMenu extends VerticalLayout {
         tab2.setCaption("Reports");
         tab2.setIcon(FontAwesome.FILE_TEXT);
         tab2.addComponent(buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, AttendeeReportView.VIEW_NAME));
-        tab2.addComponent(buttonFactory("Staff", FontAwesome.USERS, "staffReport"));
+        tab2.addComponent(buttonFactory("Staff", FontAwesome.USERS, StaffReportView.VIEW_NAME));
         menu.addComponent(tab2);
 
         Layout tab3 = new VerticalLayout();
