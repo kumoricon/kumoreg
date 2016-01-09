@@ -36,7 +36,7 @@ public class AttendeeDetailForm extends GridLayout {
     protected TextField parentFullName = createTextField("Full Name");
     protected TextField parentPhone = createTextField("Phone");
     protected CheckBox parentIsEmergencyContact = new CheckBox("Parent is Emergency Contact");
-    protected CheckBox consentFormReceived = new CheckBox("Parental Consent Form Received");
+    protected CheckBox parentFormReceived = new CheckBox("Parental Consent Form Received");
     protected NativeSelect badge = new NativeSelect("Pass Type");
     protected TextField paidAmount = createTextField("Manual Price");
     protected TextArea notes = createTextArea(null);
@@ -60,26 +60,20 @@ public class AttendeeDetailForm extends GridLayout {
         fieldGroup.bindMemberFields(this);
 
         birthDate.setDateFormat("MM/dd/yyyy");
-        birthDate.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
-                Integer currentAge = getAgeFromDate(birthDate.getValue());
-                age.setValue(String.format("(%s years old)", currentAge));
-                setMinorFieldsEnabled(currentAge < 18);
-            }
+        birthDate.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+            Integer currentAge = getAgeFromDate(birthDate.getValue());
+            age.setValue(String.format("(%s years old)", currentAge));
+            setMinorFieldsEnabled(currentAge < 18);
         });
 
 
-        badge.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
-                if (!badge.isReadOnly() && !badge.isEmpty()) {      // Field is read only when values are being added
-                    Badge thisBadge = (Badge) badge.getConvertedValue();
-                    try {
-                        paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
-                    } catch(ServiceException e) {
-                        Notification.show(e.getMessage());
-                    }
+        badge.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+            if (!badge.isReadOnly() && !badge.isEmpty()) {      // Field is read only when values are being added
+                Badge thisBadge = (Badge) badge.getConvertedValue();
+                try {
+                    paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                } catch(ServiceException e) {
+                    Notification.show(e.getMessage());
                 }
             }
         });
@@ -95,7 +89,7 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     public void show(Attendee attendee) {
-        attendeeBean = new BeanItem<Attendee>(attendee);
+        attendeeBean = new BeanItem<>(attendee);
         fieldGroup.setItemDataSource(attendeeBean);
         if (attendee.getPaidAmount() == null) {
             try {
@@ -113,7 +107,7 @@ public class AttendeeDetailForm extends GridLayout {
         parentFullName.setEnabled(isEnabled);
         parentPhone.setEnabled(isEnabled);
         parentIsEmergencyContact.setEnabled(isEnabled);
-        consentFormReceived.setEnabled(isEnabled);
+        parentFormReceived.setEnabled(isEnabled);
     }
 
 
@@ -133,7 +127,7 @@ public class AttendeeDetailForm extends GridLayout {
 
     public void setAllFieldsButCheckInEnabled() {
         setAllFieldsEnabled(false);
-        consentFormReceived.setEnabled(true);
+        parentFormReceived.setEnabled(true);
     }
 
 
@@ -189,7 +183,7 @@ public class AttendeeDetailForm extends GridLayout {
         checkBoxes.setMargin(false);
         checkBoxes.setSpacing(true);
         checkBoxes.addComponent(parentIsEmergencyContact);
-        checkBoxes.addComponent(consentFormReceived);
+        checkBoxes.addComponent(parentFormReceived);
 
         f.addComponent(parentFullName);
         f.addComponent(parentPhone);
@@ -240,8 +234,6 @@ public class AttendeeDetailForm extends GridLayout {
         badge.removeAllItems();
         badge.addItems(availableBadges);
     }
-
-
 
     class CustomFieldGroupFieldFactory extends DefaultFieldGroupFieldFactory {
         @Override

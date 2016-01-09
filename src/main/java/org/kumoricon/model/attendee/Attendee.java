@@ -30,7 +30,7 @@ public class Attendee implements Serializable {
     private Boolean parentIsEmergencyContact;   // is emergency contact same as parent?
     private String parentFullName;
     private String parentPhone;
-    private Boolean parentForm;                 // has parental consent form been received?
+    private Boolean parentFormReceived;         // has parental consent form been received?
     private Boolean paid;                       // has attendee paid? True for $0 attendees (press/comped/etc)
     private BigDecimal paidAmount;              // Amount paid - not necessarily the same as the badge cost, but
                                                 // usually should be
@@ -116,8 +116,8 @@ public class Attendee implements Serializable {
     public String getParentPhone() { return parentPhone; }
     public void setParentPhone(String parentPhone) { this.parentPhone = parentPhone; }
 
-    public Boolean getParentForm() { return parentForm; }
-    public void setParentForm(Boolean parentForm) { this.parentForm = parentForm; }
+    public Boolean getParentFormReceived() { return parentFormReceived; }
+    public void setParentFormReceived(Boolean parentFormReceived) { this.parentFormReceived = parentFormReceived; }
 
     public Boolean getPaid() { return paid; }
     public void setPaid(Boolean paid) { this.paid = paid; }
