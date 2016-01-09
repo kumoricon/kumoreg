@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 @Table(name = "attendees")
 public class Attendee implements Serializable {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String firstName;
     private String lastName;

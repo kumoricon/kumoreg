@@ -41,7 +41,7 @@ public class ImportAttendeePresenter {
         public OutputStream receiveUpload(String filename,
                                           String mimeType) {
             // Create upload stream
-            FileOutputStream fos = null; // Stream to write to
+            FileOutputStream fos; // Stream to write to
             try {
                 // Open the file for writing.
                 file = new File("/tmp/" + filename);

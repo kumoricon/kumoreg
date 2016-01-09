@@ -3,6 +3,7 @@ package org.kumoricon.model.badge;
 import com.vaadin.server.ServiceException;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,12 @@ public class Badge {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+    @NotNull
     private String name;
     private String dayText;     // Friday/Saturday/Sunday/Weekend/VIP
     private String stripeColor;
     private String stripeText;
+    @NotNull
     private boolean visible;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AgeRange> ageRanges;

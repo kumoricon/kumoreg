@@ -28,8 +28,9 @@ public class SiteLogo extends VerticalLayout {
         username.setSizeUndefined();
         addComponent(username);
         setComponentAlignment(username, Alignment.BOTTOM_CENTER);
+    }
 
-
-
+    public void setUsername(String username) {
+        this.username.setValue(username);
     }
 }

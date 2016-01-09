@@ -1,6 +1,5 @@
 package org.kumoricon.view.report;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -26,9 +25,6 @@ public class StaffReportView extends VerticalLayout implements View {
     private Button refresh = new Button("Refresh");
     private Grid dataGrid = new Grid("User List");
 
-    private BeanFieldGroup<User> userBeanFieldGroup = new BeanFieldGroup<>(User.class);
-
-
     @PostConstruct
     public void init() {
         handler.setView(this);
@@ -52,12 +48,8 @@ public class StaffReportView extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
     }
 
-    public void setHandler(StaffReportPresenter presenter) {
-        this.handler = presenter;
-    }
-
     public void afterSuccessfulFetch(List<User> users) {
-        dataGrid.setContainerDataSource(new BeanItemContainer<User>(User.class, users));
+        dataGrid.setContainerDataSource(new BeanItemContainer<>(User.class, users));
     }
 
 }

@@ -1,6 +1,8 @@
 package org.kumoricon.model.badge;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -12,10 +14,15 @@ public class AgeRange {
     private int id;
     @NotNull
     private String name;
+    @Min(0)
+    @Max(255)
     private int minAge;
+    @Min(0)
+    @Max(255)
     private int maxAge;
     private String stripeColor;
     private String stripeText;
+    @Min(0)
     private BigDecimal cost;
 
     public AgeRange(String name, int minAge, int maxAge, BigDecimal cost, String stripeColor, String stripeText) {

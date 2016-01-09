@@ -9,7 +9,6 @@ import com.vaadin.ui.VerticalLayout;
 
 import javax.annotation.PostConstruct;
 
-// pay attention to the order of annotations
 @ViewScope
 @SpringView(name = ErrorView.VIEW_NAME)
 public class ErrorView extends VerticalLayout implements View {
