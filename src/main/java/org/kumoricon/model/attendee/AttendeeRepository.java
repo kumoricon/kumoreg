@@ -23,5 +23,6 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer> {
     @Query(value = "select a.badge, count(a) from Attendee a where a.checkedIn = false group by a.badge ")
     List<Object[]> findCountPerBadgeTypeNotCheckedIn();
 
-
+    @Query(value = "select a from Attendee a where a.lastName like ?1% and a.checkedIn = false")
+    List<Attendee> findNotCheckedInByLastName(String searchString);
 }

@@ -9,7 +9,7 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.presenter.attendee.SearchPresenter;
+import org.kumoricon.presenter.attendee.PreRegSearchPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ViewScope
-@SpringView(name = SearchView.VIEW_NAME)
-public class SearchView extends VerticalLayout implements View{
-    public static final String VIEW_NAME = "attendeeSearch";
+@SpringView(name = PreRegSearchView.VIEW_NAME)
+public class PreRegSearchView extends VerticalLayout implements View{
+    public static final String VIEW_NAME = "preregSearch";
 
     @Autowired
-    private SearchPresenter handler;
+    private PreRegSearchPresenter handler;
 
-    private TextField txtSearch = new TextField("Name or Badge Number");
+    private TextField txtSearch = new TextField("Last Name");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
@@ -41,7 +41,12 @@ public class SearchView extends VerticalLayout implements View{
         f.setMargin(false);
         f.setSpacing(false);
         txtSearch.setSizeFull();
-        txtSearch.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> search());
+        txtSearch.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
+                search();
+            }
+        });
         txtSearch.setImmediate(true);
         txtSearch.setTextChangeEventMode(AbstractTextField.TextChangeEventMode.EAGER);
         f.addComponent(txtSearch);
@@ -50,18 +55,13 @@ public class SearchView extends VerticalLayout implements View{
         tblResult = new Table();
         tblResult.setSizeFull();
         tblResult.setContainerDataSource(attendeeBeanList);
-        tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "age", "zip", "checkedIn"});
-        tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Age", "Zip", "Checked In");
+        tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "age", "zip" });
+        tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Age", "Zip");
 
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
                 handler.selectAttendee((Attendee)itemClickEvent.getItemId()));
 
-        btnSearch.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                search();
-            }
-        });
+        btnSearch.addClickListener((Button.ClickListener) clickEvent -> search());
 
         HorizontalLayout h = new HorizontalLayout();
         h.setSpacing(true);
@@ -76,9 +76,6 @@ public class SearchView extends VerticalLayout implements View{
 
     }
 
-    public void setSearchLabel(String label) {
-        txtSearch.setCaption(label);
-    }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
@@ -109,8 +106,11 @@ public class SearchView extends VerticalLayout implements View{
         return attendeeBeanList;
     }
 
-    public void setHandler(SearchPresenter presenter) {
+    public void setHandler(PreRegSearchPresenter presenter) {
         this.handler = presenter;
     }
 
+    public String getViewName() {
+        return VIEW_NAME;
+    }
 }

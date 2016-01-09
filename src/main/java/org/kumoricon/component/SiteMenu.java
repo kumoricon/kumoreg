@@ -8,6 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.KumoRegUI;
+import org.kumoricon.view.attendee.PreRegSearchView;
 import org.kumoricon.view.attendee.SearchView;
 import org.kumoricon.view.report.AttendeeReportView;
 import org.kumoricon.view.report.StaffReportView;
@@ -31,7 +32,7 @@ public class SiteMenu extends VerticalLayout {
         reg.setCaption("Registration");
         reg.setIcon(FontAwesome.USERS);
         reg.addComponent(buttonFactory("At-Con Registration", FontAwesome.USER, "atcon"));
-        reg.addComponent(buttonFactory("Pre-Reg Check In", FontAwesome.USER, "prereg"));
+        reg.addComponent(buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegSearchView.VIEW_NAME));
         reg.addComponent(buttonFactory("Attendee Search", FontAwesome.SEARCH, SearchView.VIEW_NAME));
         menu.addComponent(reg);
 
