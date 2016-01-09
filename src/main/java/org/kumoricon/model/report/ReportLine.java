@@ -18,6 +18,7 @@ public class ReportLine {
     public ReportLine(String description, Float value) {
         this(description, value.toString());
     }
+    public ReportLine(String description, Long value) { this(description, value.toString()); }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

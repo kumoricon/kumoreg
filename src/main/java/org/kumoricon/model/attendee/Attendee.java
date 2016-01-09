@@ -133,6 +133,7 @@ public class Attendee implements Serializable {
 
     public Boolean getCheckedIn() { return checkedIn; }
     public void setCheckedIn(Boolean checkedIn) { this.checkedIn = checkedIn; }
+    public Boolean isCheckedIn() { return checkedIn; }
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }

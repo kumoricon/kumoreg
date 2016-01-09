@@ -37,7 +37,11 @@ public class AttendeeReportView extends VerticalLayout implements View {
         dataGrid.setSizeUndefined();
         addComponent(dataGrid);
         dataGrid.setEditorEnabled(false);
+        dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
         handler.showReport();
+        for (Grid.Column c : dataGrid.getColumns()) {
+            c.setSortable(false);
+        }
     }
 
     @Override

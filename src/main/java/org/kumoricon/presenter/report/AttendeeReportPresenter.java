@@ -26,7 +26,23 @@ public class AttendeeReportPresenter {
     public void showReport() {
         List<ReportLine> data = new ArrayList<>();
 
-        data.add(new ReportLine("Total Attendees", attendeeRepository.findAll().size()));
+        List<Object[]> results = attendeeRepository.findCountPerBadgeType();
+        data.add(new ReportLine("Total by Badge Type"));
+        for (Object[] result : results) {
+            data.add(new ReportLine(result[0].toString(), (Long)result[1]));
+        }
+
+        data.add(new ReportLine("Checked in by Badge Type"));
+        results = attendeeRepository.findCountPerBadgeTypeCheckedIn();
+        for (Object[] result : results) {
+            data.add(new ReportLine(result[0].toString(), (Long)result[1]));
+        }
+
+        data.add(new ReportLine("Not checked in in by Badge Type"));
+        results = attendeeRepository.findCountPerBadgeTypeNotCheckedIn();
+        for (Object[] result : results) {
+            data.add(new ReportLine(result[0].toString(), (Long)result[1]));
+        }
 
         view.afterSuccessfulFetch(data);
     }
