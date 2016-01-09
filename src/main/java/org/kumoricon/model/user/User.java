@@ -28,7 +28,7 @@ public class User implements Serializable {
     private String phone;
     @NotNull
     private Boolean enabled;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private Role role;
     private String salt;
 

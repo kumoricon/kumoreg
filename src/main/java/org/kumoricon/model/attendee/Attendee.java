@@ -34,9 +34,9 @@ public class Attendee implements Serializable {
     private Boolean paid;                       // has attendee paid? True for $0 attendees (press/comped/etc)
     private BigDecimal paidAmount;              // Amount paid - not necessarily the same as the badge cost, but
                                                 // usually should be
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private Badge badge;                        // Badge type
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private Order order;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
     private String notes;

@@ -18,7 +18,7 @@ public class Badge {
     private String stripeColor;
     private String stripeText;
     private boolean visible;
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL)
     private List<AgeRange> ageRanges;
 
     public Badge() {

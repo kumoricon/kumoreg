@@ -8,6 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.KumoRegUI;
+import org.kumoricon.view.report.AttendeeReportView;
 
 @SpringComponent
 @UIScope
@@ -37,14 +38,14 @@ public class SiteMenu extends VerticalLayout {
         tab1.addComponent(buttonFactory("Roles", FontAwesome.GROUP));
         tab1.addComponent(buttonFactory("Badge Types", FontAwesome.BARCODE, "badges"));
         tab1.addComponent(buttonFactory("Computers", FontAwesome.DESKTOP, "computers"));
-        tab1.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, "import"));
+        tab1.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, "importAttendees"));
 
         menu.addComponent(tab1);
 
         Layout tab2 = new VerticalLayout();
         tab2.setCaption("Reports");
         tab2.setIcon(FontAwesome.FILE_TEXT);
-        tab2.addComponent(buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, "attendanceReport"));
+        tab2.addComponent(buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, AttendeeReportView.VIEW_NAME));
         tab2.addComponent(buttonFactory("Staff", FontAwesome.USERS, "staffReport"));
         menu.addComponent(tab2);
 

@@ -1,6 +1,8 @@
 package org.kumoricon;
 
 import javafx.application.Application;
+import org.kumoricon.model.badge.BadgeFactory;
+import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.RightRepository;
 import org.kumoricon.model.role.Role;
@@ -55,6 +57,18 @@ public class KumoregApplication {
                 log.info(bauer.toString());
             }
             log.info("");
+        };
+    }
+
+    @Bean
+    public CommandLineRunner loadBadgeData(BadgeRepository repository) {
+        return (args) -> {
+            log.info("Saving example badges");
+            repository.save(BadgeFactory.badgeFactory("Weekend", "Weekend", 55.00, 45.00, 35.00));
+            repository.save(BadgeFactory.badgeFactory("Friday", "Friday", 40.00, 30.0, 20.0));
+            repository.save(BadgeFactory.badgeFactory("Saturday", "Saturday", 40.00, 30.0, 20.0));
+            repository.save(BadgeFactory.badgeFactory("Sunday", "Sunday", 40.00, 30.0, 20.0));
+            repository.save(BadgeFactory.badgeFactory("VIP", "Weekend", 300.00, 300.0, 300.0));
         };
     }
 
