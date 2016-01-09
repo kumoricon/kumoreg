@@ -38,11 +38,14 @@ public class StaffReportView extends VerticalLayout implements View {
         addComponent(refresh);
         refresh.addClickListener((Button.ClickListener) clickEvent -> handler.showUserList());
 
-        dataGrid.setSizeFull();
         addComponent(dataGrid);
         handler.showUserList();
         dataGrid.setColumns(new String[] {"lastName", "firstName", "username", "phone", "role"});
         dataGrid.setEditorEnabled(false);
+
+        setSizeFull();
+        setExpandRatio(dataGrid, 1f);
+        dataGrid.setSizeFull();
     }
 
     @Override

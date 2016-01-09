@@ -33,8 +33,6 @@ public class AttendeeReportView extends VerticalLayout implements View {
 
         addComponent(refresh);
         refresh.addClickListener((Button.ClickListener) clickEvent -> handler.showReport());
-
-        dataGrid.setSizeUndefined();
         addComponent(dataGrid);
         dataGrid.setEditorEnabled(false);
         dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
@@ -42,6 +40,10 @@ public class AttendeeReportView extends VerticalLayout implements View {
         for (Grid.Column c : dataGrid.getColumns()) {
             c.setSortable(false);
         }
+        setSizeFull();
+        setExpandRatio(dataGrid, 1f);
+        dataGrid.setSizeFull();
+        dataGrid.setWidthUndefined();
     }
 
     @Override
