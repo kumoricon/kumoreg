@@ -9,12 +9,14 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.user.UserView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 
-@Service
+@Controller
+@Scope("request")
 public class UserPresenter {
     @Autowired
     private UserRepository userRepository;

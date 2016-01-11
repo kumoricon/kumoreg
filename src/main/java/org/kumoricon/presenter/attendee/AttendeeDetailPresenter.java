@@ -8,9 +8,11 @@ import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.view.attendee.AttendeeDetailForm;
 import org.kumoricon.view.attendee.AttendeeDetailView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
-@Service
+@Controller
+@Scope("request")
 public class AttendeeDetailPresenter {
     @Autowired
     private AttendeeRepository attendeeRepository;

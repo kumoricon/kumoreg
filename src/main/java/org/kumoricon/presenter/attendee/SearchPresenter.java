@@ -8,11 +8,13 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.view.attendee.AttendeeDetailView;
 import org.kumoricon.view.attendee.SearchView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@Service
+@Controller
+@Scope("request")
 public class SearchPresenter {
     @Autowired
     private AttendeeRepository attendeeRepository;

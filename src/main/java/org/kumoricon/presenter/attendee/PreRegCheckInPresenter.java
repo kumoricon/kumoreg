@@ -10,9 +10,11 @@ import org.kumoricon.view.attendee.AttendeeDetailForm;
 import org.kumoricon.view.attendee.PreRegCheckInView;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
-@Service
+@Controller
+@Scope("request")
 public class PreRegCheckInPresenter {
     @Autowired
     private AttendeeRepository attendeeRepository;

@@ -7,12 +7,14 @@ import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.view.role.RoleView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 
-@Service
+@Controller
+@Scope("request")
 public class RolePresenter {
     @Autowired
     private RoleRepository roleRepository;

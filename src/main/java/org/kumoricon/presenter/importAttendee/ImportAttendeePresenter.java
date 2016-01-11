@@ -9,14 +9,17 @@ import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.view.importAttendee.ImportAttendeeView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStream;
 
 
-@Service
+@Controller
+@Scope("request")
 public class ImportAttendeePresenter {
     @Autowired
     private AttendeeRepository attendeeRepository;

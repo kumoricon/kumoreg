@@ -4,13 +4,15 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.report.ReportLine;
 import org.kumoricon.view.report.AttendeeReportView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Service
+@Controller
+@Scope("request")
 public class AttendeeReportPresenter {
     @Autowired
     private AttendeeRepository attendeeRepository;
