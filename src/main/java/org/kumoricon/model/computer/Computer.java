@@ -26,4 +26,21 @@ public class Computer {
     public String toString() {
         return String.format("Computer %s with printer %s", address.toString(), getPrinter().getAddress().toString());
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Computer))
+            return false;
+        if (this.getId() == null) {
+            return this == other;
+        } else {
+            Computer o = (Computer) other;
+            return this.getId().equals(o.getId());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return getAddress().hashCode();
+    }
 }

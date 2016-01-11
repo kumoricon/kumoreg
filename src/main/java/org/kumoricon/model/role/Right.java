@@ -33,7 +33,7 @@ public class Right implements Serializable {
             return this == other;
         } else {
             Right o = (Right) other;
-            return this.getId() == o.getId();
+            return this.getId().equals(o.getId());
         }
     }
 

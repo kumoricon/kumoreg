@@ -24,4 +24,21 @@ public class Printer {
     public void setAddress(String hostName) throws UnknownHostException {
         this.address = InetAddress.getByName(hostName);
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Printer))
+            return false;
+        if (this.getId() == null) {
+            return this == other;
+        } else {
+            Printer o = (Printer) other;
+            return this.getId().equals(o.getId());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return getAddress().hashCode();
+    }
 }

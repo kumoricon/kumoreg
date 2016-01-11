@@ -74,7 +74,7 @@ public class Badge {
             return this == other;
         } else {
             Badge o = (Badge) other;
-            return this.getId() == o.getId();
+            return this.getId().equals(o.getId());
         }
     }
 

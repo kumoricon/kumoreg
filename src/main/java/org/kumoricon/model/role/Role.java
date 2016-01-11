@@ -46,4 +46,21 @@ public class Role implements Serializable {
     public void clearRights() {
         this.rights.clear();
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Role))
+            return false;
+        if (this.getId() == null) {
+            return this == other;
+        } else {
+            Role o = (Role) other;
+            return this.getId().equals(o.getId());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
 }

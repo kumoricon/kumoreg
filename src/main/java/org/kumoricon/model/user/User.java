@@ -124,4 +124,19 @@ public class User implements Serializable {
             return username;
         }
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof User))
+            return false;
+        if (this.getId() == null) {
+            return this == other;
+        } else {
+            User o = (User) other;
+            return this.getId().equals(o.getId());
+        }
+    }
+
+    @Override
+    public int hashCode() { return getUsername().hashCode(); }
 }

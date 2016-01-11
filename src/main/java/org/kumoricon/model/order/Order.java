@@ -51,4 +51,19 @@ public class Order {
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Order))
+            return false;
+        if (this.getId() == null) {
+            return this == other;
+        } else {
+            Order o = (Order) other;
+            return this.getId().equals(o.getId());
+        }
+    }
+
+    @Override
+    public int hashCode() { return getOrderId().hashCode(); }
 }
