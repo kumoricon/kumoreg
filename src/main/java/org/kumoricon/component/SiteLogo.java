@@ -2,14 +2,16 @@ package org.kumoricon.component;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.annotation.VaadinSessionScope;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import org.springframework.context.annotation.Scope;
 
 @SpringComponent
-@UIScope
+@Scope("session")
+@VaadinSessionScope
 public class SiteLogo extends VerticalLayout {
     private Label username = new Label("");
 
