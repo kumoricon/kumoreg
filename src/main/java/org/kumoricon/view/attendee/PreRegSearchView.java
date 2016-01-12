@@ -24,7 +24,7 @@ public class PreRegSearchView extends VerticalLayout implements View{
     @Autowired
     private PreRegSearchPresenter handler;
 
-    private TextField txtSearch = new TextField("Last Name");
+    private TextField txtSearch = new TextField("Last Name or Order ID");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
@@ -54,8 +54,8 @@ public class PreRegSearchView extends VerticalLayout implements View{
         btnSearch = new Button("Search");
         tblResult = new Table();
         tblResult.setContainerDataSource(attendeeBeanList);
-        tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "age", "zip" });
-        tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Age", "Zip");
+        tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "age", "zip", "checkedIn" });
+        tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Age", "Zip", "Checked In");
 
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
                 handler.selectAttendee((Attendee)itemClickEvent.getItemId()));

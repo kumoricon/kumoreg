@@ -30,6 +30,7 @@ public class SearchPresenter {
     }
 
     public void searchFor(String searchString) {
+        searchString = searchString.trim();
         List<Attendee> attendees = attendeeRepository.findByLastNameOrBadgeNumber(searchString);
         view.getAttendeeBeanList().removeAllItems();
         if (attendees.size() > 0) {

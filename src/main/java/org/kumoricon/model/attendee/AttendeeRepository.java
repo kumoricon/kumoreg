@@ -25,4 +25,7 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer> {
 
     @Query(value = "select a from Attendee a where a.lastName like ?1% and a.checkedIn = false")
     List<Attendee> findNotCheckedInByLastName(String searchString);
+
+    @Query(value = "select a from Attendee a inner join a.order as order where order.orderId like ?1")
+    List<Attendee> findByOrderNumber(String searchString);
 }

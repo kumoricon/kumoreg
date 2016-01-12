@@ -8,6 +8,7 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.view.attendee.AttendeeDetailForm;
 import org.kumoricon.view.attendee.PreRegCheckInView;
+import org.kumoricon.view.attendee.PreRegSearchView;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -54,7 +55,7 @@ public class PreRegCheckInPresenter {
         attendee.setCheckedIn(true);
         attendeeRepository.save(attendee);
         Notification.show(String.format("%s %s is checked in", attendee.getFirstName(), attendee.getLastName()));
-        KumoRegUI.getCurrent().getNavigator().navigateTo("prereg/" + attendee.getOrder().getOrderId());
+        KumoRegUI.getCurrent().getNavigator().navigateTo(PreRegSearchView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
 
     }
 
