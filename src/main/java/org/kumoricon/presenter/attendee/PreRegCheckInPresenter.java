@@ -1,7 +1,6 @@
 package org.kumoricon.presenter.attendee;
 
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -43,7 +42,7 @@ public class PreRegCheckInPresenter {
         attendee = view.getAttendee();
         printBadgeWindow = new PrintBadgeWindow(this);
         if (validateBeforeCheckIn(attendee)) {
-            UI.getCurrent().addWindow(printBadgeWindow);
+            KumoRegUI.getCurrent().addWindow(printBadgeWindow);
         }
     }
 

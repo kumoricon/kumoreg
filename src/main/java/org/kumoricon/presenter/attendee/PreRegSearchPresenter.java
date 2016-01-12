@@ -5,6 +5,7 @@ import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
+import org.kumoricon.view.attendee.BadgeWarningWindow;
 import org.kumoricon.view.attendee.PreRegCheckInView;
 import org.kumoricon.view.attendee.PreRegSearchView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class PreRegSearchPresenter {
     private AttendeeRepository attendeeRepository;
 
     private PreRegSearchView view;
+    private BadgeWarningWindow warningWindow;
 
     public PreRegSearchPresenter() {
     }
@@ -47,10 +49,28 @@ public class PreRegSearchPresenter {
     }
 
     public void selectAttendee(Attendee attendee) {
-        Navigator navigator = KumoRegUI.getCurrent().getNavigator();
-        navigator.navigateTo(PreRegCheckInView.VIEW_NAME + "/" + attendee.getId().toString());
+        if (attendee.getBadge().getWarningMessage() == null) {
+            continueCheckIn(attendee);
+        } else {
+            if (!attendee.getBadge().getWarningMessage().trim().equals("")) {
+                warningWindow = new BadgeWarningWindow(this, attendee);
+                KumoRegUI.getCurrent().addWindow(warningWindow);
+            } else {
+                continueCheckIn(attendee);
+            }
+        }
     }
 
     public PreRegSearchView getView() { return view; }
     public void setView(PreRegSearchView view) { this.view = view; }
+
+    public void continueCheckIn(Attendee attendee) {
+        if (warningWindow != null) { warningWindow.close(); }
+        Navigator navigator = KumoRegUI.getCurrent().getNavigator();
+        navigator.navigateTo(PreRegCheckInView.VIEW_NAME + "/" + attendee.getId().toString());
+    }
+
+    public void abortCheckIn() {
+        if (warningWindow != null) { warningWindow.close(); }
+    }
 }
