@@ -17,8 +17,7 @@ public class Badge {
     @NotNull
     private String name;
     private String dayText;     // Friday/Saturday/Sunday/Weekend/VIP
-    private String stripeColor;
-    private String stripeText;
+    private String warningMessage;
     @NotNull
     private boolean visible;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -45,6 +44,9 @@ public class Badge {
 
     public boolean isVisible() { return visible; }
     public void setVisible(boolean visible) { this.visible = visible; }
+
+    public String getWarningMessage() { return warningMessage; }
+    public void setWarningMessage(String warningMessage) { this.warningMessage = warningMessage; }
 
     public List<AgeRange> getAgeRanges() { return ageRanges; }
     public void addAgeRange(AgeRange ageRange) { ageRanges.add(ageRange); }

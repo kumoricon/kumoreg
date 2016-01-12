@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class AgeRange {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    private Integer id;
     @NotNull
     private String name;
     @Min(0)
@@ -50,7 +50,7 @@ public class AgeRange {
     public void setStripeText(String stripeText) { this.stripeText = stripeText; }
 
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
     public void setId(int id) { this.id = id; }
 
     public String getName() { return name; }
@@ -99,5 +99,22 @@ public class AgeRange {
 
     public String toString() {
         return String.format("%s (%s-%s): $%s", name, minAge, maxAge, cost.setScale(2).toString());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof AgeRange))
+            return false;
+        if (this.getId() == null) {
+            return this == other;
+        } else {
+            AgeRange o = (AgeRange) other;
+            return this.getId().equals(o.getId());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
     }
 }

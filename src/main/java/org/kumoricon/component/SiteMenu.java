@@ -10,6 +10,7 @@ import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.view.attendee.PreRegSearchView;
 import org.kumoricon.view.attendee.SearchView;
+import org.kumoricon.view.badge.BadgeView;
 import org.kumoricon.view.report.AttendeeReportView;
 import org.kumoricon.view.report.StaffReportView;
 import org.kumoricon.view.role.RoleView;
@@ -41,7 +42,7 @@ public class SiteMenu extends VerticalLayout {
         tab1.setCaption("Administration");
         tab1.addComponent(buttonFactory("Users", FontAwesome.USER, UserView.VIEW_NAME));
         tab1.addComponent(buttonFactory("Roles", FontAwesome.GROUP, RoleView.VIEW_NAME));
-        tab1.addComponent(buttonFactory("Badge Types", FontAwesome.BARCODE, "badges"));
+        tab1.addComponent(buttonFactory("Badge Types", FontAwesome.BARCODE, BadgeView.VIEW_NAME));
         tab1.addComponent(buttonFactory("Computers", FontAwesome.DESKTOP, "computers"));
         tab1.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, "importAttendees"));
 
