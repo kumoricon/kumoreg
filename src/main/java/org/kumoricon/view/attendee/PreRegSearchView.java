@@ -53,7 +53,6 @@ public class PreRegSearchView extends VerticalLayout implements View{
 
         btnSearch = new Button("Search");
         tblResult = new Table();
-        tblResult.setSizeFull();
         tblResult.setContainerDataSource(attendeeBeanList);
         tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "age", "zip" });
         tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Age", "Zip");
@@ -72,6 +71,9 @@ public class PreRegSearchView extends VerticalLayout implements View{
 
         addComponent(h);
         addComponent(tblResult);
+        setSizeFull();
+        setExpandRatio(tblResult, 1.0f);
+        tblResult.setSizeFull();
         txtSearch.focus();
 
     }

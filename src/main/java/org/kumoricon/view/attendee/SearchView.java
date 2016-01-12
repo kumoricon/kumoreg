@@ -72,6 +72,8 @@ public class SearchView extends VerticalLayout implements View{
 
         addComponent(h);
         addComponent(tblResult);
+        setSizeFull();
+        setExpandRatio(tblResult, 1.0f);
         txtSearch.focus();
 
     }
