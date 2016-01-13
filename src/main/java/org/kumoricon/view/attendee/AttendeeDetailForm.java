@@ -125,7 +125,7 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
 
-    public void setAllFieldsButCheckInEnabled() {
+    public void setAllFieldsButCheckInDisabled() {
         setAllFieldsEnabled(false);
         parentFormReceived.setEnabled(true);
     }

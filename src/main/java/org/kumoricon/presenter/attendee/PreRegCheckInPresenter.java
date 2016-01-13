@@ -34,7 +34,7 @@ public class PreRegCheckInPresenter {
         Attendee attendee = attendeeRepository.findOne(id);
         AttendeeDetailForm form = view.getDetailForm();
         view.setAvailableBadges(badgeRepository.findAll());
-        form.setAllFieldsButCheckInEnabled();
+        form.setAllFieldsButCheckInDisabled();
         view.showAttendee(attendee);
     }
 

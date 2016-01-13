@@ -35,7 +35,7 @@ public class PreRegCheckInView extends VerticalLayout implements View {
         setMargin(true);
         setSpacing(true);
         form = new AttendeePreRegDetailForm();
-        form.setAllFieldsButCheckInEnabled();
+        form.setAllFieldsButCheckInDisabled();
         addComponent(form);
         addComponent(buildVerifiedCheckboxes());
         addComponent(buildSaveCancel());
@@ -65,18 +65,8 @@ public class PreRegCheckInView extends VerticalLayout implements View {
         h.setMargin(false);
         h.setSpacing(true);
 
-        btnCheckIn.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.checkInAttendee();
-            }
-        });
-        btnCancel.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.cancelAttendee();
-            }
-        });
+        btnCheckIn.addClickListener((Button.ClickListener) clickEvent -> handler.checkInAttendee());
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee());
         h.addComponent(btnCheckIn);
         h.addComponent(btnCancel);
         return h;
@@ -88,8 +78,21 @@ public class PreRegCheckInView extends VerticalLayout implements View {
     public AttendeeDetailForm getDetailForm() { return form; }
 
 
-    public Boolean informationVerified() { return informationVerified.getValue(); }
-    public Boolean parentalConsentFormReceived() { return consentFormReceived.getValue(); }
+    public Boolean informationVerified() {
+        if (informationVerified.getValue() == null) {
+            return false;
+        } else {
+            return informationVerified.getValue();
+        }
+    }
+
+    public Boolean parentalConsentFormReceived() {
+        if (consentFormReceived.getValue() == null) {
+            return false;
+        } else {
+            return consentFormReceived.getValue();
+        }
+    }
 
     public Attendee getAttendee() {return form.getAttendee(); }
 
@@ -98,6 +101,7 @@ public class PreRegCheckInView extends VerticalLayout implements View {
 
         informationVerified.setValue(false);
         consentFormReceived.setValue(attendee.getParentFormReceived());
+        form.setAllFieldsButCheckInDisabled();
         if (attendee.isMinor() && !attendee.getCheckedIn()) {
             consentFormReceived.setEnabled(true);
         } else {
