@@ -25,20 +25,23 @@ public class SearchPresenter {
     }
 
     public void searchChanged(String searchString) {
-        Navigator navigator = KumoRegUI.getCurrent().getNavigator();
-        navigator.navigateTo(view.VIEW_NAME + "/" + searchString);
+        if (searchString != null) {
+            Navigator navigator = KumoRegUI.getCurrent().getNavigator();
+            navigator.navigateTo(view.VIEW_NAME + "/" + searchString.trim());
+        }
     }
 
     public void searchFor(String searchString) {
-        searchString = searchString.trim();
-        List<Attendee> attendees = attendeeRepository.findByLastNameOrBadgeNumber(searchString);
         view.getAttendeeBeanList().removeAllItems();
-        if (attendees.size() > 0) {
-            view.getAttendeeBeanList().addAll(attendees);
-        } else {
-            Notification.show("No matching attendees found");
+        if (searchString != null && !searchString.trim().isEmpty()) {
+            searchString = searchString.trim();
+            List<Attendee> attendees = attendeeRepository.findByLastNameOrBadgeNumber(searchString);
+            if (attendees.size() > 0) {
+                view.getAttendeeBeanList().addAll(attendees);
+            } else {
+                Notification.show("No matching attendees found");
+            }
         }
-
     }
 
     public void selectAttendee(Attendee attendee) {

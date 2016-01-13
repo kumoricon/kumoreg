@@ -27,12 +27,15 @@ public class PreRegSearchPresenter {
     }
 
     public void searchChanged(String searchString) {
-        Navigator navigator = KumoRegUI.getCurrent().getNavigator();
-        navigator.navigateTo(view.getViewName() + "/" + searchString);
+        if (searchString != null) {
+            Navigator navigator = KumoRegUI.getCurrent().getNavigator();
+            navigator.navigateTo(view.VIEW_NAME + "/" + searchString.trim());
+        }
     }
 
     public void searchFor(String searchString) {
-        if (searchString != null) {
+        view.getAttendeeBeanList().removeAllItems();
+        if (searchString != null && !searchString.trim().isEmpty()) {
             searchString = searchString.trim();
             List<Attendee> attendees;
             if (searchString.length() == 32) {
