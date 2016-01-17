@@ -11,6 +11,8 @@ import org.kumoricon.KumoRegUI;
 import org.kumoricon.view.attendee.PreRegSearchView;
 import org.kumoricon.view.attendee.SearchView;
 import org.kumoricon.view.badge.BadgeView;
+import org.kumoricon.view.importAttendee.ImportAttendeeView;
+import org.kumoricon.view.order.OrderView;
 import org.kumoricon.view.report.AttendeeReportView;
 import org.kumoricon.view.report.StaffReportView;
 import org.kumoricon.view.role.RoleView;
@@ -34,7 +36,7 @@ public class SiteMenu extends VerticalLayout {
         Layout reg = new VerticalLayout();
         reg.setCaption("Registration");
         reg.setIcon(FontAwesome.USERS);
-        reg.addComponent(buttonFactory("At-Con Registration", FontAwesome.USER, "atcon"));
+        reg.addComponent(buttonFactory("At-Con Registration", FontAwesome.USER, OrderView.VIEW_NAME));
         reg.addComponent(buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegSearchView.VIEW_NAME));
         reg.addComponent(buttonFactory("Attendee Search", FontAwesome.SEARCH, SearchView.VIEW_NAME));
         menu.addComponent(reg);
@@ -46,7 +48,6 @@ public class SiteMenu extends VerticalLayout {
         tab1.addComponent(buttonFactory("Roles", FontAwesome.GROUP, RoleView.VIEW_NAME));
         tab1.addComponent(buttonFactory("Badge Types", FontAwesome.BARCODE, BadgeView.VIEW_NAME));
         tab1.addComponent(buttonFactory("Computers", FontAwesome.DESKTOP, "computers"));
-        tab1.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, "importAttendees"));
 
         menu.addComponent(tab1);
 
@@ -61,6 +62,7 @@ public class SiteMenu extends VerticalLayout {
         tab3.setCaption("Utilities");
         tab3.addComponent(buttonFactory("Print Test Badge", FontAwesome.PRINT, TestBadgeView.VIEW_NAME));
         tab3.addComponent(buttonFactory("Load Test Data", FontAwesome.DATABASE, LoadTestDataView.VIEW_NAME));
+        tab1.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, ImportAttendeeView.VIEW_NAME));
 
         menu.addComponent(tab3);
 
