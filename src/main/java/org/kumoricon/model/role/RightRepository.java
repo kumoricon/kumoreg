@@ -5,4 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface RightRepository extends JpaRepository<Right, Integer> {
+    Right findByNameIgnoreCase(String search);
 }

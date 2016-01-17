@@ -1,4 +1,4 @@
-package org.kumoricon.view;
+package org.kumoricon.view.utility;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;

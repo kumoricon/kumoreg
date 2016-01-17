@@ -8,4 +8,5 @@ import java.util.List;
 @Service
 public interface RoleRepository extends JpaRepository<Role, Integer> {
     List<Role> findByNameStartsWithIgnoreCase(String lastName);
+    Role findByNameIgnoreCase(String roleName);
 }

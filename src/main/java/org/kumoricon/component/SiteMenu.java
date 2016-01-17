@@ -15,6 +15,8 @@ import org.kumoricon.view.report.AttendeeReportView;
 import org.kumoricon.view.report.StaffReportView;
 import org.kumoricon.view.role.RoleView;
 import org.kumoricon.view.user.UserView;
+import org.kumoricon.view.utility.LoadTestDataView;
+import org.kumoricon.view.utility.TestBadgeView;
 
 @SpringComponent
 @UIScope
@@ -57,7 +59,8 @@ public class SiteMenu extends VerticalLayout {
 
         Layout tab3 = new VerticalLayout();
         tab3.setCaption("Utilities");
-        tab3.addComponent(buttonFactory("Print Test Badge", FontAwesome.PRINT, "testbadge"));
+        tab3.addComponent(buttonFactory("Print Test Badge", FontAwesome.PRINT, TestBadgeView.VIEW_NAME));
+        tab3.addComponent(buttonFactory("Load Test Data", FontAwesome.DATABASE, LoadTestDataView.VIEW_NAME));
 
         menu.addComponent(tab3);
 
