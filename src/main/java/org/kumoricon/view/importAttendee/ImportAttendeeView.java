@@ -37,6 +37,7 @@ public class ImportAttendeeView extends VerticalLayout implements View {
         upload.addFailedListener(receiver);
         addComponent(upload);
         status.setWidth(500, Unit.PIXELS);
+        status.setEnabled(false);
         addComponent(status);
     }
 
