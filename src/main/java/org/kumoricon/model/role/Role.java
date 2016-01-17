@@ -37,7 +37,13 @@ public class Role implements Serializable {
     public void addRights(Set<Right> rights) { this.rights.addAll(rights); }
     public void removeRight(String right) { rights.remove(right); }
     public Set<Right> getRights() { return new HashSet<Right>(rights); }
-    public boolean hasRight(String name) { return rights.contains(name); }
+    public boolean hasRight(String name) {
+        if (rights.contains("SuperAdmin")) {
+            return true;
+        } else {
+            return rights.contains(name);
+        }
+    }
 
     public String toString() {
         return name;

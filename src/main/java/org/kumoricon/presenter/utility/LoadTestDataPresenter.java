@@ -57,7 +57,7 @@ public class LoadTestDataPresenter {
 
     private void addRoles() {
         view.addResult("Creating roles");
-        String[] roles = {"Staff", "Coordinator", "Manager", "Ops", "Admin"};
+        String[] roles = {"Staff", "Coordinator", "Manager", "Ops"};
         Right search = rightRepository.findByNameIgnoreCase("Search");
         for (String roleName : roles) {
             Role role = new Role(roleName);
@@ -69,11 +69,11 @@ public class LoadTestDataPresenter {
 
     private void addUsers() {
         view.addResult("Creating users");
-        String[][] userList = {{"admin", "user", "admin"},
-                {"Jack", "Bauer", "Staff"},
-                {"Kim", "Bauer", "Staff"},
-                {"Michelle", "Dessler", "Coordinator"},
-                {"Greg", "Müller", "ops"}};
+        String[][] userList = {
+                              {"Jack", "Bauer", "Staff"},
+                              {"Kim", "Bauer", "Staff"},
+                              {"Michelle", "Dessler", "Coordinator"},
+                              {"Greg", "Müller", "ops"}};
 
         for (String[] currentUser : userList) {
             User user = new User(currentUser[0], currentUser[1]);
