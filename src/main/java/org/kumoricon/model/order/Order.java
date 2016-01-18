@@ -1,7 +1,15 @@
 package org.kumoricon.model.order;
 
+import org.hibernate.validator.constraints.Length;
+import org.kumoricon.model.attendee.Attendee;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -9,10 +17,15 @@ public class Order {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+    @Length(min = 32, max = 32)
     private String orderId;
+    @Min(0)
     private BigDecimal totalAmount;
+    @NotNull
     private Boolean paid;
     private PaymentType paymentType;
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    private Set<Attendee> attendeeList;
     private String notes;
 
     public enum PaymentType {
@@ -32,6 +45,7 @@ public class Order {
     public Order() {
         this.totalAmount = BigDecimal.ZERO;
         this.paid = false;
+        this.attendeeList = new HashSet<>();
     }
 
     public String getOrderId() { return orderId; }
@@ -52,6 +66,22 @@ public class Order {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
+    public Set<Attendee> getAttendeeList() { return attendeeList; }
+    public void setAttendeeList(Set<Attendee> attendeeList) { this.attendeeList = attendeeList; }
+    public void addAttendee(Attendee attendee) {
+        this.attendeeList.add(attendee);
+    }
+
+    public static String generateOrderId() {
+        String symbols = "abcdefghijklmnopqrstuvwxyz01234567890";
+        Random random = new Random();
+        StringBuilder output = new StringBuilder();
+        for (int i = 0; i < 32; i++) {
+            output.append(symbols.charAt(random.nextInt(symbols.length())));
+        }
+        return output.toString();
+    }
+
     @Override
     public boolean equals(Object other) {
         if (!(other instanceof Order))
@@ -66,4 +96,6 @@ public class Order {
 
     @Override
     public int hashCode() { return getOrderId().hashCode(); }
+
+    public String toString() { return orderId; }
 }

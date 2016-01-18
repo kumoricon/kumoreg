@@ -6,6 +6,8 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.Reader;
@@ -24,6 +26,7 @@ public class AttendeeImporter {
     private BadgeRepository badgeRepository;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final Logger log = LoggerFactory.getLogger(AttendeeImporter.class);
 
     public AttendeeImporter(AttendeeRepository attendeeRepository, OrderRepository orderRepository, BadgeRepository badgeRepository) {
         this.attendeeRepository = attendeeRepository;
@@ -48,8 +51,8 @@ public class AttendeeImporter {
     }
 
     public String importFromTSV(Reader inputReader) throws Exception {
+        log.info("Starting data import");
         BufferedReader TSVFile = new BufferedReader(inputReader);
-
         String dataRow = TSVFile.readLine(); // Skip the header row
         Integer lineNumber = 1;
         List<Attendee> attendeesToAdd = new ArrayList<>();
@@ -59,6 +62,7 @@ public class AttendeeImporter {
         HashMap<String, Order> orders = getOrderHashMap();
 
         while (dataRow != null){
+            if (lineNumber % 1000 == 0) { log.info("Read " + lineNumber + " lines"); }
             lineNumber++;
             dataRow = TSVFile.readLine();
             if (dataRow == null || dataRow.trim().length() == 0) { continue; }  // Skip blank lines
@@ -99,14 +103,21 @@ public class AttendeeImporter {
             if (badges.containsKey(dataArray[16])) {
                 attendee.setBadge(badges.get(dataArray[16]));
             } else {
+                log.error("Badge type " + dataArray[16] + " not found on line " + lineNumber);
                 throw new Exception("Badge type " + dataArray[16] + " not found on line " + lineNumber);
             }
 
             if (orders.containsKey(dataArray[17])) {
-                attendee.setOrder(orders.get(dataArray[17]));
+                Order currentOrder = orders.get(dataArray[17]);
+                attendee.setOrder(currentOrder);
+                currentOrder.addAttendee(attendee);
+                currentOrder.setTotalAmount(currentOrder.getTotalAmount().add(attendee.getPaidAmount()));
             } else {
                 Order o = new Order();
                 o.setOrderId(dataArray[17]);
+                o.addAttendee(attendee);
+                o.setTotalAmount(attendee.getPaidAmount());
+                o.setPaymentType(Order.PaymentType.CREDIT);
                 orders.put(o.getOrderId(), o);
                 ordersToAdd.add(o);
                 attendee.setOrder(o);
@@ -117,10 +128,20 @@ public class AttendeeImporter {
         }
         TSVFile.close();
 
+        log.info("Read " + lineNumber + " lines");
+
+        // Check to make sure all attendees in order have paid and set paid flag accordingly
+        for (Order o : ordersToAdd) {
+            Boolean isPaid = true;
+            for (Attendee a : o.getAttendeeList()) {
+                if (a.getPaid() == false) { isPaid = false; }
+            }
+            o.setPaid(isPaid);
+        }
+
+        log.info("Saving " + ordersToAdd.size() + " orders and " + attendeesToAdd.size() + " attendees to database");
         orderRepository.save(ordersToAdd);
-        attendeeRepository.save(attendeesToAdd);
-
-        return String.format("%s attendees and %s orders imported.", attendeesToAdd.size(), ordersToAdd.size());
+        log.info("Done importing data");
+        return String.format("Imported %s attendees and %s orders", attendeesToAdd.size(), ordersToAdd.size());
     }
-
 }
