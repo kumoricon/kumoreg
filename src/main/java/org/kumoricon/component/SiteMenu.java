@@ -62,7 +62,7 @@ public class SiteMenu extends VerticalLayout {
         tab3.setCaption("Utilities");
         tab3.addComponent(buttonFactory("Print Test Badge", FontAwesome.PRINT, TestBadgeView.VIEW_NAME));
         tab3.addComponent(buttonFactory("Load Test Data", FontAwesome.DATABASE, LoadTestDataView.VIEW_NAME));
-        tab1.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, ImportAttendeeView.VIEW_NAME));
+        tab3.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, ImportAttendeeView.VIEW_NAME));
 
         menu.addComponent(tab3);
 
