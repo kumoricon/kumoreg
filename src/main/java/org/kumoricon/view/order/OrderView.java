@@ -1,6 +1,8 @@
 package org.kumoricon.view.order;
 
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -28,7 +30,13 @@ public class OrderView extends VerticalLayout implements View{
     private TextArea notes = FieldFactory.createTextArea("Notes");
     private Table attendeeList = new Table();
     private Button addAttendee = new Button("Add Attendee");
+    private NativeSelect paymentType = new NativeSelect("Payment Type");
+    private Button takeMoney = new Button("Take Money");
+    private Button cancel = new Button("Cancel");
     private BeanItemContainer<Attendee> attendeeBeanList;
+    private Order currentOrder;
+
+    protected FieldGroup fieldGroup;
 
     @PostConstruct
     public void init() {
@@ -47,11 +55,26 @@ public class OrderView extends VerticalLayout implements View{
         attendeeList.setWidth(600, Unit.PIXELS);
 
         orderInfo.addComponent(attendeeList);
+        attendeeList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
+                handler.selectAttendee((Attendee)itemClickEvent.getItemId()));
+
         orderInfo.addComponent(addAttendee);
         orderInfo.addComponent(total);
+        paymentType.setNullSelectionAllowed(false);
+        orderInfo.addComponent(paymentType);
+
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setSpacing(true);
+        buttonLayout.addComponent(takeMoney);
+        buttonLayout.addComponent(cancel);
+        orderInfo.addComponent(buttonLayout);
+
         orderInfo.addComponent(notes);
         notes.setSizeFull();
 
+        addAttendee.addClickListener((Button.ClickListener) clickEvent -> handler.addNewAttendee());
+        takeMoney.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney());
+        cancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelOrder());
     }
 
     @Override
@@ -66,20 +89,35 @@ public class OrderView extends VerticalLayout implements View{
         }
     }
 
+    private void enableFields(boolean enable) {
+        addAttendee.setEnabled(enable);
+        addAttendee.setVisible(enable);
+        paymentType.setEnabled(enable);
+        notes.setEnabled(enable);
+        takeMoney.setEnabled(enable);
+        takeMoney.setVisible(enable);
+    }
+
     public Order getOrder() {
-        return null;
+        currentOrder.setPaymentType((Order.PaymentType)paymentType.getValue());
+        currentOrder.setNotes(notes.getValue());
+        return currentOrder;
     }
     public void afterSuccessfulFetch(Order order) {
+        this.currentOrder = order;
         orderId.setValue(order.getOrderId());
         total.setValue(order.getTotalAmount().toString());
         notes.setValue(order.getNotes());
+
+        paymentType.removeAllItems();
+        paymentType.addItems(Order.PaymentType.values());
+        paymentType.select(order.getPaymentType());
 
         attendeeList.setContainerDataSource(new BeanItemContainer<>(Attendee.class, order.getAttendeeList()));
         attendeeList.setVisibleColumns(new String[] { "firstName", "lastName", "badge", "paidAmount"});
         attendeeList.setColumnHeaders("First Name", "Last Name", "Badge Type", "Cost");
 
-//        attendeeBeanList.removeAllItems();
-//        attendeeBeanList.addAll(attendees);
+        setEnabled(!order.getPaid());   // Disable editing if the order has been paid
     }
 
     public void setHandler(OrderPresenter presenter) {

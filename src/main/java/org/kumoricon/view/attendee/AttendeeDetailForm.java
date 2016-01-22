@@ -17,30 +17,29 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
-import static org.kumoricon.util.FieldFactory.createTextArea;
-import static org.kumoricon.util.FieldFactory.createTextField;
+import static org.kumoricon.util.FieldFactory.*;
 
 
 public class AttendeeDetailForm extends GridLayout {
-    protected TextField firstName = createTextField("First Name");
-    protected TextField lastName = createTextField("Last Name");
-    protected TextField badgeName = createTextField("Badge Name");
-    protected TextField badgeNumber = createTextField("Badge Number");
-    protected TextField phoneNumber = createTextField("Phone");
-    protected TextField email = createTextField("Email");
-    protected TextField zip = createTextField("Zip");
-    protected DateField birthDate = new DateField("");
+    protected TextField firstName = createTextField("First Name", 1);
+    protected TextField lastName = createTextField("Last Name", 2);
+    protected TextField badgeName = createTextField("Badge Name", 3);
+    protected TextField badgeNumber = createTextField("Badge Number", 4);
+    protected TextField phoneNumber = createTextField("Phone", 5);
+    protected DateField birthDate = createDateField("", 6);
+    protected TextField email = createTextField("Email", 7);
+    protected TextField zip = createTextField("Zip", 8);
     protected Label age = new Label("");
-    protected TextField emergencyContactFullName = createTextField("Full Name");
-    protected TextField emergencyContactPhone = createTextField("Phone");
-    protected TextField parentFullName = createTextField("Full Name");
-    protected TextField parentPhone = createTextField("Phone");
-    protected CheckBox parentIsEmergencyContact = new CheckBox("Parent is Emergency Contact");
-    protected CheckBox parentFormReceived = new CheckBox("Parental Consent Form Received");
-    protected NativeSelect badge = new NativeSelect("Pass Type");
-    protected TextField paidAmount = createTextField("Manual Price");
-    protected TextArea notes = createTextArea(null);
-    protected CheckBox checkedIn = new CheckBox("Attendee Checked In");
+    protected TextField emergencyContactFullName = createTextField("Full Name", 9);
+    protected TextField emergencyContactPhone = createTextField("Phone", 10);
+    protected TextField parentFullName = createTextField("Full Name", 11);
+    protected TextField parentPhone = createTextField("Phone", 12);
+    protected CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 13);
+    protected CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 14);
+    protected NativeSelect badge = createNativeSelect("Pass Type", 15);
+    protected TextField paidAmount = createTextField("Manual Price", 16);
+    protected TextArea notes = createTextArea(null, 17);
+    protected CheckBox checkedIn = createCheckBox("Attendee Checked In", 18);
     protected BeanItem<Attendee> attendeeBean;
 
     protected FieldGroup fieldGroup;
@@ -86,6 +85,8 @@ public class AttendeeDetailForm extends GridLayout {
         addComponent(buildPassInfo(), 0, 2);
         addComponent(buildNotes(), 1, 2);
         addComponent(buildCheckedIn(), 0, 3);
+
+
     }
 
     public void show(Attendee attendee) {
@@ -100,7 +101,7 @@ public class AttendeeDetailForm extends GridLayout {
         }
         badge.select(attendee.getBadge());
         setMinorFieldsEnabled(attendee.isMinor());
-
+        firstName.focus();
     }
 
     private void setMinorFieldsEnabled(boolean isEnabled) {
@@ -112,13 +113,14 @@ public class AttendeeDetailForm extends GridLayout {
 
 
     public Attendee getAttendee() {
-        return attendeeBean.getBean();
+        try {
+            fieldGroup.commit();
+            return attendeeBean.getBean();
+        } catch (FieldGroup.CommitException e) {
+            Notification.show(e.getMessage());
+        }
+        return null;
     }
-
-//    public Attendee get() {
-//
-//    }
-
 
     public void setAllFieldsEnabled(Boolean enabled) {
         fieldGroup.setEnabled(enabled);
@@ -233,6 +235,10 @@ public class AttendeeDetailForm extends GridLayout {
     public void setAvailableBadges(List<Badge> availableBadges) {
         badge.removeAllItems();
         badge.addItems(availableBadges);
+    }
+
+    public void selectFirstName() {
+        firstName.selectAll();
     }
 
     class CustomFieldGroupFieldFactory extends DefaultFieldGroupFieldFactory {

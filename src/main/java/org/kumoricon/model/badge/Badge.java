@@ -68,21 +68,21 @@ public class Badge {
         throw new ServiceException("Error: No valid age range found in badge {} for age {}".format(this.name, age));
     }
 
+
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Badge))
-            return false;
-        if (this.getId() == null) {
-            return this == other;
-        } else {
-            Badge o = (Badge) other;
-            return this.getId().equals(o.getId());
-        }
+        if (this == other) return true;
+        if ( !(other instanceof Badge) ) return false;
+
+        final Badge otherBadge = (Badge) other;
+
+        return otherBadge.getName().equals(getName());
+
     }
 
     @Override
     public int hashCode() {
-        return getName().hashCode();
+        return name.hashCode();
     }
 
     public String toString() {

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
@@ -34,11 +35,12 @@ public class Attendee implements Serializable {
     private Boolean paid;                       // has attendee paid? True for $0 attendees (press/comped/etc)
     private BigDecimal paidAmount;              // Amount paid - not necessarily the same as the badge cost, but
                                                 // usually should be
-    @ManyToOne(cascade=CascadeType.MERGE)
+    @ManyToOne
     private Badge badge;                        // Badge type
-    @ManyToOne(cascade=CascadeType.MERGE)
+    @ManyToOne
     private Order order;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
+    public LocalDateTime checkInTime;           // Timestamp when checked in
     private String notes;
     private boolean preRegistered;              // Did attendee register before con?
 
@@ -93,6 +95,7 @@ public class Attendee implements Serializable {
     public LocalDate getBirthDate() { return birthDate; }
     public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
     public Long getAge() {
+        if (birthDate == null) { return 0L; }
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
         return ChronoUnit.YEARS.between(birthDate, now);
     }
@@ -132,7 +135,14 @@ public class Attendee implements Serializable {
     public void setOrder(Order order) { this.order = order; }
 
     public Boolean getCheckedIn() { return checkedIn; }
-    public void setCheckedIn(Boolean checkedIn) { this.checkedIn = checkedIn; }
+    public void setCheckedIn(Boolean checkedIn) {
+        this.checkedIn = checkedIn;
+        if (checkedIn) {
+            checkInTime = LocalDateTime.now();
+        } else {
+            checkInTime = null;
+        }
+    }
     public Boolean isCheckedIn() { return checkedIn; }
 
     public String getNotes() { return notes; }
@@ -144,5 +154,4 @@ public class Attendee implements Serializable {
     public String toString() {
         return String.format("%s %s (Birthdate: %s)", firstName, lastName, birthDate);
     }
-
 }

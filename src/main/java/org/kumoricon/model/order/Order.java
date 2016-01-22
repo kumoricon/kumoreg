@@ -37,8 +37,6 @@ public class Order {
             public String toString() { return "Money Order"; }
         }, CREDIT {
             public String toString() { return "Credit Card"; }
-        }, MANUAL {
-            public String toString() { return "Manual/Free"; }
         }
     }
 
@@ -72,6 +70,10 @@ public class Order {
         this.attendeeList.add(attendee);
     }
 
+    public void removeAttendee(Attendee attendee) {
+        this.attendeeList.remove(attendee);
+    }
+
     public static String generateOrderId() {
         String symbols = "abcdefghijklmnopqrstuvwxyz01234567890";
         Random random = new Random();
@@ -80,6 +82,14 @@ public class Order {
             output.append(symbols.charAt(random.nextInt(symbols.length())));
         }
         return output.toString();
+    }
+
+    public void paymentComplete() {
+        paid = true;
+        for (Attendee attendee : attendeeList) {
+            attendee.setCheckedIn(true);
+            attendee.setPaid(true);
+        }
     }
 
     @Override
