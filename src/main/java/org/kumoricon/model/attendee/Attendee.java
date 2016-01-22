@@ -7,9 +7,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @Entity
 @Table(name = "attendees")
@@ -40,7 +40,8 @@ public class Attendee implements Serializable {
     @ManyToOne
     private Order order;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
-    public LocalDateTime checkInTime;           // Timestamp when checked in
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date checkInTime;           // Timestamp when checked in
     private String notes;
     private boolean preRegistered;              // Did attendee register before con?
 
@@ -138,7 +139,7 @@ public class Attendee implements Serializable {
     public void setCheckedIn(Boolean checkedIn) {
         this.checkedIn = checkedIn;
         if (checkedIn) {
-            checkInTime = LocalDateTime.now();
+            checkInTime = new Date();
         } else {
             checkInTime = null;
         }
