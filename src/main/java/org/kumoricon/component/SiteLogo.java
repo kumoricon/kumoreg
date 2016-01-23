@@ -7,6 +7,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import org.kumoricon.model.user.User;
 import org.springframework.context.annotation.Scope;
 
 @SpringComponent
@@ -32,7 +33,11 @@ public class SiteLogo extends VerticalLayout {
         setComponentAlignment(username, Alignment.BOTTOM_CENTER);
     }
 
-    public void setUsername(String username) {
-        this.username.setValue(username);
+    public void setUser(User user) {
+        if (user != null) {
+            this.username.setValue(user.getUsername());
+        } else {
+            this.username.setValue(null);
+        }
     }
 }

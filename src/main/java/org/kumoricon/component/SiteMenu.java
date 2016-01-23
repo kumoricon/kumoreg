@@ -8,6 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.KumoRegUI;
+import org.kumoricon.view.LogoutView;
 import org.kumoricon.view.attendee.PreRegSearchView;
 import org.kumoricon.view.attendee.SearchView;
 import org.kumoricon.view.badge.BadgeView;
@@ -68,6 +69,8 @@ public class SiteMenu extends VerticalLayout {
 
         addComponent(menu);
         setExpandRatio(menu, 1.0f);
+
+        addComponent(buttonFactory("Logout", FontAwesome.LOCK, LogoutView.VIEW_NAME));
 
     }
 

@@ -2,16 +2,16 @@ package org.kumoricon;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.kumoricon.component.SiteLogo;
 import org.kumoricon.component.SiteMenu;
+import org.kumoricon.model.user.User;
 import org.kumoricon.view.ErrorView;
+import org.kumoricon.view.LoginView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Theme("valo")
@@ -25,6 +25,18 @@ public class KumoRegUI extends UI {
 
     @Autowired
     private SiteLogo logo;
+
+    private User loggedInUser;
+
+    public User getLoggedInUser(){
+        return (User)getSession().getAttribute("user");
+//        return loggedInUser;
+    }
+
+    public void setLoggedInUser(User user){
+        getSession().setAttribute("user", user);
+        logo.setUser(user);
+    }
 
     @Override
     protected void init(VaadinRequest request) {
@@ -57,6 +69,26 @@ public class KumoRegUI extends UI {
         root.setExpandRatio(viewContainer, 1.0f);
         Navigator navigator = new Navigator(this, viewContainer);
         navigator.setErrorView(new ErrorView());
+
+        navigator.addViewChangeListener(new ViewChangeListener() {
+            @Override
+            public boolean beforeViewChange(ViewChangeEvent event) {
+                User currentUser = ((KumoRegUI)KumoRegUI.getCurrent()).getLoggedInUser();
+                if (currentUser == null && !(event.getNewView() instanceof LoginView)) {
+                    event.getNavigator().navigateTo(LoginView.VIEW_NAME);
+                    return false;
+//                } else if (!currentUser.hasRight("test")) {
+//                    Notification.show("Permission denied", Notification.Type.ERROR_MESSAGE);
+//                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public void afterViewChange(ViewChangeEvent event) {}
+        });
+
         navigator.addProvider(viewProvider);
     }
 
