@@ -27,11 +27,8 @@ public class KumoRegUI extends UI {
 
     private VerticalLayout leftPanel;
 
-    private User loggedInUser;
-
     public User getLoggedInUser(){
         return (User)getSession().getAttribute("user");
-//        return loggedInUser;
     }
 
     public void setLoggedInUser(User user){

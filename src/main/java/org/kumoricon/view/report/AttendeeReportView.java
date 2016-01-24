@@ -7,8 +7,11 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.report.ReportLine;
+import org.kumoricon.model.user.User;
 import org.kumoricon.presenter.report.AttendeeReportPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +22,7 @@ import java.util.List;
 @SpringView(name = AttendeeReportView.VIEW_NAME)
 public class AttendeeReportView extends VerticalLayout implements View {
     public static final String VIEW_NAME = "attendeeReport";
+    public static final String REQUIRES_RIGHT = "view_staff_report";
     @Autowired
     private AttendeeReportPresenter handler;
 
@@ -48,10 +52,15 @@ public class AttendeeReportView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        KumoRegUI ui = (KumoRegUI) getUI();
+        User user = ui.getLoggedInUser();
+        if (user != null && !user.hasRight(REQUIRES_RIGHT)) {
+            ui.getNavigator().navigateTo("/");
+            Notification.show("Permission denied. Right " + REQUIRES_RIGHT + " is required for " + VIEW_NAME +".");
+        }
     }
 
     public void afterSuccessfulFetch(List<ReportLine> data) {
         dataGrid.setContainerDataSource(new BeanItemContainer<>(ReportLine.class, data));
     }
-
 }
