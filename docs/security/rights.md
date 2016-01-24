@@ -1,8 +1,8 @@
 Security Rights
 ===============
 
-Roles each have rights, which are the flags checked to enable/disable them. Names are not case sensitive, and
-should have underscores between words.
+Rights are individual strings that are checked to enable/disable features for a certain user. Names are not case 
+sensitive, and should have underscores between words.
 
 Available rights are:
 
@@ -20,6 +20,7 @@ Available rights are:
 | view_attendance_report  | Can view attendance report (counts only)                        |
 | view_revenue_report     | Can view revenue report                                         |
 | view_staff_report       | Can view staff report (lists name/phone numbers)                |
+| view_role_report        | Can view roles and rights assigned to each                      |
 |                         |                                                                 |
 | manage_staff            | Can add/edit users and reset passwords                          |
 | manage_pass_types       | Can add/edit badge types                                        |
@@ -27,3 +28,14 @@ Available rights are:
 | manage_devices          | Can add/edit devices (computer/printer mappings)                |
 | import_pre_reg_data     | Import pre-registered attendees and orders                      |
 | super_admin             | Override - can do everything                                    |
+
+
+Rights can be added/removed from a given Role in the regular user interface.
+
+
+Adding new rights
+-----------------
+Currently there's no interface for adding rights in the UI (since they're only useful from code.
+If you add one, make sure to add it to LoadTestDataPresenter (loads default roles/rights/badges/etc) along
+with setting it in the appropriate Role. 
+

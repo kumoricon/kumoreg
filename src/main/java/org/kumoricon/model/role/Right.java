@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "rights")
-public class Right implements Serializable {
+public class Right implements Serializable, Comparable {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
@@ -52,5 +52,14 @@ public class Right implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o != null && o instanceof Right) {
+            Right other = (Right)o;
+            return name.compareTo(other.getName());
+        }
+        return 0;
     }
 }

@@ -73,8 +73,8 @@ public class LoadTestDataPresenter {
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
-                "attendee_override_price", "reprint_badge", "manage_staff",
-                "manage_pass_types", "view_attendance_report", "view_revenue_report", "view_staff_report"});
+                "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types", "view_role_report",
+                 "view_attendance_report", "view_revenue_report", "view_staff_report"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
