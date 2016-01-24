@@ -38,11 +38,12 @@ public class Role implements Serializable {
     public void removeRight(String right) { rights.remove(right); }
     public Set<Right> getRights() { return new HashSet<Right>(rights); }
     public boolean hasRight(String name) {
-        if (rights.contains("SuperAdmin")) {
-            return true;
-        } else {
-            return rights.contains(name);
+        name = name.toLowerCase();
+        if (name == null) { return false; }
+        for (Right r : rights) {    // Todo: better way to do this?
+            if (r.getName().equals(name) || r.getName().equals("super_admin")) { return true; }
         }
+        return false;
     }
 
     public String toString() {

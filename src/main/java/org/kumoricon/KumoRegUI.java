@@ -20,11 +20,12 @@ public class KumoRegUI extends UI {
     @Autowired
     private SpringViewProvider viewProvider;
 
-    @Autowired
     private SiteMenu menu;
 
     @Autowired
     private SiteLogo logo;
+
+    private VerticalLayout leftPanel;
 
     private User loggedInUser;
 
@@ -47,10 +48,10 @@ public class KumoRegUI extends UI {
         setContent(root);
 
         // Left hand logo and menu
-        final VerticalLayout leftPanel = new VerticalLayout();
+        leftPanel = new VerticalLayout();
         leftPanel.setWidth(200, Unit.PIXELS);
         leftPanel.addComponent(logo);
-        leftPanel.addComponent(menu);
+        if (getLoggedInUser() != null) { buildMenu(); }
         root.addComponent(leftPanel);
 
 //        final CssLayout navigationBar = new CssLayout();
@@ -90,6 +91,17 @@ public class KumoRegUI extends UI {
         });
 
         navigator.addProvider(viewProvider);
+    }
+
+    public void buildMenu() {
+        if (leftPanel.getComponentCount() == 1) {
+            menu = new SiteMenu(getLoggedInUser());
+            leftPanel.addComponent(menu);
+        }
+    }
+
+    public void removeMenu() {
+        leftPanel.removeComponent(menu);
     }
 
 }

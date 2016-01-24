@@ -23,6 +23,7 @@ public class LogoutPresenter {
     public void logout() {
         KumoRegUI ui = (KumoRegUI)KumoRegUI.getCurrent();
         ui.setLoggedInUser(null);
+        ui.removeMenu();
         ui.getNavigator().navigateTo(LoginView.VIEW_NAME);
         Notification.show("Logged out");
     }

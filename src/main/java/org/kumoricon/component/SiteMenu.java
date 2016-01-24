@@ -8,6 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.KumoRegUI;
+import org.kumoricon.model.user.User;
 import org.kumoricon.view.LogoutView;
 import org.kumoricon.view.attendee.PreRegSearchView;
 import org.kumoricon.view.attendee.SearchView;
@@ -26,7 +27,10 @@ import org.kumoricon.view.utility.TestBadgeView;
 public class SiteMenu extends VerticalLayout {
     Accordion menu = new Accordion();
 
-    public SiteMenu() {
+    User loggedInUser;
+
+    public SiteMenu(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
         setSizeFull();
         setMargin(false);
         setSpacing(false);
@@ -37,35 +41,44 @@ public class SiteMenu extends VerticalLayout {
         Layout reg = new VerticalLayout();
         reg.setCaption("Registration");
         reg.setIcon(FontAwesome.USERS);
-        reg.addComponent(buttonFactory("At-Con Registration", FontAwesome.USER, OrderView.VIEW_NAME));
-        reg.addComponent(buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegSearchView.VIEW_NAME));
-        reg.addComponent(buttonFactory("Attendee Search", FontAwesome.SEARCH, SearchView.VIEW_NAME));
-        menu.addComponent(reg);
+        addButtonTo(reg, "at_con_registration",
+                buttonFactory("At-Con Registration", FontAwesome.USER, OrderView.VIEW_NAME));
+        addButtonTo(reg, "pre_reg_check_in",
+                buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegSearchView.VIEW_NAME));
+        addButtonTo(reg, "attendee_search",
+                buttonFactory("Attendee Search", FontAwesome.SEARCH, SearchView.VIEW_NAME));
+        if (reg.getComponentCount() > 0) { menu.addComponent(reg); }
 
         Layout tab1 = new VerticalLayout();
         tab1.setIcon(FontAwesome.GEARS);
         tab1.setCaption("Administration");
-        tab1.addComponent(buttonFactory("Users", FontAwesome.USER, UserView.VIEW_NAME));
-        tab1.addComponent(buttonFactory("Roles", FontAwesome.GROUP, RoleView.VIEW_NAME));
-        tab1.addComponent(buttonFactory("Badge Types", FontAwesome.BARCODE, BadgeView.VIEW_NAME));
-        tab1.addComponent(buttonFactory("Computers", FontAwesome.DESKTOP, "computers"));
-
-        menu.addComponent(tab1);
+        addButtonTo(tab1, "manage_staff",
+                buttonFactory("Users", FontAwesome.USER, UserView.VIEW_NAME));
+        addButtonTo(tab1, "manage_roles",
+                buttonFactory("Roles", FontAwesome.GROUP, RoleView.VIEW_NAME));
+        addButtonTo(tab1, "manage_pass_types",
+                buttonFactory("Badge Types", FontAwesome.BARCODE, BadgeView.VIEW_NAME));
+        addButtonTo(tab1, "manage_devices",
+                buttonFactory("Computers", FontAwesome.DESKTOP, "computers"));
+        if (tab1.getComponentCount() > 0) { menu.addComponent(tab1); }
 
         Layout tab2 = new VerticalLayout();
         tab2.setCaption("Reports");
         tab2.setIcon(FontAwesome.FILE_TEXT);
-        tab2.addComponent(buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, AttendeeReportView.VIEW_NAME));
-        tab2.addComponent(buttonFactory("Staff", FontAwesome.USERS, StaffReportView.VIEW_NAME));
-        menu.addComponent(tab2);
+        addButtonTo(tab2, "view_attendance_report",
+                buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, AttendeeReportView.VIEW_NAME));
+        addButtonTo(tab2, "view_staff_report",
+                buttonFactory("Staff", FontAwesome.USERS, StaffReportView.VIEW_NAME));
+        if (tab2.getComponentCount() > 0) { menu.addComponent(tab2); }
 
         Layout tab3 = new VerticalLayout();
         tab3.setCaption("Utilities");
-        tab3.addComponent(buttonFactory("Print Test Badge", FontAwesome.PRINT, TestBadgeView.VIEW_NAME));
-        tab3.addComponent(buttonFactory("Load Test Data", FontAwesome.DATABASE, LoadTestDataView.VIEW_NAME));
-        tab3.addComponent(buttonFactory("Import Attendees", FontAwesome.UPLOAD, ImportAttendeeView.VIEW_NAME));
-
-        menu.addComponent(tab3);
+        addButtonTo(tab3, null, buttonFactory("Print Test Badge", FontAwesome.PRINT, TestBadgeView.VIEW_NAME));
+        addButtonTo(tab3, "import_pre_reg_data",
+                buttonFactory("Load Test Data", FontAwesome.DATABASE, LoadTestDataView.VIEW_NAME));
+        addButtonTo(tab3, "import_pre_reg_data",
+                buttonFactory("Import Attendees", FontAwesome.UPLOAD, ImportAttendeeView.VIEW_NAME));
+        if (tab3.getComponentCount() > 0) { menu.addComponent(tab3); }
 
         addComponent(menu);
         setExpandRatio(menu, 1.0f);
@@ -85,20 +98,24 @@ public class SiteMenu extends VerticalLayout {
 
     private Button buttonFactory(String name, FontAwesome icon, String action) {
         final String navTo = action;
-        Button b = new Button();
-        b.setWidth(100, Unit.PERCENTAGE);
-        b.setCaption(name);
+        Button button = new Button();
+        button.setWidth(100, Unit.PERCENTAGE);
+        button.setCaption(name);
         if (icon != null) {
-            b.setIcon(icon);
+            button.setIcon(icon);
         }
-        b.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                KumoRegUI.getCurrent().getNavigator().navigateTo(navTo);
-            }
-        });
+        button.addClickListener((Button.ClickListener) clickEvent ->
+                KumoRegUI.getCurrent().getNavigator().navigateTo(navTo));
+        return button;
+    }
 
-        return b;
+    private void addButtonTo(Layout tab, String requiredRight, Button button) {
+        // If the current user has the given right, add the button to the Layout tab. Used when building the
+        // site menu
+        if (tab == null || button == null || loggedInUser == null) { return; }
+        if (requiredRight == null || loggedInUser.hasRight(requiredRight)) {
+            tab.addComponent(button);
+        }
     }
 
 }

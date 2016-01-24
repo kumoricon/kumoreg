@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import java.util.HashMap;
+
 
 @Controller
 @Scope("request")
@@ -49,7 +51,11 @@ public class LoadTestDataPresenter {
 
     private void addRights() {
         view.addResult("Creating rights");
-        String[] rights = {"viewAttendee", "editAttendee", "search", "import"};
+        String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
+                "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
+                "view_attendance_report", "view_revenue_report", "view_staff_report", "manage_staff",
+                "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data"};
+
         for (String right : rights) {
             rightRepository.save(new Right(right));
         }
@@ -57,11 +63,31 @@ public class LoadTestDataPresenter {
 
     private void addRoles() {
         view.addResult("Creating roles");
-        String[] roles = {"Staff", "Coordinator", "Manager", "Ops"};
-        Right search = rightRepository.findByNameIgnoreCase("Search");
-        for (String roleName : roles) {
+        HashMap<String, String[]> roles = new HashMap<>();
+        roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge"});
+        roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
+                                               "print_badge", "attendee_edit", "attendee_edit_notes",
+                                               "attendee_override_price", "reprint_badge", "view_staff_report"});
+        roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
+                "print_badge", "attendee_edit", "attendee_edit_notes",
+                "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report"});
+        roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
+                "print_badge", "attendee_edit", "attendee_edit_notes",
+                "attendee_override_price", "reprint_badge", "manage_staff",
+                "manage_pass_types", "view_attendance_report", "view_revenue_report", "view_staff_report"});
+        roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes"});
+
+        HashMap<String, Right> rightMap = getRightsHashMap();
+
+        for (String roleName : roles.keySet()) {
             Role role = new Role(roleName);
-            role.addRight(search);
+            for (String rightName : roles.get(roleName)) {
+                if (rightMap.containsKey(rightName)) {
+                    role.addRight(rightMap.get(rightName));
+                } else {
+                    view.addResult("Error creating role " + roleName + ". Right " + rightName + " not found");
+                }
+            }
             view.addResult("    Creating " + role.toString());
             roleRepository.save(role);
         }
@@ -70,17 +96,23 @@ public class LoadTestDataPresenter {
     private void addUsers() {
         view.addResult("Creating users");
         String[][] userList = {
-                              {"Jack", "Bauer", "Staff"},
-                              {"Kim", "Bauer", "Staff"},
-                              {"Michelle", "Dessler", "Coordinator"},
-                              {"Greg", "Müller", "ops"}};
+                              {"Staff", "User", "Staff"},
+                              {"Coordinator", "User", "Coordinator"},
+                              {"Manager", "User", "Manager"},
+                              {"Director", "User", "Director"},
+                              {"Ops", "User", "ops"}};
 
         for (String[] currentUser : userList) {
             User user = new User(currentUser[0], currentUser[1]);
+            user.setUsername(currentUser[0]);
             Role role = roleRepository.findByNameIgnoreCase(currentUser[2]);
-            user.setRole(role);
-            view.addResult("    Creating " + user.toString());
-            userRepository.save(user);
+            if (role == null) {
+                view.addResult("    Error creating user " + currentUser[0] + ". Role " + currentUser[2] + " not found");
+            } else {
+                user.setRole(role);
+                view.addResult("    Creating " + user.toString());
+                userRepository.save(user);
+            }
         }
     }
 
@@ -101,4 +133,13 @@ public class LoadTestDataPresenter {
             badgeRepository.save(badge);
         }
     }
+
+    private HashMap<String, Right> getRightsHashMap() {
+        HashMap<String, Right> rightHashMap = new HashMap<>();
+        for (Right r : rightRepository.findAll()) {
+            rightHashMap.put(r.getName(), r);
+        }
+        return rightHashMap;
+    }
+
 }

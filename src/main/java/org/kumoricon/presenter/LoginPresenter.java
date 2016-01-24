@@ -1,6 +1,5 @@
 package org.kumoricon.presenter;
 
-import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
@@ -44,8 +43,8 @@ public class LoginPresenter {
         if (user != null && user.checkPassword(password) && user.getEnabled()) {
             KumoRegUI ui = (KumoRegUI)KumoRegUI.getCurrent();
             ui.setLoggedInUser(user);
+            ui.buildMenu();
             ui.getNavigator().navigateTo(HomeView.VIEW_NAME);
-            Notification.show(user.getUsername() + " logged in");
         } else {
             loginView.loginFailed();
         }

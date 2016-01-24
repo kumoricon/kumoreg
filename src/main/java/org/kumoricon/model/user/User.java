@@ -139,4 +139,12 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() { return getUsername().hashCode(); }
+
+    public boolean hasRight(String right) {
+        if (role == null) {
+            return false;
+        } else {
+            return role.hasRight(right);
+        }
+    }
 }
