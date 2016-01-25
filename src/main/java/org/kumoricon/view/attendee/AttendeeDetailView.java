@@ -54,29 +54,16 @@ public class AttendeeDetailView extends BaseView implements View {
         btnCancel = new Button("Cancel");
         btnSaveAndReprint = new Button("Save and Reprint Badge");
 
-        btnSave.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                try {
-                    detailForm.commit();
-                    handler.saveAttendee();
-                } catch (FieldGroup.CommitException e) {
-                    Notification.show(e.getMessage());
-                }
+        btnSave.addClickListener((Button.ClickListener) clickEvent -> {
+            try {
+                detailForm.commit();
+                handler.saveAttendee();
+            } catch (FieldGroup.CommitException e) {
+                Notification.show(e.getMessage());
             }
         });
-        btnCancel.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.cancelAttendee();
-            }
-        });
-        btnSaveAndReprint.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.saveAttendeeAndRepreintBadge();
-            }
-        });
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee());
+        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent -> handler.saveAttendeeAndRepreintBadge());
         h.addComponent(btnSave);
         h.addComponent(btnSaveAndReprint);
         h.addComponent(btnCancel);

@@ -124,24 +124,16 @@ public class BadgeView extends BaseView implements View {
         buttons.addComponent(btnSave);
         buttons.addComponent(btnCancel);
 
-        btnSave.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                try {
-                    badgeBeanFieldGroup.commit();
-                    handler.saveBadge();
-                } catch (Exception e) {
-                    Notification.show(e.getMessage());
-                }
+        btnSave.addClickListener((Button.ClickListener) clickEvent -> {
+            try {
+                badgeBeanFieldGroup.commit();
+                handler.saveBadge();
+            } catch (Exception e) {
+                Notification.show(e.getMessage());
             }
         });
 
-        btnCancel.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.cancelBadge();
-            }
-        });
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelBadge());
 
         form.addComponent(tblAgeRanges);
         form.addComponent(buttons);

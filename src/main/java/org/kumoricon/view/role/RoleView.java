@@ -118,17 +118,14 @@ public class RoleView extends BaseView implements View {
         buttons.addComponent(btnSave);
         buttons.addComponent(btnCancel);
 
-        btnSave.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                try {
-                    roleBeanFieldGroup.commit();
-                    handler.saveRole();
-                } catch (DataIntegrityViolationException e) {
-                    Notification.show("Error saving role: Constraint violation. Duplicate name?");
-                } catch (Exception e) {
-                    Notification.show(e.getMessage());
-                }
+        btnSave.addClickListener((Button.ClickListener) clickEvent -> {
+            try {
+                roleBeanFieldGroup.commit();
+                handler.saveRole();
+            } catch (DataIntegrityViolationException e) {
+                Notification.show("Error saving role: Constraint violation. Duplicate name?");
+            } catch (Exception e) {
+                Notification.show(e.getMessage());
             }
         });
 

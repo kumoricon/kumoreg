@@ -129,17 +129,14 @@ public class UserView extends BaseView implements View {
         buttons.addComponent(btnSave);
         buttons.addComponent(btnCancel);
 
-        btnSave.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                try {
-                    userBeanFieldGroup.commit();
-                    handler.saveUser();
-                } catch (DataIntegrityViolationException e) {
-                    Notification.show("Error saving user: Constraint violation. Duplicate username?");
-                } catch (Exception e) {
-                    Notification.show(e.getMessage());
-                }
+        btnSave.addClickListener((Button.ClickListener) clickEvent -> {
+            try {
+                userBeanFieldGroup.commit();
+                handler.saveUser();
+            } catch (DataIntegrityViolationException e) {
+                Notification.show("Error saving user: Constraint violation. Duplicate username?");
+            } catch (Exception e) {
+                Notification.show(e.getMessage());
             }
         });
 

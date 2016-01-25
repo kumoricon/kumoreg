@@ -57,12 +57,7 @@ public class SearchView extends BaseView implements View{
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
                 handler.selectAttendee((Attendee)itemClickEvent.getItemId()));
 
-        btnSearch.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                search();
-            }
-        });
+        btnSearch.addClickListener((Button.ClickListener) clickEvent -> search());
 
         HorizontalLayout h = new HorizontalLayout();
         h.setSpacing(true);

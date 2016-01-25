@@ -35,18 +35,15 @@ public class LoginView extends FormLayout implements View {
         addComponent(passwordField);
         addComponent(loginButton);
         loginButton.setClickShortcut( ShortcutAction.KeyCode.ENTER ) ;
-        loginButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                if (usernameField.isEmpty()) {
-                    Notification.show("Username is required");
-                    usernameField.focus();
-                } else if (passwordField.isEmpty()) {
-                    Notification.show("Password is required");
-                    passwordField.focus();
-                } else {
-                    handler.login(usernameField.getValue(), passwordField.getValue());
-                }
+        loginButton.addClickListener((Button.ClickListener) clickEvent -> {
+            if (usernameField.isEmpty()) {
+                Notification.show("Username is required");
+                usernameField.focus();
+            } else if (passwordField.isEmpty()) {
+                Notification.show("Password is required");
+                passwordField.focus();
+            } else {
+                handler.login(usernameField.getValue(), passwordField.getValue());
             }
         });
         usernameField.focus();

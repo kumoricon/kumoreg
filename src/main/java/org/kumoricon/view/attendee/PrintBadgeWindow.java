@@ -27,18 +27,8 @@ public class PrintBadgeWindow extends Window {
         printedSuccessfully.focus();
         horizontalLayout.addComponent(reprint);
 
-        printedSuccessfully.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.badgePrintSuccess();
-            }
-        });
-        reprint.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.badgePrintFailed();
-            }
-        });
+        printedSuccessfully.addClickListener((Button.ClickListener) clickEvent -> handler.badgePrintSuccess());
+        reprint.addClickListener((Button.ClickListener) clickEvent -> handler.badgePrintFailed());
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
     }

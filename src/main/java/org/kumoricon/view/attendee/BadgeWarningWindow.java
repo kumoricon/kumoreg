@@ -33,18 +33,8 @@ public class BadgeWarningWindow extends Window {
         btnContinue.focus();
         horizontalLayout.addComponent(btnAbort);
 
-        btnContinue.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.continueCheckIn(attendee);
-            }
-        });
-        btnAbort.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                handler.abortCheckIn();
-            }
-        });
+        btnContinue.addClickListener((Button.ClickListener) clickEvent -> handler.continueCheckIn(attendee));
+        btnAbort.addClickListener((Button.ClickListener) clickEvent -> handler.abortCheckIn());
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
     }
