@@ -73,7 +73,6 @@ public class OrderPresenter {
 
     public void addAttendeeToOrder(Attendee attendee) {
         Order order = view.getOrder();
-        attendee.setOrder(order);
         order.addAttendee(attendee);
         order.setTotalAmount(getOrderTotal(order));
         orderRepository.save(order);
