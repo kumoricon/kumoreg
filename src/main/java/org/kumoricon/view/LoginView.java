@@ -2,7 +2,6 @@ package org.kumoricon.view;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import org.kumoricon.presenter.LoginPresenter;
@@ -13,8 +12,9 @@ import javax.annotation.PostConstruct;
 import static org.kumoricon.util.FieldFactory.createTextField;
 
 @SpringView(name = LoginView.VIEW_NAME)
-public class LoginView extends FormLayout implements View {
+public class LoginView extends BaseView implements View {
     public static final String VIEW_NAME = "login";
+    public static final String REQUIRED_RIGHT = null;
 
     @Autowired
     private LoginPresenter handler;
@@ -28,12 +28,13 @@ public class LoginView extends FormLayout implements View {
     @PostConstruct
     void init() {
         handler.setLoginView(this);
-        setMargin(true);
-        setSpacing(true);
 
-        addComponent(usernameField);
-        addComponent(passwordField);
-        addComponent(loginButton);
+        FormLayout formLayout = new FormLayout();
+        formLayout.addComponent(usernameField);
+        formLayout.addComponent(passwordField);
+        formLayout.addComponent(loginButton);
+        addComponent(formLayout);
+
         loginButton.setClickShortcut( ShortcutAction.KeyCode.ENTER ) ;
         loginButton.addClickListener((Button.ClickListener) clickEvent -> {
             if (usernameField.isEmpty()) {
@@ -47,17 +48,13 @@ public class LoginView extends FormLayout implements View {
             }
         });
         usernameField.focus();
-
-
-    }
-
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent event) {
-        // the view is constructed in the init() method()
     }
 
     public void loginFailed() {
         Notification.show("Error: Login failed", Notification.Type.HUMANIZED_MESSAGE);
         passwordField.selectAll();
     }
+
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
+
 }

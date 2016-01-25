@@ -26,17 +26,19 @@ public class BaseView extends VerticalLayout implements View {
 
     protected String getRequiredRight() {
         // In the default case, assume that the user does not have rights to this page. This should be
-        // overridden in the individual views
+        // overridden in the individual views. "No Rights" shouldn't match any existing right.
         return "No Rights";
     }
 
     @PostConstruct
     protected void initLayout() {
+        // For every [child] view, do this:
         setSpacing(true);
         setMargin(true);
     }
 
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        // If you override the enter method, make sure to call super.enter(viewChangeEvent)
         checkPermissions();
     }
 }
