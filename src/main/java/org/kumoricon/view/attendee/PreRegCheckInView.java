@@ -7,10 +7,10 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.presenter.attendee.PreRegCheckInPresenter;
+import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -18,8 +18,10 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = PreRegCheckInView.VIEW_NAME)
-public class PreRegCheckInView extends VerticalLayout implements View {
+public class PreRegCheckInView extends BaseView implements View {
     public static final String VIEW_NAME = "preregcheckin";
+    public static final String REQUIRED_RIGHT = "pre_reg_check_in";
+
 
     @Autowired
     private PreRegCheckInPresenter handler;
@@ -32,8 +34,6 @@ public class PreRegCheckInView extends VerticalLayout implements View {
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setMargin(true);
-        setSpacing(true);
         form = new AttendeePreRegDetailForm();
         form.setAllFieldsButCheckInDisabled();
         addComponent(form);
@@ -122,4 +122,5 @@ public class PreRegCheckInView extends VerticalLayout implements View {
         form.setAvailableBadges(availableBadges);
     }
 
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
 }

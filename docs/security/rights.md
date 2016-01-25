@@ -27,6 +27,7 @@ Available rights are:
 | manage_roles            | Can add/edit security roles                                     |
 | manage_devices          | Can add/edit devices (computer/printer mappings)                |
 | import_pre_reg_data     | Import pre-registered attendees and orders                      |
+| load_test_data          | Loads example data (users, roles, rights)                       |
 | super_admin             | Override - can do everything                                    |
 
 

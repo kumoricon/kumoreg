@@ -12,6 +12,7 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.presenter.order.OrderPresenter;
 import org.kumoricon.util.FieldFactory;
+import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -19,8 +20,9 @@ import java.util.ArrayList;
 
 @ViewScope
 @SpringView(name = OrderView.VIEW_NAME)
-public class OrderView extends VerticalLayout implements View{
+public class OrderView extends BaseView implements View{
     public static final String VIEW_NAME = "order";
+    public static final String REQUIRED_RIGHT = "at_con_registration";
 
     @Autowired
     private OrderPresenter handler;
@@ -41,8 +43,6 @@ public class OrderView extends VerticalLayout implements View{
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setSpacing(true);
-        setMargin(true);
 
         FormLayout orderInfo = new FormLayout();
         orderId.setWidth(400, Unit.PIXELS);
@@ -79,6 +79,7 @@ public class OrderView extends VerticalLayout implements View{
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        super.enter(viewChangeEvent);
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
             // If no parameters, create a new order and navigate to it
@@ -103,6 +104,7 @@ public class OrderView extends VerticalLayout implements View{
         currentOrder.setNotes(notes.getValue());
         return currentOrder;
     }
+
     public void afterSuccessfulFetch(Order order) {
         this.currentOrder = order;
         orderId.setValue(order.getOrderId());
@@ -124,4 +126,5 @@ public class OrderView extends VerticalLayout implements View{
         this.handler = presenter;
     }
 
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
 }

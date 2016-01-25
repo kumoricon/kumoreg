@@ -54,7 +54,7 @@ public class LoadTestDataPresenter {
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
                 "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
                 "view_attendance_report", "view_revenue_report", "view_staff_report", "manage_staff",
-                "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data"};
+                "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data", "load_test_data"};
 
         for (String right : rights) {
             rightRepository.save(new Right(right));

@@ -10,6 +10,7 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.presenter.attendee.SearchPresenter;
+import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -18,8 +19,9 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = SearchView.VIEW_NAME)
-public class SearchView extends VerticalLayout implements View{
+public class SearchView extends BaseView implements View{
     public static final String VIEW_NAME = "attendeeSearch";
+    public static final String REQUIRED_RIGHT = "attendee_search";
 
     @Autowired
     private SearchPresenter handler;
@@ -32,8 +34,7 @@ public class SearchView extends VerticalLayout implements View{
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setSpacing(true);
-        setMargin(true);
+        setSizeFull();
 
         attendeeBeanList = new BeanItemContainer<Attendee>(Attendee.class, new ArrayList<Attendee>());
 
@@ -72,18 +73,14 @@ public class SearchView extends VerticalLayout implements View{
 
         addComponent(h);
         addComponent(tblResult);
-        setSizeFull();
         setExpandRatio(tblResult, 1.0f);
         txtSearch.focus();
 
     }
 
-    public void setSearchLabel(String label) {
-        txtSearch.setCaption(label);
-    }
-
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        super.enter(viewChangeEvent);
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
             txtSearch.clear();
@@ -115,4 +112,5 @@ public class SearchView extends VerticalLayout implements View{
         this.handler = presenter;
     }
 
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
 }

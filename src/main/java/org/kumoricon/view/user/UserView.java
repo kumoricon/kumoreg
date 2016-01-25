@@ -13,6 +13,7 @@ import org.kumoricon.model.role.Role;
 import org.kumoricon.model.user.User;
 import org.kumoricon.presenter.user.UserPresenter;
 import org.kumoricon.util.FieldFactory;
+import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -21,8 +22,10 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = UserView.VIEW_NAME)
-public class UserView extends HorizontalLayout implements View {
+public class UserView extends BaseView implements View {
     public static final String VIEW_NAME = "users";
+    public static final String REQUIRED_RIGHT = "manage_staff";
+
     @Autowired
     private UserPresenter handler;
 
@@ -47,8 +50,6 @@ public class UserView extends HorizontalLayout implements View {
     @PostConstruct
     public void init() {
         handler.setUserView(this);
-        setSpacing(true);
-        setMargin(true);
 
         leftPanel = buildLeftPanel();
         rightPanel = buildRightPanel();
@@ -60,6 +61,7 @@ public class UserView extends HorizontalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        super.enter(viewChangeEvent);
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
             hideUserForm();
@@ -195,4 +197,7 @@ public class UserView extends HorizontalLayout implements View {
 
         return user;
     }
+
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
+
 }

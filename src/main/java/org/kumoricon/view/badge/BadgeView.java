@@ -13,6 +13,7 @@ import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.presenter.badge.BadgePresenter;
 import org.kumoricon.util.FieldFactory;
+import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -20,8 +21,10 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = BadgeView.VIEW_NAME)
-public class BadgeView extends HorizontalLayout implements View {
+public class BadgeView extends BaseView implements View {
     public static final String VIEW_NAME = "badges";
+    public static final String REQUIRED_RIGHT = "manage_pass_types";
+
     @Autowired
     private BadgePresenter handler;
 
@@ -46,8 +49,6 @@ public class BadgeView extends HorizontalLayout implements View {
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setSpacing(true);
-        setMargin(true);
 
         leftPanel = buildLeftPanel();
         rightPanel = buildRightPanel();
@@ -59,6 +60,7 @@ public class BadgeView extends HorizontalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        super.enter(viewChangeEvent);
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
             hideBadgeForm();
@@ -190,6 +192,7 @@ public class BadgeView extends HorizontalLayout implements View {
 
         return badge;
     }
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
 
 }
 

@@ -13,6 +13,7 @@ import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.presenter.role.RolePresenter;
 import org.kumoricon.util.FieldFactory;
+import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -22,8 +23,10 @@ import java.util.Set;
 
 @ViewScope
 @SpringView(name = RoleView.VIEW_NAME)
-public class RoleView extends HorizontalLayout implements View {
+public class RoleView extends BaseView implements View {
     public static final String VIEW_NAME = "roles";
+    public static final String REQUIRED_RIGHT = "manage_roles";
+
     @Autowired
     private RolePresenter handler;
 
@@ -44,8 +47,6 @@ public class RoleView extends HorizontalLayout implements View {
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setSpacing(true);
-        setMargin(true);
 
         leftPanel = buildLeftPanel();
         rightPanel = buildRightPanel();
@@ -57,6 +58,7 @@ public class RoleView extends HorizontalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        super.enter(viewChangeEvent);
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
             hideRoleForm();
@@ -176,6 +178,6 @@ public class RoleView extends HorizontalLayout implements View {
     public void setAvailableRights(List<Right> all) {
         rightsList.setContainerDataSource(new BeanItemContainer<Right>(Right.class, all));
     }
+
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
 }
-
-

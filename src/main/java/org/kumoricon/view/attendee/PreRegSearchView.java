@@ -10,6 +10,7 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.presenter.attendee.PreRegSearchPresenter;
+import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -18,8 +19,9 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = PreRegSearchView.VIEW_NAME)
-public class PreRegSearchView extends VerticalLayout implements View{
+public class PreRegSearchView extends BaseView implements View{
     public static final String VIEW_NAME = "preregSearch";
+    public static final String REQUIRED_RIGHT = "pre_reg_check_in";
 
     @Autowired
     private PreRegSearchPresenter handler;
@@ -32,9 +34,7 @@ public class PreRegSearchView extends VerticalLayout implements View{
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setSpacing(true);
-        setMargin(true);
-
+        setSizeFull();
         attendeeBeanList = new BeanItemContainer<Attendee>(Attendee.class, new ArrayList<Attendee>());
 
         FormLayout f = new FormLayout();
@@ -71,7 +71,6 @@ public class PreRegSearchView extends VerticalLayout implements View{
 
         addComponent(h);
         addComponent(tblResult);
-        setSizeFull();
         setExpandRatio(tblResult, 1.0f);
         tblResult.setSizeFull();
         txtSearch.focus();
@@ -112,7 +111,5 @@ public class PreRegSearchView extends VerticalLayout implements View{
         this.handler = presenter;
     }
 
-    public String getViewName() {
-        return VIEW_NAME;
-    }
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
 }
