@@ -80,6 +80,9 @@ public class OrderPresenter {
     }
 
     private static BigDecimal getOrderTotal(Order order) {
+        // Just get the total for all the attendees instead of keeping a running total
+        // and adding the latest amount to it. Keeping a running total made testing a pain
+        // if a value somehow got corrupt along the way
         BigDecimal total = BigDecimal.ZERO;
         for (Attendee a : order.getAttendeeList()) {
             total = total.add(a.getPaidAmount());
