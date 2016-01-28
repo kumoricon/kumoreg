@@ -44,6 +44,33 @@ public class AttendeeDetailView extends BaseView implements View {
         if (parameters != null && !parameters.equals("")) {
             handler.showAttendee((Integer.parseInt(viewChangeEvent.getParameters())));
         }
+
+        // Set editable fields based on current user's rights
+        if (currentUserHasRight("attendee_edit")) {
+            detailForm.setEditableFields(AttendeeDetailForm.EditableFields.ALL);
+            if (currentUserHasRight("attendee_override_price")) {
+                detailForm.setManualPriceEnabled(true);
+            } else {
+                detailForm.setManualPriceEnabled(false);
+            }
+        } else if (currentUserHasRight("attendee_edit_notes")) {
+            detailForm.setEditableFields(AttendeeDetailForm.EditableFields.NOTES);
+        } else {
+            detailForm.setEditableFields(AttendeeDetailForm.EditableFields.NONE);
+        }
+
+        if (currentUserHasRight("attendee_edit") || currentUserHasRight("attendee_edit_notes")) {
+            btnSave.setEnabled(true);
+            if (currentUserHasRight("reprint_badge")) {
+                btnSaveAndReprint.setEnabled(true);
+            } else {
+                btnSaveAndReprint.setEnabled(false);
+            }
+        } else {
+            btnSave.setEnabled(false);
+            btnSaveAndReprint.setEnabled(false);
+        }
+
     }
 
     private HorizontalLayout buildSaveCancel() {
@@ -70,9 +97,7 @@ public class AttendeeDetailView extends BaseView implements View {
         return h;
     }
 
-    public void setHandler(AttendeeDetailPresenter handler) {
-        this.handler = handler;
-    }
+    public void setHandler(AttendeeDetailPresenter handler) { this.handler = handler; }
 
     public Layout getDetailForm() { return detailForm; }
     public Attendee getAttendee() { return detailForm.getAttendee(); }

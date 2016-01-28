@@ -44,6 +44,8 @@ public class AttendeeDetailForm extends GridLayout {
 
     protected FieldGroup fieldGroup;
 
+    public enum EditableFields {ALL, NOTES, NONE}
+
     public AttendeeDetailForm() {
         birthDate.setConverter(new DateToLocalDateConverter());
         setColumns(2);
@@ -63,6 +65,14 @@ public class AttendeeDetailForm extends GridLayout {
             Integer currentAge = getAgeFromDate(birthDate.getValue());
             age.setValue(String.format("(%s years old)", currentAge));
             setMinorFieldsEnabled(currentAge < 18);
+            try {
+                if (!badge.isEmpty()) {
+                    Badge thisBadge = (Badge) badge.getConvertedValue();
+                    paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                }
+            } catch(ServiceException e) {
+                Notification.show(e.getMessage());
+            }
         });
 
 
@@ -111,6 +121,9 @@ public class AttendeeDetailForm extends GridLayout {
         parentFormReceived.setEnabled(isEnabled);
     }
 
+    public void setManualPriceEnabled(boolean enabled) {
+        paidAmount.setEnabled(enabled);
+    }
 
     public Attendee getAttendee() {
         try {
@@ -239,6 +252,20 @@ public class AttendeeDetailForm extends GridLayout {
 
     public void selectFirstName() {
         firstName.selectAll();
+    }
+
+    public void setEditableFields(EditableFields fields) {
+        switch (fields) {
+            case ALL:
+                fieldGroup.setEnabled(true);
+                break;
+            case NOTES:
+                fieldGroup.setEnabled(false);
+                notes.setEnabled(true);
+                break;
+            case NONE:
+                fieldGroup.setEnabled(false);
+        }
     }
 
     class CustomFieldGroupFieldFactory extends DefaultFieldGroupFieldFactory {

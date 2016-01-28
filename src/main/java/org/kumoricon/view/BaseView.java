@@ -21,13 +21,23 @@ public class BaseView extends VerticalLayout implements View {
                 Notification.show("Permission denied. Right " + getRequiredRight() + " is required.");
             }
         }
-
     }
 
     protected String getRequiredRight() {
         // In the default case, assume that the user does not have rights to this page. This should be
         // overridden in the individual views. "No Rights" shouldn't match any existing right.
         return "No Rights";
+    }
+
+    public Boolean currentUserHasRight(String right) {
+        if (right != null) {
+            KumoRegUI ui = (KumoRegUI) getUI();
+            User user = ui.getLoggedInUser();
+            if (user != null) {
+                return user.hasRight(right);
+            }
+        }
+        return false;
     }
 
     @PostConstruct

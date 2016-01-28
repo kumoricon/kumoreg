@@ -10,7 +10,7 @@ Available rights are:
 |-------------------------|-----------------------------------------------------------------|
 | at_con_registration     | Can add new attendees via At-Con Registration                   |
 | pre_reg_check_in        | Can check in preregistered attendees                            |
-| attendee_search         | Can search attendees                                            |
+| attendee_search         | Can search for and view attendees                               |
 | attendee_edit           | Can edit attendees from search results                          |
 | attendee_edit_notes     | Can edit notes field on attendees, but no other fields          |
 | attendee_override_price | Can manually set price for attendee                             |

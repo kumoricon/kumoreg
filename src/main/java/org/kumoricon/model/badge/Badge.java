@@ -60,6 +60,8 @@ public class Badge {
     }
 
     public BigDecimal getCostForAge(Long age) throws ServiceException {
+        // No birthdate? Charge for adult badge
+        if (age == null) { return getCostForAge(40L); }
         for (AgeRange ageRange : ageRanges) {
             if (ageRange.isValidForAge(age)) {
                 return ageRange.getCost();
