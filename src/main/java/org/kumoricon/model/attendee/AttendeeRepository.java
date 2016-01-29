@@ -28,4 +28,7 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer> {
 
     @Query(value = "select a from Attendee a inner join a.order as order where order.orderId like ?1")
     List<Attendee> findByOrderNumber(String searchString);
+
+    @Query(value = "SELECT badges.name as Badge, IFNULL(checkedIn.cnt, 0) as CheckedIn, IFNULL(notCheckedIn.cnt, 0) as NotCheckedIn FROM badges LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.checked_in) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = TRUE GROUP BY badges.id) as checkedIn ON badges.id = checkedIn.subid LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.id) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = FALSE GROUP BY badges.id) as notCheckedIn ON badges.id = notCheckedIn.subid", nativeQuery = true)
+    List<Object[]> findBadgeCounts();
 }

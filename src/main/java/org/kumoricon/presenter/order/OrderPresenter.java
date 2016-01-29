@@ -61,6 +61,7 @@ public class OrderPresenter {
 
     public void addNewAttendee() {
         Attendee newAttendee = new Attendee();
+//        newAttendee.setBadgeNumber("AB23236");        // Set to next badge number across system
         newAttendee.setOrder(view.getOrder());
         AttendeeWindow attendeeWindow = new AttendeeWindow(this);
         KumoRegUI.getCurrent().addWindow(attendeeWindow);
