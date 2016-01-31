@@ -20,7 +20,7 @@ import org.kumoricon.view.report.RoleReportView;
 import org.kumoricon.view.report.StaffReportView;
 import org.kumoricon.view.role.RoleView;
 import org.kumoricon.view.user.UserView;
-import org.kumoricon.view.utility.LoadTestDataView;
+import org.kumoricon.view.utility.LoadBaseDataView;
 import org.kumoricon.view.utility.TestBadgeView;
 
 @SpringComponent
@@ -78,7 +78,7 @@ public class SiteMenu extends VerticalLayout {
         tab3.setCaption("Utilities");
         addButtonTo(tab3, null, buttonFactory("Print Test Badge", FontAwesome.PRINT, TestBadgeView.VIEW_NAME));
         addButtonTo(tab3, "import_pre_reg_data",
-                buttonFactory("Load Test Data", FontAwesome.DATABASE, LoadTestDataView.VIEW_NAME));
+                buttonFactory("Load Base Data", FontAwesome.DATABASE, LoadBaseDataView.VIEW_NAME));
         addButtonTo(tab3, "import_pre_reg_data",
                 buttonFactory("Import Attendees", FontAwesome.UPLOAD, ImportAttendeeView.VIEW_NAME));
         if (tab3.getComponentCount() > 0) { menu.addComponent(tab3); }

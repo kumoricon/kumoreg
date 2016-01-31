@@ -9,7 +9,7 @@ import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
-import org.kumoricon.view.utility.LoadTestDataView;
+import org.kumoricon.view.utility.LoadBaseDataView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 
 @Controller
 @Scope("request")
-public class LoadTestDataPresenter {
+public class LoadBaseDataPresenter {
     @Autowired
     private UserRepository userRepository;
 
@@ -32,20 +32,38 @@ public class LoadTestDataPresenter {
     @Autowired
     private RightRepository rightRepository;
 
-    private LoadTestDataView view;
+    private LoadBaseDataView view;
 
-    public LoadTestDataPresenter() {
+    public LoadBaseDataPresenter() {
     }
-
 
     public void loadDataButtonClicked() {
-        addRights();
-        addRoles();
-        addUsers();
-        addBadges();
+        if (targetTablesAreEmpty()) {
+            addRights();
+            addRoles();
+            addUsers();
+            addBadges();
+        }
     }
 
-    public void setView(LoadTestDataView view) {
+    private Boolean targetTablesAreEmpty() {
+        if (rightRepository.count() > 0) {
+            view.addResult("Error: rights table not empty. Aborting.");
+            return false;
+        } else if (roleRepository.count() > 0) {
+            view.addResult("Error: roles table not empty. Aborting.");
+            return false;
+        } else if (userRepository.count() > 0) {
+            view.addResult("Error: users table not empty. Aborting.");
+            return false;
+        } else if (badgeRepository.count() > 0) {
+            view.addResult("Error: badges table not empty. Aborting.");
+            return false;
+        }
+        return true;
+    }
+
+    public void setView(LoadBaseDataView view) {
         this.view = view;
     }
 
@@ -54,7 +72,7 @@ public class LoadTestDataPresenter {
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
                 "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
                 "view_attendance_report", "view_revenue_report", "view_staff_report", "manage_staff",
-                "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data", "load_test_data"};
+                "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data", "load_base_data"};
 
         for (String right : rights) {
             rightRepository.save(new Right(right));
