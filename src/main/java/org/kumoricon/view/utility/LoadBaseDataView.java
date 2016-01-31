@@ -4,6 +4,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import org.kumoricon.presenter.utility.LoadBaseDataPresenter;
 import org.kumoricon.view.BaseView;
@@ -20,12 +21,15 @@ public class LoadBaseDataView extends BaseView implements View {
     @Autowired
     private LoadBaseDataPresenter handler;
 
-    Button loadData = new Button("Load Data");
-    TextArea results = new TextArea();
+    private Label description = new Label("Load base rights, roles, and example users");
+    private Button loadData = new Button("Load Data");
+    private TextArea results = new TextArea();
 
     @PostConstruct
     void init() {
         handler.setView(this);
+        setSizeFull();
+        addComponent(description);
         addComponent(loadData);
         addComponent(results);
         results.setSizeFull();

@@ -28,6 +28,7 @@ public class ImportAttendeeView extends BaseView implements View {
     @PostConstruct
     public void init() {
         handler.setView(this);
+        setSizeFull();
 
         addComponent(instructions);
         ImportAttendeePresenter.UploadReceiver receiver = handler.getUploadReceiver();
@@ -35,9 +36,11 @@ public class ImportAttendeeView extends BaseView implements View {
         upload.addSucceededListener(receiver);
         upload.addFailedListener(receiver);
         addComponent(upload);
-        status.setWidth(500, Sizeable.Unit.PIXELS);
+        status.setSizeFull();
+        status.setWidth(600, Sizeable.Unit.PIXELS);
         status.setEnabled(false);
         addComponent(status);
+        setExpandRatio(status, 1.0f);
     }
 
     public void setHandler(ImportAttendeePresenter presenter) {
