@@ -71,7 +71,7 @@ public class OrderPresenter {
         KumoRegUI.getCurrent().addWindow(attendeeWindow);
 
         AttendeeDetailForm form = attendeeWindow.getDetailForm();
-        form.setAvailableBadges(badgeRepository.findAll());
+        form.setAvailableBadges(badgeRepository.findByVisibleTrue());
 
         form.show(newAttendee);
         form.setManualPriceEnabled(view.currentUserHasRight("attendee_override_price"));
@@ -133,7 +133,7 @@ public class OrderPresenter {
         AttendeeWindow attendeeWindow = new AttendeeWindow(this);
         KumoRegUI.getCurrent().addWindow(attendeeWindow);
         AttendeeDetailForm form = attendeeWindow.getDetailForm();
-        form.setAvailableBadges(badgeRepository.findAll());
+        form.setAvailableBadges(badgeRepository.findByVisibleTrue());
         form.show(attendee);
     }
 

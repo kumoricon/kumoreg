@@ -77,7 +77,8 @@ public class AttendeeDetailForm extends GridLayout {
 
 
         badge.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
-            if (!badge.isReadOnly() && !badge.isEmpty()) {      // Field is read only when values are being added
+            // Field is read only when values are being added
+            if (!badge.isReadOnly() && !badge.isEmpty() && !birthDate.isEmpty()) {
                 Badge thisBadge = (Badge) badge.getConvertedValue();
                 try {
                     paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
@@ -235,10 +236,14 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     protected static Integer getAgeFromDate(Date birthDate) {
-        LocalDate bd = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Integer age = Period.between(bd, LocalDate.now()).getYears();
-        if (age < 0) { age = 0; }
-        return age;
+        if (birthDate != null) {
+            LocalDate bd = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Integer age = Period.between(bd, LocalDate.now()).getYears();
+            if (age < 0) { age = 0; }
+            return age;
+        } else {
+            return null;
+        }
     }
 
     public void commit() throws FieldGroup.CommitException {

@@ -9,4 +9,5 @@ import java.util.List;
 public interface BadgeRepository extends JpaRepository<Badge, Integer> {
     List<Badge> findByNameStartsWithIgnoreCase(String name);
     Badge findOneByNameIgnoreCase(String name);
+    List<Badge> findByVisibleTrue();
 }
