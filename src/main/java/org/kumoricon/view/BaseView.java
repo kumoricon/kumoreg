@@ -40,6 +40,9 @@ public class BaseView extends VerticalLayout implements View {
         return false;
     }
 
+    public void notify(String message) { Notification.show(message); }
+    public void notifyError(String message) { Notification.show(message, Notification.Type.ERROR_MESSAGE); }
+
     @PostConstruct
     protected void initLayout() {
         // For every [child] view, do this:

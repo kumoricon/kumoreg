@@ -1,7 +1,6 @@
 package org.kumoricon.presenter.attendee;
 
 import com.vaadin.navigator.Navigator;
-import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -46,7 +45,7 @@ public class PreRegSearchPresenter {
             }
             view.afterSuccessfulFetch(attendees);
             if (attendees.isEmpty()) {
-                Notification.show("No matching attendees found");
+                view.notify("No matching attendees found");
             }
         }
     }

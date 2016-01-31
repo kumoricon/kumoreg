@@ -1,6 +1,5 @@
 package org.kumoricon.presenter;
 
-import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.view.LoginView;
 import org.kumoricon.view.LogoutView;
@@ -25,6 +24,6 @@ public class LogoutPresenter {
         ui.setLoggedInUser(null);
         ui.removeMenu();
         ui.getNavigator().navigateTo(LoginView.VIEW_NAME);
-        Notification.show("Logged out");
+        view.notify("Logged out");
     }
 }

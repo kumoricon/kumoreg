@@ -1,7 +1,6 @@
 package org.kumoricon.presenter.user;
 
 import com.vaadin.navigator.Navigator;
-import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
@@ -91,10 +90,10 @@ public class UserPresenter {
         user.setPassword("password");
         try {
             userRepository.save(user);
-            Notification.show("Password reset for " + user.getUsername());
+            userView.notify("Password reset for " + user.getUsername());
             cancelUser();
         } catch (Exception e) {
-            Notification.show(e.getMessage());
+            userView.notifyError(e.getMessage());
         }
     }
 

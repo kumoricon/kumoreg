@@ -1,6 +1,5 @@
 package org.kumoricon.presenter.order;
 
-import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -50,7 +49,7 @@ public class OrderPresenter {
         if (order != null) {
             view.afterSuccessfulFetch(order);
         } else {
-            Notification.show("Error: order " + id + " not found.");
+            view.notifyError("Error: order " + id + " not found.");
         }
     }
 
@@ -107,7 +106,7 @@ public class OrderPresenter {
             order.setTotalAmount(getOrderTotal(order));
             orderRepository.save(order);
             attendeeRepository.delete(attendee);
-            Notification.show(name + " deleted");
+            view.notify(name + " deleted");
             view.afterSuccessfulFetch(order);
         }
     }
@@ -115,11 +114,11 @@ public class OrderPresenter {
     public void takeMoney() {
         Order currentOrder = view.getOrder();
         if (currentOrder.getAttendeeList().size() == 0) {
-            Notification.show("Error: No attendees in order");
+            view.notify("Error: No attendees in order");
             return;
         }
         if (currentOrder.getPaymentType() == null) {
-            Notification.show("Error: Payment type not selected");
+            view.notify("Error: Payment type not selected");
             return;
         }
 
@@ -127,7 +126,7 @@ public class OrderPresenter {
         currentOrder.paymentComplete();
         orderRepository.save(currentOrder);
         KumoRegUI.getCurrent().getNavigator().navigateTo("/");
-        Notification.show("Order complete");
+        view.notify("Order complete");
     }
 
     public void selectAttendee(Attendee attendee) {

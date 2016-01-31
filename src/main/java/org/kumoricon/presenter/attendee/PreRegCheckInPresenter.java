@@ -1,6 +1,5 @@
 package org.kumoricon.presenter.attendee;
 
-import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -53,24 +52,24 @@ public class PreRegCheckInPresenter {
                                                                     // but still needs to be set.
         attendee.setCheckedIn(true);
         attendeeRepository.save(attendee);
-        Notification.show(String.format("%s %s is checked in", attendee.getFirstName(), attendee.getLastName()));
+        view.notify(String.format("%s %s is checked in", attendee.getFirstName(), attendee.getLastName()));
         KumoRegUI.getCurrent().getNavigator().navigateTo(PreRegSearchView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
 
     }
 
     public void badgePrintFailed() {
-        Notification.show("Reprinting badge...");
+        view.notify("Reprinting badge...");
     }
 
     public Boolean validateBeforeCheckIn(Attendee attendee) {
         if (attendee.isMinor()) {
             if (!view.parentalConsentFormReceived()) {
-                Notification.show("Error: Parental consent form has not been received");
+                view.notify("Error: Parental consent form has not been received");
                 return false;
             }
         }
         if (!view.informationVerified()) {
-            Notification.show("Error: Information not verified");
+            view.notify("Error: Information not verified");
             return false;
         }
         return true;

@@ -1,6 +1,5 @@
 package org.kumoricon.presenter.attendee;
 
-import com.vaadin.ui.Notification;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -32,14 +31,14 @@ public class AttendeeDetailPresenter {
             form.setAvailableBadges(badgeRepository.findAll());
             form.show(attendee);
         } else {
-            Notification.show("Error: attendee " + id + " not found.");
+            view.notify("Error: attendee " + id + " not found.");
         }
     }
 
     public void saveAttendee() {
         Attendee attendee = view.getAttendee();
         attendee = attendeeRepository.save(attendee);
-        Notification.show(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
+        view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
         KumoRegUI.getCurrent().getNavigator().navigateTo("");
     }
 

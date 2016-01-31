@@ -1,8 +1,6 @@
 package org.kumoricon.presenter.importAttendee;
 
 
-import com.vaadin.server.Page;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -55,17 +53,13 @@ public class ImportAttendeePresenter {
                 file = new File("/tmp/" + filename);
                 fos = new FileOutputStream(file);
             } catch (final java.io.FileNotFoundException e) {
-                new Notification("Could not open file<br/>",
-                        e.getMessage(),
-                        Notification.Type.ERROR_MESSAGE)
-                        .show(Page.getCurrent());
+                view.notifyError("Could not open file<br/>" + e.getMessage());
                 return null;
             }
             return fos; // Return the output stream to write to
         }
 
         public void uploadSucceeded(Upload.SucceededEvent event) {
-//            Notification.show(file.getAbsolutePath() + " saved");
             AttendeeImporter importer = new AttendeeImporter(attendeeRepository, orderRepository, badgeRepository, userRepository);
             view.clearStatus();
             String result = "";
@@ -83,7 +77,7 @@ public class ImportAttendeePresenter {
         }
 
         public void uploadFailed(Upload.FailedEvent event) {
-            Notification.show(event.toString());
+            view.notifyError(event.toString());
         }
     };
 
