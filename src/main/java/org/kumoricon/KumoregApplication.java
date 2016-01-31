@@ -30,12 +30,12 @@ public class KumoregApplication {
             if (adminRight == null && rightRepository.findAll().size() == 0) {
                 log.info("No rights found, creating 'admin' right");
                 adminRight = new Right("super_admin");
-                rightRepository.save(adminRight);
+                adminRight = rightRepository.save(adminRight);
                 if (roleRepository.findAll().size() == 0) {
                     log.info("Creating admin role");
                     Role adminRole = new Role("Admin");
                     adminRole.addRight(adminRight);
-                    roleRepository.save(adminRole);
+                    adminRole = roleRepository.save(adminRole);
                 }
             }
 
@@ -47,7 +47,7 @@ public class KumoregApplication {
                 defaultUser.setUsername("admin");
                 defaultUser.setPassword("password");
                 defaultUser.setRole(adminRole);
-                userRepository.save(defaultUser);
+                defaultUser = userRepository.save(defaultUser);
             }
 
         };

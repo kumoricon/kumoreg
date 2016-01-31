@@ -31,11 +31,14 @@ public class User implements Serializable {
     @ManyToOne(cascade=CascadeType.MERGE)
     private Role role;
     private String salt;
+    @NotNull
+    private Integer lastBadgeNumberCreated;
 
     public User() {
         this.id = null;
         this.salt = "TempSalt"; // Todo: randomly generate salt
         this.enabled = true;
+        this.lastBadgeNumberCreated = 0;
     }
 
     public User(String firstName, String lastName) {
@@ -77,6 +80,13 @@ public class User implements Serializable {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public Integer getLastBadgeNumberCreated() { return lastBadgeNumberCreated; }
+    public void setLastBadgeNumberCreated(Integer lastBadgeNumberCreated) { this.lastBadgeNumberCreated = lastBadgeNumberCreated; }
+    public Integer getNextBadgeNumber() {
+        if (lastBadgeNumberCreated == null) { lastBadgeNumberCreated = 0; }
+        return ++lastBadgeNumberCreated;
+    }
 
     private static String hashPassword(String password, String salt){
         char[] passwordChars = password.toCharArray();

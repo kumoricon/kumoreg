@@ -4,9 +4,11 @@ package org.kumoricon.presenter.importAttendee;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
+import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.importAttendee.ImportAttendeeView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -29,6 +31,9 @@ public class ImportAttendeePresenter {
 
     @Autowired
     private BadgeRepository badgeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private ImportAttendeeView view;
 
@@ -61,11 +66,13 @@ public class ImportAttendeePresenter {
 
         public void uploadSucceeded(Upload.SucceededEvent event) {
 //            Notification.show(file.getAbsolutePath() + " saved");
-            AttendeeImporter importer = new AttendeeImporter(attendeeRepository, orderRepository, badgeRepository);
+            AttendeeImporter importer = new AttendeeImporter(attendeeRepository, orderRepository, badgeRepository, userRepository);
             view.clearStatus();
             String result = "";
+            KumoRegUI ui = (KumoRegUI) view.getUI();
+
             try {
-                result = importer.importFromTSV(new FileReader(file));
+                result = importer.importFromTSV(new FileReader(file), ui.getLoggedInUser());
             } catch (Exception e) {
                 result = e.getMessage();
             } finally {
@@ -79,6 +86,7 @@ public class ImportAttendeePresenter {
             Notification.show(event.toString());
         }
     };
+
     public ImportAttendeeView getView() { return view; }
     public void setView(ImportAttendeeView view) { this.view = view; }
 }

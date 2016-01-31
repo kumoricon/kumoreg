@@ -155,4 +155,25 @@ public class Attendee implements Serializable {
     public String toString() {
         return String.format("%s %s (Birthdate: %s)", firstName, lastName, birthDate);
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if ( !(other instanceof Attendee) ) return false;
+
+        final Attendee otherAttendee = (Attendee) other;
+
+        if (!id.equals(otherAttendee.getId())) return false;
+        if (!badgeNumber.equals(otherAttendee.getBadgeNumber())) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result =0;
+        if (id != null) { result = id.hashCode(); }
+        if (badgeNumber != null) { result = (result * 29) + badgeNumber.hashCode(); }
+        return result;
+    }
 }

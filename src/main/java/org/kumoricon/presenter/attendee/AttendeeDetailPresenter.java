@@ -38,7 +38,7 @@ public class AttendeeDetailPresenter {
 
     public void saveAttendee() {
         Attendee attendee = view.getAttendee();
-        attendeeRepository.save(attendee);
+        attendee = attendeeRepository.save(attendee);
         Notification.show(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
         KumoRegUI.getCurrent().getNavigator().navigateTo("");
     }

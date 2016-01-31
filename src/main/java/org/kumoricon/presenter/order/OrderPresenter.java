@@ -7,6 +7,8 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.user.User;
+import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.attendee.AttendeeDetailForm;
 import org.kumoricon.view.order.AttendeeWindow;
 import org.kumoricon.view.order.OrderView;
@@ -27,6 +29,9 @@ public class OrderPresenter {
 
     @Autowired
     private AttendeeRepository attendeeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private OrderView view;
 
@@ -61,7 +66,7 @@ public class OrderPresenter {
 
     public void addNewAttendee() {
         Attendee newAttendee = new Attendee();
-//        newAttendee.setBadgeNumber("AB23236");        // Set to next badge number across system
+        newAttendee.setBadgeNumber(generateBadgeNumber());
         newAttendee.setOrder(view.getOrder());
         AttendeeWindow attendeeWindow = new AttendeeWindow(this);
         KumoRegUI.getCurrent().addWindow(attendeeWindow);
@@ -77,7 +82,7 @@ public class OrderPresenter {
         Order order = view.getOrder();
         order.addAttendee(attendee);
         order.setTotalAmount(getOrderTotal(order));
-        orderRepository.save(order);
+        order = orderRepository.save(order);
         view.afterSuccessfulFetch(order);
     }
 
@@ -131,5 +136,16 @@ public class OrderPresenter {
         AttendeeDetailForm form = attendeeWindow.getDetailForm();
         form.setAvailableBadges(badgeRepository.findAll());
         form.show(attendee);
+    }
+
+    private String generateBadgeNumber() {
+        KumoRegUI ui = (KumoRegUI) view.getUI();
+        User user = userRepository.findOne(ui.getLoggedInUser().getId());
+        StringBuilder output = new StringBuilder();
+        output.append(user.getFirstName().charAt(0));
+        output.append(user.getLastName().charAt(0));
+        output.append(String.format("%1$05d", user.getNextBadgeNumber()));
+        userRepository.save(user);
+        return output.toString().toUpperCase();
     }
 }

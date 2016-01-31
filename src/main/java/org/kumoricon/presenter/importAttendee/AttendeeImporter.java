@@ -6,6 +6,8 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.user.User;
+import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +27,16 @@ public class AttendeeImporter {
 
     private BadgeRepository badgeRepository;
 
+    private UserRepository userRepository;
+
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(AttendeeImporter.class);
 
-    public AttendeeImporter(AttendeeRepository attendeeRepository, OrderRepository orderRepository, BadgeRepository badgeRepository) {
+    public AttendeeImporter(AttendeeRepository attendeeRepository, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.badgeRepository = badgeRepository;
+        this.userRepository = userRepository;
     }
 
     private HashMap<String, Badge> getBadgeHashMap() {
@@ -50,7 +55,7 @@ public class AttendeeImporter {
         return orders;
     }
 
-    public String importFromTSV(Reader inputReader) throws Exception {
+    public String importFromTSV(Reader inputReader, User user) throws Exception {
         log.info("Starting data import");
         BufferedReader TSVFile = new BufferedReader(inputReader);
         String dataRow = TSVFile.readLine(); // Skip the header row
@@ -60,6 +65,7 @@ public class AttendeeImporter {
 
         HashMap<String, Badge> badges = getBadgeHashMap();
         HashMap<String, Order> orders = getOrderHashMap();
+        User currentUser = userRepository.findOne(user.getId());
 
         while (dataRow != null){
             if (lineNumber % 1000 == 0) { log.info("Read " + lineNumber + " lines"); }
@@ -74,7 +80,11 @@ public class AttendeeImporter {
             attendee.setFirstName(dataArray[0]);
             attendee.setLastName(dataArray[1]);
             attendee.setBadgeName(dataArray[2]);
-            attendee.setBadgeNumber(dataArray[3]);
+            if (dataArray[3].trim().equals("")) {
+                attendee.setBadgeNumber(generateBadgeNumber(currentUser.getNextBadgeNumber()));
+            } else {
+                attendee.setBadgeNumber(dataArray[3]);
+            }
             attendee.setZip(dataArray[4]);
             attendee.setCountry(dataArray[5]);
             attendee.setPhoneNumber(dataArray[6]);
@@ -141,7 +151,18 @@ public class AttendeeImporter {
 
         log.info("Saving " + ordersToAdd.size() + " orders and " + attendeesToAdd.size() + " attendees to database");
         orderRepository.save(ordersToAdd);
+
+        userRepository.save(currentUser);
+
         log.info("Done importing data");
         return String.format("Imported %s attendees and %s orders", attendeesToAdd.size(), ordersToAdd.size());
     }
+
+    private String generateBadgeNumber(Integer badgeNumber) {
+        StringBuilder output = new StringBuilder();
+        output.append("ONL");
+        output.append(String.format("%1$05d", badgeNumber));
+        return output.toString().toUpperCase();
+    }
+
 }
