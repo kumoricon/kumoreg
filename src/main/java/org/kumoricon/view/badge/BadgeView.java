@@ -108,7 +108,9 @@ public class BadgeView extends BaseView implements View {
         form.addComponent(name);
         form.addComponent(dayText);
         form.addComponent(waringMessage);
+        waringMessage.setDescription("Displayed when attendee with this badge type checks in");
         form.addComponent(visible);
+        visible.setDescription("This badge type may be selected when checking in/editing attendees");
 
         badgeBeanFieldGroup.bind(name, "name");
         badgeBeanFieldGroup.bind(dayText, "dayText");
