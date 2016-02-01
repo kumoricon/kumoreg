@@ -16,6 +16,7 @@ Available rights are:
 | attendee_override_price | Can manually set price for attendee                             |
 | print_badge             | Can print badge on attendee checkin                             |
 | reprint_badge           | Can reprint attendee badges after attendee is checked in        |
+| badge_type_press        | Can select the "Press" badge type                               |
 |                         |                                                                 |
 | view_attendance_report  | Can view attendance report (counts only)                        |
 | view_revenue_report     | Can view revenue report                                         |
@@ -27,7 +28,7 @@ Available rights are:
 | manage_roles            | Can add/edit security roles                                     |
 | manage_devices          | Can add/edit devices (computer/printer mappings)                |
 | import_pre_reg_data     | Import pre-registered attendees and orders                      |
-| load_test_data          | Loads example data (users, roles, rights)                       |
+| load_base_data          | Loads default data (users, roles, rights)                       |
 | super_admin             | Override - can do everything                                    |
 
 

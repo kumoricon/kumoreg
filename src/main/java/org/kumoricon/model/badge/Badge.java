@@ -22,6 +22,7 @@ public class Badge {
     private boolean visible;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AgeRange> ageRanges;
+    private String requiredRight;       // Only show to users who have this right, or all if null
 
     public Badge() {
         visible = true;
@@ -44,6 +45,9 @@ public class Badge {
 
     public boolean isVisible() { return visible; }
     public void setVisible(boolean visible) { this.visible = visible; }
+
+    public String getRequiredRight() { return requiredRight; }
+    public void setRequiredRight(String requiredRight) { this.requiredRight = requiredRight; }
 
     public String getWarningMessage() { return warningMessage; }
     public void setWarningMessage(String warningMessage) { this.warningMessage = warningMessage; }

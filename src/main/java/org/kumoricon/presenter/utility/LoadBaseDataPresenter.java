@@ -47,13 +47,15 @@ public class LoadBaseDataPresenter {
     }
 
     private Boolean targetTablesAreEmpty() {
-        if (rightRepository.count() > 0) {
+        // Abort if there is more than one right, role, or user - it should just have the admin user
+        // with the Admin role and super_admin right.
+        if (rightRepository.count() > 1) {
             view.addResult("Error: rights table not empty. Aborting.");
             return false;
-        } else if (roleRepository.count() > 0) {
+        } else if (roleRepository.count() > 1) {
             view.addResult("Error: roles table not empty. Aborting.");
             return false;
-        } else if (userRepository.count() > 0) {
+        } else if (userRepository.count() > 1) {
             view.addResult("Error: users table not empty. Aborting.");
             return false;
         } else if (badgeRepository.count() > 0) {
@@ -70,7 +72,7 @@ public class LoadBaseDataPresenter {
     private void addRights() {
         view.addResult("Creating rights");
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
-                "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
+                "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",  "badge_type_press",
                 "view_attendance_report", "view_revenue_report", "view_staff_report", "manage_staff",
                 "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data", "load_base_data"};
 
@@ -150,6 +152,13 @@ public class LoadBaseDataPresenter {
             view.addResult("    Creating " + badge.toString());
             badgeRepository.save(badge);
         }
+
+        // Create badge types with security restrictions below
+        Badge press = BadgeFactory.badgeFactory("Press", "Weekend", 0f, 0f, 0f);
+        press.setRequiredRight("badge_type_press");
+        view.addResult("    Creating " + press.toString());
+        badgeRepository.save(press);
+
     }
 
     private HashMap<String, Right> getRightsHashMap() {

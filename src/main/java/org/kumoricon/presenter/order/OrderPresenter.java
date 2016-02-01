@@ -3,6 +3,7 @@ package org.kumoricon.presenter.order;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
+import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
@@ -16,6 +17,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @Scope("request")
@@ -67,14 +70,7 @@ public class OrderPresenter {
         Attendee newAttendee = new Attendee();
         newAttendee.setBadgeNumber(generateBadgeNumber());
         newAttendee.setOrder(view.getOrder());
-        AttendeeWindow attendeeWindow = new AttendeeWindow(this);
-        KumoRegUI.getCurrent().addWindow(attendeeWindow);
-
-        AttendeeDetailForm form = attendeeWindow.getDetailForm();
-        form.setAvailableBadges(badgeRepository.findByVisibleTrue());
-
-        form.show(newAttendee);
-        form.setManualPriceEnabled(view.currentUserHasRight("attendee_override_price"));
+        selectAttendee(newAttendee);
     }
 
     public void addAttendeeToOrder(Attendee attendee) {
@@ -104,7 +100,8 @@ public class OrderPresenter {
             attendee.setOrder(null);
 
             order.setTotalAmount(getOrderTotal(order));
-            orderRepository.save(order);
+            Order result = orderRepository.save(order);
+            view.afterSuccessfulFetch(result);
             attendeeRepository.delete(attendee);
             view.notify(name + " deleted");
             view.afterSuccessfulFetch(order);
@@ -133,9 +130,19 @@ public class OrderPresenter {
         AttendeeWindow attendeeWindow = new AttendeeWindow(this);
         KumoRegUI.getCurrent().addWindow(attendeeWindow);
         AttendeeDetailForm form = attendeeWindow.getDetailForm();
-        form.setAvailableBadges(badgeRepository.findByVisibleTrue());
+        List<Badge> badgeTypesUserCanSee = new ArrayList<>();
+        for (Badge badge : badgeRepository.findByVisibleTrue()) {
+            if (badge.getRequiredRight() == null || view.currentUserHasRight(badge.getRequiredRight())) {
+                badgeTypesUserCanSee.add(badge);
+            }
+        }
+        form.setAvailableBadges(badgeTypesUserCanSee);
+
+        form.setManualPriceEnabled(view.currentUserHasRight("attendee_override_price"));
+
         form.show(attendee);
     }
+
 
     private String generateBadgeNumber() {
         KumoRegUI ui = (KumoRegUI) view.getUI();

@@ -32,6 +32,7 @@ public class BadgeView extends BaseView implements View {
 
     private TextField dayText = FieldFactory.createTextField("Day Text");
     private TextField waringMessage = FieldFactory.createTextField("Warning message");
+    private TextField requiredRight = FieldFactory.createDisabledTextField("Required Right");
     private CheckBox visible = new CheckBox("Visible");
     private Table tblAgeRanges;
 
@@ -109,12 +110,15 @@ public class BadgeView extends BaseView implements View {
         form.addComponent(dayText);
         form.addComponent(waringMessage);
         waringMessage.setDescription("Displayed when attendee with this badge type checks in");
+        form.addComponent(requiredRight);
+        requiredRight.setDescription("Only show to users with this security right, empty for all users");
         form.addComponent(visible);
         visible.setDescription("This badge type may be selected when checking in/editing attendees");
 
         badgeBeanFieldGroup.bind(name, "name");
         badgeBeanFieldGroup.bind(dayText, "dayText");
         badgeBeanFieldGroup.bind(waringMessage, "warningMessage");
+        badgeBeanFieldGroup.bind(requiredRight, "requiredRight");
         badgeBeanFieldGroup.bind(visible, "visible");
 
         tblAgeRanges = new Table();
