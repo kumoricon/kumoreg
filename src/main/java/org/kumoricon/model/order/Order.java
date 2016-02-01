@@ -1,5 +1,7 @@
 package org.kumoricon.model.order;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 import org.kumoricon.model.attendee.Attendee;
 
@@ -25,6 +27,7 @@ public class Order {
     private Boolean paid;
     private PaymentType paymentType;
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<Attendee> attendeeList;
     private String notes;
 
@@ -99,8 +102,11 @@ public class Order {
         if (this.getId() == null) {
             return this == other;
         } else {
-            Order o = (Order) other;
-            return this.getId().equals(o.getId());
+            final Order o = (Order) other;
+            if (!id.equals(o.getId())) return false;
+            if (!orderId.equals(o.getOrderId())) return false;
+
+            return true;
         }
     }
 
