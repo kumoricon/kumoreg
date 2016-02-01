@@ -25,13 +25,17 @@ public class AttendeeReportPresenter {
 
     public void showReport() {
         StringBuilder sb = new StringBuilder();
-        sb.append("<table border=\"1\"><tr><td>Badge Type</td><td>Checked In</td><td>Not Checked In</td></tr>");
+        sb.append("<table border=\"1\"><tr><td>Badge Type</td>");
+        sb.append("<td>At-Con Checked In</td><td>At-Con Not Checked In</td>");
+        sb.append("<td>Pre Reg Checked In</td><td>Pre Reg Not Checked In</td></tr>");
         List<Object[]> results = attendeeRepository.findBadgeCounts();
         for (Object[] line : results) {
             sb.append("<tr>");
             sb.append("<td>" + line[0].toString() + "</td>");
             sb.append("<td align=\"right\">" + line[1].toString() + "</td>");
             sb.append("<td align=\"right\">" + line[2].toString() + "</td>");
+            sb.append("<td align=\"right\">" + line[3].toString() + "</td>");
+            sb.append("<td align=\"right\">" + line[4].toString() + "</td>");
             sb.append("</tr>");
         }
         sb.append("</table>");
