@@ -31,7 +31,8 @@ public class BaseView extends VerticalLayout implements View {
 
     public Boolean currentUserHasRight(String right) {
         if (right != null) {
-            KumoRegUI ui = (KumoRegUI) getUI();
+            KumoRegUI ui = (KumoRegUI)KumoRegUI.getCurrent();
+            if (ui == null) { return false; }
             User user = ui.getLoggedInUser();
             if (user != null) {
                 return user.hasRight(right);
