@@ -11,6 +11,7 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.attendee.AttendeeDetailForm;
 import org.kumoricon.view.order.AttendeeWindow;
+import org.kumoricon.view.order.CreditCardAuthWindow;
 import org.kumoricon.view.order.OrderView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -119,10 +120,20 @@ public class OrderPresenter {
             return;
         }
 
-        // Print badges here
+        if (currentOrder.getPaymentType().equals(Order.PaymentType.CREDIT)) {
+            CreditCardAuthWindow creditCardAuthWindow = new CreditCardAuthWindow(this);
+            KumoRegUI.getCurrent().addWindow(creditCardAuthWindow);
+        } else {
+            orderComplete(currentOrder);
+        }
+
+    }
+
+    public void orderComplete(Order currentOrder) {
         currentOrder.paymentComplete();
         orderRepository.save(currentOrder);
-        KumoRegUI.getCurrent().getNavigator().navigateTo("/");
+        // Print badges here
+        view.getUI().getNavigator().navigateTo("/");
         view.notify("Order complete");
     }
 
@@ -153,5 +164,13 @@ public class OrderPresenter {
         output.append(String.format("%1$05d", user.getNextBadgeNumber()));
         userRepository.save(user);
         return output.toString().toUpperCase();
+    }
+
+    public void saveAuthNumberClicked(String value) {
+        Order order = view.getOrder();
+        String oldNotes = "";
+        if (order.getNotes() != null) { oldNotes = order.getNotes(); }
+        order.setNotes("Credit card authorization Number: " + value + "\n" + oldNotes);
+        orderComplete(order);
     }
 }
