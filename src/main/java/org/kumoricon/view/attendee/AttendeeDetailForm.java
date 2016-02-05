@@ -201,6 +201,17 @@ public class AttendeeDetailForm extends GridLayout {
         checkBoxes.addComponent(parentIsEmergencyContact);
         checkBoxes.addComponent(parentFormReceived);
 
+        parentIsEmergencyContact.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+            if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
+                parentFullName.setValue(emergencyContactFullName.getValue());
+                parentPhone.setValue(emergencyContactPhone.getValue());
+            } else {
+                parentFullName.setValue(null);
+                parentPhone.setValue(null);
+                parentFullName.focus();
+            }
+        });
+
         f.addComponent(parentFullName);
         f.addComponent(parentPhone);
         f.addComponent(checkBoxes);
