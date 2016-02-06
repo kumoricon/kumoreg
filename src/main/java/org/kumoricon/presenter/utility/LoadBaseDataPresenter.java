@@ -139,10 +139,10 @@ public class LoadBaseDataPresenter {
     private void addBadges() {
         view.addResult("Creating badges");
         String[][] badgeList = {
-                {"Weekend", "55", "45", "35"},
-                {"Friday", "40", "30", "20"},
-                {"Saturday", "40", "30", "20"},
-                {"Sunday", "35", "25", "15"},
+                {"Weekend", "60", "60", "45"},
+                {"Friday", "40", "40", "30"},
+                {"Saturday", "40", "40", "30"},
+                {"Sunday", "30", "30", "20"},
                 {"VIP", "300", "300", "300"}};
         for (String[] currentBadge : badgeList) {
             Badge badge = BadgeFactory.badgeFactory(currentBadge[0], currentBadge[0],
