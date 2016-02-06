@@ -24,7 +24,7 @@ public class AttendeeWindow extends Window {
         this.handler = orderPresenter;
         setIcon(FontAwesome.USER);
         center();
-
+        setModal(true);
         setWidth(1100, Unit.PIXELS);
 
         VerticalLayout verticalLayout = new VerticalLayout();

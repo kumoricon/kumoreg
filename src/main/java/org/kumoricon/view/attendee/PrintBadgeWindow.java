@@ -14,6 +14,7 @@ public class PrintBadgeWindow extends Window {
         super("Print Badge");
         this.handler = preRegCheckInPresenter;
         setIcon(FontAwesome.PRINT);
+        setModal(true);
         center();
 
         VerticalLayout verticalLayout = new VerticalLayout();

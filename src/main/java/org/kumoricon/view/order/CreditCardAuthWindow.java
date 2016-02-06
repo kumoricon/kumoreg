@@ -20,6 +20,7 @@ public class CreditCardAuthWindow extends Window {
         super("Authorization Number");
         this.handler = orderPresenter;
         setIcon(FontAwesome.CREDIT_CARD);
+        setModal(true);
         center();
 
         setWidth(600, Unit.PIXELS);

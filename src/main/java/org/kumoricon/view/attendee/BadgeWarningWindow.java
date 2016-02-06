@@ -15,6 +15,7 @@ public class BadgeWarningWindow extends Window {
         super("Warning");
         this.handler = preRegCheckInPresenter;
         setIcon(FontAwesome.WARNING);
+        setModal(true);
         center();
 
         String warning = attendee.getFirstName() + " " + attendee.getLastName() + ": " +
