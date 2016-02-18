@@ -1,5 +1,6 @@
 package org.kumoricon.model.attendee;
 
+import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 
@@ -175,5 +176,16 @@ public class Attendee implements Serializable {
         if (id != null) { result = id.hashCode(); }
         if (badgeNumber != null) { result = (result * 29) + badgeNumber.hashCode(); }
         return result;
+    }
+
+    public AgeRange getCurrentAgeRange() {
+        if (birthDate != null) {
+            for (AgeRange ageRange : getBadge().getAgeRanges()) {
+                if (ageRange.isValidForAge(getAge())) {
+                    return ageRange;
+                }
+            }
+        }
+        return null;
     }
 }
