@@ -4,6 +4,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
 
@@ -39,6 +40,10 @@ public class BaseView extends VerticalLayout implements View {
             }
         }
         return false;
+    }
+
+    public void showWindow(Window window) {
+        getUI().addWindow(window);
     }
 
     public void notify(String message) { Notification.show(message); }

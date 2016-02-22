@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @Scope("request")
-public class PreRegCheckInPresenter {
+public class PreRegCheckInPresenter implements PrintBadgePresenter {
     @Autowired
     private AttendeeRepository attendeeRepository;
 
@@ -39,9 +42,11 @@ public class PreRegCheckInPresenter {
 
     public void checkInAttendee() {
         attendee = view.getAttendee();
-        printBadgeWindow = new PrintBadgeWindow(this);
+        List<Attendee> attendeeList = new ArrayList<>();
+        attendeeList.add(attendee);
+        printBadgeWindow = new PrintBadgeWindow(this, attendeeList);
         if (validateBeforeCheckIn(attendee)) {
-            KumoRegUI.getCurrent().addWindow(printBadgeWindow);
+            view.showWindow(printBadgeWindow);
         }
     }
 
@@ -57,7 +62,8 @@ public class PreRegCheckInPresenter {
 
     }
 
-    public void badgePrintFailed() {
+    @Override
+    public void reprintBadges(List<Attendee> attendeeList) {
         view.notify("Reprinting badge...");
     }
 
@@ -82,4 +88,9 @@ public class PreRegCheckInPresenter {
 
     public PreRegCheckInView getView() { return view; }
     public void setView(PreRegCheckInView view) { this.view = view; }
+
+    @Override
+    public void showAttendeeBadgeWindow(List<Attendee> attendeeList) {
+
+    }
 }

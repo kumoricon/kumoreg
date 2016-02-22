@@ -60,6 +60,8 @@ public class AttendeeDetailView extends BaseView implements View {
         }
 
         if (currentUserHasRight("attendee_edit") || currentUserHasRight("attendee_edit_notes")) {
+            // Todo: handle prompting for override if current user doesn't have permission to reprint badge
+            // Also, should you be able to edit an attendee with override?
             btnSave.setEnabled(true);
             if (currentUserHasRight("reprint_badge")) {
                 btnSaveAndReprint.setEnabled(true);
@@ -79,7 +81,11 @@ public class AttendeeDetailView extends BaseView implements View {
         h.setSpacing(true);
         btnSave = new Button("Save");
         btnCancel = new Button("Cancel");
-        btnSaveAndReprint = new Button("Save and Reprint Badge");
+        if (currentUserHasRight("reprint_badge")) {
+            btnSaveAndReprint = new Button("Save and Reprint Badge");
+        } else {
+            btnSaveAndReprint = new Button("Reprint Badge (Override)");
+        }
 
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
@@ -90,7 +96,7 @@ public class AttendeeDetailView extends BaseView implements View {
             }
         });
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee());
-        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent -> handler.saveAttendeeAndRepreintBadge());
+        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent -> handler.saveAttendeeAndReprintBadge());
         h.addComponent(btnSave);
         h.addComponent(btnSaveAndReprint);
         h.addComponent(btnCancel);

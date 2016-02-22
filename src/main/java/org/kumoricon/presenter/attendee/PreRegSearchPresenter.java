@@ -56,7 +56,7 @@ public class PreRegSearchPresenter {
         } else {
             if (!attendee.getBadge().getWarningMessage().trim().equals("")) {
                 warningWindow = new BadgeWarningWindow(this, attendee);
-                KumoRegUI.getCurrent().addWindow(warningWindow);
+                view.showWindow(warningWindow);
             } else {
                 continueCheckIn(attendee);
             }

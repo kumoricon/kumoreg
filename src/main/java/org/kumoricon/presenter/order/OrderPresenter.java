@@ -122,7 +122,7 @@ public class OrderPresenter {
 
         if (currentOrder.getPaymentType().equals(Order.PaymentType.CREDIT)) {
             CreditCardAuthWindow creditCardAuthWindow = new CreditCardAuthWindow(this);
-            KumoRegUI.getCurrent().addWindow(creditCardAuthWindow);
+            view.showWindow(creditCardAuthWindow);
         } else {
             orderComplete(currentOrder);
         }
@@ -139,7 +139,7 @@ public class OrderPresenter {
 
     public void selectAttendee(Attendee attendee) {
         AttendeeWindow attendeeWindow = new AttendeeWindow(this);
-        KumoRegUI.getCurrent().addWindow(attendeeWindow);
+        view.showWindow(attendeeWindow);
         AttendeeDetailForm form = attendeeWindow.getDetailForm();
         List<Badge> badgeTypesUserCanSee = new ArrayList<>();
         for (Badge badge : badgeRepository.findByVisibleTrue()) {
