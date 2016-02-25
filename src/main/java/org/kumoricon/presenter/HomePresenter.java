@@ -21,7 +21,9 @@ public class HomePresenter {
 
     public void showBadges() {
         List<Badge> badges = badgeRepository.findByVisibleTrue();
-        view.showBadges(badges);
+        if (badges.size() > 0) {
+            view.showBadges(badges);
+        }
     }
 
     public HomeView getView() { return view; }
