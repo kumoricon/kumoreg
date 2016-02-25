@@ -85,7 +85,8 @@ public class BadgeView extends BaseView implements View {
         leftPanel.setSpacing(true);
         badgeList.setCaption("Roles");
         badgeList.setNullSelectionAllowed(false);
-        badgeList.setWidth(200, Unit.PIXELS);
+        badgeList.setWidth(300, Unit.PIXELS);
+        badgeList.setHeight(150, Unit.PIXELS);
         badgeList.setImmediate(true);
         leftPanel.addComponent(badgeList);
         leftPanel.addComponent(btnAddNew);

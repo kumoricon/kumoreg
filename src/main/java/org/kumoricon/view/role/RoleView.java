@@ -82,7 +82,7 @@ public class RoleView extends BaseView implements View {
         leftPanel.setSpacing(true);
         roleList.setCaption("Roles");
         roleList.setNullSelectionAllowed(false);
-        roleList.setWidth(200, Unit.PIXELS);
+        roleList.setWidth(500, Unit.PIXELS);
         roleList.setImmediate(true);
         leftPanel.addComponent(roleList);
         leftPanel.addComponent(btnAddNew);

@@ -38,8 +38,8 @@ public class StaffReportView extends BaseView implements View {
         handler.showUserList();
         dataGrid.setColumns(new String[] {"lastName", "firstName", "username", "phone", "role"});
         dataGrid.setEditorEnabled(false);
-        setExpandRatio(dataGrid, 1f);
-        dataGrid.setSizeFull();
+        setExpandRatio(dataGrid, .9f);
+        dataGrid.setWidth(90, Unit.PERCENTAGE);
     }
 
     public void afterSuccessfulFetch(List<User> users) {

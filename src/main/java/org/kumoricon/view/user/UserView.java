@@ -85,7 +85,7 @@ public class UserView extends BaseView implements View {
         leftPanel.setSpacing(true);
         userList.setCaption("Users");
         userList.setNullSelectionAllowed(false);
-        userList.setWidth(200, Unit.PIXELS);
+        userList.setWidth(500, Unit.PIXELS);
         userList.setImmediate(true);
         leftPanel.addComponent(userList);
         leftPanel.addComponent(btnAddNew);
