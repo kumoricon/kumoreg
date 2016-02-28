@@ -72,9 +72,10 @@ public class LoadBaseDataPresenter {
     private void addRights() {
         view.addResult("Creating rights");
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
-                "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",  "badge_type_press",
-                "view_attendance_report", "view_revenue_report", "view_staff_report", "manage_staff",
-                "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data", "load_base_data"};
+                "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
+                "reprint_badge_with_override", "badge_type_press", "view_attendance_report", "view_revenue_report",
+                "view_staff_report", "manage_staff", "manage_pass_types", "manage_roles", "manage_devices",
+                "import_pre_reg_data", "load_base_data"};
 
         for (String right : rights) {
             rightRepository.save(new Right(right));
@@ -84,7 +85,8 @@ public class LoadBaseDataPresenter {
     private void addRoles() {
         view.addResult("Creating roles");
         HashMap<String, String[]> roles = new HashMap<>();
-        roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge"});
+        roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
+                                         "reprint_badge_with_override"});
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                                                "print_badge", "attendee_edit", "attendee_edit_notes",
                                                "attendee_override_price", "reprint_badge", "view_staff_report"});

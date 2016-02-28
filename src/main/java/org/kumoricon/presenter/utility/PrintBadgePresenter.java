@@ -3,7 +3,7 @@ package org.kumoricon.presenter.utility;
 import com.vaadin.ui.Window;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeFactory;
-import org.kumoricon.presenter.attendee.PrintBadgePresenter;
+import org.kumoricon.presenter.attendee.PrintBadgeHandler;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.kumoricon.view.utility.TestBadgeView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 @Scope("request")
-public class TestBadgePresenter implements PrintBadgePresenter {
+public class PrintBadgePresenter implements PrintBadgeHandler {
 
     private TestBadgeView view;
 
@@ -24,7 +24,7 @@ public class TestBadgePresenter implements PrintBadgePresenter {
 
     private Window printBadgeWindow;
 
-    public TestBadgePresenter() {}
+    public PrintBadgePresenter() {}
 
     public void setView(TestBadgeView view) {
         this.view = view;

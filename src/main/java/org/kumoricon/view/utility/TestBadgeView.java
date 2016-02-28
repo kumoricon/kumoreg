@@ -4,7 +4,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.presenter.utility.TestBadgePresenter;
+import org.kumoricon.presenter.utility.PrintBadgePresenter;
 import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,7 +17,7 @@ public class TestBadgeView extends BaseView implements View {
     public static final String REQUIRED_RIGHT = null;
 
     @Autowired
-    private TestBadgePresenter handler;
+    private PrintBadgePresenter handler;
 
     @PostConstruct
     public void init() {

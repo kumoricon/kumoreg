@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @Scope("request")
-public class PreRegCheckInPresenter implements PrintBadgePresenter {
+public class PreRegCheckInPresenter implements PrintBadgeHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
 

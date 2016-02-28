@@ -7,7 +7,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.presenter.attendee.PreRegCheckInPresenter;
-import org.kumoricon.presenter.attendee.PrintBadgePresenter;
+import org.kumoricon.presenter.attendee.PrintBadgeHandler;
 import org.kumoricon.util.BadgeGenerator;
 
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ public class PrintBadgeWindow extends Window {
     Grid attendeeGrid;
     BeanItemContainer<Attendee> container;
 
-    private PrintBadgePresenter handler;
+    private PrintBadgeHandler handler;
 
-    public PrintBadgeWindow(PrintBadgePresenter preRegCheckInPresenter, List<Attendee> attendeeList) {
+    public PrintBadgeWindow(PrintBadgeHandler preRegCheckInPresenter, List<Attendee> attendeeList) {
         super("Reprint Badges");
         this.handler = preRegCheckInPresenter;
         setIcon(FontAwesome.PRINT);
@@ -100,6 +100,6 @@ public class PrintBadgeWindow extends Window {
     }
 
 
-    public PrintBadgePresenter getHandler() { return handler; }
+    public PrintBadgeHandler getHandler() { return handler; }
     public void setHandler(PreRegCheckInPresenter handler) { this.handler = handler; }
 }
