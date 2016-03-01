@@ -130,7 +130,7 @@ public class OrderPresenter {
     }
 
     public void orderComplete(Order currentOrder) {
-        currentOrder.paymentComplete();
+        currentOrder.paymentComplete(view.getCurrentUser());
         orderRepository.save(currentOrder);
         // Print badges here
         view.getUI().getNavigator().navigateTo("/");

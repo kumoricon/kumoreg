@@ -4,11 +4,13 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -30,6 +32,11 @@ public class Order {
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Attendee> attendeeList;
     private String notes;
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private User paymentTakenByUser;
+    private LocalDate paidAt;
+    private Integer paidSession;
 
     public enum PaymentType {
         CASH {
@@ -87,11 +94,16 @@ public class Order {
         return output.toString();
     }
 
-    public void paymentComplete() {
-        paid = true;
-        for (Attendee attendee : attendeeList) {
-            attendee.setCheckedIn(true);
-            attendee.setPaid(true);
+    public void paymentComplete(User currentUser) {
+        if (currentUser != null) {
+            paid = true;
+            paidAt = LocalDate.now();
+            paidSession = currentUser.getSessionNumber();
+            paymentTakenByUser = currentUser;
+            for (Attendee attendee : attendeeList) {
+                attendee.setCheckedIn(true);
+                attendee.setPaid(true);
+            }
         }
     }
 

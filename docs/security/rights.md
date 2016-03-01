@@ -8,7 +8,7 @@ Available rights are:
 
 | Name                        | Description                                                       |
 |-----------------------------|-------------------------------------------------------------------|
-| at_con_registration         | Can add new attendees via At-Con Registration                     |
+| at_con_registration         | Can add new attendees via At-Con Registration and close till      |
 | pre_reg_check_in            | Can check in preregistered attendees                              |
 | attendee_search             | Can search for and view attendees                                 |
 | attendee_edit               | Can edit attendees from search results                            |

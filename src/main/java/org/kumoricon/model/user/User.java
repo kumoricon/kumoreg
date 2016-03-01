@@ -33,12 +33,15 @@ public class User implements Serializable {
     private String salt;
     @NotNull
     private Integer lastBadgeNumberCreated;
+    @NotNull
+    private Integer sessionNumber;              // Used for printing report when cashing out
 
     public User() {
         this.id = null;
         this.salt = "TempSalt"; // Todo: randomly generate salt
         this.enabled = true;
         this.lastBadgeNumberCreated = 0;
+        this.sessionNumber = 1;
     }
 
     public User(String firstName, String lastName) {
@@ -112,6 +115,8 @@ public class User implements Serializable {
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
+    public Integer getSessionNumber() { return sessionNumber; }
+    public void setSessionNumber(Integer sessionNumber) { this.sessionNumber = sessionNumber; }
 
     public static String generateUserName(String firstName, String lastName) {
         // Remove anything that isn't a letter and combine to first initial + last name

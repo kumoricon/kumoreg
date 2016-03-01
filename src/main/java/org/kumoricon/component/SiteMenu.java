@@ -20,6 +20,7 @@ import org.kumoricon.view.report.RoleReportView;
 import org.kumoricon.view.report.StaffReportView;
 import org.kumoricon.view.role.RoleView;
 import org.kumoricon.view.user.UserView;
+import org.kumoricon.view.utility.CloseOutTillView;
 import org.kumoricon.view.utility.LoadBaseDataView;
 import org.kumoricon.view.utility.TestBadgeView;
 
@@ -81,6 +82,8 @@ public class SiteMenu extends VerticalLayout {
                 buttonFactory("Load Base Data", FontAwesome.DATABASE, LoadBaseDataView.VIEW_NAME));
         addButtonTo(tab3, "import_pre_reg_data",
                 buttonFactory("Import Attendees", FontAwesome.UPLOAD, ImportAttendeeView.VIEW_NAME));
+        addButtonTo(tab3, "at_con_registration",
+                buttonFactory("Close Out Till", FontAwesome.DOLLAR, CloseOutTillView.VIEW_NAME));
         if (tab3.getComponentCount() > 0) { menu.addComponent(tab3); }
 
         addComponent(menu);

@@ -42,6 +42,16 @@ public class BaseView extends VerticalLayout implements View {
         return false;
     }
 
+    public User getCurrentUser() {
+        KumoRegUI ui = (KumoRegUI)KumoRegUI.getCurrent();
+        if (ui == null) { return null; }
+        User user = ui.getLoggedInUser();
+        if (user != null) {
+            return user;
+        }
+        return null;
+    }
+
     public void showWindow(Window window) {
         getUI().addWindow(window);
     }
