@@ -16,7 +16,7 @@ public class User implements Serializable {
     public static final String DEFAULT_PASSWORD = "password";
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
     @Column(unique=true)

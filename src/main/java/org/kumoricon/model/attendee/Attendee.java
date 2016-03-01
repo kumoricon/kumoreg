@@ -16,7 +16,7 @@ import java.util.Date;
 @Table(name = "attendees")
 public class Attendee implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String firstName;
     private String lastName;
@@ -42,7 +42,7 @@ public class Attendee implements Serializable {
     private Order order;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
     @Temporal(TemporalType.TIMESTAMP)
-    public Date checkInTime;           // Timestamp when checked in
+    public Date checkInTime;                    // Timestamp when checked in
     private String notes;
     private boolean preRegistered;              // Did attendee register before con?
 

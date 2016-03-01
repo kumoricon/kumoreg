@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Table(name = "ageranges")
 public class AgeRange {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
     private String name;

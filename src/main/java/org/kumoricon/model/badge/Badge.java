@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "badges")
 public class Badge {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
     private String name;

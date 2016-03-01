@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 @Table(name = "printers")
 public class Printer {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private InetAddress address;
 

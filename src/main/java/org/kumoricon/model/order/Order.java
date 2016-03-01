@@ -10,7 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Length(min = 32, max = 32)
     private String orderId;
@@ -35,7 +35,7 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     @NotFound(action = NotFoundAction.IGNORE)
     private User paymentTakenByUser;
-    private LocalDate paidAt;
+    private LocalDateTime paidAt;
     private Integer paidSession;
 
     public enum PaymentType {
@@ -83,6 +83,12 @@ public class Order {
     public void removeAttendee(Attendee attendee) {
         this.attendeeList.remove(attendee);
     }
+    public Integer getPaidSession() { return paidSession; }
+    public void setPaidSession(Integer paidSession) { this.paidSession = paidSession; }
+    public User getPaymentTakenByUser() { return paymentTakenByUser; }
+    public void setPaymentTakenByUser(User paymentTakenByUser) { this.paymentTakenByUser = paymentTakenByUser; }
+    public LocalDateTime getPaidAt() { return paidAt; }
+    public void setPaidAt(LocalDateTime paidAt) { this.paidAt = paidAt; }
 
     public static String generateOrderId() {
         String symbols = "abcdefghijklmnopqrstuvwxyz01234567890";
@@ -97,7 +103,7 @@ public class Order {
     public void paymentComplete(User currentUser) {
         if (currentUser != null) {
             paid = true;
-            paidAt = LocalDate.now();
+            paidAt = LocalDateTime.now();
             paidSession = currentUser.getSessionNumber();
             paymentTakenByUser = currentUser;
             for (Attendee attendee : attendeeList) {

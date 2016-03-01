@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Table(name = "rights")
 public class Right implements Serializable, Comparable {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
     @Column(unique=true)

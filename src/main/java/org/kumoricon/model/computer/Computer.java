@@ -7,7 +7,7 @@ import java.net.InetAddress;
 @Table(name = "computers")
 public class Computer {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private java.net.InetAddress address;
     @OneToOne
