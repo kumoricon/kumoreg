@@ -11,9 +11,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "orders")
@@ -89,6 +87,12 @@ public class Order {
     public void setPaymentTakenByUser(User paymentTakenByUser) { this.paymentTakenByUser = paymentTakenByUser; }
     public LocalDateTime getPaidAt() { return paidAt; }
     public void setPaidAt(LocalDateTime paidAt) { this.paidAt = paidAt; }
+
+    public List<Attendee> getAttendees() {
+        List<Attendee> attendees = new ArrayList<>();
+        attendees.addAll(attendeeList);
+        return attendees;
+    }
 
     public static String generateOrderId() {
         String symbols = "abcdefghijklmnopqrstuvwxyz01234567890";

@@ -9,7 +9,9 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.presenter.attendee.PrintBadgeHandler;
 import org.kumoricon.view.attendee.AttendeeDetailForm;
+import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.kumoricon.view.order.AttendeeWindow;
 import org.kumoricon.view.order.CreditCardAuthWindow;
 import org.kumoricon.view.order.OrderView;
@@ -23,7 +25,7 @@ import java.util.List;
 
 @Controller
 @Scope("request")
-public class OrderPresenter {
+public class OrderPresenter implements PrintBadgeHandler {
     @Autowired
     private OrderRepository orderRepository;
 
@@ -37,6 +39,8 @@ public class OrderPresenter {
     private UserRepository userRepository;
 
     private OrderView view;
+
+    private PrintBadgeWindow printBadgeWindow;
 
     public OrderPresenter() {
     }
@@ -132,9 +136,8 @@ public class OrderPresenter {
     public void orderComplete(Order currentOrder) {
         currentOrder.paymentComplete(view.getCurrentUser());
         orderRepository.save(currentOrder);
-        // Print badges here
-        view.getUI().getNavigator().navigateTo("/");
-        view.notify("Order complete");
+        // Todo: Trigger printing badges
+        showAttendeeBadgeWindow(currentOrder.getAttendees());
     }
 
     public void selectAttendee(Attendee attendee) {
@@ -173,4 +176,23 @@ public class OrderPresenter {
         order.setNotes("Credit card authorization Number: " + value + "\n" + oldNotes);
         orderComplete(order);
     }
+
+    @Override
+    public void showAttendeeBadgeWindow(List<Attendee> attendeeList) {
+        printBadgeWindow = new PrintBadgeWindow(this, attendeeList);
+        view.showWindow(printBadgeWindow);
+    }
+
+    public void badgePrintSuccess() {
+        printBadgeWindow.close();
+        view.notify("Order Complete");
+        KumoRegUI.getCurrent().getNavigator().navigateTo("/");
+    }
+
+    @Override
+    public void reprintBadges(List<Attendee> attendeeList) {
+        view.notify("Reprinting badge...");
+    }
+
+
 }
