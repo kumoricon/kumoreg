@@ -1,10 +1,10 @@
 package org.kumoricon.view.utility;
 
 import com.vaadin.navigator.View;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextArea;
 import org.kumoricon.presenter.utility.CloseOutTillPresenter;
 import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class CloseOutTillView extends BaseView implements View {
 
     private Label description = new Label("Print cash report when you are ready to turn in your till");
     private Button closeTillButton = new Button("Close Out Till");
-    private TextArea data = new TextArea();
+    private Label data = new Label();
 
     @Autowired
     private CloseOutTillPresenter handler;
@@ -32,7 +32,7 @@ public class CloseOutTillView extends BaseView implements View {
         addComponent(description);
         addComponent(closeTillButton);
         addComponent(data);
-        data.setEnabled(false);
+        data.setContentMode(ContentMode.PREFORMATTED);
         setExpandRatio(data, 1f);
         data.setSizeFull();
 
