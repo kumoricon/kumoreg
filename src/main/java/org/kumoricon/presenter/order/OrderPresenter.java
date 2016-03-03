@@ -159,8 +159,7 @@ public class OrderPresenter implements PrintBadgeHandler {
 
 
     private String generateBadgeNumber() {
-        KumoRegUI ui = (KumoRegUI) view.getUI();
-        User user = userRepository.findOne(ui.getLoggedInUser().getId());
+        User user = userRepository.findOne(view.getCurrentUser().getId());
         StringBuilder output = new StringBuilder();
         output.append(user.getFirstName().charAt(0));
         output.append(user.getLastName().charAt(0));

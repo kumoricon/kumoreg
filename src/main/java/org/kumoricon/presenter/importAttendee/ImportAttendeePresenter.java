@@ -2,7 +2,6 @@ package org.kumoricon.presenter.importAttendee;
 
 
 import com.vaadin.ui.Upload;
-import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.OrderRepository;
@@ -63,10 +62,9 @@ public class ImportAttendeePresenter {
             AttendeeImporter importer = new AttendeeImporter(attendeeRepository, orderRepository, badgeRepository, userRepository);
             view.clearStatus();
             String result = "";
-            KumoRegUI ui = (KumoRegUI) view.getUI();
 
             try {
-                result = importer.importFromTSV(new FileReader(file), ui.getLoggedInUser());
+                result = importer.importFromTSV(new FileReader(file), view.getCurrentUser());
             } catch (Exception e) {
                 result = e.getMessage();
             } finally {
