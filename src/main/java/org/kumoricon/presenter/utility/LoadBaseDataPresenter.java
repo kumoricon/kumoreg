@@ -144,8 +144,7 @@ public class LoadBaseDataPresenter {
                 {"Weekend", "60", "60", "45"},
                 {"Friday", "40", "40", "30"},
                 {"Saturday", "40", "40", "30"},
-                {"Sunday", "30", "30", "20"},
-                {"VIP", "300", "300", "300"}};
+                {"Sunday", "30", "30", "20"}};
         for (String[] currentBadge : badgeList) {
             Badge badge = BadgeFactory.badgeFactory(currentBadge[0], currentBadge[0],
                     Float.parseFloat(currentBadge[1]),
@@ -154,6 +153,12 @@ public class LoadBaseDataPresenter {
             view.addResult("    Creating " + badge.toString());
             badgeRepository.save(badge);
         }
+
+        // Create VIP badge with warning message
+        Badge vip = BadgeFactory.badgeFactory("VIP", "VIP", 300, 300, 300);
+        vip.setWarningMessage("VIP check in. See your coordinator");
+        view.addResult("    Creating " + vip.toString());
+        badgeRepository.save(vip);
 
         // Create badge types with security restrictions below
         Badge press = BadgeFactory.badgeFactory("Press", "Weekend", 0f, 0f, 0f);
