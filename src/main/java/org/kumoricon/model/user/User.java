@@ -40,7 +40,7 @@ public class User implements Serializable {
         this.id = null;
         this.salt = "TempSalt"; // Todo: randomly generate salt
         this.enabled = true;
-        this.lastBadgeNumberCreated = 0;
+        this.lastBadgeNumberCreated = 1213;     // Start at an arbitrary number instead of 0
         this.sessionNumber = 1;
     }
 
