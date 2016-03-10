@@ -48,6 +48,8 @@ public class AttendeeDetailView extends BaseView implements View {
         // Set editable fields based on current user's rights
         if (currentUserHasRight("attendee_edit")) {
             detailForm.setEditableFields(AttendeeDetailForm.EditableFields.ALL);
+            detailForm.setMinorFieldsEnabled(detailForm.getAttendee().isMinor());
+
             if (currentUserHasRight("attendee_override_price")) {
                 detailForm.setManualPriceEnabled(true);
             } else {
@@ -75,6 +77,7 @@ public class AttendeeDetailView extends BaseView implements View {
                 btnSaveAndReprint.setEnabled(false);
             }
         }
+
 
     }
 

@@ -115,7 +115,7 @@ public class AttendeeDetailForm extends GridLayout {
         firstName.focus();
     }
 
-    private void setMinorFieldsEnabled(boolean isEnabled) {
+    public void setMinorFieldsEnabled(boolean isEnabled) {
         parentFullName.setEnabled(isEnabled);
         parentPhone.setEnabled(isEnabled);
         parentIsEmergencyContact.setEnabled(isEnabled);
