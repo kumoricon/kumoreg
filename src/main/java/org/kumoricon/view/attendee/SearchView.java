@@ -26,7 +26,7 @@ public class SearchView extends BaseView implements View{
     @Autowired
     private SearchPresenter handler;
 
-    private TextField txtSearch = new TextField("Name or Badge Number");
+    private TextField txtSearch = new TextField("Last Name or Badge Number");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
@@ -51,8 +51,8 @@ public class SearchView extends BaseView implements View{
         tblResult = new Table();
         tblResult.setSizeFull();
         tblResult.setContainerDataSource(attendeeBeanList);
-        tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "age", "zip", "checkedIn"});
-        tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Age", "Zip", "Checked In");
+        tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "badgeNumber", "age", "zip", "checkedIn"});
+        tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Badge Number", "Age", "Zip", "Checked In");
 
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
                 handler.selectAttendee((Attendee)itemClickEvent.getItemId()));
