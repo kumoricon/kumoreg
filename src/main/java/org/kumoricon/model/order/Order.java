@@ -40,9 +40,7 @@ public class Order {
         CASH {
             public String toString() { return "Cash"; }
         }, CHECK {
-            public String toString() { return "Check"; }
-        }, MONEYORDER {
-            public String toString() { return "Money Order"; }
+            public String toString() { return "Check/Money Order"; }
         }, CREDIT {
             public String toString() { return "Credit Card"; }
         }
