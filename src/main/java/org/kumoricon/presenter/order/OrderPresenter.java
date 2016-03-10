@@ -152,9 +152,9 @@ public class OrderPresenter implements PrintBadgeHandler {
         }
         form.setAvailableBadges(badgeTypesUserCanSee);
 
+        form.show(attendee);
         form.setManualPriceEnabled(view.currentUserHasRight("attendee_override_price"));
 
-        form.show(attendee);
     }
 
 
