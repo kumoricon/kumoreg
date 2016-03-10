@@ -23,6 +23,7 @@ Available rights are:
 | view_revenue_report         | Can view revenue report                                           |
 | view_staff_report           | Can view staff report (lists name/phone numbers)                  |
 | view_role_report            | Can view roles and rights assigned to each                        |
+| view_check_in_by_hour_report| Can view attendee check ins per hour report                       |
 |                             |                                                                   |
 | manage_staff                | Can add/edit users and reset passwords                            |
 | manage_pass_types           | Can add/edit badge types                                          |

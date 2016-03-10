@@ -16,6 +16,7 @@ import org.kumoricon.view.badge.BadgeView;
 import org.kumoricon.view.importAttendee.ImportAttendeeView;
 import org.kumoricon.view.order.OrderView;
 import org.kumoricon.view.report.AttendeeReportView;
+import org.kumoricon.view.report.CheckInByHourReportView;
 import org.kumoricon.view.report.RoleReportView;
 import org.kumoricon.view.report.StaffReportView;
 import org.kumoricon.view.role.RoleView;
@@ -69,6 +70,8 @@ public class SiteMenu extends VerticalLayout {
         tab2.setIcon(FontAwesome.FILE_TEXT);
         addButtonTo(tab2, "view_attendance_report",
                 buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, AttendeeReportView.VIEW_NAME));
+        addButtonTo(tab2, "view_check_in_by_hour_report",
+                buttonFactory("Check Ins by Hour", FontAwesome.CLOCK_O, CheckInByHourReportView.VIEW_NAME));
         addButtonTo(tab2, "view_staff_report",
                 buttonFactory("Staff", FontAwesome.USERS, StaffReportView.VIEW_NAME));
         addButtonTo(tab2, "view_role_report",
