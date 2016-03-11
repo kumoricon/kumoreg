@@ -17,7 +17,9 @@ Available rights are:
 | print_badge                 | Can print badge on attendee checkin                               |
 | reprint_badge               | Can reprint attendee badges after attendee is checked in          |
 | reprint_badge_with_override | Can reprint badge if a user with reprint_badge right approves it  |
-| badge_type_press            | Can select the "Press" badge type                                 |
+| badge_type_vip              | Can select/check in the "VIP" badge type                          |
+| badge_type_press            | Can select/check in the "Press" badge type                        |
+| badge_type_artist           | Can select/check in the "Artist" badge type                       |
 |                             |                                                                   |
 | view_attendance_report      | Can view attendance report (counts only)                          |
 | view_revenue_report         | Can view revenue report                                           |

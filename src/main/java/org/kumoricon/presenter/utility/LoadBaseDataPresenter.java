@@ -73,7 +73,7 @@ public class LoadBaseDataPresenter {
         view.addResult("Creating rights");
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
                 "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
-                "reprint_badge_with_override", "badge_type_press", "badge_type_vip",
+                "reprint_badge_with_override", "badge_type_press", "badge_type_vip", "badge_type_artist",
                 "view_attendance_report", "view_revenue_report",
                 "view_check_in_by_hour_report", "view_staff_report", "view_role_report", "manage_staff",
                 "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data", "load_base_data"};
@@ -93,7 +93,8 @@ public class LoadBaseDataPresenter {
                                                "attendee_override_price", "reprint_badge", "view_staff_report",
                                                "view_check_in_by_hour_report"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                "print_badge", "attendee_edit", "attendee_edit_notes", "badge_type_vip", "badge_type_press",
+                "print_badge", "attendee_edit", "attendee_edit_notes",
+                "badge_type_vip", "badge_type_press", "badge_type_artist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
                 "view_check_in_by_hour_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
@@ -166,9 +167,15 @@ public class LoadBaseDataPresenter {
 
         Badge press = BadgeFactory.badgeFactory("Press", "Weekend", 0f, 0f, 0f);
         press.setRequiredRight("badge_type_press");
-        vip.setWarningMessage("Press check in. See your coordinator!");
+        press.setWarningMessage("Press check in. See your coordinator!");
         view.addResult("    Creating " + press.toString());
         badgeRepository.save(press);
+
+        Badge artist = BadgeFactory.badgeFactory("Artist", "Weekend", 0f, 0f, 0f);
+        artist.setRequiredRight("badge_type_artist");
+        artist.setWarningMessage("Artist check in. See your coordinator!");
+        view.addResult("    Creating " + artist.toString());
+        badgeRepository.save(artist);
     }
 
     private HashMap<String, Right> getRightsHashMap() {
