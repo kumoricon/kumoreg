@@ -73,7 +73,8 @@ public class LoadBaseDataPresenter {
         view.addResult("Creating rights");
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
                 "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
-                "reprint_badge_with_override", "badge_type_press", "view_attendance_report", "view_revenue_report",
+                "reprint_badge_with_override", "badge_type_press", "badge_type_vip",
+                "view_attendance_report", "view_revenue_report",
                 "view_check_in_by_hour_report", "view_staff_report", "view_role_report", "manage_staff",
                 "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data", "load_base_data"};
 
@@ -92,7 +93,7 @@ public class LoadBaseDataPresenter {
                                                "attendee_override_price", "reprint_badge", "view_staff_report",
                                                "view_check_in_by_hour_report"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                "print_badge", "attendee_edit", "attendee_edit_notes",
+                "print_badge", "attendee_edit", "attendee_edit_notes", "badge_type_vip", "badge_type_press",
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
                 "view_check_in_by_hour_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
@@ -156,18 +157,18 @@ public class LoadBaseDataPresenter {
             badgeRepository.save(badge);
         }
 
-        // Create VIP badge with warning message
+        // Create badge types with security restrictions below
         Badge vip = BadgeFactory.badgeFactory("VIP", "VIP", 300, 300, 300);
-        vip.setWarningMessage("VIP check in. See your coordinator");
+        vip.setRequiredRight("badge_type_vip");
+        vip.setWarningMessage("VIP check in. See your coordinator!");
         view.addResult("    Creating " + vip.toString());
         badgeRepository.save(vip);
 
-        // Create badge types with security restrictions below
         Badge press = BadgeFactory.badgeFactory("Press", "Weekend", 0f, 0f, 0f);
         press.setRequiredRight("badge_type_press");
+        vip.setWarningMessage("Press check in. See your coordinator!");
         view.addResult("    Creating " + press.toString());
         badgeRepository.save(press);
-
     }
 
     private HashMap<String, Right> getRightsHashMap() {

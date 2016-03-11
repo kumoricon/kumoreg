@@ -54,11 +54,13 @@ public class PreRegSearchPresenter {
         if (attendee.getBadge().getWarningMessage() == null) {
             continueCheckIn(attendee);
         } else {
-            if (!attendee.getBadge().getWarningMessage().trim().equals("")) {
+            String requiredRight = attendee.getBadge().getRequiredRight();
+            String warningMessage = attendee.getBadge().getWarningMessage();
+            if (requiredRight == null || view.currentUserHasRight(requiredRight)) {
+                continueCheckIn(attendee);
+            } else {
                 warningWindow = new BadgeWarningWindow(this, attendee);
                 view.showWindow(warningWindow);
-            } else {
-                continueCheckIn(attendee);
             }
         }
     }

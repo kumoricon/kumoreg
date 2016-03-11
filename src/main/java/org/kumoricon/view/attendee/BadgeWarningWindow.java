@@ -7,7 +7,6 @@ import org.kumoricon.presenter.attendee.PreRegSearchPresenter;
 
 public class BadgeWarningWindow extends Window {
     Label lblMessage = new Label("");
-    Button btnContinue = new Button("Continue");
     Button btnAbort = new Button("Abort");
     private PreRegSearchPresenter handler;
 
@@ -30,11 +29,8 @@ public class BadgeWarningWindow extends Window {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSpacing(true);
-        horizontalLayout.addComponent(btnContinue);
-        btnContinue.focus();
         horizontalLayout.addComponent(btnAbort);
-
-        btnContinue.addClickListener((Button.ClickListener) clickEvent -> handler.continueCheckIn(attendee));
+        btnAbort.focus();
         btnAbort.addClickListener((Button.ClickListener) clickEvent -> handler.abortCheckIn());
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
