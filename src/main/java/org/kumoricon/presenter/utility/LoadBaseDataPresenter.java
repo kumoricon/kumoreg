@@ -46,20 +46,31 @@ public class LoadBaseDataPresenter {
     private Boolean targetTablesAreEmpty(StringBuilder results) {
         // Abort if there is more than one right, role, or user - it should just have the admin user
         // with the Admin role and super_admin right.
+
+        Integer errors = 0;
         if (rightRepository.count() > 1) {
-            results.append("Error: rights table not empty. Aborting.");
-            return false;
-        } else if (roleRepository.count() > 1) {
-            results.append("Error: roles table not empty. Aborting.");
-            return false;
-        } else if (userRepository.count() > 1) {
-            results.append("Error: users table not empty. Aborting.");
-            return false;
-        } else if (badgeRepository.count() > 0) {
-            results.append("Error: badges table not empty. Aborting.");
+            results.append("Error: rights table not empty.\n");
+            errors++;
+        }
+        if (roleRepository.count() > 1) {
+            results.append("Error: roles table not empty.\n");
+            errors++;
+        }
+        if (userRepository.count() > 1) {
+            results.append("Error: users table not empty.\n");
+            errors++;
+        }
+        if (badgeRepository.count() > 0) {
+            results.append("Error: badges table not empty.\n");
+            errors++;
+        }
+
+        if (errors == 0) {
+            return true;
+        } else {
+            results.append("Aborting.\n");
             return false;
         }
-        return true;
     }
 
     private void addRights(StringBuilder results) {
