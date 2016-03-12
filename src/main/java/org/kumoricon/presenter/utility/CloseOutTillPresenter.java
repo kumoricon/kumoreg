@@ -15,27 +15,20 @@ import java.util.List;
 @Controller
 @Scope("request")
 public class CloseOutTillPresenter {
-
-    private CloseOutTillView view;
-
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private OrderRepository orderRepository;
 
-    public void setView(CloseOutTillView view) {
-        this.view = view;
-    }
-
-    public void closeTill(User currentUser) {
+    public void closeTill(CloseOutTillView view, User currentUser) {
         if (currentUser != null) {
             StringBuilder output = new StringBuilder();
-            output.append("User ID: " + currentUser.getId() + " (" + currentUser.getUsername() + ")\n");
-            output.append(currentUser.getFirstName() + " " + currentUser.getLastName() + "\n");
-            output.append(LocalDateTime.now() + "\n");
+            output.append(String.format("User ID: %d (%s)\n", currentUser.getId(), currentUser.getUsername()));
+            output.append(String.format("%s %s\n", currentUser.getFirstName(), currentUser.getLastName()));
+            output.append(String.format("%s\n", LocalDateTime.now()));
             output.append("--------------------------------------------------------------------------------\n");
-            output.append("Session Number: " + currentUser.getSessionNumber() + "\n\n");
+            output.append(String.format("Session Number: %d\n\n", currentUser.getSessionNumber()));
 
             List<Object[]> results = orderRepository.getSessionOrderCountsAndTotals(
                     currentUser.getId(), currentUser.getSessionNumber());
@@ -55,7 +48,7 @@ public class CloseOutTillPresenter {
         }
     }
 
-    private String getPaymentType(Integer typeId) {
+    private static String getPaymentType(Integer typeId) {
         Order.PaymentType[] orderTypes = Order.PaymentType.values();
         return orderTypes[typeId].toString();
     }

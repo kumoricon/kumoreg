@@ -25,8 +25,6 @@ public class CloseOutTillView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        handler.setView(this);
-
         setSizeFull();
 
         addComponent(description);
@@ -36,7 +34,7 @@ public class CloseOutTillView extends BaseView implements View {
         setExpandRatio(data, 1f);
         data.setSizeFull();
 
-        closeTillButton.addClickListener((Button.ClickListener) clickEvent -> handler.closeTill(getCurrentUser()));
+        closeTillButton.addClickListener((Button.ClickListener) clickEvent -> handler.closeTill(this, getCurrentUser()));
     }
 
     public void showData(String report) { data.setValue(report); }
