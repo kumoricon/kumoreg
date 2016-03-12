@@ -5,14 +5,12 @@ import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.view.report.ReportView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 
 @Controller
-@Scope("request")
 public class RoleReportPresenter implements ReportPresenter {
     @Autowired
     private RoleRepository roleRepository;

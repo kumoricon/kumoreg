@@ -28,14 +28,13 @@ public class StaffReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        handler.setView(this);
         setSizeFull();
 
         addComponent(refresh);
-        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.showUserList());
+        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.showUserList(this));
 
         addComponent(dataGrid);
-        handler.showUserList();
+        handler.showUserList(this);
         dataGrid.setColumns(new String[] {"lastName", "firstName", "username", "phone", "role"});
         dataGrid.setEditorEnabled(false);
         setExpandRatio(dataGrid, .9f);

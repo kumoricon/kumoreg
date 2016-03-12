@@ -3,14 +3,12 @@ package org.kumoricon.presenter.report;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.view.report.ReportView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 
 @Controller
-@Scope("request")
 public class AttendeeReportPresenter implements ReportPresenter {
     @Autowired
     private AttendeeRepository attendeeRepository;
