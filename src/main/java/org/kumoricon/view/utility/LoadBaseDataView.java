@@ -27,7 +27,6 @@ public class LoadBaseDataView extends BaseView implements View {
 
     @PostConstruct
     void init() {
-        handler.setView(this);
         setSizeFull();
         addComponent(description);
         addComponent(loadData);
@@ -36,7 +35,7 @@ public class LoadBaseDataView extends BaseView implements View {
         results.setEnabled(false);
         setExpandRatio(results, 1.0f);
 
-        loadData.addClickListener((Button.ClickListener) clickEvent -> handler.loadDataButtonClicked());
+        loadData.addClickListener((Button.ClickListener) clickEvent -> handler.loadDataButtonClicked(this));
     }
 
     @Override

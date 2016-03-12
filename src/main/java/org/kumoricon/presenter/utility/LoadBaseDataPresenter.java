@@ -11,14 +11,11 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.utility.LoadBaseDataView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.util.HashMap;
 
-
 @Controller
-@Scope("request")
 public class LoadBaseDataPresenter {
     @Autowired
     private UserRepository userRepository;
@@ -32,45 +29,41 @@ public class LoadBaseDataPresenter {
     @Autowired
     private RightRepository rightRepository;
 
-    private LoadBaseDataView view;
-
     public LoadBaseDataPresenter() {
     }
 
-    public void loadDataButtonClicked() {
-        if (targetTablesAreEmpty()) {
-            addRights();
-            addRoles();
-            addUsers();
-            addBadges();
+    public void loadDataButtonClicked(LoadBaseDataView view) {
+        StringBuilder results = new StringBuilder();
+        if (targetTablesAreEmpty(results)) {
+            addRights(results);
+            addRoles(results);
+            addUsers(results);
+            addBadges(results);
         }
+        view.addResult(results.toString());
     }
 
-    private Boolean targetTablesAreEmpty() {
+    private Boolean targetTablesAreEmpty(StringBuilder results) {
         // Abort if there is more than one right, role, or user - it should just have the admin user
         // with the Admin role and super_admin right.
         if (rightRepository.count() > 1) {
-            view.addResult("Error: rights table not empty. Aborting.");
+            results.append("Error: rights table not empty. Aborting.");
             return false;
         } else if (roleRepository.count() > 1) {
-            view.addResult("Error: roles table not empty. Aborting.");
+            results.append("Error: roles table not empty. Aborting.");
             return false;
         } else if (userRepository.count() > 1) {
-            view.addResult("Error: users table not empty. Aborting.");
+            results.append("Error: users table not empty. Aborting.");
             return false;
         } else if (badgeRepository.count() > 0) {
-            view.addResult("Error: badges table not empty. Aborting.");
+            results.append("Error: badges table not empty. Aborting.");
             return false;
         }
         return true;
     }
 
-    public void setView(LoadBaseDataView view) {
-        this.view = view;
-    }
-
-    private void addRights() {
-        view.addResult("Creating rights");
+    private void addRights(StringBuilder results) {
+        results.append("Creating rights");
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
                 "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
                 "reprint_badge_with_override", "badge_type_press", "badge_type_vip", "badge_type_artist",
@@ -83,8 +76,8 @@ public class LoadBaseDataPresenter {
         }
     }
 
-    private void addRoles() {
-        view.addResult("Creating roles");
+    private void addRoles(StringBuilder results) {
+        results.append("Creating roles");
         HashMap<String, String[]> roles = new HashMap<>();
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
                                          "reprint_badge_with_override"});
@@ -111,16 +104,16 @@ public class LoadBaseDataPresenter {
                 if (rightMap.containsKey(rightName)) {
                     role.addRight(rightMap.get(rightName));
                 } else {
-                    view.addResult("Error creating role " + roleName + ". Right " + rightName + " not found");
+                    results.append("Error creating role " + roleName + ". Right " + rightName + " not found");
                 }
             }
-            view.addResult("    Creating " + role.toString());
+            results.append("    Creating " + role.toString());
             roleRepository.save(role);
         }
     }
 
-    private void addUsers() {
-        view.addResult("Creating users");
+    private void addUsers(StringBuilder results) {
+        results.append("Creating users");
         String[][] userList = {
                               {"Staff", "User", "Staff"},
                               {"Coordinator", "User", "Coordinator"},
@@ -133,17 +126,17 @@ public class LoadBaseDataPresenter {
             user.setUsername(currentUser[0]);
             Role role = roleRepository.findByNameIgnoreCase(currentUser[2]);
             if (role == null) {
-                view.addResult("    Error creating user " + currentUser[0] + ". Role " + currentUser[2] + " not found");
+                results.append("    Error creating user " + currentUser[0] + ". Role " + currentUser[2] + " not found");
             } else {
                 user.setRole(role);
-                view.addResult("    Creating " + user.toString());
+                results.append("    Creating " + user.toString());
                 userRepository.save(user);
             }
         }
     }
 
-    private void addBadges() {
-        view.addResult("Creating badges");
+    private void addBadges(StringBuilder results) {
+        results.append("Creating badges");
         String[][] badgeList = {
                 {"Weekend", "60", "60", "45"},
                 {"Friday", "40", "40", "30"},
@@ -154,7 +147,7 @@ public class LoadBaseDataPresenter {
                     Float.parseFloat(currentBadge[1]),
                     Float.parseFloat(currentBadge[2]),
                     Float.parseFloat(currentBadge[3]));
-            view.addResult("    Creating " + badge.toString());
+            results.append("    Creating " + badge.toString());
             badgeRepository.save(badge);
         }
 
@@ -162,19 +155,19 @@ public class LoadBaseDataPresenter {
         Badge vip = BadgeFactory.badgeFactory("VIP", "VIP", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
-        view.addResult("    Creating " + vip.toString());
+        results.append("    Creating " + vip.toString());
         badgeRepository.save(vip);
 
         Badge press = BadgeFactory.badgeFactory("Press", "Weekend", 0f, 0f, 0f);
         press.setRequiredRight("badge_type_press");
         press.setWarningMessage("Press check in. See your coordinator!");
-        view.addResult("    Creating " + press.toString());
+        results.append("    Creating " + press.toString());
         badgeRepository.save(press);
 
         Badge artist = BadgeFactory.badgeFactory("Artist", "Weekend", 0f, 0f, 0f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
-        view.addResult("    Creating " + artist.toString());
+        results.append("    Creating " + artist.toString());
         badgeRepository.save(artist);
     }
 
@@ -185,5 +178,4 @@ public class LoadBaseDataPresenter {
         }
         return rightHashMap;
     }
-
 }
