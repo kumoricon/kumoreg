@@ -1,7 +1,5 @@
 package org.kumoricon.presenter.attendee;
 
-import com.vaadin.navigator.Navigator;
-import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.view.attendee.BadgeWarningWindow;
@@ -27,8 +25,7 @@ public class PreRegSearchPresenter {
 
     public void searchChanged(String searchString) {
         if (searchString != null) {
-            Navigator navigator = KumoRegUI.getCurrent().getNavigator();
-            navigator.navigateTo(view.VIEW_NAME + "/" + searchString.trim());
+            view.navigateTo(view.VIEW_NAME + "/" + searchString.trim());
         }
     }
 
@@ -70,8 +67,7 @@ public class PreRegSearchPresenter {
 
     public void continueCheckIn(Attendee attendee) {
         if (warningWindow != null) { warningWindow.close(); }
-        Navigator navigator = KumoRegUI.getCurrent().getNavigator();
-        navigator.navigateTo(PreRegCheckInView.VIEW_NAME + "/" + attendee.getId().toString());
+        view.navigateTo(PreRegCheckInView.VIEW_NAME + "/" + attendee.getId().toString());
     }
 
     public void abortCheckIn() {

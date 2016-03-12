@@ -1,6 +1,5 @@
 package org.kumoricon.presenter.order;
 
-import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;
@@ -49,7 +48,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         Order order = new Order();
         order.setOrderId(order.generateOrderId());
         orderRepository.save(order);
-        KumoRegUI.getCurrent().getNavigator().navigateTo(view.VIEW_NAME + "/" + order.getId());
+        view.navigateTo(view.VIEW_NAME + "/" + order.getId());
     }
 
     public void showOrder(int id) {
@@ -65,7 +64,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         // Todo: Remove from database if order hasn't been saved yet? Make sure to not
         // delete orders that are already paid for. Not sure if this is a good feature
         // or not
-        KumoRegUI.getCurrent().getNavigator().navigateTo("");
+        view.navigateTo("");
     }
 
     public OrderView getView() { return view; }
@@ -185,7 +184,7 @@ public class OrderPresenter implements PrintBadgeHandler {
     public void badgePrintSuccess() {
         printBadgeWindow.close();
         view.notify("Order Complete");
-        KumoRegUI.getCurrent().getNavigator().navigateTo("/");
+        view.navigateTo("/");
     }
 
     @Override

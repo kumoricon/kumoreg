@@ -1,6 +1,5 @@
 package org.kumoricon.presenter.attendee;
 
-import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
@@ -58,7 +57,7 @@ public class PreRegCheckInPresenter implements PrintBadgeHandler {
         attendee.setCheckedIn(true);
         attendeeRepository.save(attendee);
         view.notify(String.format("%s %s is checked in", attendee.getFirstName(), attendee.getLastName()));
-        KumoRegUI.getCurrent().getNavigator().navigateTo(PreRegSearchView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+        view.navigateTo(PreRegSearchView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
 
     }
 
@@ -82,7 +81,7 @@ public class PreRegCheckInPresenter implements PrintBadgeHandler {
     }
 
     public void cancelAttendee() {
-        KumoRegUI.getCurrent().getNavigator().navigateTo("");
+        view.navigateTo("");
     }
 
 

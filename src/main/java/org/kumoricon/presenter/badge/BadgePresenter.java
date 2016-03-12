@@ -1,7 +1,5 @@
 package org.kumoricon.presenter.badge;
 
-import com.vaadin.navigator.Navigator;
-import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeFactory;
 import org.kumoricon.model.badge.BadgeRepository;
@@ -26,8 +24,7 @@ public class BadgePresenter {
 
     public void badgeSelected(Badge badge) {
         if (badge != null) {
-            Navigator navigator = KumoRegUI.getCurrent().getNavigator();
-            navigator.navigateTo(BadgeView.VIEW_NAME + "/" + badge.getId().toString());
+            view.navigateTo(BadgeView.VIEW_NAME + "/" + badge.getId().toString());
             view.showBadge(badge);
         }
     }
@@ -42,13 +39,13 @@ public class BadgePresenter {
     public void addNewBadge() {
         view.clearBadgeForm();
         view.showBadgeForm();
-        KumoRegUI.getCurrent().getNavigator().navigateTo(BadgeView.VIEW_NAME);
+        view.navigateTo(BadgeView.VIEW_NAME);
         Badge newBadge = BadgeFactory.emptyBadgeFactory();
         view.showBadge(newBadge);
     }
 
     public void cancelBadge() {
-        KumoRegUI.getCurrent().getNavigator().navigateTo(BadgeView.VIEW_NAME);
+        view.navigateTo(BadgeView.VIEW_NAME);
         view.clearBadgeForm();
         view.hideBadgeForm();
         view.clearSelection();
@@ -58,7 +55,7 @@ public class BadgePresenter {
         Badge badge = view.getBadge();
 
         badgeRepository.save(badge);
-        KumoRegUI.getCurrent().getNavigator().navigateTo(BadgeView.VIEW_NAME);
+        view.navigateTo(BadgeView.VIEW_NAME);
         showBadgeList();
     }
 

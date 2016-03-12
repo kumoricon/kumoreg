@@ -15,13 +15,17 @@ public class BaseView extends VerticalLayout implements View {
     protected void checkPermissions() {
         // Check user permission
         if (getRequiredRight() != null) {
-            KumoRegUI ui = (KumoRegUI) getUI();
-            User user = ui.getLoggedInUser();
+            User user = getCurrentUser();
             if (user != null && !user.hasRight(getRequiredRight())) {
-                ui.getNavigator().navigateTo("/");
+                navigateTo("/");
                 Notification.show("Permission denied. Right " + getRequiredRight() + " is required.");
             }
         }
+    }
+
+    public void navigateTo(String path) {
+        KumoRegUI ui = (KumoRegUI) getUI();
+        ui.getNavigator().navigateTo(path);
     }
 
     protected String getRequiredRight() {

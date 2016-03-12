@@ -34,7 +34,7 @@ public class LoginPresenter {
             KumoRegUI ui = (KumoRegUI)view.getUI();
             ui.setLoggedInUser(user);
             ui.buildMenu();
-            ui.getNavigator().navigateTo(HomeView.VIEW_NAME);
+            view.navigateTo(HomeView.VIEW_NAME);
         } else {
             view.loginFailed();
         }

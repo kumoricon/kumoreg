@@ -1,6 +1,5 @@
 package org.kumoricon.presenter.attendee;
 
-import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
@@ -51,7 +50,7 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
         Attendee attendee = view.getAttendee();
         attendee = attendeeRepository.save(attendee);
         view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
-        KumoRegUI.getCurrent().getNavigator().navigateTo("");
+        view.navigateTo("");
     }
 
     public void saveAttendeeAndReprintBadge(User overrideUser) {
@@ -98,7 +97,7 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
         }
         Attendee attendee = view.getAttendee();
         view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
-        KumoRegUI.getCurrent().getNavigator().navigateTo("");
+        view.navigateTo("");
     }
 
     @Override
@@ -111,7 +110,7 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
     }
 
     public void cancelAttendee() {
-        KumoRegUI.getCurrent().getNavigator().navigateTo("");
+        view.navigateTo("");
     }
 
     public AttendeeDetailView getView() { return view; }

@@ -1,7 +1,5 @@
 package org.kumoricon.presenter.user;
 
-import com.vaadin.navigator.Navigator;
-import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
@@ -32,8 +30,7 @@ public class UserPresenter {
 
     public void userSelected(User user) {
         if (user != null) {
-            Navigator navigator = KumoRegUI.getCurrent().getNavigator();
-            navigator.navigateTo(userView.VIEW_NAME + "/" + user.getId().toString());
+            userView.navigateTo(userView.VIEW_NAME + "/" + user.getId().toString());
             userView.setRoleList(getAvailableRoles());
             userView.showUser(user);
         }
@@ -49,7 +46,7 @@ public class UserPresenter {
     public void addNewUser() {
         userView.clearUserForm();
         userView.showUserForm();
-        KumoRegUI.getCurrent().getNavigator().navigateTo(userView.VIEW_NAME);
+        userView.navigateTo(userView.VIEW_NAME);
         User user = new User();
         user.setPassword(user.DEFAULT_PASSWORD);
         userView.setRoleList(roleRepository.findAll());
@@ -57,7 +54,7 @@ public class UserPresenter {
     }
 
     public void cancelUser() {
-        KumoRegUI.getCurrent().getNavigator().navigateTo(userView.VIEW_NAME);
+        userView.navigateTo(userView.VIEW_NAME);
         userView.clearUserForm();
         userView.hideUserForm();
         userView.clearSelection();
@@ -67,7 +64,7 @@ public class UserPresenter {
         User user = userView.getUser();
 
         userRepository.save(user);
-        KumoRegUI.getCurrent().getNavigator().navigateTo(userView.VIEW_NAME);
+        userView.navigateTo(userView.VIEW_NAME);
         showUserList();
     }
 
