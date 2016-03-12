@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 
 @ViewScope
 @SpringView(name = AttendeeReportView.VIEW_NAME)
-public class AttendeeReportView extends BaseView implements View {
+public class AttendeeReportView extends BaseView implements View, ReportView {
     public static final String VIEW_NAME = "attendeeReport";
     public static final String REQUIRED_RIGHT = "view_attendee_report";
     @Autowired
@@ -25,19 +25,20 @@ public class AttendeeReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        handler.setView(this);
         setSizeFull();
 
         addComponent(refresh);
-        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.showReport());
+        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
         addComponent(data);
         data.setContentMode(ContentMode.HTML);
-        handler.showReport();
+        handler.fetchReportData(this);
         setExpandRatio(data, 1f);
         data.setSizeFull();
         data.setWidthUndefined();
     }
 
+
+    @Override
     public void afterSuccessfulFetch(String data) {
         this.data.setValue(data);
     }

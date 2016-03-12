@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 
 @ViewScope
 @SpringView(name = CheckInByHourReportView.VIEW_NAME)
-public class CheckInByHourReportView extends BaseView implements View {
+public class CheckInByHourReportView extends BaseView implements View, ReportView {
     public static final String VIEW_NAME = "checkInByHourReport";
     public static final String REQUIRED_RIGHT = "view_check_in_by_hour_report";
 
@@ -26,14 +26,13 @@ public class CheckInByHourReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        handler.setView(this);
         setSizeFull();
 
         addComponent(refresh);
-        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.showReport());
+        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
         addComponent(data);
         data.setContentMode(ContentMode.HTML);
-        handler.showReport();
+        handler.fetchReportData(this);
         setExpandRatio(data, 1f);
         data.setSizeFull();
         data.setWidthUndefined();
