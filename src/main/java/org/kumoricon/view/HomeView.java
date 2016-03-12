@@ -30,7 +30,6 @@ public class HomeView extends BaseView implements View {
 
     @PostConstruct
     void init() {
-        handler.setView(this);
         addComponent(welcome);
 
         passTypesTable.setWidth(600, Unit.PIXELS);
@@ -60,7 +59,7 @@ public class HomeView extends BaseView implements View {
 
         addComponent(passTypesTable);
         setExpandRatio(passTypesTable, 1.0f);
-        handler.showBadges();
+        handler.showBadges(this);
     }
 
 
@@ -73,21 +72,17 @@ public class HomeView extends BaseView implements View {
     public String getRequiredRight() { return REQUIRED_RIGHT; }
 
     public void showBadges(List<Badge> badges) {
-        Integer count = 0;
         for (Badge badge : badges) {
-            if (badge.getRequiredRight() == null || currentUserHasRight(badge.getRequiredRight())) {
-                try {
-                    passTypesTable.addRow(badge.getName(),
-                            badge.getCostForAge(35L),
-                            badge.getCostForAge(17L),
-                            badge.getCostForAge(11L),
-                            badge.getCostForAge(4L));
-                    count++;
-                } catch (ServiceException e) {
-                    notify("Error getting age ranges for badge " + e.getMessage());
-                }
+            try {
+                passTypesTable.addRow(badge.getName(),
+                        badge.getCostForAge(35L),
+                        badge.getCostForAge(17L),
+                        badge.getCostForAge(11L),
+                        badge.getCostForAge(4L));
+            } catch (ServiceException e) {
+                notifyError("Error getting age ranges for badge " + badge.getName());
             }
         }
-        passTypesTable.setHeightByRows(count);
+        passTypesTable.setHeightByRows(badges.size());
     }
 }

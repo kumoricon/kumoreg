@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -16,17 +17,17 @@ public class HomePresenter {
     @Autowired
     private BadgeRepository badgeRepository;
 
-
-    private HomeView view;
-
-    public void showBadges() {
+    public void showBadges(HomeView view) {
         List<Badge> badges = badgeRepository.findByVisibleTrue();
-        if (badges.size() > 0) {
-            view.showBadges(badges);
+        List<Badge> badgesUserCanView = new ArrayList<>();
+        for (Badge badge : badges) {
+            if (badge.getRequiredRight() == null || view.currentUserHasRight(badge.getRequiredRight())) {
+                badgesUserCanView.add(badge);
+            }
+        }
+
+        if (badgesUserCanView.size() > 0) {
+            view.showBadges(badgesUserCanView);
         }
     }
-
-    public HomeView getView() { return view; }
-
-    public void setView(HomeView view) { this.view = view; }
 }

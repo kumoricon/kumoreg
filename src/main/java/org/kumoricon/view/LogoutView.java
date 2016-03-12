@@ -18,8 +18,7 @@ public class LogoutView extends BaseView implements View {
 
     @PostConstruct
     void init() {
-        handler.setView(this);
-        handler.logout();
+        handler.logout(this);
     }
 
     @Override

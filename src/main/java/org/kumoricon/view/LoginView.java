@@ -19,16 +19,12 @@ public class LoginView extends BaseView implements View {
     @Autowired
     private LoginPresenter handler;
 
-
     private TextField usernameField = createTextField("Username");
     private PasswordField passwordField = new PasswordField("Password");
     private Button loginButton = new Button("Login");
 
-
     @PostConstruct
     void init() {
-        handler.setLoginView(this);
-
         FormLayout formLayout = new FormLayout();
         formLayout.addComponent(usernameField);
         formLayout.addComponent(passwordField);
@@ -44,7 +40,7 @@ public class LoginView extends BaseView implements View {
                 Notification.show("Password is required");
                 passwordField.focus();
             } else {
-                handler.login(usernameField.getValue(), passwordField.getValue());
+                handler.login(this, usernameField.getValue(), passwordField.getValue());
             }
         });
         usernameField.focus();
@@ -56,5 +52,4 @@ public class LoginView extends BaseView implements View {
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
-
 }
