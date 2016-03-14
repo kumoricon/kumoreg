@@ -49,14 +49,12 @@ public class BadgeView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        handler.setView(this);
-
         leftPanel = buildLeftPanel();
         rightPanel = buildRightPanel();
         addComponent(leftPanel);
         addComponent(rightPanel);
 
-        handler.showBadgeList();
+        handler.showBadgeList(this);
     }
 
     @Override
@@ -67,7 +65,7 @@ public class BadgeView extends BaseView implements View {
             hideBadgeForm();
             clearBadgeForm();
         } else {
-            handler.navigateToRole(viewChangeEvent.getParameters());
+            handler.navigateToRole(this, viewChangeEvent.getParameters());
         }
     }
 
@@ -92,11 +90,11 @@ public class BadgeView extends BaseView implements View {
         leftPanel.addComponent(btnAddNew);
 
         badgeList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
-                handler.badgeSelected((Badge)valueChangeEvent.getProperty().getValue()));
+                handler.badgeSelected(this, (Badge)valueChangeEvent.getProperty().getValue()));
 
         btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
             badgeList.select(null);
-            handler.addNewBadge();
+            handler.addNewBadge(this);
         });
         return leftPanel;
     }
@@ -134,13 +132,13 @@ public class BadgeView extends BaseView implements View {
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
                 badgeBeanFieldGroup.commit();
-                handler.saveBadge();
+                handler.saveBadge(this);
             } catch (Exception e) {
                 Notification.show(e.getMessage());
             }
         });
 
-        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelBadge());
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelBadge(this));
 
         form.addComponent(tblAgeRanges);
         form.addComponent(buttons);
@@ -155,44 +153,30 @@ public class BadgeView extends BaseView implements View {
         tblAgeRanges.removeAllItems();
     }
 
-
     public void showBadge(Badge badge) {
         clearBadgeForm();
         showBadgeForm();
         badgeBeanFieldGroup.setItemDataSource(badge);
-        BeanItemContainer<AgeRange> ageRanges = new BeanItemContainer<AgeRange>(AgeRange.class);
+        BeanItemContainer<AgeRange> ageRanges = new BeanItemContainer<>(AgeRange.class);
         ageRanges.addAll(badge.getAgeRanges());
         tblAgeRanges.setContainerDataSource(ageRanges);
         tblAgeRanges.setVisibleColumns(new String[] { "name", "minAge", "maxAge", "cost", "stripeColor", "stripeText"});
-        tblAgeRanges.setColumnHeaders(new String[] { "Name", "Minimum Age", "Maximum Age", "Cost",
-                "Stripe Color", "Stripe Text"});
-
-    }
-    public BeanItemContainer<AgeRange> getAgeRangeContainer() {
-        return (BeanItemContainer<AgeRange>) tblAgeRanges.getContainerDataSource();
-    }
-    public void hideBadgeForm() {
-        rightPanel.setVisible(false);
-    }
-    public void showBadgeForm() { rightPanel.setVisible(true);}
-
-    public void selectBadge(Badge role) {
-        badgeList.select(role);
-
+        tblAgeRanges.setColumnHeaders("Name", "Minimum Age", "Maximum Age", "Cost", "Stripe Color", "Stripe Text");
     }
 
+    public void hideBadgeForm() { rightPanel.setVisible(false); }
+    public void showBadgeForm() { rightPanel.setVisible(true); }
+    public void selectBadge(Badge role) { badgeList.select(role); }
     public void clearSelection() {
         badgeList.select(null);
     }
 
     public Badge getBadge() {
         BeanItem<Badge> badgeBean = badgeBeanFieldGroup.getItemDataSource();
-        Badge badge = badgeBean.getBean();
-
-        return badge;
+        return badgeBean.getBean();
     }
-    public String getRequiredRight() { return REQUIRED_RIGHT; }
 
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
 }
 
 

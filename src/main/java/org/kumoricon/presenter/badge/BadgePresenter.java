@@ -5,38 +5,34 @@ import org.kumoricon.model.badge.BadgeFactory;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.view.badge.BadgeView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 
 @Controller
-@Scope("request")
 public class BadgePresenter {
     @Autowired
     private BadgeRepository badgeRepository;
 
-    private BadgeView view;
-
     public BadgePresenter() {
     }
 
-    public void badgeSelected(Badge badge) {
+    public void badgeSelected(BadgeView view, Badge badge) {
         if (badge != null) {
             view.navigateTo(BadgeView.VIEW_NAME + "/" + badge.getId().toString());
             view.showBadge(badge);
         }
     }
 
-    public void badgeSelected(Integer id) {
+    public void badgeSelected(BadgeView view, Integer id) {
         if (id != null) {
             org.kumoricon.model.badge.Badge badge = badgeRepository.findOne(id);
-            badgeSelected(badge);
+            badgeSelected(view, badge);
         }
     }
 
-    public void addNewBadge() {
+    public void addNewBadge(BadgeView view) {
         view.clearBadgeForm();
         view.showBadgeForm();
         view.navigateTo(BadgeView.VIEW_NAME);
@@ -44,36 +40,31 @@ public class BadgePresenter {
         view.showBadge(newBadge);
     }
 
-    public void cancelBadge() {
+    public void cancelBadge(BadgeView view) {
         view.navigateTo(BadgeView.VIEW_NAME);
         view.clearBadgeForm();
         view.hideBadgeForm();
         view.clearSelection();
     }
 
-    public void saveBadge() {
+    public void saveBadge(BadgeView view) {
         Badge badge = view.getBadge();
 
         badgeRepository.save(badge);
         view.navigateTo(BadgeView.VIEW_NAME);
-        showBadgeList();
+        showBadgeList(view);
     }
 
-    public void showBadgeList() {
+    public void showBadgeList(BadgeView view) {
         List<Badge> badges = badgeRepository.findAll();
         view.afterSuccessfulFetch(badges);
     }
 
-    public void navigateToRole(String parameters) {
+    public void navigateToRole(BadgeView view, String parameters) {
         if (parameters != null) {
             Integer id = Integer.parseInt(parameters);
             Badge badge = badgeRepository.findOne(id);
             view.selectBadge(badge);
         }
     }
-
-
-    public BadgeView getView() { return view; }
-    public void setView(BadgeView roleView) { this.view = roleView; }
-
 }
