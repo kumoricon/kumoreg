@@ -33,8 +33,6 @@ public class BadgePresenter {
     }
 
     public void addNewBadge(BadgeView view) {
-        view.clearBadgeForm();
-        view.showBadgeForm();
         view.navigateTo(BadgeView.VIEW_NAME);
         Badge newBadge = BadgeFactory.emptyBadgeFactory();
         view.showBadge(newBadge);
@@ -42,14 +40,11 @@ public class BadgePresenter {
 
     public void cancelBadge(BadgeView view) {
         view.navigateTo(BadgeView.VIEW_NAME);
-        view.clearBadgeForm();
-        view.hideBadgeForm();
+        view.closeBadgeEditWindow();
         view.clearSelection();
     }
 
-    public void saveBadge(BadgeView view) {
-        Badge badge = view.getBadge();
-
+    public void saveBadge(BadgeView view, Badge badge) {
         badgeRepository.save(badge);
         view.navigateTo(BadgeView.VIEW_NAME);
         showBadgeList(view);
@@ -66,5 +61,15 @@ public class BadgePresenter {
             Badge badge = badgeRepository.findOne(id);
             view.selectBadge(badge);
         }
+    }
+
+    public void deleteBadge(BadgeView view, Badge badge) {
+        if (badge.getId() != null) {
+            badgeRepository.delete(badge);
+            view.navigateTo(view.VIEW_NAME);
+            showBadgeList(view);
+            view.notify(badge.getName() + " deleted");
+        }
+        view.closeBadgeEditWindow();
     }
 }
