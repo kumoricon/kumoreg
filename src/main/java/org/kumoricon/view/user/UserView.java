@@ -49,14 +49,12 @@ public class UserView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        handler.setUserView(this);
-
         leftPanel = buildLeftPanel();
         rightPanel = buildRightPanel();
         addComponent(leftPanel);
         addComponent(rightPanel);
 
-        handler.showUserList();
+        handler.showUserList(this);
     }
 
     @Override
@@ -67,7 +65,7 @@ public class UserView extends BaseView implements View {
             hideUserForm();
             clearUserForm();
         } else {
-            handler.navigateToUser(viewChangeEvent.getParameters());
+            handler.navigateToUser(this, viewChangeEvent.getParameters());
         }
     }
 
@@ -91,11 +89,11 @@ public class UserView extends BaseView implements View {
         leftPanel.addComponent(btnAddNew);
 
         userList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
-                handler.userSelected((User)valueChangeEvent.getProperty().getValue()));
+                handler.userSelected(this, (User)valueChangeEvent.getProperty().getValue()));
 
         btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
             userList.select(null);
-            handler.addNewUser();
+            handler.addNewUser(this);
         });
 
         return leftPanel;
@@ -132,7 +130,7 @@ public class UserView extends BaseView implements View {
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
                 userBeanFieldGroup.commit();
-                handler.saveUser();
+                handler.saveUser(this);
             } catch (DataIntegrityViolationException e) {
                 Notification.show("Error saving user: Constraint violation. Duplicate username?");
             } catch (Exception e) {
@@ -140,13 +138,12 @@ public class UserView extends BaseView implements View {
             }
         });
 
-        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelUser());
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelUser(this));
 
         form.addComponent(buttons);
 
         form.addComponent(btnResetPassword);
-        btnResetPassword.addClickListener((Button.ClickListener) clickEvent -> handler.resetPassword());
-
+        btnResetPassword.addClickListener((Button.ClickListener) clickEvent -> handler.resetPassword(this));
 
         return form;
     }

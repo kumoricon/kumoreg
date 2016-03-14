@@ -5,14 +5,12 @@ import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.view.role.RoleView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 
 @Controller
-@Scope("request")
 public class RolePresenter {
     @Autowired
     private RoleRepository roleRepository;
@@ -20,13 +18,10 @@ public class RolePresenter {
     @Autowired
     private RightRepository rightRepository;
 
-    private RoleView view;
-
     public RolePresenter() {
     }
 
-
-    public void roleSelected(Role role) {
+    public void roleSelected(RoleView view, Role role) {
         if (role != null) {
             view.navigateTo(view.VIEW_NAME + "/" + role.getId().toString());
             view.setAvailableRights(rightRepository.findAll());
@@ -34,14 +29,14 @@ public class RolePresenter {
         }
     }
 
-    public void roleSelected(Integer id) {
+    public void roleSelected(RoleView view, Integer id) {
         if (id != null) {
             Role role = roleRepository.findOne(id);
-            roleSelected(role);
+            roleSelected(view, role);
         }
     }
 
-    public void addNewRole() {
+    public void addNewRole(RoleView view) {
         view.clearRoleForm();
         view.showRoleForm();
         view.navigateTo(RoleView.VIEW_NAME);
@@ -49,36 +44,31 @@ public class RolePresenter {
         view.showRole(role);
     }
 
-    public void cancel() {
+    public void cancel(RoleView view) {
         view.navigateTo(RoleView.VIEW_NAME);
         view.clearRoleForm();
         view.hideRoleForm();
         view.clearSelection();
     }
 
-    public void saveRole() {
+    public void saveRole(RoleView view) {
         Role role = view.getRole();
 
         roleRepository.save(role);
         view.navigateTo(RoleView.VIEW_NAME);
-        showRoleList();
+        showRoleList(view);
     }
 
-    public void showRoleList() {
+    public void showRoleList(RoleView view) {
         List<Role> roles = roleRepository.findAll();
         view.afterSuccessfulFetch(roles);
     }
 
-    public void navigateToRole(String parameters) {
+    public void navigateToRole(RoleView view, String parameters) {
         if (parameters != null) {
             Integer id = Integer.parseInt(parameters);
             Role role = roleRepository.findOne(id);
             view.selectRole(role);
         }
     }
-
-
-    public RoleView getView() { return view; }
-    public void setView(RoleView roleView) { this.view = roleView; }
-
 }

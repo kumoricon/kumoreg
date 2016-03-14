@@ -46,14 +46,12 @@ public class RoleView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        handler.setView(this);
-
         leftPanel = buildLeftPanel();
         rightPanel = buildRightPanel();
         addComponent(leftPanel);
         addComponent(rightPanel);
 
-        handler.showRoleList();
+        handler.showRoleList(this);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class RoleView extends BaseView implements View {
             hideRoleForm();
             clearRoleForm();
         } else {
-            handler.navigateToRole(viewChangeEvent.getParameters());
+            handler.navigateToRole(this, viewChangeEvent.getParameters());
         }
     }
 
@@ -88,11 +86,11 @@ public class RoleView extends BaseView implements View {
         leftPanel.addComponent(btnAddNew);
 
         roleList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
-                handler.roleSelected((Role)valueChangeEvent.getProperty().getValue()));
+                handler.roleSelected(this, (Role)valueChangeEvent.getProperty().getValue()));
 
         btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
             roleList.select(null);
-            handler.addNewRole();
+            handler.addNewRole(this);
         });
 
         return leftPanel;
@@ -121,7 +119,7 @@ public class RoleView extends BaseView implements View {
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
                 roleBeanFieldGroup.commit();
-                handler.saveRole();
+                handler.saveRole(this);
             } catch (DataIntegrityViolationException e) {
                 Notification.show("Error saving role: Constraint violation. Duplicate name?");
             } catch (Exception e) {
@@ -129,7 +127,7 @@ public class RoleView extends BaseView implements View {
             }
         });
 
-        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancel());
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancel(this));
 
         form.addComponent(buttons);
 
@@ -157,7 +155,6 @@ public class RoleView extends BaseView implements View {
 
     public void selectRole(Role role) {
         roleList.select(role);
-
     }
 
     public void clearSelection() {
