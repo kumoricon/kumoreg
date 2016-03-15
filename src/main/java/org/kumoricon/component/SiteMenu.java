@@ -12,6 +12,7 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.view.LogoutView;
 import org.kumoricon.view.attendee.PreRegView;
 import org.kumoricon.view.attendee.SearchView;
+import org.kumoricon.view.badge.BadgeView;
 import org.kumoricon.view.importAttendee.ImportAttendeeView;
 import org.kumoricon.view.order.OrderView;
 import org.kumoricon.view.report.AttendeeReportView;
@@ -59,7 +60,7 @@ public class SiteMenu extends VerticalLayout {
         addButtonTo(tab1, "manage_roles",
                 buttonFactory("Roles", FontAwesome.GROUP, RoleView.VIEW_NAME));
         addButtonTo(tab1, "manage_pass_types",
-                buttonFactory("Badge Types", FontAwesome.BARCODE, PreRegView.VIEW_NAME));
+                buttonFactory("Badge Types", FontAwesome.BARCODE, BadgeView.VIEW_NAME));
         addButtonTo(tab1, "manage_devices",
                 buttonFactory("Computers", FontAwesome.DESKTOP, "computers"));
         if (tab1.getComponentCount() > 0) { menu.addComponent(tab1); }
