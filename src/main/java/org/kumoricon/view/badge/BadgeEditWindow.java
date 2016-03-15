@@ -49,6 +49,7 @@ public class BadgeEditWindow extends Window {
         form.addComponent(name);
         form.addComponent(dayText);
         form.addComponent(waringMessage);
+        waringMessage.setWidth(70, Unit.EM);
         waringMessage.setDescription("Displayed when attendee with this badge type checks in");
         form.addComponent(requiredRight);
         requiredRight.setDescription("Only show to users with this security right, empty for all users");
