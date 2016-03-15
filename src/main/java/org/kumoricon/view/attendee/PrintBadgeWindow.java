@@ -6,9 +6,10 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.presenter.attendee.PreRegCheckInPresenter;
+import org.kumoricon.presenter.attendee.PreRegPresenter;
 import org.kumoricon.presenter.attendee.PrintBadgeHandler;
 import org.kumoricon.util.BadgeGenerator;
+import org.kumoricon.view.BaseView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,12 @@ public class PrintBadgeWindow extends Window {
     BeanItemContainer<Attendee> container;
 
     private PrintBadgeHandler handler;
+    private BaseView parentView;
 
-    public PrintBadgeWindow(PrintBadgeHandler preRegCheckInPresenter, List<Attendee> attendeeList) {
+    public PrintBadgeWindow(BaseView view, PrintBadgeHandler presenter, List<Attendee> attendeeList) {
         super("Reprint Badges");
-        this.handler = preRegCheckInPresenter;
+        this.handler = presenter;
+        this.parentView = view;
         setIcon(FontAwesome.PRINT);
         setModal(true);
         setClosable(false);
@@ -61,7 +64,7 @@ public class PrintBadgeWindow extends Window {
             for (Object sel : attendeeGrid.getSelectedRows()) {
                 selectedAttendees.add((Attendee) sel);
             }
-            handler.reprintBadges(selectedAttendees);
+            handler.reprintBadges(this, selectedAttendees);
         });
         showBadgeInBrowser.addClickListener((Button.ClickListener) clickEvent -> {
             List<Attendee> selectedAttendees = new ArrayList<>();
@@ -70,7 +73,7 @@ public class PrintBadgeWindow extends Window {
             }
             showBadgesInBrowser(selectedAttendees);
         });
-        printedSuccessfully.addClickListener((Button.ClickListener) clickEvent -> handler.badgePrintSuccess());
+        printedSuccessfully.addClickListener((Button.ClickListener) clickEvent -> handler.badgePrintSuccess(this, attendeeList));
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
     }
@@ -101,5 +104,8 @@ public class PrintBadgeWindow extends Window {
 
 
     public PrintBadgeHandler getHandler() { return handler; }
-    public void setHandler(PreRegCheckInPresenter handler) { this.handler = handler; }
+    public void setHandler(PrintBadgeHandler handler) { this.handler = handler; }
+
+    public BaseView getParentView() { return parentView; }
+    public void setParentView(BaseView parentView) { this.parentView = parentView; }
 }

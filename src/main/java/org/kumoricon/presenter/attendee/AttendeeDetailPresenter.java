@@ -5,6 +5,7 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.view.BaseView;
 import org.kumoricon.view.attendee.AttendeeDetailForm;
 import org.kumoricon.view.attendee.AttendeeDetailView;
 import org.kumoricon.view.attendee.OverrideRequiredWindow;
@@ -62,7 +63,7 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
             if (view.currentUserHasRight("reprint_badge")) {
                 List<Attendee> attendeeList = new ArrayList<>();
                 attendeeList.add(attendee);
-                showAttendeeBadgeWindow(attendeeList);
+                showAttendeeBadgeWindow(view, attendeeList);
                 // Todo: print badge
             } else {
                 overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge");
@@ -72,40 +73,13 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
             if (overrideUser.hasRight("reprint_badge")) {
                 List<Attendee> attendeeList = new ArrayList<>();
                 attendeeList.add(attendee);
-                showAttendeeBadgeWindow(attendeeList);
+                showAttendeeBadgeWindow(view, attendeeList);
                 // Todo: print badge
             } else {
                 view.notifyError("Override user does not have the required right");
                 overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge");
                 view.showWindow(overrideRequiredWindow);
             }
-        }
-    }
-
-    @Override
-    public void showAttendeeBadgeWindow(List<Attendee> attendeeList) {
-        if (attendeeList != null) {
-            printBadgeWindow = new PrintBadgeWindow(this, attendeeList);
-            view.showWindow(printBadgeWindow);
-        }
-    }
-
-    @Override
-    public void badgePrintSuccess() {
-        if (printBadgeWindow != null) {
-            printBadgeWindow.close();
-        }
-        Attendee attendee = view.getAttendee();
-        view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
-        view.navigateTo("");
-    }
-
-    @Override
-    public void reprintBadges(List<Attendee> attendeeList) {
-        if (attendeeList.size() > 0) {
-            view.notify("Reprinting badges");
-        } else {
-            view.notify("No attendees selected");
         }
     }
 
@@ -130,5 +104,32 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
     @Override
     public void overrideCancel() {
         overrideRequiredWindow.close();
+    }
+
+    @Override
+    public void showAttendeeBadgeWindow(BaseView view, List<Attendee> attendeeList) {
+        if (attendeeList != null) {
+            printBadgeWindow = new PrintBadgeWindow(view, this, attendeeList);
+            view.showWindow(printBadgeWindow);
+        }
+    }
+
+    @Override
+    public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
+        if (printBadgeWindow != null) {
+            printBadgeWindow.close();
+        }
+        Attendee attendee = view.getAttendee();
+        view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
+        view.navigateTo("");
+    }
+
+    @Override
+    public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
+        if (attendeeList.size() > 0) {
+            view.notify("Reprinting badges");
+        } else {
+            view.notify("No attendees selected");
+        }
     }
 }

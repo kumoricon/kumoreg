@@ -10,9 +10,8 @@ import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
 import org.kumoricon.view.LogoutView;
-import org.kumoricon.view.attendee.PreRegSearchView;
+import org.kumoricon.view.attendee.PreRegView;
 import org.kumoricon.view.attendee.SearchView;
-import org.kumoricon.view.badge.BadgeView;
 import org.kumoricon.view.importAttendee.ImportAttendeeView;
 import org.kumoricon.view.order.OrderView;
 import org.kumoricon.view.report.AttendeeReportView;
@@ -47,7 +46,7 @@ public class SiteMenu extends VerticalLayout {
         addButtonTo(reg, "at_con_registration",
                 buttonFactory("At-Con Registration", FontAwesome.USER, OrderView.VIEW_NAME));
         addButtonTo(reg, "pre_reg_check_in",
-                buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegSearchView.VIEW_NAME));
+                buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegView.VIEW_NAME));
         addButtonTo(reg, "attendee_search",
                 buttonFactory("Attendee Search", FontAwesome.SEARCH, SearchView.VIEW_NAME));
         if (reg.getComponentCount() > 0) { menu.addComponent(reg); }
@@ -60,7 +59,7 @@ public class SiteMenu extends VerticalLayout {
         addButtonTo(tab1, "manage_roles",
                 buttonFactory("Roles", FontAwesome.GROUP, RoleView.VIEW_NAME));
         addButtonTo(tab1, "manage_pass_types",
-                buttonFactory("Badge Types", FontAwesome.BARCODE, BadgeView.VIEW_NAME));
+                buttonFactory("Badge Types", FontAwesome.BARCODE, PreRegView.VIEW_NAME));
         addButtonTo(tab1, "manage_devices",
                 buttonFactory("Computers", FontAwesome.DESKTOP, "computers"));
         if (tab1.getComponentCount() > 0) { menu.addComponent(tab1); }

@@ -26,7 +26,7 @@ public class TestBadgeView extends BaseView implements View {
         Button display = new Button("Display");
         addComponent(display);
 
-        display.addClickListener((Button.ClickListener) clickEvent -> handler.showAttendeeBadgeWindow(new ArrayList<Attendee>()));
+        display.addClickListener((Button.ClickListener) clickEvent -> handler.showAttendeeBadgeWindow(this, new ArrayList<Attendee>()));
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }

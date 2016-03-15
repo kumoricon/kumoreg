@@ -3,14 +3,14 @@ package org.kumoricon.view.attendee;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.presenter.attendee.PreRegSearchPresenter;
+import org.kumoricon.presenter.attendee.PreRegPresenter;
 
 public class BadgeWarningWindow extends Window {
     Label lblMessage = new Label("");
     Button btnAbort = new Button("Abort");
-    private PreRegSearchPresenter handler;
+    private PreRegPresenter handler;
 
-    public BadgeWarningWindow(PreRegSearchPresenter preRegCheckInPresenter, Attendee attendee) {
+    public BadgeWarningWindow(PreRegPresenter preRegCheckInPresenter, Attendee attendee) {
         super("Warning");
         this.handler = preRegCheckInPresenter;
         setIcon(FontAwesome.WARNING);
@@ -37,6 +37,6 @@ public class BadgeWarningWindow extends Window {
     }
 
 
-    public PreRegSearchPresenter getHandler() { return handler; }
-    public void setHandler(PreRegSearchPresenter handler) { this.handler = handler; }
+    public PreRegPresenter getHandler() { return handler; }
+    public void setHandler(PreRegPresenter handler) { this.handler = handler; }
 }

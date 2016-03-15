@@ -9,6 +9,7 @@ import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.presenter.attendee.PrintBadgeHandler;
+import org.kumoricon.view.BaseView;
 import org.kumoricon.view.attendee.AttendeeDetailForm;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.kumoricon.view.order.AttendeeWindow;
@@ -136,7 +137,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         currentOrder.paymentComplete(view.getCurrentUser());
         orderRepository.save(currentOrder);
         // Todo: Trigger printing badges
-        showAttendeeBadgeWindow(currentOrder.getAttendees());
+        showAttendeeBadgeWindow(view, currentOrder.getAttendees());
     }
 
     public void selectAttendee(Attendee attendee) {
@@ -175,22 +176,22 @@ public class OrderPresenter implements PrintBadgeHandler {
         orderComplete(order);
     }
 
+
     @Override
-    public void showAttendeeBadgeWindow(List<Attendee> attendeeList) {
-        printBadgeWindow = new PrintBadgeWindow(this, attendeeList);
+    public void showAttendeeBadgeWindow(BaseView view, List<Attendee> attendeeList) {
+        printBadgeWindow = new PrintBadgeWindow(view, this, attendeeList);
         view.showWindow(printBadgeWindow);
     }
 
-    public void badgePrintSuccess() {
+    @Override
+    public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         printBadgeWindow.close();
         view.notify("Order Complete");
         view.navigateTo("/");
     }
 
     @Override
-    public void reprintBadges(List<Attendee> attendeeList) {
+    public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         view.notify("Reprinting badge...");
     }
-
-
 }

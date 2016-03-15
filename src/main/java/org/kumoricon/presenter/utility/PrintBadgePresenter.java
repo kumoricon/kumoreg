@@ -4,6 +4,7 @@ import com.vaadin.ui.Window;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeFactory;
 import org.kumoricon.presenter.attendee.PrintBadgeHandler;
+import org.kumoricon.view.BaseView;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.kumoricon.view.utility.TestBadgeView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,25 +32,26 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
     }
 
     @Override
-    public void showAttendeeBadgeWindow(List<Attendee> attendeeList) {
+    public void showAttendeeBadgeWindow(BaseView view, List<Attendee> attendeeList) {
         // Because this is for test badges in this presenter, don't use any existing attendees - generate them
         attendeeList.clear();
         attendeeList.add(attendeeFactory.generateDemoAttendee());
         attendeeList.add(attendeeFactory.generateYouthAttendee());
         attendeeList.add(attendeeFactory.generateChildAttendee());
-        printBadgeWindow = new PrintBadgeWindow(this, attendeeList);
+        // Todo: Fix this
+//        printBadgeWindow = new PrintBadgeWindow(this, attendeeList);
         view.showWindow(printBadgeWindow);
     }
 
     @Override
-    public void badgePrintSuccess() {
+    public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         if (printBadgeWindow != null) {
             printBadgeWindow.close();
         }
     }
 
     @Override
-    public void reprintBadges(List<Attendee> attendeeList) {
+    public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         if (attendeeList.size() > 0) {
             view.notify("Reprinting badges");
         } else {

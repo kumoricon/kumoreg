@@ -9,7 +9,8 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.presenter.attendee.PreRegSearchPresenter;
+import org.kumoricon.model.badge.Badge;
+import org.kumoricon.presenter.attendee.PreRegPresenter;
 import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,18 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ViewScope
-@SpringView(name = PreRegSearchView.VIEW_NAME)
-public class PreRegSearchView extends BaseView implements View{
-    public static final String VIEW_NAME = "preregSearch";
+@SpringView(name = PreRegView.VIEW_NAME)
+public class PreRegView extends BaseView implements View{
+    public static final String VIEW_NAME = "preReg";
     public static final String REQUIRED_RIGHT = "pre_reg_check_in";
 
     @Autowired
-    private PreRegSearchPresenter handler;
+    private PreRegPresenter handler;
 
     private TextField txtSearch = new TextField("Last Name or Order ID");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
+
+    private PreRegCheckInWindow preRegCheckInWindow;
 
     @PostConstruct
     public void init() {
@@ -74,21 +77,25 @@ public class PreRegSearchView extends BaseView implements View{
         setExpandRatio(tblResult, 1.0f);
         tblResult.setSizeFull();
         txtSearch.focus();
-
     }
 
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         String parameters = viewChangeEvent.getParameters();
-        if (parameters == null || parameters.equals("")) {
+        if (parameters == null || parameters.replace("/search", "").equals("")) {
             txtSearch.clear();
             tblResult.clear();
-        } else {
-            String searchString = viewChangeEvent.getParameters();
+        } else if (parameters.matches("^search/.*")) {
+            String searchString = viewChangeEvent.getParameters().replace("search/", "");
             tblResult.clear();
+            if (preRegCheckInWindow != null) {
+                preRegCheckInWindow.close();
+            }
             txtSearch.setValue(searchString);
             handler.searchFor(searchString);
+        } else {
+            handler.showAttendee(this, Integer.parseInt(parameters));
         }
     }
 
@@ -103,11 +110,18 @@ public class PreRegSearchView extends BaseView implements View{
     }
 
 
+    public void showAttendee(Attendee attendee, List<Badge> badgeList) {
+        preRegCheckInWindow = new PreRegCheckInWindow(this, handler);
+        preRegCheckInWindow.setAvailableBadges(badgeList);
+        preRegCheckInWindow.showAttendee(attendee);
+        showWindow(preRegCheckInWindow);
+    }
+
     public BeanItemContainer<Attendee> getAttendeeBeanList() {
         return attendeeBeanList;
     }
 
-    public void setHandler(PreRegSearchPresenter presenter) {
+    public void setHandler(PreRegPresenter presenter) {
         this.handler = presenter;
     }
 
