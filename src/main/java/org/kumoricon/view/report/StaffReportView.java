@@ -28,8 +28,6 @@ public class StaffReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        setSizeFull();
-
         addComponent(refresh);
         refresh.addClickListener((Button.ClickListener) clickEvent -> handler.showUserList(this));
 

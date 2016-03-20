@@ -25,8 +25,6 @@ public class AttendeeReportView extends BaseView implements View, ReportView {
 
     @PostConstruct
     public void init() {
-        setSizeFull();
-
         addComponent(refresh);
         refresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
         addComponent(data);
