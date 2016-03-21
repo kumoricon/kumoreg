@@ -9,18 +9,23 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.presenter.order.OrderPresenter;
 import org.kumoricon.util.FieldFactory;
 import org.kumoricon.view.BaseView;
+import org.kumoricon.view.attendee.AttendeeDetailForm;
+import org.kumoricon.view.attendee.AttendeePrintView;
+import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.List;
 
 @ViewScope
 @SpringView(name = OrderView.VIEW_NAME)
-public class OrderView extends BaseView implements View{
+public class OrderView extends BaseView implements View, AttendeePrintView {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "at_con_registration";
 
@@ -42,21 +47,19 @@ public class OrderView extends BaseView implements View{
 
     @PostConstruct
     public void init() {
-        handler.setView(this);
-
         FormLayout orderInfo = new FormLayout();
         orderId.setWidth(400, Unit.PIXELS);
         orderInfo.addComponent(orderId);
         addComponent(orderInfo);
 
-        attendeeBeanList = new BeanItemContainer<>(Attendee.class, new ArrayList<Attendee>());;
+        attendeeBeanList = new BeanItemContainer<>(Attendee.class, new ArrayList<Attendee>());
         attendeeList.setContainerDataSource(attendeeBeanList);
         attendeeList.setPageLength(5);
         attendeeList.setWidth(600, Unit.PIXELS);
 
         orderInfo.addComponent(attendeeList);
         attendeeList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
-                handler.selectAttendee((Attendee)itemClickEvent.getItemId()));
+                handler.selectAttendee(this, (Attendee)itemClickEvent.getItemId()));
 
         orderInfo.addComponent(addAttendee);
         orderInfo.addComponent(total);
@@ -72,9 +75,9 @@ public class OrderView extends BaseView implements View{
         orderInfo.addComponent(notes);
         notes.setSizeFull();
 
-        addAttendee.addClickListener((Button.ClickListener) clickEvent -> handler.addNewAttendee());
-        takeMoney.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney());
-        cancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelOrder());
+        addAttendee.addClickListener((Button.ClickListener) clickEvent -> handler.addNewAttendee(this));
+        takeMoney.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney(this));
+        cancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelOrder(this));
     }
 
     @Override
@@ -83,10 +86,10 @@ public class OrderView extends BaseView implements View{
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
             // If no parameters, create a new order and navigate to it
-            handler.createNewOrder();
+            handler.createNewOrder(this);
         } else {
             String searchString = viewChangeEvent.getParameters();
-            handler.showOrder(Integer.parseInt(searchString));
+            handler.showOrder(this, Integer.parseInt(searchString));
         }
     }
 
@@ -127,4 +130,24 @@ public class OrderView extends BaseView implements View{
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
+
+    public void showCreditCardAuthWindow() {
+        CreditCardAuthWindow creditCardAuthWindow = new CreditCardAuthWindow(this, handler);
+        showWindow(creditCardAuthWindow);
+    }
+
+    public void showAttendeeDetail(Attendee attendee, List<Badge> availableBadgeTypes) {
+        AttendeeWindow attendeeWindow = new AttendeeWindow(this, handler);
+        AttendeeDetailForm form = attendeeWindow.getDetailForm();
+        form.setAvailableBadges(availableBadgeTypes);
+        form.show(attendee);
+        form.setManualPriceEnabled(currentUserHasRight("attendee_override_price"));
+        showWindow(attendeeWindow);
+    }
+
+    @Override
+    public void showPrintBadgeWindow(List<Attendee> attendeeList) {
+        PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
+        showWindow(printBadgeWindow);
+    }
 }

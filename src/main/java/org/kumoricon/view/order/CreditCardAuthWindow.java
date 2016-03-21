@@ -15,10 +15,12 @@ public class CreditCardAuthWindow extends Window {
     Button save = new Button("Save");
 
     private OrderPresenter handler;
+    private OrderView parentView;
 
-    public CreditCardAuthWindow(OrderPresenter orderPresenter) {
+    public CreditCardAuthWindow(OrderView parentView, OrderPresenter orderPresenter) {
         super("Authorization Number");
         this.handler = orderPresenter;
+        this.parentView = parentView;
         setIcon(FontAwesome.CREDIT_CARD);
         setModal(true);
         center();
@@ -38,7 +40,7 @@ public class CreditCardAuthWindow extends Window {
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         save.addClickListener((Button.ClickListener) clickEvent -> {
             if (authNumber.getValue().trim().length() >= 6) {
-                handler.saveAuthNumberClicked(authNumber.getValue());
+                handler.saveAuthNumberClicked(this.parentView, authNumber.getValue());
                 close();
             } else {
                 authNumber.selectAll();

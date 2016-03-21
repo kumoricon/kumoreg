@@ -15,10 +15,11 @@ import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @ViewScope
 @SpringView(name = AttendeeDetailView.VIEW_NAME)
-public class AttendeeDetailView extends BaseView implements View {
+public class AttendeeDetailView extends BaseView implements View, AttendeePrintView {
     public static final String VIEW_NAME = "attendee";
     public static final String REQUIRED_RIGHT = "attendee_search";
 
@@ -116,5 +117,11 @@ public class AttendeeDetailView extends BaseView implements View {
 
     public String getRequiredRight() {
         return REQUIRED_RIGHT;
+    }
+
+    @Override
+    public void showPrintBadgeWindow(List<Attendee> attendeeList) {
+        PrintBadgeWindow window = new PrintBadgeWindow(this, handler, attendeeList);
+        showWindow(window);
     }
 }

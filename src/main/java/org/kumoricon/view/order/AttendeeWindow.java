@@ -10,17 +10,20 @@ import org.kumoricon.presenter.order.OrderPresenter;
 import org.kumoricon.view.attendee.AttendeeCheckinDetailForm;
 import org.kumoricon.view.attendee.AttendeeDetailForm;
 
+
 public class AttendeeWindow extends Window {
 
     AttendeeDetailForm attendeeDetailForm = new AttendeeCheckinDetailForm();
     Button save = new Button("Save");
     Button cancel = new Button("Cancel");
     Button delete = new Button("Delete");
+    OrderView parentView;
 
     private OrderPresenter handler;
 
-    public AttendeeWindow(OrderPresenter orderPresenter) {
+    public AttendeeWindow(OrderView parentView, OrderPresenter orderPresenter) {
         super("Attendee");
+        this.parentView = parentView;
         this.handler = orderPresenter;
         setIcon(FontAwesome.USER);
         center();
@@ -44,7 +47,7 @@ public class AttendeeWindow extends Window {
 
         save.addClickListener((Button.ClickListener) clickEvent -> {
             // handler.attendeeIsValid(attendee);
-            handler.addAttendeeToOrder(attendeeDetailForm.getAttendee());
+            handler.addAttendeeToOrder(parentView, attendeeDetailForm.getAttendee());
             close();
         });
 
@@ -53,7 +56,7 @@ public class AttendeeWindow extends Window {
         });
 
         delete.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.removeAttendeeFromOrder(attendeeDetailForm.getAttendee());
+            handler.removeAttendeeFromOrder(parentView, attendeeDetailForm.getAttendee());
             close();
         });
 

@@ -5,11 +5,7 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
-import org.kumoricon.view.BaseView;
-import org.kumoricon.view.attendee.AttendeeDetailForm;
-import org.kumoricon.view.attendee.AttendeeDetailView;
-import org.kumoricon.view.attendee.OverrideRequiredWindow;
-import org.kumoricon.view.attendee.PrintBadgeWindow;
+import org.kumoricon.view.attendee.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -30,7 +26,6 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
     private UserRepository userRepository;
 
     private AttendeeDetailView view;
-    private PrintBadgeWindow printBadgeWindow;
     private OverrideRequiredWindow overrideRequiredWindow;
 
     public AttendeeDetailPresenter() {
@@ -107,10 +102,9 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
     }
 
     @Override
-    public void showAttendeeBadgeWindow(BaseView view, List<Attendee> attendeeList) {
+    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
         if (attendeeList != null) {
-            printBadgeWindow = new PrintBadgeWindow(view, this, attendeeList);
-            view.showWindow(printBadgeWindow);
+            view.showPrintBadgeWindow(attendeeList);
         }
     }
 

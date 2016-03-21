@@ -10,13 +10,10 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.presenter.attendee.PrintBadgeHandler;
 import org.kumoricon.view.BaseView;
-import org.kumoricon.view.attendee.AttendeeDetailForm;
+import org.kumoricon.view.attendee.AttendeePrintView;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
-import org.kumoricon.view.order.AttendeeWindow;
-import org.kumoricon.view.order.CreditCardAuthWindow;
 import org.kumoricon.view.order.OrderView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@Scope("request")
 public class OrderPresenter implements PrintBadgeHandler {
     @Autowired
     private OrderRepository orderRepository;
@@ -39,21 +35,17 @@ public class OrderPresenter implements PrintBadgeHandler {
     @Autowired
     private UserRepository userRepository;
 
-    private OrderView view;
-
-    private PrintBadgeWindow printBadgeWindow;
-
     public OrderPresenter() {
     }
 
-    public void createNewOrder() {
+    public void createNewOrder(OrderView view) {
         Order order = new Order();
         order.setOrderId(order.generateOrderId());
         orderRepository.save(order);
         view.navigateTo(view.VIEW_NAME + "/" + order.getId());
     }
 
-    public void showOrder(int id) {
+    public void showOrder(OrderView view, int id) {
         Order order = orderRepository.findOne(id);
         if (order != null) {
             view.afterSuccessfulFetch(order);
@@ -62,24 +54,21 @@ public class OrderPresenter implements PrintBadgeHandler {
         }
     }
 
-    public void cancelOrder() {
+    public void cancelOrder(OrderView view) {
         // Todo: Remove from database if order hasn't been saved yet? Make sure to not
         // delete orders that are already paid for. Not sure if this is a good feature
         // or not
         view.navigateTo("");
     }
 
-    public OrderView getView() { return view; }
-    public void setView(OrderView view) { this.view = view; }
-
-    public void addNewAttendee() {
+    public void addNewAttendee(OrderView view) {
         Attendee newAttendee = new Attendee();
-        newAttendee.setBadgeNumber(generateBadgeNumber());
+        newAttendee.setBadgeNumber(generateBadgeNumber(view));
         newAttendee.setOrder(view.getOrder());
-        selectAttendee(newAttendee);
+        selectAttendee(view, newAttendee);
     }
 
-    public void addAttendeeToOrder(Attendee attendee) {
+    public void addAttendeeToOrder(OrderView view, Attendee attendee) {
         Order order = view.getOrder();
         order.addAttendee(attendee);
         order.setTotalAmount(getOrderTotal(order));
@@ -98,7 +87,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         return total;
     }
 
-    public void removeAttendeeFromOrder(Attendee attendee) {
+    public void removeAttendeeFromOrder(OrderView view, Attendee attendee) {
         if (attendee != null && !attendee.isCheckedIn()) {
             String name = attendee.getName();
             Order order = view.getOrder();
@@ -114,7 +103,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         }
     }
 
-    public void takeMoney() {
+    public void takeMoney(OrderView view) {
         Order currentOrder = view.getOrder();
         if (currentOrder.getAttendeeList().size() == 0) {
             view.notify("Error: No attendees in order");
@@ -126,40 +115,31 @@ public class OrderPresenter implements PrintBadgeHandler {
         }
 
         if (currentOrder.getPaymentType().equals(Order.PaymentType.CREDIT)) {
-            CreditCardAuthWindow creditCardAuthWindow = new CreditCardAuthWindow(this);
-            view.showWindow(creditCardAuthWindow);
+            view.showCreditCardAuthWindow();
         } else {
-            orderComplete(currentOrder);
+            orderComplete(view, currentOrder);
         }
 
     }
 
-    public void orderComplete(Order currentOrder) {
+    public void orderComplete(OrderView view, Order currentOrder) {
         currentOrder.paymentComplete(view.getCurrentUser());
         orderRepository.save(currentOrder);
-        // Todo: Trigger printing badges
         showAttendeeBadgeWindow(view, currentOrder.getAttendees());
     }
 
-    public void selectAttendee(Attendee attendee) {
-        AttendeeWindow attendeeWindow = new AttendeeWindow(this);
-        view.showWindow(attendeeWindow);
-        AttendeeDetailForm form = attendeeWindow.getDetailForm();
+    public void selectAttendee(OrderView view, Attendee attendee) {
         List<Badge> badgeTypesUserCanSee = new ArrayList<>();
         for (Badge badge : badgeRepository.findByVisibleTrue()) {
             if (badge.getRequiredRight() == null || view.currentUserHasRight(badge.getRequiredRight())) {
                 badgeTypesUserCanSee.add(badge);
             }
         }
-        form.setAvailableBadges(badgeTypesUserCanSee);
-
-        form.show(attendee);
-        form.setManualPriceEnabled(view.currentUserHasRight("attendee_override_price"));
-
+        view.showAttendeeDetail(attendee, badgeTypesUserCanSee);
     }
 
     @Transactional
-    private String generateBadgeNumber() {
+    private String generateBadgeNumber(OrderView view) {
         User user = userRepository.findOne(view.getCurrentUser().getId());
         StringBuilder output = new StringBuilder();
         output.append(user.getFirstName().charAt(0));
@@ -169,23 +149,23 @@ public class OrderPresenter implements PrintBadgeHandler {
         return output.toString().toUpperCase();
     }
 
-    public void saveAuthNumberClicked(String value) {
+    public void saveAuthNumberClicked(OrderView view, String value) {
         Order order = view.getOrder();
         String oldNotes = "";
         if (order.getNotes() != null) { oldNotes = order.getNotes(); }
         order.setNotes("Credit card authorization Number: " + value + "\n" + oldNotes);
-        orderComplete(order);
+        orderComplete(view, order);
     }
 
-
     @Override
-    public void showAttendeeBadgeWindow(BaseView view, List<Attendee> attendeeList) {
-        printBadgeWindow = new PrintBadgeWindow(view, this, attendeeList);
-        view.showWindow(printBadgeWindow);
+    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
+        // Todo: Print badges here
+        view.showPrintBadgeWindow(attendeeList);
     }
 
     @Override
     public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
+        BaseView view = printBadgeWindow.getParentView();
         printBadgeWindow.close();
         view.notify("Order Complete");
         view.navigateTo("/");
@@ -193,6 +173,6 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
-        view.notify("Reprinting badge...");
+        printBadgeWindow.getParentView().notify("Reprinting badge...");
     }
 }

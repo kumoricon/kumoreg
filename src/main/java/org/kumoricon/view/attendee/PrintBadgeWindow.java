@@ -6,7 +6,6 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.presenter.attendee.PreRegPresenter;
 import org.kumoricon.presenter.attendee.PrintBadgeHandler;
 import org.kumoricon.util.BadgeGenerator;
 import org.kumoricon.view.BaseView;
@@ -73,7 +72,8 @@ public class PrintBadgeWindow extends Window {
             }
             showBadgesInBrowser(selectedAttendees);
         });
-        printedSuccessfully.addClickListener((Button.ClickListener) clickEvent -> handler.badgePrintSuccess(this, attendeeList));
+        printedSuccessfully.addClickListener((Button.ClickListener) clickEvent ->
+                handler.badgePrintSuccess(this, attendeeList));
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
     }

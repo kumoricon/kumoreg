@@ -3,11 +3,7 @@ package org.kumoricon.presenter.attendee;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
-import org.kumoricon.view.BaseView;
-import org.kumoricon.view.attendee.BadgeWarningWindow;
-import org.kumoricon.view.attendee.PreRegCheckInWindow;
-import org.kumoricon.view.attendee.PreRegView;
-import org.kumoricon.view.attendee.PrintBadgeWindow;
+import org.kumoricon.view.attendee.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -108,8 +104,8 @@ public class PreRegPresenter implements PrintBadgeHandler {
 
 
     @Override
-    public void showAttendeeBadgeWindow(BaseView view, List<Attendee> attendeeList) {
-
+    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
+        view.showPrintBadgeWindow(attendeeList);
     }
 
     @Override
