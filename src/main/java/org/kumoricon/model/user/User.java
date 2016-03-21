@@ -88,7 +88,8 @@ public class User implements Serializable {
     public void setLastBadgeNumberCreated(Integer lastBadgeNumberCreated) { this.lastBadgeNumberCreated = lastBadgeNumberCreated; }
     public Integer getNextBadgeNumber() {
         if (lastBadgeNumberCreated == null) { lastBadgeNumberCreated = 0; }
-        return ++lastBadgeNumberCreated;
+        lastBadgeNumberCreated += 1;
+        return lastBadgeNumberCreated;
     }
 
     private static String hashPassword(String password, String salt){

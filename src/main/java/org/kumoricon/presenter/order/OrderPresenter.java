@@ -18,6 +18,7 @@ import org.kumoricon.view.order.OrderView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -157,7 +158,7 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     }
 
-
+    @Transactional
     private String generateBadgeNumber() {
         User user = userRepository.findOne(view.getCurrentUser().getId());
         StringBuilder output = new StringBuilder();
