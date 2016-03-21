@@ -50,12 +50,33 @@ public class AttendeeReportPresenter implements ReportPresenter {
         return sb.toString();
     }
 
+    private static String buildAttendanceCounts( Integer totalAttendance, Integer warmBodyCount) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<h2>Total Attendance Counts</h2>");
+        sb.append("<table border=\"1\">");
+        sb.append("<tr>");
+        sb.append("<td>Total Attendance</td>");
+        sb.append(String.format("<td align=\"right\">%d</td>", totalAttendance));
+        sb.append("</tr>");
+        sb.append("<td>Warm Body Count</td>");
+        sb.append(String.format("<td align=\"right\">%d</td>", warmBodyCount));
+        sb.append("</tr>");
+        sb.append("</table>");
+        sb.append("<b>Total Attendance:</b> <i>Paying</i> attendees who checked in<br>");
+        sb.append("<b>Warm Body Count:</b> All attendees (paid and gratis) who checked in<br>");
+        sb.append("Attendees with multiple single day badges are counted as a single attendee based on " +
+                "first name, last name, birthdate, and zip code<br>");
+        return sb.toString();
+    }
+
     @Override
     public void fetchReportData(ReportView view) {
         StringBuilder sb = new StringBuilder();
         sb.append(getTotalsByBadgeType());
         sb.append(buildTable("At Con Check Ins By Day", attendeeRepository.findAtConCheckInCountsByDate()));
         sb.append(buildTable("Pre Reg Check Ins By Day", attendeeRepository.findPreRegCheckInCountsByDate()));
+        sb.append(buildAttendanceCounts(
+                attendeeRepository.findTotalAttendeeCount(), attendeeRepository.findWarmBodyCount()));
         view.afterSuccessfulFetch(sb.toString());
     }
 
