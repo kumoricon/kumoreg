@@ -62,7 +62,11 @@ public class AttendeeReportPresenter implements ReportPresenter {
         sb.append(String.format("<td align=\"right\">%d</td>", warmBodyCount));
         sb.append("</tr>");
         sb.append("</table>");
-        sb.append("<b>Total Attendance:</b> <i>Paying</i> attendees who checked in<br>");
+        sb.append("<b>Total Attendance:</b> <i>Unique, paid</i> attendees who checked in. This means that weekend " +
+                "badges are counted only once, and the count is a number of unique individual attendees who " +
+                "registered in a given year. Attendance figures count paid membership purchases at standard or VIP " +
+                "rates (staff, exhibitors, artists, guests, industry, press, and complimentary badges are not " +
+                "counted).<br>");
         sb.append("<b>Warm Body Count:</b> All attendees (paid and gratis) who checked in<br>");
         sb.append("Attendees with multiple single day badges are counted as a single attendee based on " +
                 "first name, last name, birthdate, and zip code<br>");
