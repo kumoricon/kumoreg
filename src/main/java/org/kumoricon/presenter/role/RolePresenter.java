@@ -3,6 +3,7 @@ package org.kumoricon.presenter.role;
 import org.kumoricon.model.role.RightRepository;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
+import org.kumoricon.view.role.RoleEditWindow;
 import org.kumoricon.view.role.RoleView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,9 +24,8 @@ public class RolePresenter {
 
     public void roleSelected(RoleView view, Role role) {
         if (role != null) {
-            view.navigateTo(view.VIEW_NAME + "/" + role.getId().toString());
-            view.setAvailableRights(rightRepository.findAll());
-            view.showRole(role);
+            view.navigateTo(RoleView.VIEW_NAME + "/" + role.getId().toString());
+            view.showRole(role, rightRepository.findAll());
         }
     }
 
@@ -37,24 +37,22 @@ public class RolePresenter {
     }
 
     public void addNewRole(RoleView view) {
-        view.clearRoleForm();
-        view.showRoleForm();
         view.navigateTo(RoleView.VIEW_NAME);
         Role role = new Role();
-        view.showRole(role);
+        view.showRole(role, rightRepository.findAll());
     }
 
-    public void cancel(RoleView view) {
+    public void cancel(RoleEditWindow window) {
+        RoleView view = window.getParentView();
+        window.close();
         view.navigateTo(RoleView.VIEW_NAME);
-        view.clearRoleForm();
-        view.hideRoleForm();
         view.clearSelection();
     }
 
-    public void saveRole(RoleView view) {
-        Role role = view.getRole();
-
+    public void saveRole(RoleEditWindow window, Role role) {
+        RoleView view = window.getParentView();
         roleRepository.save(role);
+        window.close();
         view.navigateTo(RoleView.VIEW_NAME);
         showRoleList(view);
     }
