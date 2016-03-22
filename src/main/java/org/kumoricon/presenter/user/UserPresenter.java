@@ -4,6 +4,7 @@ import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.view.user.UserEditWindow;
 import org.kumoricon.view.user.UserView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,7 @@ public class UserPresenter {
     public void userSelected(UserView view, User user) {
         if (user != null) {
             view.navigateTo(view.VIEW_NAME + "/" + user.getId().toString());
-            view.setRoleList(getAvailableRoles());
-            view.showUser(user);
+            view.showUser(user, getAvailableRoles());
         }
     }
 
@@ -37,27 +37,24 @@ public class UserPresenter {
     }
 
     public void addNewUser(UserView view) {
-        view.clearUserForm();
-        view.showUserForm();
         view.navigateTo(view.VIEW_NAME);
         User user = new User();
         user.setPassword(user.DEFAULT_PASSWORD);
-        view.setRoleList(roleRepository.findAll());
-        view.showUser(user);
+        view.showUser(user, roleRepository.findAll());
     }
 
-    public void cancelUser(UserView view) {
-        view.navigateTo(view.VIEW_NAME);
-        view.clearUserForm();
-        view.hideUserForm();
+    public void cancelUser(UserEditWindow window) {
+        UserView view = window.getParentView();
+        view.navigateTo(UserView.VIEW_NAME);
+        window.close();
         view.clearSelection();
     }
 
-    public void saveUser(UserView view) {
-        User user = view.getUser();
-
+    public void saveUser(UserEditWindow window, User user) {
+        UserView view = window.getParentView();
         userRepository.save(user);
-        view.navigateTo(view.VIEW_NAME);
+        window.close();
+        view.navigateTo(UserView.VIEW_NAME);
         showUserList(view);
     }
 
@@ -70,18 +67,18 @@ public class UserPresenter {
         if (parameters != null) {
             Integer id = Integer.parseInt(parameters);
             User user = userRepository.findOne(id);
-            view.setRoleList(roleRepository.findAll());
+//            List<Role> roles = roleRepository.findAll();
             view.selectUser(user);
         }
     }
 
-    public void resetPassword(UserView view) {
-        User user = view.getUser();
+    public void resetPassword(UserEditWindow window, User user) {
+        UserView view = window.getParentView();
         user.setPassword("password");
         try {
             userRepository.save(user);
             view.notify("Password reset for " + user.getUsername());
-            cancelUser(view);
+            window.close();
         } catch (Exception e) {
             view.notifyError(e.getMessage());
         }
