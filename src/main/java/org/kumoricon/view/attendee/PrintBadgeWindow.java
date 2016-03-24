@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PrintBadgeWindow extends Window {
 
-    Button printedSuccessfully = new Button("Printed Successfully");
+    Button printedSuccessfully = new Button("Printed Successfully?");
     Button reprint = new Button("Reprint Selected");
     Button showBadgeInBrowser = new Button("Show Selected In Browser");
 

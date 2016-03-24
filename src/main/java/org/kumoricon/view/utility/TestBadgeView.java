@@ -24,7 +24,7 @@ public class TestBadgeView extends BaseView implements View, AttendeePrintView {
 
     @PostConstruct
     public void init() {
-        Button display = new Button("Display");
+        Button display = new Button("Print Test Badges");
         addComponent(display);
 
         display.addClickListener((Button.ClickListener) clickEvent -> handler.showAttendeeBadgeWindow(this, new ArrayList<Attendee>()));
