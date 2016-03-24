@@ -50,10 +50,10 @@ public class BadgePrintService {
 
         PrintService printer = PrintServiceLookup.lookupDefaultPrintService();
         if (printer != null) {
-            log.warn(String.format("Printer \"%s\" not found, using default printer %s", name, printer.getName()));
+            log.warn("Printer \"{}\" not found, using default printer \"{}\"", name, printer.getName());
             return printer;
         }
-        log.error(String.format("Printer \"%s\" not found, no default printer found. Set a printer as default.", name));
+        log.error("Printer \"%s\" not found, no default printer found. Set a printer as default.", name);
         return null;
     }
 
