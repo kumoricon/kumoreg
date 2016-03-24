@@ -4,6 +4,7 @@
 
 1. Install Tomcat (and MySQL if you don't already have a database server)
 2. Place kumoreg.jar in webapps directory
+3. Configure all network printers in CUPS.
 3. Update database information in application.properties file
 4. Start Tomcat
 5. Browse to http://servername:8080/ 
@@ -13,3 +14,4 @@
     - Configure Roles under Administration > Roles
     - Configure Users under Administration > Users
     - Configure Badge Types under Administration > Badge Types
+    - Map printers and computers under Administration > Computers
