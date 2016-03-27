@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "kumoreg.enablePrintingFromServer",
+      "type": "java.lang.Boolean",
+      "description": "Print badges via printers installed locally on the server."
+    }
+  ]
+}
