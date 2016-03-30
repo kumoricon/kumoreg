@@ -1,11 +1,14 @@
 package org.kumoricon.presenter.utility;
 
+import org.kumoricon.attendee.BadgePrintService;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeFactory;
 import org.kumoricon.presenter.attendee.PrintBadgeHandler;
 import org.kumoricon.view.BaseView;
 import org.kumoricon.view.attendee.AttendeePrintView;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -16,9 +19,13 @@ import java.util.List;
 @Controller
 @Scope("request")
 public class PrintBadgePresenter implements PrintBadgeHandler {
+    private static final Logger log = LoggerFactory.getLogger(BadgePrintService.class);
 
     @Autowired
     private AttendeeFactory attendeeFactory;
+
+    @Autowired
+    private BadgePrintService badgePrintService;
 
     public PrintBadgePresenter() {}
 
@@ -29,8 +36,8 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
         attendeeList.add(attendeeFactory.generateDemoAttendee());
         attendeeList.add(attendeeFactory.generateYouthAttendee());
         attendeeList.add(attendeeFactory.generateChildAttendee());
-        // Todo: Fix this
-//        printBadgeWindow = new PrintBadgeWindow(this, attendeeList);
+
+        printBadges((BaseView) view, attendeeList);
         view.showPrintBadgeWindow(attendeeList);
     }
 
@@ -43,12 +50,26 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
 
     @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
-        if (printBadgeWindow == null) { return; }
+        if (printBadgeWindow == null) {
+            return;
+        }
         BaseView view = printBadgeWindow.getParentView();
         if (attendeeList.size() > 0) {
+            printBadges(view, attendeeList);
             view.notify("Reprinting badges");
         } else {
             view.notify("No attendees selected");
         }
+    }
+
+    private void printBadges(BaseView view, List<Attendee> attendeeList) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("[%s] printing test badges for: ", view.getCurrentUser()));
+        for (Attendee attendee : attendeeList) {
+            sb.append(attendee.getName());
+            sb.append("; ");
+        }
+        log.info(sb.toString());
+        view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
     }
 }

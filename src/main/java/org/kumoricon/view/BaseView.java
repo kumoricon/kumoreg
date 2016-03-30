@@ -70,6 +70,11 @@ public class BaseView extends VerticalLayout implements View {
         setMargin(true);
     }
 
+    public String getCurrentClientIPAddress() {
+        return getUI().getCurrent().getPage().getWebBrowser().getAddress();
+    }
+
+
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         // If you override the enter method, make sure to call super.enter(viewChangeEvent)
         checkPermissions();

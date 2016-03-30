@@ -20,7 +20,7 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = PreRegView.VIEW_NAME)
-public class PreRegView extends BaseView implements View{
+public class PreRegView extends BaseView implements View, AttendeePrintView{
     public static final String VIEW_NAME = "preReg";
     public static final String REQUIRED_RIGHT = "pre_reg_check_in";
 
@@ -126,4 +126,10 @@ public class PreRegView extends BaseView implements View{
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
+
+    @Override
+    public void showPrintBadgeWindow(List<Attendee> attendeeList) {
+        PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
+        showWindow(printBadgeWindow);
+    }
 }

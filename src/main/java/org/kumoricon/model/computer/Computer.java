@@ -1,7 +1,6 @@
 package org.kumoricon.model.computer;
 
 import javax.persistence.*;
-import java.net.InetAddress;
 
 @Entity
 @Table(name = "computers")
@@ -9,22 +8,21 @@ public class Computer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private java.net.InetAddress address;
-    @OneToOne
-    private Printer printer;
+
+    private String ipAddress;
+    private String printerName;
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public InetAddress getAddress() { return address; }
-    public void setAddress(InetAddress address) { this.address = address; }
-    public void setAddress(byte[] address) throws Exception { this.address = InetAddress.getByAddress(address); }
+    public String getIpAddress() { return ipAddress; }
+    public void setIpAddress(String ipAddress) { this.ipAddress = ipAddress; }
 
-    public Printer getPrinter() { return printer; }
-    public void setPrinter(Printer printer) { this.printer = printer; }
+    public String getPrinterName() { return printerName; }
+    public void setPrinterName(String printerName) { this.printerName = printerName; }
 
     public String toString() {
-        return String.format("Computer %s with printer %s", address.toString(), getPrinter().getAddress().toString());
+        return String.format("Computer %s with printer %s", ipAddress, printerName);
     }
 
     @Override
@@ -39,8 +37,8 @@ public class Computer {
         }
     }
 
-    @Override
-    public int hashCode() {
-        return getAddress().hashCode();
-    }
+//    @Override
+//    public int hashCode() {
+//        return getId().hashCode();
+//    }
 }
