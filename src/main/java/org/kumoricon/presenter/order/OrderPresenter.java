@@ -49,6 +49,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         Order order = new Order();
         order.setOrderId(order.generateOrderId());
         orderRepository.save(order);
+        log.info(String.format("%s created new order %s", view.getCurrentUser(), order));
         view.navigateTo(view.VIEW_NAME + "/" + order.getId());
     }
 
@@ -62,9 +63,11 @@ public class OrderPresenter implements PrintBadgeHandler {
     }
 
     public void cancelOrder(OrderView view) {
-        // Todo: Remove from database if order hasn't been saved yet? Make sure to not
-        // delete orders that are already paid for. Not sure if this is a good feature
-        // or not
+        Order order = view.getOrder();
+        if (order.getAttendeeList().size() == 0 && !order.getPaid()) {
+            orderRepository.delete(order);
+            log.info(String.format("%s canceled empty order %s. It was deleted.", view.getCurrentUser(), order));
+        }
         view.navigateTo("");
     }
 
@@ -80,6 +83,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         order.addAttendee(attendee);
         order.setTotalAmount(getOrderTotal(order));
         order = orderRepository.save(order);
+        log.info(String.format("%s added attendee %s to order %s", view.getCurrentUser(), attendee, order));
         view.afterSuccessfulFetch(order);
     }
 
@@ -105,6 +109,8 @@ public class OrderPresenter implements PrintBadgeHandler {
             Order result = orderRepository.save(order);
             view.afterSuccessfulFetch(result);
             attendeeRepository.delete(attendee);
+            log.info(String.format("%s removed attendee %s from order %s. Attendee was deleted.",
+                    view.getCurrentUser(), attendee, order));
             view.notify(name + " deleted");
             view.afterSuccessfulFetch(order);
         }
@@ -132,6 +138,8 @@ public class OrderPresenter implements PrintBadgeHandler {
     public void orderComplete(OrderView view, Order currentOrder) {
         currentOrder.paymentComplete(view.getCurrentUser());
         orderRepository.save(currentOrder);
+        log.info(String.format("%s completed order %s and took payment $%s",
+                view.getCurrentUser(), currentOrder, currentOrder.getTotalAmount()));
         showAttendeeBadgeWindow(view, currentOrder.getAttendees());
     }
 
