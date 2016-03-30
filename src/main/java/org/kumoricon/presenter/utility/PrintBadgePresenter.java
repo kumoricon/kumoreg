@@ -4,18 +4,15 @@ import org.kumoricon.attendee.BadgePrintService;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeFactory;
 import org.kumoricon.presenter.attendee.PrintBadgeHandler;
-import org.kumoricon.util.BadgeGenerator;
 import org.kumoricon.view.BaseView;
 import org.kumoricon.view.attendee.AttendeePrintView;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import javax.print.PrintException;
 import java.util.List;
 
 
@@ -30,10 +27,6 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
     @Autowired
     private BadgePrintService badgePrintService;
 
-
-    @Value("${kumoreg.printing.enablePrintingFromServer}")
-    private Boolean enablePrintingFromServer;
-
     public PrintBadgePresenter() {}
 
     @Override
@@ -44,7 +37,7 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
         attendeeList.add(attendeeFactory.generateYouthAttendee());
         attendeeList.add(attendeeFactory.generateChildAttendee());
 
-        printBadges((BaseView)view, attendeeList);
+        printBadges((BaseView) view, attendeeList);
         view.showPrintBadgeWindow(attendeeList);
     }
 
@@ -57,7 +50,9 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
 
     @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
-        if (printBadgeWindow == null) { return; }
+        if (printBadgeWindow == null) {
+            return;
+        }
         BaseView view = printBadgeWindow.getParentView();
         if (attendeeList.size() > 0) {
             printBadges(view, attendeeList);
@@ -68,18 +63,13 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
     }
 
     private void printBadges(BaseView view, List<Attendee> attendeeList) {
-        BadgeGenerator badgeGenerator = new BadgeGenerator(attendeeList);
-
-        if (enablePrintingFromServer != null && enablePrintingFromServer) {
-            try {
-                badgePrintService.printDocument(badgeGenerator.getStream(), "Test");
-            } catch (PrintException e) {
-                view.notifyError("Error printing. No printers found? More information in server logs");
-                log.error(String.format("Error printing badge for %s: %s",
-                        view.getCurrentUser().getUsername(), e.getMessage()), e);
-            }
-        } else {
-            view.notify("Printing from server not enabled. Select \"Show Badges in Browser\".");
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("[%s] printing test badges for: ", view.getCurrentUser()));
+        for (Attendee attendee : attendeeList) {
+            sb.append(attendee.getName());
+            sb.append("; ");
         }
+        log.info(sb.toString());
+        view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
     }
 }

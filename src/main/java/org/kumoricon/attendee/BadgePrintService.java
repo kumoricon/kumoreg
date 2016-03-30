@@ -1,7 +1,12 @@
 package org.kumoricon.attendee;
 
+import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.computer.ComputerService;
+import org.kumoricon.util.BadgeGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.print.*;
@@ -14,6 +19,37 @@ import java.util.List;
 @Service
 public class BadgePrintService {
     private static final Logger log = LoggerFactory.getLogger(BadgePrintService.class);
+
+    @Value("${kumoreg.printing.enablePrintingFromServer}")
+    private Boolean enablePrintingFromServer;
+
+    @Autowired
+    private ComputerService computerService;
+
+    /**
+     * Prints badges for a given list of attendees to either the appropriate printer name (from
+     * the computers table), or the default printer on the server.
+     * @param attendees List of attendees
+     * @param clientIPAddress Client computer's IP address
+     * @return
+     */
+    public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) {
+        if (enablePrintingFromServer != null && enablePrintingFromServer) {
+            BadgeGenerator badgeGenerator = new BadgeGenerator(attendees);
+            String printerName = computerService.findPrinterNameForComputer(clientIPAddress);
+            try {
+                printDocument(badgeGenerator.getStream(), printerName);
+            } catch (PrintException e) {
+                log.error(String.format("Error printing badge for %s: %s",
+                        clientIPAddress, e.getMessage()), e);
+                return("Error printing. No printers found? More information in server logs");
+            }
+        } else {
+            return("Printing from server not enabled. Select \"Show Badges in Browser\".");
+        }
+        return "Printed";
+    }
+
 
     /**
      * Prints the given inputStream to the printer with the given name, or the default printer

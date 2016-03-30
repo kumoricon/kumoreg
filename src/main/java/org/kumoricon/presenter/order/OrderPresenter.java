@@ -1,5 +1,6 @@
 package org.kumoricon.presenter.order;
 
+import org.kumoricon.attendee.BadgePrintService;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;
@@ -13,6 +14,8 @@ import org.kumoricon.view.BaseView;
 import org.kumoricon.view.attendee.AttendeePrintView;
 import org.kumoricon.view.attendee.PrintBadgeWindow;
 import org.kumoricon.view.order.OrderView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +36,11 @@ public class OrderPresenter implements PrintBadgeHandler {
     private AttendeeRepository attendeeRepository;
 
     @Autowired
+    private BadgePrintService badgePrintService;
+
+    @Autowired
     private UserRepository userRepository;
+    private static final Logger log = LoggerFactory.getLogger(OrderPresenter.class);
 
     public OrderPresenter() {
     }
@@ -159,7 +166,14 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
-        // Todo: Print badges here
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s printing badges for: ", view.getCurrentUser()));
+        for (Attendee attendee : attendeeList) {
+            sb.append(attendee.getName());
+            sb.append("; ");
+        }
+        log.info(sb.toString());
+        view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
         view.showPrintBadgeWindow(attendeeList);
     }
 
@@ -173,6 +187,16 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
-        printBadgeWindow.getParentView().notify("Reprinting badge...");
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s printing badges for: ", printBadgeWindow.getParentView().getCurrentUser()));
+        for (Attendee attendee : attendeeList) {
+            sb.append(attendee.getName());
+            sb.append("; ");
+        }
+        sb.append(" (Reprint from window)");
+        log.info(sb.toString());
+        printBadgeWindow.getParentView().notify(
+                badgePrintService.printBadgesForAttendees(attendeeList,
+                        printBadgeWindow.getParentView().getCurrentClientIPAddress()));
     }
 }

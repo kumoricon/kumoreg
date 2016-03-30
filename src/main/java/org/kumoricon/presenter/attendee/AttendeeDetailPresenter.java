@@ -1,11 +1,14 @@
 package org.kumoricon.presenter.attendee;
 
+import org.kumoricon.attendee.BadgePrintService;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.attendee.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,11 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BadgePrintService badgePrintService;
+
+    private static final Logger log = LoggerFactory.getLogger(AttendeeDetailPresenter.class);
 
     private AttendeeDetailView view;
     private OverrideRequiredWindow overrideRequiredWindow;
@@ -58,8 +66,8 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
             if (view.currentUserHasRight("reprint_badge")) {
                 List<Attendee> attendeeList = new ArrayList<>();
                 attendeeList.add(attendee);
+                log.info(view.getCurrentUser() + " reprinting badge(s)");
                 showAttendeeBadgeWindow(view, attendeeList);
-                // Todo: print badge
             } else {
                 overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge");
                 view.showWindow(overrideRequiredWindow);
@@ -68,8 +76,8 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
             if (overrideUser.hasRight("reprint_badge")) {
                 List<Attendee> attendeeList = new ArrayList<>();
                 attendeeList.add(attendee);
+                log.info(view.getCurrentUser() + " reprinting badge(s)");
                 showAttendeeBadgeWindow(view, attendeeList);
-                // Todo: print badge
             } else {
                 view.notifyError("Override user does not have the required right");
                 overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge");
@@ -104,6 +112,14 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
         if (attendeeList != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(String.format("%s printing badges for: ", view.getCurrentUser()));
+            for (Attendee attendee : attendeeList) {
+                sb.append(attendee.getName());
+                sb.append("; ");
+            }
+            log.info(sb.toString());
+            view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
             view.showPrintBadgeWindow(attendeeList);
         }
     }
@@ -121,7 +137,15 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
     @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         if (attendeeList.size() > 0) {
-            view.notify("Reprinting badges");
+            StringBuilder sb = new StringBuilder();
+            sb.append(String.format("%s printing badges for: ", view.getCurrentUser()));
+            for (Attendee attendee : attendeeList) {
+                sb.append(attendee.getName());
+                sb.append("; ");
+            }
+            sb.append(" (Reprint from window)");
+            log.info(sb.toString());
+            view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
         } else {
             view.notify("No attendees selected");
         }

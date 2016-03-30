@@ -37,7 +37,7 @@ public class ComputerView extends BaseView implements View {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
-        yourAddress = new Label("Your IP Address is: " + getCurrentIpAddress());
+        yourAddress = new Label("Your IP Address is: " + getCurrentClientIPAddress());
         layout.addComponent(yourAddress);
         data.setCaption("Computers - Printer Mapping");
         data.setEditorEnabled(true);
@@ -87,10 +87,6 @@ public class ComputerView extends BaseView implements View {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         super.enter(viewChangeEvent);
-        String parameters = viewChangeEvent.getParameters();
-//        if (parameters != null && !parameters.equals("")) {
-//            handler.navigateToRole(this, viewChangeEvent.getParameters());
-//        }
     }
 
     public void setHandler(ComputerPresenter presenter) {
@@ -100,20 +96,6 @@ public class ComputerView extends BaseView implements View {
     public void afterSuccessfulFetch(List<Computer> computers) {
         computerList.removeAllItems();
         computerList.addAll(computers);
-    }
-
-//    public void showRole(Role role, List<Right> rights) {
-//        RoleEditWindow window = new RoleEditWindow(this, handler, rights);
-//        window.showRole(role);
-//        showWindow(window);
-//    }
-//
-//    public void selectRole(Role role) {
-//        roleList.select(role);
-//    }
-
-    private String getCurrentIpAddress() {
-        return getUI().getCurrent().getPage().getWebBrowser().getAddress();
     }
 
     public void clearSelection() { data.select(null); }

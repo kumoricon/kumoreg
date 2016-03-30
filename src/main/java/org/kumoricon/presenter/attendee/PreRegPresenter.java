@@ -1,9 +1,13 @@
 package org.kumoricon.presenter.attendee;
 
+import org.kumoricon.attendee.BadgePrintService;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
+import org.kumoricon.view.BaseView;
 import org.kumoricon.view.attendee.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -18,9 +22,14 @@ public class PreRegPresenter implements PrintBadgeHandler {
     private AttendeeRepository attendeeRepository;
     @Autowired
     private BadgeRepository badgeRepository;
+    @Autowired
+    private BadgePrintService badgePrintService;
 
     private PreRegView view;
     private BadgeWarningWindow warningWindow;
+    private static final Logger log = LoggerFactory.getLogger(PreRegPresenter.class);
+
+
 
     public PreRegPresenter() {
     }
@@ -74,14 +83,23 @@ public class PreRegPresenter implements PrintBadgeHandler {
         attendeeList.add(attendee);
         if (validateBeforeCheckIn(window, attendee)) {
             window.close();
-            PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(window.getParentView(), this, attendeeList);
-            window.getParentView().showWindow(printBadgeWindow);
+            showAttendeeBadgeWindow(window.getParentView(), attendeeList);
         }
     }
 
     @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
-        printBadgeWindow.getParentView().notify("Reprinting badge...");
+        BaseView v = printBadgeWindow.getParentView();
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s printing badges for: ", v.getCurrentUser()));
+        for (Attendee attendee : attendeeList) {
+            sb.append(attendee.getName());
+            sb.append("; ");
+        }
+        sb.append(" (Reprint from window)");
+        log.info(sb.toString());
+        printBadgeWindow.getParentView().notify(
+                badgePrintService.printBadgesForAttendees(attendeeList, v.getCurrentClientIPAddress()));
     }
 
     public Boolean validateBeforeCheckIn(PreRegCheckInWindow window, Attendee attendee) {
@@ -105,14 +123,19 @@ public class PreRegPresenter implements PrintBadgeHandler {
 
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s printing badges for: ", view.getCurrentUser()));
+        for (Attendee attendee : attendeeList) {
+            sb.append(attendee.getName());
+            sb.append("; ");
+        }
+        log.info(sb.toString());
+        view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
         view.showPrintBadgeWindow(attendeeList);
     }
 
     @Override
     public void badgePrintSuccess(PrintBadgeWindow window, List<Attendee> attendees) {
-        //        attendee.setParentFormReceived(); // This field isn't part of the main attendee
-//                                          // detail form, so it isn't bound automatically
-//                                         // but still needs to be set.
         for (Attendee attendee : attendees) {
             attendee.setCheckedIn(true);
         }
