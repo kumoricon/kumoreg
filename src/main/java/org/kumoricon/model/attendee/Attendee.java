@@ -1,5 +1,6 @@
 package org.kumoricon.model.attendee;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
@@ -155,6 +156,45 @@ public class Attendee implements Serializable {
 
     public String toString() {
         return String.format("(%s) %s %s", id, firstName, lastName);
+    }
+
+    public Boolean validate() throws ValueException {
+        if (isNullOrEmpty(firstName)) { throw new ValueException("First name is required"); }
+        if (isNullOrEmpty(lastName)) { throw new ValueException("Last name is required"); }
+        if (isNullOrEmpty(phoneNumber) && isNullOrEmpty(email)) {
+            throw new ValueException("Phone Number or Email is required");
+        }
+        if (paidAmount == null || paidAmount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new ValueException("Paid amount may not be negative");
+        }
+        if (birthDate == null || birthDate.isBefore(LocalDate.of(1900, 1, 1))) {
+            throw new ValueException("Birthdate may not be before 1/1/1900");
+        }
+        if (birthDate == null || birthDate.isAfter(LocalDate.now())) {
+            throw new ValueException("Birthdate may not be after today");
+        }
+        if (isNullOrEmpty(emergencyContactFullName)) {
+            throw new ValueException("Emergency Contact Name required");
+        }
+        if (isNullOrEmpty(emergencyContactPhone)) {
+            throw new ValueException("Emergency Contact Phone Number required");
+        }
+        if (badge == null) {
+            throw new ValueException("Badge may not be empty");
+        }
+        if (isMinor()) {
+            if (isNullOrEmpty(parentFullName)) {
+                throw new ValueException("Minors must have parent name entered");
+            }
+            if (isNullOrEmpty(parentPhone)) {
+                throw new ValueException("Minors must have parent phone number entered");
+            }
+        }
+        return true;
+    }
+
+    private Boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
     }
 
     @Override

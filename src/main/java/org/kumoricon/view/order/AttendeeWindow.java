@@ -5,6 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.presenter.order.OrderPresenter;
 import org.kumoricon.view.attendee.AttendeeCheckinDetailForm;
@@ -46,9 +47,14 @@ public class AttendeeWindow extends Window {
         cancel.setTabIndex(21);
 
         save.addClickListener((Button.ClickListener) clickEvent -> {
-            // handler.attendeeIsValid(attendee);
-            handler.addAttendeeToOrder(parentView, attendeeDetailForm.getAttendee());
-            close();
+            Attendee attendee = attendeeDetailForm.getAttendee();
+            try {
+                attendee.validate();
+                handler.addAttendeeToOrder(parentView, attendee);
+                close();
+            } catch (ValueException e) {
+                parentView.notifyError(e.getMessage());
+            }
         });
 
         cancel.addClickListener((Button.ClickListener) clickEvent -> {

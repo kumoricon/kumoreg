@@ -1,5 +1,6 @@
 package org.kumoricon.util;
 
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.*;
 
 public class FieldFactory {
@@ -15,6 +16,28 @@ public class FieldFactory {
         textField.setTabIndex(tabIndex);
         return textField;
     }
+
+    public static final TextField createNumberField(String name, int tabIndex) {
+        TextField textField = createTextField(name);
+        textField.addValidator(new RegexpValidator("[0-9]+", "This is not a number"));
+        textField.setTabIndex(tabIndex);
+        return textField;
+    }
+
+    public static final TextField createPhoneNumberField(String name, int tabIndex) {
+        TextField textField = createTextField(name);
+        textField.addValidator(new RegexpValidator("[\\(\\)0-9 -]+", "Must contain numbers or dash only"));
+        textField.setTabIndex(tabIndex);
+        return textField;
+    }
+
+    public static final TextField createDecimalField(String name, int tabIndex) {
+        TextField textField = createTextField(name);
+        textField.addValidator(new RegexpValidator("[0-9]*\\.?[0-9]+", "This is not a number"));
+        textField.setTabIndex(tabIndex);
+        return textField;
+    }
+
 
     public static final TextField createDisabledTextField(String name) {
         // Creates a TextField object that defaults to being disabled

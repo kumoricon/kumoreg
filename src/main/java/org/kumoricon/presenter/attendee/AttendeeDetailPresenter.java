@@ -1,5 +1,6 @@
 package org.kumoricon.presenter.attendee;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.attendee.BadgePrintService;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -52,15 +53,26 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
 
     public void saveAttendee() {
         Attendee attendee = view.getAttendee();
-        attendee = attendeeRepository.save(attendee);
-        view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
-        view.navigateTo("");
+        try {
+            attendee.validate();
+            attendee = attendeeRepository.save(attendee);
+            view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
+            view.navigateTo("");
+        } catch (ValueException e) {
+            view.notifyError(e.getMessage());
+        }
     }
 
     public void saveAttendeeAndReprintBadge(User overrideUser) {
         // If overrideUser is null, get the current user from the view
         Attendee attendee = view.getAttendee();
-        attendee = attendeeRepository.save(attendee);
+        try {
+            attendee.validate();
+            attendee = attendeeRepository.save(attendee);
+        } catch (ValueException e) {
+            view.notifyError(e.getMessage());
+            return;
+        }
 
         if (overrideUser == null) {
             if (view.currentUserHasRight("reprint_badge")) {

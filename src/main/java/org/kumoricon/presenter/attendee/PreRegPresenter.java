@@ -79,11 +79,13 @@ public class PreRegPresenter implements PrintBadgeHandler {
     }
 
     public void checkInAttendee(PreRegCheckInWindow window, Attendee attendee) {
-        List<Attendee> attendeeList = new ArrayList<>();
-        attendeeList.add(attendee);
-        if (validateBeforeCheckIn(window, attendee)) {
-            window.close();
-            showAttendeeBadgeWindow(window.getParentView(), attendeeList);
+        if (attendee != null) {
+            List<Attendee> attendeeList = new ArrayList<>();
+            attendeeList.add(attendee);
+            if (validateBeforeCheckIn(window, attendee)) {
+                window.close();
+                showAttendeeBadgeWindow(window.getParentView(), attendeeList);
+            }
         }
     }
 
