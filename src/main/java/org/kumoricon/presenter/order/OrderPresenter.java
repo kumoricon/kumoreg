@@ -58,6 +58,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         if (order != null) {
             view.afterSuccessfulFetch(order);
         } else {
+            log.error(String.format("%s tried to view order %s and it was not found.", view.getCurrentUser(), id));
             view.notifyError("Error: order " + id + " not found.");
         }
     }
@@ -161,6 +162,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         output.append(user.getLastName().charAt(0));
         output.append(String.format("%1$05d", user.getNextBadgeNumber()));
         userRepository.save(user);
+        log.info(String.format("%s generated badge number %s", view.getCurrentUser(), output.toString().toUpperCase()));
         return output.toString().toUpperCase();
     }
 
