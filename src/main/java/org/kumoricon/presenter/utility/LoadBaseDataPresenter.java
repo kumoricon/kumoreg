@@ -79,8 +79,9 @@ public class LoadBaseDataPresenter {
                 "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
                 "reprint_badge_with_override", "badge_type_press", "badge_type_vip", "badge_type_artist",
                 "view_attendance_report", "view_revenue_report",
-                "view_check_in_by_hour_report", "view_staff_report", "view_role_report", "manage_staff",
-                "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data", "load_base_data"};
+                "view_check_in_by_hour_report", "view_staff_report", "view_role_report", "view_panelist_report",
+                "manage_staff", "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data",
+                "load_base_data"};
 
         for (String right : rights) {
             rightRepository.save(new Right(right));
@@ -95,17 +96,18 @@ public class LoadBaseDataPresenter {
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                                                "print_badge", "attendee_edit", "attendee_edit_notes",
                                                "attendee_override_price", "reprint_badge", "view_staff_report",
-                                               "view_check_in_by_hour_report"});
+                                               "view_check_in_by_hour_report", "view_presenter_report"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
                 "badge_type_vip", "badge_type_press", "badge_type_artist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
-                "view_check_in_by_hour_report"});
+                "view_check_in_by_hour_report, view_presenter_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types", "view_role_report",
-                 "view_attendance_report", "view_revenue_report", "view_staff_report", "view_check_in_by_hour_report"});
-        roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes"});
+                "view_attendance_report", "view_revenue_report", "view_staff_report", "view_check_in_by_hour_report",
+                "view_presenter_report"});
+        roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes", "view_panelist_report"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
 

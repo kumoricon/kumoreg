@@ -148,6 +148,8 @@ public class Attendee implements Serializable {
     }
     public Boolean isCheckedIn() { return checkedIn; }
 
+    public Date getCheckInTime() { return checkInTime; }
+
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
 

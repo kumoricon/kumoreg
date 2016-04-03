@@ -46,4 +46,7 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer> {
     @Query(value = "SELECT COUNT(*) FROM (SELECT DISTINCT firstName, lastName, zip, birthDate FROM attendees WHERE checkedIn=TRUE AND paidAmount > 0) as t", nativeQuery = true)
     Integer findTotalAttendeeCount();
 
+    @Query(value = "select a from Attendee a where a.badge in (select b from Badge b where b.name like '%Panelist%')")
+    List<Attendee> findPanelists();
+
 }
