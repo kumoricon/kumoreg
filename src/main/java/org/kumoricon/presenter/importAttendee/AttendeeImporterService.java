@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AttendeeImporter {
+public class AttendeeImporterService {
     private AttendeeRepository attendeeRepository;
 
     private OrderRepository orderRepository;
@@ -30,9 +30,9 @@ public class AttendeeImporter {
     private UserRepository userRepository;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final Logger log = LoggerFactory.getLogger(AttendeeImporter.class);
+    private static final Logger log = LoggerFactory.getLogger(AttendeeImporterService.class);
 
-    public AttendeeImporter(AttendeeRepository attendeeRepository, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
+    public AttendeeImporterService(AttendeeRepository attendeeRepository, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.badgeRepository = badgeRepository;
@@ -87,18 +87,18 @@ public class AttendeeImporter {
             }
             attendee.setZip(dataArray[4]);
             attendee.setCountry(dataArray[5]);
-            attendee.setPhoneNumber(dataArray[6]);
+            attendee.setPhoneNumber(cleanPhoneNumber(dataArray[6]));
             attendee.setEmail(dataArray[7]);
             attendee.setBirthDate(LocalDate.parse(dataArray[8], formatter));
             attendee.setEmergencyContactFullName(dataArray[9]);
-            attendee.setEmergencyContactPhone(dataArray[10]);
+            attendee.setEmergencyContactPhone(cleanPhoneNumber(dataArray[10]));
             if (dataArray[11].toUpperCase().equals("Y")) {
                 attendee.setParentIsEmergencyContact(true);
             } else {
                 attendee.setParentIsEmergencyContact(false);
             }
             attendee.setParentFullName(dataArray[12]);
-            attendee.setParentPhone(dataArray[13]);
+            attendee.setParentPhone(cleanPhoneNumber(dataArray[13]));
             if (dataArray[14].toUpperCase().equals("Y")) {
                 attendee.setPaid(true);
             } else {
@@ -165,4 +165,25 @@ public class AttendeeImporter {
         return output.toString().toUpperCase();
     }
 
+    /**
+     * Removes characters from the given string except for [0-9 -] and formats it nicely. If
+     * it's a 10 digit number, returns the format 123-456-7890. Otherwise, just returns
+     * whatever digits, dashes and spaces exist.
+     * @param phoneNumber String
+     * @return String
+     */
+    protected static String cleanPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null) { return null; }
+        String output;
+        String p = phoneNumber.replaceAll("[^0-9]", "");
+        if (p.matches("\\d{10}")) {
+            output = p.substring(0, 3) + "-" + p.substring(3, 6) + "-" + p.substring(6, 10);
+        } else {
+            output = phoneNumber.replaceAll("^\\+[^0-9 -]", "").trim();
+        }
+        if (!phoneNumber.equals(output)) {
+            log.info("While reformatting phone numbers, changed \"{}\" to \"{}\"", phoneNumber, output);
+        }
+        return output;
+    }
 }

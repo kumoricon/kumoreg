@@ -59,7 +59,7 @@ public class ImportAttendeePresenter {
         }
 
         public void uploadSucceeded(Upload.SucceededEvent event) {
-            AttendeeImporter importer = new AttendeeImporter(attendeeRepository, orderRepository, badgeRepository, userRepository);
+            AttendeeImporterService importer = new AttendeeImporterService(attendeeRepository, orderRepository, badgeRepository, userRepository);
             view.clearStatus();
             String result = "";
 
