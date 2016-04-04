@@ -74,7 +74,7 @@ public class LoadBaseDataPresenter {
     }
 
     private void addRights(StringBuilder results) {
-        results.append("Creating rights");
+        results.append("Creating rights\n");
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
                 "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
                 "reprint_badge_with_override", "badge_type_press", "badge_type_vip", "badge_type_artist",
@@ -90,20 +90,20 @@ public class LoadBaseDataPresenter {
     }
 
     private void addRoles(StringBuilder results) {
-        results.append("Creating roles");
+        results.append("Creating roles\n");
         HashMap<String, String[]> roles = new HashMap<>();
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
                                          "reprint_badge_with_override"});
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                                                "print_badge", "attendee_edit", "attendee_edit_notes",
                                                "attendee_override_price", "reprint_badge", "view_staff_report",
-                                               "view_check_in_by_hour_report", "view_presenter_report"});
+                                               "view_check_in_by_hour_report", "view_panelist_report"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
                 "badge_type_industry", "badge_type_panelist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
-                "view_check_in_by_hour_report, view_presenter_report"});
+                "view_check_in_by_hour_report", "view_panelist_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
@@ -111,7 +111,7 @@ public class LoadBaseDataPresenter {
                 "badge_type_industry", "badge_type_panelist",
                 "view_role_report",
                 "view_attendance_report", "view_revenue_report", "view_staff_report", "view_check_in_by_hour_report",
-                "view_presenter_report"});
+                "view_panelist_report"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes", "view_panelist_report"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
@@ -122,16 +122,16 @@ public class LoadBaseDataPresenter {
                 if (rightMap.containsKey(rightName)) {
                     role.addRight(rightMap.get(rightName));
                 } else {
-                    results.append("Error creating role " + roleName + ". Right " + rightName + " not found");
+                    results.append("Error creating role " + roleName + ". Right " + rightName + " not found\n");
                 }
             }
-            results.append("    Creating " + role.toString());
+            results.append("    Creating " + role.toString() + "\n");
             roleRepository.save(role);
         }
     }
 
     private void addUsers(StringBuilder results) {
-        results.append("Creating users");
+        results.append("Creating users\n");
         String[][] userList = {
                               {"Staff", "User", "Staff"},
                               {"Coordinator", "User", "Coordinator"},
@@ -144,17 +144,17 @@ public class LoadBaseDataPresenter {
             user.setUsername(currentUser[0]);
             Role role = roleRepository.findByNameIgnoreCase(currentUser[2]);
             if (role == null) {
-                results.append("    Error creating user " + currentUser[0] + ". Role " + currentUser[2] + " not found");
+                results.append("    Error creating user " + currentUser[0] + ". Role " + currentUser[2] + " not found\n");
             } else {
                 user.setRole(role);
-                results.append("    Creating " + user.toString());
+                results.append("    Creating " + user.toString() + "\n");
                 userRepository.save(user);
             }
         }
     }
 
     private void addBadges(StringBuilder results) {
-        results.append("Creating badges");
+        results.append("Creating badges\n");
         String[][] badgeList = {
                 {"Weekend", "60", "60", "45"},
                 {"Friday", "40", "40", "30"},
@@ -165,7 +165,7 @@ public class LoadBaseDataPresenter {
                     Float.parseFloat(currentBadge[1]),
                     Float.parseFloat(currentBadge[2]),
                     Float.parseFloat(currentBadge[3]));
-            results.append("    Creating " + badge.toString());
+            results.append("    Creating " + badge.toString() + "\n");
             badgeRepository.save(badge);
         }
 
@@ -173,43 +173,43 @@ public class LoadBaseDataPresenter {
         Badge vip = BadgeFactory.badgeFactory("VIP", "VIP", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
-        results.append("    Creating " + vip.toString());
+        results.append("    Creating " + vip.toString() + "\n");
         badgeRepository.save(vip);
 
         Badge artist = BadgeFactory.badgeFactory("Artist", "Weekend", 0f, 0f, 0f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
-        results.append("    Creating " + artist.toString());
+        results.append("    Creating " + artist.toString() + "\n");
         badgeRepository.save(artist);
 
         Badge exhibitor = BadgeFactory.badgeFactory("Exhibitor", "Exhibitor", 0f, 0f, 0f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
-        results.append("    Creating " + exhibitor.toString());
+        results.append("    Creating " + exhibitor.toString() + "\n");
         badgeRepository.save(exhibitor);
 
         Badge guest = BadgeFactory.badgeFactory("Guest", "Guest", 0f, 0f, 0f);
         guest.setRequiredRight("badge_type_guest");
         guest.setWarningMessage("Guest check in. See your coordinator!");
-        results.append("    Creating " + guest.toString());
+        results.append("    Creating " + guest.toString() + "\n");
         badgeRepository.save(guest);
 
         Badge press = BadgeFactory.badgeFactory("Press", "Press", 0f, 0f, 0f);
         press.setRequiredRight("badge_type_press");
         press.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + press.toString());
+        results.append("    Creating " + press.toString() + "\n");
         badgeRepository.save(press);
 
         Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);
         press.setRequiredRight("badge_type_industry");
         press.setWarningMessage("Industry check in. See your coordinator!");
-        results.append("    Creating " + press.toString());
+        results.append("    Creating " + industry.toString() + "\n");
         badgeRepository.save(industry);
 
         Badge panelist = BadgeFactory.badgeFactory("Panelist", "Panelist", 0f, 0f, 0f);
         press.setRequiredRight("badge_type_panelist");
         press.setWarningMessage("Panelist check in. See your coordinator!");
-        results.append("    Creating " + press.toString());
+        results.append("    Creating " + panelist.toString() + "\n");
         badgeRepository.save(panelist);
     }
 
