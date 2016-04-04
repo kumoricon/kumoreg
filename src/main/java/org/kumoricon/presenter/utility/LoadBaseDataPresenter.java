@@ -78,6 +78,7 @@ public class LoadBaseDataPresenter {
         String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
                 "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
                 "reprint_badge_with_override", "badge_type_press", "badge_type_vip", "badge_type_artist",
+                "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "view_attendance_report", "view_revenue_report",
                 "view_check_in_by_hour_report", "view_staff_report", "view_role_report", "view_panelist_report",
                 "manage_staff", "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data",
@@ -99,12 +100,16 @@ public class LoadBaseDataPresenter {
                                                "view_check_in_by_hour_report", "view_presenter_report"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
-                "badge_type_vip", "badge_type_press", "badge_type_artist",
+                "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
+                "badge_type_industry", "badge_type_panelist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
                 "view_check_in_by_hour_report, view_presenter_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
-                "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types", "view_role_report",
+                "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
+                "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
+                "badge_type_industry", "badge_type_panelist",
+                "view_role_report",
                 "view_attendance_report", "view_revenue_report", "view_staff_report", "view_check_in_by_hour_report",
                 "view_presenter_report"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes", "view_panelist_report"});
@@ -171,17 +176,41 @@ public class LoadBaseDataPresenter {
         results.append("    Creating " + vip.toString());
         badgeRepository.save(vip);
 
-        Badge press = BadgeFactory.badgeFactory("Press", "Weekend", 0f, 0f, 0f);
-        press.setRequiredRight("badge_type_press");
-        press.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + press.toString());
-        badgeRepository.save(press);
-
         Badge artist = BadgeFactory.badgeFactory("Artist", "Weekend", 0f, 0f, 0f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
         results.append("    Creating " + artist.toString());
         badgeRepository.save(artist);
+
+        Badge exhibitor = BadgeFactory.badgeFactory("Exhibitor", "Exhibitor", 0f, 0f, 0f);
+        exhibitor.setRequiredRight("badge_type_exhibitor");
+        exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
+        results.append("    Creating " + exhibitor.toString());
+        badgeRepository.save(exhibitor);
+
+        Badge guest = BadgeFactory.badgeFactory("Guest", "Guest", 0f, 0f, 0f);
+        guest.setRequiredRight("badge_type_guest");
+        guest.setWarningMessage("Guest check in. See your coordinator!");
+        results.append("    Creating " + guest.toString());
+        badgeRepository.save(guest);
+
+        Badge press = BadgeFactory.badgeFactory("Press", "Press", 0f, 0f, 0f);
+        press.setRequiredRight("badge_type_press");
+        press.setWarningMessage("Press check in. See your coordinator!");
+        results.append("    Creating " + press.toString());
+        badgeRepository.save(press);
+
+        Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);
+        press.setRequiredRight("badge_type_industry");
+        press.setWarningMessage("Industry check in. See your coordinator!");
+        results.append("    Creating " + press.toString());
+        badgeRepository.save(industry);
+
+        Badge panelist = BadgeFactory.badgeFactory("Panelist", "Panelist", 0f, 0f, 0f);
+        press.setRequiredRight("badge_type_panelist");
+        press.setWarningMessage("Panelist check in. See your coordinator!");
+        results.append("    Creating " + press.toString());
+        badgeRepository.save(panelist);
     }
 
     private HashMap<String, Right> getRightsHashMap() {
