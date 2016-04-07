@@ -44,4 +44,23 @@ public class AttendeeImporterServiceTest {
         String testNumber = "867-5309";
         assertEquals(testNumber, AttendeeImporterService.cleanPhoneNumber(testNumber));
     }
+
+    @Test
+    public void testCleanPhoneNumberLeavesXcharacter() throws Exception {
+        String testNumber = "867-5309 x1234";
+        assertEquals(testNumber, AttendeeImporterService.cleanPhoneNumber(testNumber));
+    }
+
+    @Test
+    public void testCleanPhoneNumberStartsWithPlus() throws Exception {
+        String testNumber = "+64 6-759 9128";
+        assertEquals(testNumber, AttendeeImporterService.cleanPhoneNumber(testNumber));
+    }
+
+
+    @Test
+    public void testCleanPhoneNumberRemovesLettersFromLongNumber() throws Exception {
+        String testNumber = "+1 04 12 123-12341234 asdfasdf x12321";
+        assertEquals("+1 04 12 123-12341234 x12321", AttendeeImporterService.cleanPhoneNumber(testNumber));
+    }
 }

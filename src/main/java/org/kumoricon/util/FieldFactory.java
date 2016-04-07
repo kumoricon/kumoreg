@@ -26,7 +26,8 @@ public class FieldFactory {
 
     public static final TextField createPhoneNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
-        textField.addValidator(new RegexpValidator("[\\(\\)0-9 -]+", "Must contain numbers or dash only"));
+        textField.addValidator(new RegexpValidator("[0-9 \\+x-]+",
+                "Must contain only numbers, dash, space, + or x"));
         textField.setTabIndex(tabIndex);
         return textField;
     }
