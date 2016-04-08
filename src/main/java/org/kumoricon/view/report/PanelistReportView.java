@@ -44,7 +44,7 @@ public class PanelistReportView extends BaseView implements View {
 
     public void afterSuccessfulFetch(List<Attendee> attendees) {
         dataGrid.setContainerDataSource(new BeanItemContainer<>(Attendee.class, attendees));
-        dataGrid.setHeightByRows(attendees.size());
+        if (attendees.size() > 0) { dataGrid.setHeightByRows(attendees.size()); }
     }
 
     public String getRequiredRight() {

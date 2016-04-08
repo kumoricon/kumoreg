@@ -2,6 +2,7 @@ package org.kumoricon.view.report;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
@@ -35,12 +36,14 @@ public class StaffReportView extends BaseView implements View {
         handler.showUserList(this);
         dataGrid.setColumns(new String[] {"lastName", "firstName", "username", "phone", "role"});
         dataGrid.setEditorEnabled(false);
+        dataGrid.setHeightMode(HeightMode.ROW);
+        dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
         setExpandRatio(dataGrid, .9f);
-        dataGrid.setWidth(90, Unit.PERCENTAGE);
     }
 
     public void afterSuccessfulFetch(List<User> users) {
         dataGrid.setContainerDataSource(new BeanItemContainer<>(User.class, users));
+        if (users.size() > 0) { dataGrid.setHeightByRows(users.size()); }
     }
 
     public String getRequiredRight() {
