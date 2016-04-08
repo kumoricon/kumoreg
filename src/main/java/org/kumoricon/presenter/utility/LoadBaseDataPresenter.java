@@ -75,17 +75,39 @@ public class LoadBaseDataPresenter {
 
     private void addRights(StringBuilder results) {
         results.append("Creating rights\n");
-        String[] rights = {"at_con_registration", "pre_reg_check_in", "attendee_search", "attendee_edit",
-                "attendee_edit_notes", "attendee_override_price", "print_badge", "reprint_badge",
-                "reprint_badge_with_override", "badge_type_press", "badge_type_vip", "badge_type_artist",
-                "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
-                "view_attendance_report", "view_revenue_report",
-                "view_check_in_by_hour_report", "view_staff_report", "view_role_report", "view_panelist_report",
-                "manage_staff", "manage_pass_types", "manage_roles", "manage_devices", "import_pre_reg_data",
-                "load_base_data"};
+        String[][] rights = {
+            {"at_con_registration", "Add new attendees via At-Con Registration and close till"},
+            {"pre_reg_check_in", "Check in preregistered attendees"},
+            {"attendee_search", "Search for and view attendees"},
+            {"attendee_edit", "Edit attendees from search results"},
+            {"attendee_edit_notes", "Edit notes field on attendees, but no other fields"},
+            {"attendee_override_price", "Manually set price for attendee"},
+            {"print_badge", "Print badge on attendee check in"},
+            {"reprint_badge", "Reprint attendee badges after attendee is checked in"},
+            {"reprint_badge_with_override", "Reprint badge if a user with reprint_badge right approves it"},
+            {"badge_type_press", "Select/check in the \"Press\" badge type"},
+            {"badge_type_vip", "Select/check in the \"VIP\" badge type"},
+            {"badge_type_artist", "Select/check in the \"Artist\" badge type"},
+            {"badge_type_exhibitor", "Select/check in the \"Exhibitor\" badge type"},
+            {"badge_type_guest", "Select/check in the \"Guest\" badge type"},
+            {"badge_type_industry", "Select/check in the \"Industry\" badge type"},
+            {"badge_type_panelist", "Select/check in the \"Panelist\" badge type"},
+            {"view_attendance_report", "View attendance report (counts only)"},
+            {"view_revenue_report", "View revenue report"},
+            {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
+            {"view_staff_report", "View staff report (lists name/phone numbers)"},
+            {"view_role_report", "View registration system role report"},
+            {"view_panelist_report", "View panelist check in report"},
+            {"manage_staff", "Add/edit users and reset passwords"},
+            {"manage_pass_types", "Add/edit badge types"},
+            {"manage_roles", "Add/edit security roles"},
+            {"manage_devices", "Add/edit devices (computer/printer mappings)"},
+            {"import_pre_reg_data", "Import pre-registered attendees and orders"},
+            {"load_base_data", "Load default data (users, roles, rights)"}
+        };
 
-        for (String right : rights) {
-            rightRepository.save(new Right(right));
+        for (String[] rightInfo : rights) {
+            rightRepository.save(new Right(rightInfo[0], rightInfo[1]));
         }
     }
 

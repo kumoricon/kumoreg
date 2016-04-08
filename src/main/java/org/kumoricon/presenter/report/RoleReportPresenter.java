@@ -30,9 +30,16 @@ public class RoleReportPresenter implements ReportPresenter {
             sb.append("<tr>");
             sb.append(String.format("<td>%s</td>", role.getName()));
             sb.append("<td>");
+            sb.append("<table width=\"100%\">");
             for (Right right : role.getRights()) {
-                sb.append(String.format("%s ", right.getName()));
+                if (right.getDescription() == null) {
+                    sb.append(String.format("<tr><td>%s</td><td></td></tr>", right.getName()));
+                } else {
+                    sb.append(String.format("<tr><td>%s</td><td>(%s)</td></tr>",
+                            right.getName(), right.getDescription()));
+                }
             }
+            sb.append("</table>");
             sb.append("</td>");
             sb.append("</tr>");
         }

@@ -33,6 +33,7 @@ public class RoleReportView extends BaseView implements View, ReportView {
         handler.fetchReportData(this);
         setExpandRatio(data, 1f);
         data.setSizeFull();
+
     }
 
 

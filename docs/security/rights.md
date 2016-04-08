@@ -6,34 +6,40 @@ sensitive, and should have underscores between words.
 
 Available rights are:
 
-| Name                        | Description                                                       |
-|-----------------------------|-------------------------------------------------------------------|
-| at_con_registration         | Can add new attendees via At-Con Registration and close till      |
-| pre_reg_check_in            | Can check in preregistered attendees                              |
-| attendee_search             | Can search for and view attendees                                 |
-| attendee_edit               | Can edit attendees from search results                            |
-| attendee_edit_notes         | Can edit notes field on attendees, but no other fields            |
-| attendee_override_price     | Can manually set price for attendee                               |
-| print_badge                 | Can print badge on attendee checkin                               |
-| reprint_badge               | Can reprint attendee badges after attendee is checked in          |
-| reprint_badge_with_override | Can reprint badge if a user with reprint_badge right approves it  |
-| badge_type_vip              | Can select/check in the "VIP" badge type                          |
-| badge_type_press            | Can select/check in the "Press" badge type                        |
-| badge_type_artist           | Can select/check in the "Artist" badge type                       |
-|                             |                                                                   |
-| view_attendance_report      | Can view attendance report (counts only)                          |
-| view_revenue_report         | Can view revenue report                                           |
-| view_staff_report           | Can view staff report (lists name/phone numbers)                  |
-| view_role_report            | Can view roles and rights assigned to each                        |
-| view_check_in_by_hour_report| Can view attendee check ins per hour report                       |
-|                             |                                                                   |
-| manage_staff                | Can add/edit users and reset passwords                            |
-| manage_pass_types           | Can add/edit badge types                                          |
-| manage_roles                | Can add/edit security roles                                       |
-| manage_devices              | Can add/edit devices (computer/printer mappings)                  |
-| import_pre_reg_data         | Import pre-registered attendees and orders                        |
-| load_base_data              | Loads default data (users, roles, rights)                         |
-| super_admin                 | Override - can do everything                                      |
+| Name                          | Description                                                     |
+|-------------------------------|-----------------------------------------------------------------|
+| at_con_registration           | Add new attendees via At-Con Registration and close till        |
+| pre_reg_check_in              | Check in preregistered attendees                                |
+| attendee_search               | Search for and view attendees                                   |
+| attendee_edit                 | Edit attendees from search results                              |
+| attendee_edit_notes           | Edit notes field on attendees, but no other fields              |
+| attendee_override_price       | Manually set price for attendee                                 |
+| print_badge                   | Print badge on attendee check in                                |
+| reprint_badge                 | Reprint attendee badges after attendee is checked in            |
+| reprint_badge_with_override   | Reprint badge if a user with reprint_badge right approves it    |
+| badge_type_press              | Select/check in the \"Press\" badge type                        |
+| badge_type_vip                | Select/check in the \"VIP\" badge type                          |
+| badge_type_artist             | Select/check in the \"Artist\" badge type                       |
+| badge_type_exhibitor          | Select/check in the \"Exhibitor\" badge type                    |
+| badge_type_guest              | Select/check in the \"Guest\" badge type                        |
+| badge_type_industry           | Select/check in the \"Industry\" badge type                     |
+| badge_type_panelist           | Select/check in the \"Panelist\" badge type                     |
+|                               |                                                                 |
+| view_attendance_report        | View attendance report (counts only)                            |
+| view_revenue_report           | View revenue report                                             |
+| view_check_in_by_hour_report  | View attendee check ins per hour report                         |
+| view_staff_report             | View staff report (lists name/phone numbers)                    |
+| view_role_report              | View registration system role report                            |
+| view_panelist_report          | View panelist check in report                                   |
+|                               |                                                                 |
+| manage_staff                  | Add/edit users and reset passwords                              |
+| manage_pass_types             | Add/edit badge types                                            |
+| manage_roles                  | Add/edit security roles                                         |
+| manage_devices                | Add/edit devices (computer/printer mappings)                    |
+| import_pre_reg_data           | Import pre-registered attendees and orders                      |
+| load_base_data                | Load default data (users, roles, rights)                        |
+
+
 
 Rights can be added/removed from a given Role in the regular user interface.
 

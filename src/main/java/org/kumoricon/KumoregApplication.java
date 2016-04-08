@@ -29,7 +29,7 @@ public class KumoregApplication {
             Right adminRight = rightRepository.findByNameIgnoreCase("Admin");
             if (adminRight == null && rightRepository.findAll().size() == 0) {
                 log.info("No rights found, creating 'admin' right");
-                adminRight = new Right("super_admin");
+                adminRight = new Right("super_admin", "Override - can do everything");
                 adminRight = rightRepository.save(adminRight);
                 if (roleRepository.findAll().size() == 0) {
                     log.info("Creating admin role");

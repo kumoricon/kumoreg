@@ -13,6 +13,7 @@ public class Right implements Serializable, Comparable {
     @NotNull
     @Column(unique=true)
     private String name;
+    private String description;
 
     public String toString() {
         return String.format("%s", name);
@@ -23,6 +24,11 @@ public class Right implements Serializable, Comparable {
     public Right(String name) {
         this();
         this.name = name;
+    }
+
+    public Right(String name, String description) {
+        this(name);
+        this.description = description;
     }
 
     @Override
@@ -49,10 +55,12 @@ public class Right implements Serializable, Comparable {
     }
 
     public String getName() { return name; }
-
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     @Override
     public int compareTo(Object o) {
