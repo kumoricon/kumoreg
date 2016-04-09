@@ -223,14 +223,14 @@ public class LoadBaseDataPresenter {
         badgeRepository.save(press);
 
         Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);
-        press.setRequiredRight("badge_type_industry");
-        press.setWarningMessage("Industry check in. See your coordinator!");
+        industry.setRequiredRight("badge_type_industry");
+        industry.setWarningMessage("Industry check in. See your coordinator!");
         results.append("    Creating " + industry.toString() + "\n");
         badgeRepository.save(industry);
 
         Badge panelist = BadgeFactory.badgeFactory("Panelist", "Panelist", 0f, 0f, 0f);
-        press.setRequiredRight("badge_type_panelist");
-        press.setWarningMessage("Panelist check in. See your coordinator!");
+        panelist.setRequiredRight("badge_type_panelist");
+        panelist.setWarningMessage("Panelist check in. See your coordinator!");
         results.append("    Creating " + panelist.toString() + "\n");
         badgeRepository.save(panelist);
     }
