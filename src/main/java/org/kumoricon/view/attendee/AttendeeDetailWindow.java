@@ -5,6 +5,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.model.user.User;
 import org.kumoricon.presenter.attendee.AttendeeSearchPresenter;
 import org.kumoricon.view.BaseView;
 
@@ -18,6 +19,7 @@ public class AttendeeDetailWindow extends Window {
     private Button btnSave;
     private Button btnCancel;
     private Button btnSaveAndReprint;
+    private Button btnEdit;
 
     private AttendeeSearchPresenter handler;
     private BaseView parentView;
@@ -71,38 +73,7 @@ public class AttendeeDetailWindow extends Window {
         } else {
             consentFormReceived.setEnabled(false);
         }
-        // Set editable fields based on current user's rights
-        if (parentView.currentUserHasRight("attendee_edit")) {
-            form.setEditableFields(AttendeeDetailForm.EditableFields.ALL);
-            form.setMinorFieldsEnabled(form.getAttendee().isMinor());
-
-            if (parentView.currentUserHasRight("attendee_override_price")) {
-                form.setManualPriceEnabled(true);
-            } else {
-                form.setManualPriceEnabled(false);
-            }
-        } else if (parentView.currentUserHasRight("attendee_edit_notes")) {
-            form.setEditableFields(AttendeeDetailForm.EditableFields.NOTES);
-        } else {
-            form.setEditableFields(AttendeeDetailForm.EditableFields.NONE);
-        }
-
-        if (parentView.currentUserHasRight("attendee_edit") || parentView.currentUserHasRight("attendee_edit_notes")) {
-            // Should you be able to edit an attendee with override?
-            btnSave.setEnabled(true);
-            if (parentView.currentUserHasRight("reprint_badge") || parentView.currentUserHasRight("reprint_badge_with_override")) {
-                btnSaveAndReprint.setEnabled(true);
-            } else {
-                btnSaveAndReprint.setEnabled(false);
-            }
-        } else {
-            btnSave.setEnabled(false);
-            if (parentView.currentUserHasRight("reprint_badge_with_override")) {
-                btnSaveAndReprint.setEnabled(true);
-            } else {
-                btnSaveAndReprint.setEnabled(false);
-            }
-        }
+        setEditableFields(getParentView().getCurrentUser());
     }
 
     public void setAvailableBadges(List<Badge> availableBadges) {
@@ -125,6 +96,10 @@ public class AttendeeDetailWindow extends Window {
         h.setMargin(true);
         btnSave = new Button("Save");
         btnCancel = new Button("Cancel");
+        btnEdit = new Button("Edit (Override)");
+        btnEdit.addClickListener((Button.ClickListener) clickEvent -> {
+           handler.overrideEdit(this);
+        });
         if (parentView.currentUserHasRight("reprint_badge")) {
             btnSaveAndReprint = new Button("Save and Reprint Badge");
         } else {
@@ -143,6 +118,7 @@ public class AttendeeDetailWindow extends Window {
         btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent ->
                 handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
         h.addComponent(btnSave);
+        h.addComponent(btnEdit);
         h.addComponent(btnSaveAndReprint);
         h.addComponent(btnCancel);
         return h;
@@ -154,4 +130,50 @@ public class AttendeeDetailWindow extends Window {
 
     public BaseView getParentView() { return parentView; }
     public void setParentView(BaseView parentView) { this.parentView = parentView; }
+
+    public void enableEditing(User overrideUser) {
+        setEditableFields(overrideUser);
+    }
+
+    private void setEditableFields(User user) {
+        // Set editable fields based on current user's rights
+        if (user.hasRight("attendee_edit")) {
+            form.setEditableFields(AttendeeDetailForm.EditableFields.ALL);
+            form.setMinorFieldsEnabled(form.getAttendee().isMinor());
+
+            if (user.hasRight("attendee_override_price")) {
+                form.setManualPriceEnabled(true);
+            } else {
+                form.setManualPriceEnabled(false);
+            }
+        } else if (user.hasRight("attendee_edit_notes")) {
+            form.setEditableFields(AttendeeDetailForm.EditableFields.NOTES);
+        } else {
+            form.setEditableFields(AttendeeDetailForm.EditableFields.NONE);
+        }
+
+        if (user.hasRight("attendee_edit") || user.hasRight("attendee_edit_notes")) {
+            btnSave.setEnabled(true);
+            if (user.hasRight("reprint_badge") || user.hasRight("reprint_badge_with_override")) {
+                btnSaveAndReprint.setEnabled(true);
+            } else {
+                btnSaveAndReprint.setEnabled(false);
+            }
+        } else {
+            btnSave.setEnabled(false);
+            if (user.hasRight("reprint_badge_with_override")) {
+                btnSaveAndReprint.setEnabled(true);
+            } else {
+                btnSaveAndReprint.setEnabled(false);
+            }
+        }
+
+        if (user.hasRight("attendee_edit_with_override") && !user.hasRight("attendee_edit")) {
+            btnEdit.setEnabled(true);
+            btnEdit.setVisible(true);
+        } else {
+            btnEdit.setEnabled(false);
+            btnEdit.setVisible(false);
+        }
+    }
 }

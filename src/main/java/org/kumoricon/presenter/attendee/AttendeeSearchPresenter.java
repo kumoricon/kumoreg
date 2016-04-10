@@ -21,7 +21,7 @@ import java.util.List;
 
 @Controller
 @Scope("request")
-public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandler {
+public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
 
@@ -109,7 +109,10 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     @Override
     public void overrideLogin(OverrideRequiredWindow window, String username, String password, List<Attendee> targets) {
         User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
-        if (overrideUser != null && overrideUser.checkPassword(password)) {
+        if (overrideUser != null && overrideUser.checkPassword(password) && overrideUser.hasRight("reprint_badge")) {
+            log.info(String.format("%s got reprint badges override from %s",
+                    view.getCurrentUser(), overrideUser));
+
             saveAttendeeAndReprintBadge(window, (Attendee)targets.get(0), overrideUser);
         } else {
             view.notify("Bad username or password");
@@ -124,13 +127,6 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
         if (attendeeList != null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(String.format("%s printing badges for: ", view.getCurrentUser()));
-            for (Attendee attendee : attendeeList) {
-                sb.append(attendee.getName());
-                sb.append("; ");
-            }
-            log.info(sb.toString());
             view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
             view.showPrintBadgeWindow(attendeeList);
         }
@@ -178,4 +174,25 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         }
     }
 
+
+    @Override
+    public void overrideEditLogin(OverrideRequiredForEditWindow window, String username, String password, AttendeeDetailWindow attendeeDetailWindow) {
+        User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
+        if (overrideUser != null && overrideUser.checkPassword(password) && overrideUser.hasRight("attendee_edit")) {
+            log.info(String.format("%s got edit override from %s to edit %s",
+                    view.getCurrentUser(), overrideUser, attendeeDetailWindow.getAttendee()));
+            window.close();
+            attendeeDetailWindow.enableEditing(overrideUser);
+        } else {
+            view.notify("Bad username or password");
+        }
+    }
+
+    @Override
+    public void overrideEditCancel(OverrideRequiredForEditWindow window) { window.close(); }
+
+    public void overrideEdit(AttendeeDetailWindow attendeeDetailWindow) {
+        OverrideRequiredForEditWindow window = new OverrideRequiredForEditWindow(this, "attendee_edit", attendeeDetailWindow);
+        view.showWindow(window);
+    }
 }

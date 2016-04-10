@@ -81,6 +81,7 @@ public class LoadBaseDataPresenter {
             {"attendee_search", "Search for and view attendees"},
             {"attendee_edit", "Edit attendees from search results"},
             {"attendee_edit_notes", "Edit notes field on attendees, but no other fields"},
+            {"attendee_edit_with_override", "Edit attendee if a user with attendee_edit right approves it"},
             {"attendee_override_price", "Manually set price for attendee"},
             {"print_badge", "Print badge on attendee check in"},
             {"reprint_badge", "Reprint attendee badges after attendee is checked in"},
@@ -115,7 +116,7 @@ public class LoadBaseDataPresenter {
         results.append("Creating roles\n");
         HashMap<String, String[]> roles = new HashMap<>();
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
-                                         "reprint_badge_with_override"});
+                                         "attendee_edit_with_override", "reprint_badge_with_override"});
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                                                "print_badge", "attendee_edit", "attendee_edit_notes",
                                                "attendee_override_price", "reprint_badge", "view_staff_report",

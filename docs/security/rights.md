@@ -14,6 +14,7 @@ Available rights are:
 | attendee_edit                 | Edit attendees from search results                              |
 | attendee_edit_notes           | Edit notes field on attendees, but no other fields              |
 | attendee_override_price       | Manually set price for attendee                                 |
+| attendee_edit_with_override   | Edit attendee if user with attendee_edit right approves it <sup>[1](#footnote1)</sup>|
 | print_badge                   | Print badge on attendee check in                                |
 | reprint_badge                 | Reprint attendee badges after attendee is checked in            |
 | reprint_badge_with_override   | Reprint badge if a user with reprint_badge right approves it    |
@@ -40,6 +41,8 @@ Available rights are:
 | load_base_data                | Load default data (users, roles, rights)                        |
 
 
+<a name="footnote1">1</a>: When an override is entered, the user gets all edit rights that the overriding user has in
+a single attendee edit window. For example, attendee_override_price.
 
 Rights can be added/removed from a given Role in the regular user interface.
 
