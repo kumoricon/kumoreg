@@ -2,7 +2,10 @@ package org.kumoricon.view.attendee;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
+import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.presenter.attendee.OverrideHandler;
+
+import java.util.List;
 
 public class OverrideRequiredWindow extends Window {
 
@@ -13,12 +16,14 @@ public class OverrideRequiredWindow extends Window {
     Button override = new Button("Override");
     Button cancel = new Button("Cancel");
 
+    List<Attendee> targets;
     private OverrideHandler handler;
 
-    public OverrideRequiredWindow(OverrideHandler handler, String requiredRight) {
+    public OverrideRequiredWindow(OverrideHandler handler, String requiredRight, List<Attendee> targets) {
         super("Override Required");
 
         this.handler = handler;
+        this.targets = targets;
         setIcon(FontAwesome.LOCK);
         setModal(true);
         setClosable(true);
@@ -40,8 +45,8 @@ public class OverrideRequiredWindow extends Window {
         horizontalLayout.addComponent(cancel);
 
         override.addClickListener((Button.ClickListener) clickEvent ->
-                handler.overrideLogin(username.getValue(), password.getValue()));
-        cancel.addClickListener((Button.ClickListener) clickEvent -> handler.overrideCancel());
+                handler.overrideLogin(this, username.getValue(), password.getValue(), targets));
+        cancel.addClickListener((Button.ClickListener) clickEvent -> handler.overrideCancel(this));
 
         verticalLayout.addComponent(horizontalLayout);
         username.focus();

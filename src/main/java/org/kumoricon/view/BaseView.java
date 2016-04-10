@@ -7,6 +7,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.PostConstruct;
 
@@ -54,6 +55,13 @@ public class BaseView extends VerticalLayout implements View {
             return user;
         }
         return null;
+    }
+
+    /**
+     * Refresh any data in the current view. Override this!
+     */
+    public void refresh() {
+        throw new NotImplementedException();
     }
 
     public void showWindow(Window window) {

@@ -5,7 +5,8 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
-import org.kumoricon.presenter.attendee.AttendeeDetailPresenter;
+import org.kumoricon.presenter.attendee.AttendeeSearchPresenter;
+import org.kumoricon.view.BaseView;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ public class AttendeeDetailWindow extends Window {
     private Button btnCancel;
     private Button btnSaveAndReprint;
 
-    private AttendeeDetailPresenter handler;
-    private PreRegView parentView;
+    private AttendeeSearchPresenter handler;
+    private BaseView parentView;
 
-    public AttendeeDetailWindow(PreRegView parentView, AttendeeDetailPresenter handler) {
+    public AttendeeDetailWindow(BaseView parentView, AttendeeSearchPresenter handler) {
         super("Attendee Detail");
         this.handler = handler;
         this.parentView = parentView;
@@ -133,14 +134,14 @@ public class AttendeeDetailWindow extends Window {
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
                 form.commit();
-//                handler.saveAttendee(this, form.getAttendee());
+                handler.saveAttendee(this, form.getAttendee());
             } catch (FieldGroup.CommitException e) {
                 parentView.notifyError(e.getMessage());
             }
         });
-//        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee(this));
-//        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent ->
-//                handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee(this));
+        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent ->
+                handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
         h.addComponent(btnSave);
         h.addComponent(btnSaveAndReprint);
         h.addComponent(btnCancel);
@@ -148,9 +149,9 @@ public class AttendeeDetailWindow extends Window {
     }
 
 
-    public AttendeeDetailPresenter getHandler() { return handler; }
-    public void setHandler(AttendeeDetailPresenter handler) { this.handler = handler; }
+    public AttendeeSearchPresenter getHandler() { return handler; }
+    public void setHandler(AttendeeSearchPresenter handler) { this.handler = handler; }
 
-    public PreRegView getParentView() { return parentView; }
-    public void setParentView(PreRegView parentView) { this.parentView = parentView; }
+    public BaseView getParentView() { return parentView; }
+    public void setParentView(BaseView parentView) { this.parentView = parentView; }
 }

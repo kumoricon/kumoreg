@@ -9,7 +9,8 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.presenter.attendee.SearchPresenter;
+import org.kumoricon.model.badge.Badge;
+import org.kumoricon.presenter.attendee.AttendeeSearchPresenter;
 import org.kumoricon.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ViewScope
-@SpringView(name = SearchView.VIEW_NAME)
-public class SearchView extends BaseView implements View{
+@SpringView(name = AttendeeSearchView.VIEW_NAME)
+public class AttendeeSearchView extends BaseView implements View, AttendeePrintView {
     public static final String VIEW_NAME = "attendeeSearch";
     public static final String REQUIRED_RIGHT = "attendee_search";
 
     @Autowired
-    private SearchPresenter handler;
+    private AttendeeSearchPresenter handler;
 
     private TextField txtSearch = new TextField("Last Name or Badge Number");
     private Button btnSearch = new Button("Search");
@@ -36,7 +37,7 @@ public class SearchView extends BaseView implements View{
         handler.setView(this);
         setSizeFull();
 
-        attendeeBeanList = new BeanItemContainer<Attendee>(Attendee.class, new ArrayList<Attendee>());
+        attendeeBeanList = new BeanItemContainer<>(Attendee.class, new ArrayList<>());
 
         FormLayout f = new FormLayout();
         f.setMargin(false);
@@ -54,8 +55,10 @@ public class SearchView extends BaseView implements View{
         tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "badgeNumber", "age", "zip", "checkedIn"});
         tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Badge Number", "Age", "Zip", "Checked In");
 
-        tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
-                handler.selectAttendee((Attendee)itemClickEvent.getItemId()));
+        tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
+
+            handler.showAttendee((Integer) itemClickEvent.getItem().getItemProperty("id").getValue());
+        });
 
         btnSearch.addClickListener((Button.ClickListener) clickEvent -> search());
 
@@ -98,14 +101,32 @@ public class SearchView extends BaseView implements View{
         handler.searchFor(txtSearch.getValue());
     }
 
+    @Override
+    public void refresh() {
+        handler.searchChanged(txtSearch.getValue());
+        handler.searchFor(txtSearch.getValue());
+    }
 
     public BeanItemContainer<Attendee> getAttendeeBeanList() {
         return attendeeBeanList;
     }
 
-    public void setHandler(SearchPresenter presenter) {
+    public void setHandler(AttendeeSearchPresenter presenter) {
         this.handler = presenter;
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
+
+    public void showAttendee(Attendee attendee, List<Badge> all) {
+        AttendeeDetailWindow window = new AttendeeDetailWindow(this, handler);
+        window.setAvailableBadges(all);
+        window.showAttendee(attendee);
+        showWindow(window);
+    }
+
+    @Override
+    public void showPrintBadgeWindow(List<Attendee> attendeeList) {
+        PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
+        showWindow(printBadgeWindow);
+    }
 }

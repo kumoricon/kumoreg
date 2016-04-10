@@ -1,5 +1,6 @@
 package org.kumoricon.presenter.attendee;
 
+import com.vaadin.ui.Window;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.attendee.BadgePrintService;
 import org.kumoricon.model.attendee.Attendee;
@@ -7,6 +8,7 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.view.BaseView;
 import org.kumoricon.view.attendee.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,7 @@ import java.util.List;
 
 @Controller
 @Scope("request")
-public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandler {
+public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
 
@@ -32,40 +34,38 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
     @Autowired
     private BadgePrintService badgePrintService;
 
-    private static final Logger log = LoggerFactory.getLogger(AttendeeDetailPresenter.class);
+    private static final Logger log = LoggerFactory.getLogger(AttendeeSearchPresenter.class);
 
-    private AttendeeDetailView view;
+    private AttendeeSearchView view;
     private OverrideRequiredWindow overrideRequiredWindow;
 
-    public AttendeeDetailPresenter() {
+    public AttendeeSearchPresenter() {
     }
 
     public void showAttendee(int id) {
         Attendee attendee = attendeeRepository.findOne(id);
         if (attendee != null) {
-            AttendeeDetailForm form = (AttendeeDetailForm) view.getDetailForm();
-            form.setAvailableBadges(badgeRepository.findAll());
-            form.show(attendee);
+            view.showAttendee(attendee, badgeRepository.findAll());
         } else {
             view.notify("Error: attendee " + id + " not found.");
         }
     }
 
-    public void saveAttendee() {
-        Attendee attendee = view.getAttendee();
+    public void saveAttendee(AttendeeDetailWindow window, Attendee attendee) {
+        BaseView view = window.getParentView();
         try {
             attendee.validate();
             attendee = attendeeRepository.save(attendee);
             view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
-            view.navigateTo("");
+            window.close();
+            view.refresh();
         } catch (ValueException e) {
             view.notifyError(e.getMessage());
         }
     }
 
-    public void saveAttendeeAndReprintBadge(User overrideUser) {
+    public void saveAttendeeAndReprintBadge(Window window, Attendee attendee, User overrideUser) {
         // If overrideUser is null, get the current user from the view
-        Attendee attendee = view.getAttendee();
         try {
             attendee.validate();
             attendee = attendeeRepository.save(attendee);
@@ -74,51 +74,51 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
             return;
         }
 
+        window.close();
+        List<Attendee> attendeeList = new ArrayList<>();
+        attendeeList.add(attendee);
         if (overrideUser == null) {
             if (view.currentUserHasRight("reprint_badge")) {
-                List<Attendee> attendeeList = new ArrayList<>();
-                attendeeList.add(attendee);
                 log.info(view.getCurrentUser() + " reprinting badge(s)");
                 showAttendeeBadgeWindow(view, attendeeList);
             } else {
-                overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge");
+                overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge", attendeeList);
                 view.showWindow(overrideRequiredWindow);
             }
         } else {
             if (overrideUser.hasRight("reprint_badge")) {
-                List<Attendee> attendeeList = new ArrayList<>();
-                attendeeList.add(attendee);
-                log.info(view.getCurrentUser() + " reprinting badge(s)");
+                log.info(view.getCurrentUser() + " reprinting badge(s) with override from " + overrideUser);
                 showAttendeeBadgeWindow(view, attendeeList);
             } else {
                 view.notifyError("Override user does not have the required right");
-                overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge");
+                List<Object> target = new ArrayList<>();
+                target.add(attendee);
+                overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge", attendeeList);
                 view.showWindow(overrideRequiredWindow);
             }
         }
     }
 
-    public void cancelAttendee() {
-        view.navigateTo("");
+    public void cancelAttendee(AttendeeDetailWindow window) {
+        window.close();
     }
 
-    public AttendeeDetailView getView() { return view; }
-    public void setView(AttendeeDetailView view) { this.view = view; }
+    public AttendeeSearchView getView() { return view; }
+    public void setView(AttendeeSearchView view) { this.view = view; }
 
     @Override
-    public void overrideLogin(String username, String password) {
+    public void overrideLogin(OverrideRequiredWindow window, String username, String password, List<Attendee> targets) {
         User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
         if (overrideUser != null && overrideUser.checkPassword(password)) {
-            overrideRequiredWindow.close();
-            saveAttendeeAndReprintBadge(overrideUser);
+            saveAttendeeAndReprintBadge(window, (Attendee)targets.get(0), overrideUser);
         } else {
             view.notify("Bad username or password");
         }
     }
 
     @Override
-    public void overrideCancel() {
-        overrideRequiredWindow.close();
+    public void overrideCancel(OverrideRequiredWindow window) {
+        window.close();
     }
 
     @Override
@@ -141,9 +141,6 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
         if (printBadgeWindow != null) {
             printBadgeWindow.close();
         }
-        Attendee attendee = view.getAttendee();
-        view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
-        view.navigateTo("");
     }
 
     @Override
@@ -162,4 +159,23 @@ public class AttendeeDetailPresenter implements PrintBadgeHandler, OverrideHandl
             view.notify("No attendees selected");
         }
     }
+
+    public void searchChanged(String searchString) {
+        if (searchString != null) {
+            view.navigateTo(view.VIEW_NAME + "/" + searchString.trim());
+        }
+    }
+
+    public void searchFor(String searchString) {
+        if (searchString != null && !searchString.trim().isEmpty()) {
+            searchString = searchString.trim();
+            List<Attendee> attendees = attendeeRepository.findByLastNameOrBadgeNumber(searchString);
+            if (attendees.size() > 0) {
+                view.afterSuccessfulFetch(attendees);
+            } else {
+                view.notify("No matching attendees found");
+            }
+        }
+    }
+
 }

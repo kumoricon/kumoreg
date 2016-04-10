@@ -11,7 +11,7 @@ import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
 import org.kumoricon.view.LogoutView;
 import org.kumoricon.view.attendee.PreRegView;
-import org.kumoricon.view.attendee.SearchView;
+import org.kumoricon.view.attendee.AttendeeSearchView;
 import org.kumoricon.view.badge.BadgeView;
 import org.kumoricon.view.computer.ComputerView;
 import org.kumoricon.view.importAttendee.ImportAttendeeView;
@@ -47,7 +47,7 @@ public class SiteMenu extends VerticalLayout {
         addButtonTo(reg, "pre_reg_check_in",
                 buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegView.VIEW_NAME));
         addButtonTo(reg, "attendee_search",
-                buttonFactory("Attendee Search", FontAwesome.SEARCH, SearchView.VIEW_NAME));
+                buttonFactory("Attendee Search", FontAwesome.SEARCH, AttendeeSearchView.VIEW_NAME));
         if (reg.getComponentCount() > 0) { menu.addComponent(reg); }
 
         Layout tab1 = new VerticalLayout();
