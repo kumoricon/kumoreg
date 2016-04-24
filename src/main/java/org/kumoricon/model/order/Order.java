@@ -133,5 +133,7 @@ public class Order {
     @Override
     public int hashCode() { return getOrderId().hashCode(); }
 
-    public String toString() { return orderId; }
+    public String toString() {
+        return String.format("[Order %s: %s]", id, orderId);
+    }
 }

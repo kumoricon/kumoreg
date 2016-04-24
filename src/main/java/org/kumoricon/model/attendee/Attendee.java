@@ -157,7 +157,7 @@ public class Attendee implements Serializable {
     public Boolean isPreRegistered() { return preRegistered; }
 
     public String toString() {
-        return String.format("(%s) %s %s", id, firstName, lastName);
+        return String.format("[Attendee %s: %s %s]", id, firstName, lastName);
     }
 
     public Boolean validate() throws ValueException {

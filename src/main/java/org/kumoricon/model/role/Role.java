@@ -47,7 +47,7 @@ public class Role implements Serializable {
     }
 
     public String toString() {
-        return name;
+        return String.format("[Role %s: %s]", id, name);
     }
 
     public void clearRights() {

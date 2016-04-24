@@ -92,7 +92,7 @@ public class Badge {
     }
 
     public String toString() {
-        return String.format(name);
+        return String.format("[Badge %s: %s]", id, name);
     }
 
 }

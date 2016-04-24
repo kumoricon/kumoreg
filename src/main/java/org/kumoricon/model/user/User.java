@@ -135,7 +135,7 @@ public class User implements Serializable {
 
     public String toString() {
         if (firstName != null && lastName != null) {
-            return String.format("%s (%s %s)", username, firstName, lastName);
+            return String.format("[User %s: %s]", id, username);
         } else {
             return username;
         }

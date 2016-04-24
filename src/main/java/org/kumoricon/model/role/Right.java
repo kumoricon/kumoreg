@@ -16,7 +16,7 @@ public class Right implements Serializable, Comparable {
     private String description;
 
     public String toString() {
-        return String.format("%s", name);
+        return name;
     }
 
     public Right() {}

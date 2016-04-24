@@ -22,7 +22,7 @@ public class Computer {
     public void setPrinterName(String printerName) { this.printerName = printerName; }
 
     public String toString() {
-        return String.format("(%d) %s -> printer %s", id, ipAddress, printerName);
+        return String.format("[Computer %s: %s]", id, ipAddress);
     }
 
     @Override
