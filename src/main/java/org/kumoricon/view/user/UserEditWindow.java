@@ -40,8 +40,9 @@ public class UserEditWindow extends Window {
         setModal(true);
         setResizable(false);
 
-        BeanItemContainer<Role> roleBeanItemContainer = new BeanItemContainer<>(Role.class, roleList);
-        role.setContainerDataSource(roleBeanItemContainer);
+        role.setContainerDataSource(new BeanItemContainer<>(Role.class, roleList));
+        role.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        role.setItemCaptionPropertyId("name");
 
         FormLayout form = new FormLayout();
         form.setMargin(true);

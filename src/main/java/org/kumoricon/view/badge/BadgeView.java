@@ -6,10 +6,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.presenter.badge.BadgePresenter;
 import org.kumoricon.view.BaseView;
@@ -67,6 +64,8 @@ public class BadgeView extends BaseView implements View {
         badgeList.setNullSelectionAllowed(false);
         badgeList.setWidth(300, Unit.PIXELS);
         badgeList.setImmediate(true);
+        badgeList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        badgeList.setItemCaptionPropertyId("name");
         leftPanel.addComponent(badgeList);
         leftPanel.addComponent(btnAddNew);
 

@@ -5,6 +5,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.ServiceException;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
@@ -224,6 +225,8 @@ public class AttendeeDetailForm extends GridLayout {
         f.setCaption("Badge Information");
         f.setMargin(false);
         f.addComponent(badge);
+        badge.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        badge.setItemCaptionPropertyId("name");
         badge.setNullSelectionAllowed(false);
         f.addComponent(paidAmount);
         return f;
@@ -262,8 +265,7 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     public void setAvailableBadges(List<Badge> availableBadges) {
-        badge.removeAllItems();
-        badge.addItems(availableBadges);
+        badge.setContainerDataSource(new BeanItemContainer<Badge>(Badge.class, availableBadges));
     }
 
     public void selectFirstName() {

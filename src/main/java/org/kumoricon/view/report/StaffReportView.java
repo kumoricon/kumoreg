@@ -38,6 +38,7 @@ public class StaffReportView extends BaseView implements View {
         dataGrid.setEditorEnabled(false);
         dataGrid.setHeightMode(HeightMode.ROW);
         dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        dataGrid.setWidth(600, Unit.PIXELS);
         setExpandRatio(dataGrid, .9f);
     }
 

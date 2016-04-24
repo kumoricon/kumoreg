@@ -45,10 +45,10 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void showAttendee(int id) {
         Attendee attendee = attendeeRepository.findOne(id);
         if (attendee != null) {
-            log.info("{} displayed Attendee {}", view.getCurrentUser(), id);
+            log.info("{} displayed Attendee {}", view.getCurrentUser(), attendee);
             view.showAttendee(attendee, badgeRepository.findAll());
         } else {
-            log.error("{} tried to display Attendee {} and it was not found", view.getCurrentUser(), id);
+            log.error("{} tried to display Attendee id {} and it was not found", view.getCurrentUser(), id);
             view.notify("Error: attendee " + id + " not found.");
         }
     }

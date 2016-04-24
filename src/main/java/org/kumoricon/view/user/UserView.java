@@ -6,10 +6,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.user.User;
 import org.kumoricon.presenter.user.UserPresenter;
@@ -40,6 +37,8 @@ public class UserView extends BaseView implements View {
         userList.setNullSelectionAllowed(false);
         userList.setWidth(500, Unit.PIXELS);
         userList.setImmediate(true);
+        userList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        userList.setItemCaptionPropertyId("username");
         layout.addComponent(userList);
         layout.addComponent(btnAddNew);
 

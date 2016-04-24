@@ -6,6 +6,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
@@ -38,6 +39,9 @@ public class RoleView extends BaseView implements View {
         roleList.setCaption("Roles");
         roleList.setNullSelectionAllowed(false);
         roleList.setWidth(500, Unit.PIXELS);
+        roleList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        roleList.setItemCaptionPropertyId("name");
+
         roleList.setImmediate(true);
         layout.addComponent(roleList);
         layout.addComponent(btnAddNew);
