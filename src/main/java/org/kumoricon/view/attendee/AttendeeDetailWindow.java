@@ -131,6 +131,14 @@ public class AttendeeDetailWindow extends Window {
     public BaseView getParentView() { return parentView; }
     public void setParentView(BaseView parentView) { this.parentView = parentView; }
 
+    public User getCurrentUser() {
+        if (parentView != null) {
+            return parentView.getCurrentUser();
+        } else {
+            return null;
+        }
+    }
+
     public void enableEditing(User overrideUser) {
         setEditableFields(overrideUser);
     }

@@ -45,8 +45,10 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void showAttendee(int id) {
         Attendee attendee = attendeeRepository.findOne(id);
         if (attendee != null) {
+            log.info("{} displayed Attendee {}", view.getCurrentUser(), id);
             view.showAttendee(attendee, badgeRepository.findAll());
         } else {
+            log.error("{} tried to display Attendee {} and it was not found", view.getCurrentUser(), id);
             view.notify("Error: attendee " + id + " not found.");
         }
     }
@@ -57,9 +59,12 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
             attendee.validate();
             attendee = attendeeRepository.save(attendee);
             view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
+            log.info("{} saved {}", view.getCurrentUser(), attendee);
             window.close();
             view.refresh();
         } catch (ValueException e) {
+            log.error("{} tried to save {} and got error {}",
+                    window.getCurrentUser(), attendee, e.getMessage());
             view.notifyError(e.getMessage());
         }
     }
@@ -69,8 +74,12 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         try {
             attendee.validate();
             attendee = attendeeRepository.save(attendee);
+            // Todo: Will have to refactor this
+            // Todo: log.info("{} saved {}", window.getCurrentUser(), attendee);
         } catch (ValueException e) {
             view.notifyError(e.getMessage());
+//          Todo:  log.error("{} tried to save {} and got error {}",
+//                    window.getCurrentUser(), attendee, e.getMessage());
             return;
         }
 
@@ -79,7 +88,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         attendeeList.add(attendee);
         if (overrideUser == null) {
             if (view.currentUserHasRight("reprint_badge")) {
-                log.info(view.getCurrentUser() + " reprinting badge(s)");
+                log.info("{} reprinting badge(s) for {}", view.getCurrentUser(), attendee);
                 showAttendeeBadgeWindow(view, attendeeList);
             } else {
                 overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge", attendeeList);
@@ -87,10 +96,13 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
             }
         } else {
             if (overrideUser.hasRight("reprint_badge")) {
-                log.info(view.getCurrentUser() + " reprinting badge(s) with override from " + overrideUser);
+                log.info("{} reprinting badge(s) for {} with override from {}",
+                        view.getCurrentUser(), attendee, overrideUser);
                 showAttendeeBadgeWindow(view, attendeeList);
             } else {
                 view.notifyError("Override user does not have the required right");
+                log.error("{} requested an override but {} did not have the reprint_badge right",
+                        view.getCurrentUser(), overrideUser);
                 List<Object> target = new ArrayList<>();
                 target.add(attendee);
                 overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge", attendeeList);
@@ -110,9 +122,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void overrideLogin(OverrideRequiredWindow window, String username, String password, List<Attendee> targets) {
         User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
         if (overrideUser != null && overrideUser.checkPassword(password) && overrideUser.hasRight("reprint_badge")) {
-            log.info(String.format("%s got reprint badges override from %s",
-                    view.getCurrentUser(), overrideUser));
-
+            log.info("{} got reprint badges override from {}", view.getCurrentUser(), overrideUser);
             saveAttendeeAndReprintBadge(window, (Attendee)targets.get(0), overrideUser);
         } else {
             view.notify("Bad username or password");
@@ -166,6 +176,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         if (searchString != null && !searchString.trim().isEmpty()) {
             searchString = searchString.trim();
             List<Attendee> attendees = attendeeRepository.findByLastNameOrBadgeNumber(searchString);
+            log.info("{} searched Attendees for \"{}\" and got {} results", view.getCurrentUser(), searchString, attendees.size());
             if (attendees.size() > 0) {
                 view.afterSuccessfulFetch(attendees);
             } else {
@@ -179,8 +190,8 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void overrideEditLogin(OverrideRequiredForEditWindow window, String username, String password, AttendeeDetailWindow attendeeDetailWindow) {
         User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
         if (overrideUser != null && overrideUser.checkPassword(password) && overrideUser.hasRight("attendee_edit")) {
-            log.info(String.format("%s got edit override from %s to edit %s",
-                    view.getCurrentUser(), overrideUser, attendeeDetailWindow.getAttendee()));
+            log.info("{} got edit override from {} to edit {}",
+                    view.getCurrentUser(), overrideUser, attendeeDetailWindow.getAttendee());
             window.close();
             attendeeDetailWindow.enableEditing(overrideUser);
         } else {
