@@ -5,6 +5,8 @@ import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.utility.CloseOutTillView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -21,8 +23,11 @@ public class CloseOutTillPresenter {
     @Autowired
     private OrderRepository orderRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(CloseOutTillPresenter.class);
+
     public void closeTill(CloseOutTillView view, User currentUser) {
         if (currentUser != null) {
+            log.info("{} closed out their till, session number {}", currentUser, currentUser.getSessionNumber());
             StringBuilder output = new StringBuilder();
             output.append(String.format("User ID: %d (%s)\n", currentUser.getId(), currentUser.getUsername()));
             output.append(String.format("%s %s\n", currentUser.getFirstName(), currentUser.getLastName()));
@@ -44,6 +49,7 @@ public class CloseOutTillPresenter {
             output.append("Session closed. New session number is: ");
             output.append(currentUser.getSessionNumber());
             view.showData(output.toString());
+            log.info("{} created new till session, number {}", currentUser, currentUser.getSessionNumber());
             // Todo: Print report (to which printer?) as well
         }
     }

@@ -6,6 +6,8 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.user.UserEditWindow;
 import org.kumoricon.view.user.UserView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -19,11 +21,14 @@ public class UserPresenter {
     @Autowired
     private RoleRepository roleRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(UserPresenter.class);
+
     public UserPresenter() {
     }
 
     public void userSelected(UserView view, User user) {
         if (user != null) {
+            log.info("{} viewed user {}", view.getCurrentUser(), user);
             view.navigateTo(view.VIEW_NAME + "/" + user.getId().toString());
             view.showUser(user, getAvailableRoles());
         }
@@ -37,10 +42,11 @@ public class UserPresenter {
     }
 
     public void addNewUser(UserView view) {
+        log.info("{} created new user", view.getCurrentUser());
         view.navigateTo(view.VIEW_NAME);
         User user = new User();
         user.setPassword(user.DEFAULT_PASSWORD);
-        view.showUser(user, roleRepository.findAll());
+        view.showUser(user, getAvailableRoles());
     }
 
     public void cancelUser(UserEditWindow window) {
@@ -53,6 +59,7 @@ public class UserPresenter {
     public void saveUser(UserEditWindow window, User user) {
         UserView view = window.getParentView();
         userRepository.save(user);
+        log.info("{} saved user {}", view.getCurrentUser(), user);
         window.close();
         view.navigateTo(UserView.VIEW_NAME);
         showUserList(view);
@@ -60,6 +67,7 @@ public class UserPresenter {
 
     public void showUserList(UserView view) {
         List<User> users = userRepository.findAll();
+        log.info("{} viewed user list", view.getCurrentUser());
         view.afterSuccessfulFetch(users);
     }
 
@@ -67,7 +75,6 @@ public class UserPresenter {
         if (parameters != null) {
             Integer id = Integer.parseInt(parameters);
             User user = userRepository.findOne(id);
-//            List<Role> roles = roleRepository.findAll();
             view.selectUser(user);
         }
     }
@@ -78,9 +85,11 @@ public class UserPresenter {
         try {
             userRepository.save(user);
             view.notify("Password reset for " + user.getUsername());
+            log.info("{} reset password for {}", view.getCurrentUser(), user);
             window.close();
         } catch (Exception e) {
             view.notifyError(e.getMessage());
+            log.error("{} got error while resetting password for {}. {}", view.getCurrentUser(), user, e);
         }
     }
 
