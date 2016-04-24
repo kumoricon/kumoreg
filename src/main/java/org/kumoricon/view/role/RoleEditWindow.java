@@ -9,7 +9,6 @@ import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.presenter.role.RolePresenter;
 import org.kumoricon.util.FieldFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 import java.util.Set;
@@ -56,21 +55,9 @@ public class RoleEditWindow extends Window {
         buttons.setSpacing(true);
         buttons.addComponent(btnSave);
         buttons.addComponent(btnCancel);
-
-        btnSave.addClickListener((Button.ClickListener) clickEvent -> {
-            try {
-                roleBeanFieldGroup.commit();
-                handler.saveRole(this, roleBeanFieldGroup.getItemDataSource().getBean());
-            } catch (DataIntegrityViolationException e) {
-                Notification.show("Error saving role: Constraint violation. Duplicate name?");
-            } catch (Exception e) {
-                Notification.show(e.getMessage());
-            }
-        });
+        form.addComponent(buttons);
 
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancel(this));
-
-        form.addComponent(buttons);
 
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
@@ -80,8 +67,6 @@ public class RoleEditWindow extends Window {
                 parentView.notifyError(e.getMessage());
             }
         });
-
-        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancel(this));
 
         setContent(form);
     }
