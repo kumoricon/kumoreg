@@ -98,12 +98,10 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
 
     private void search() {
         handler.searchChanged(txtSearch.getValue());
-        handler.searchFor(txtSearch.getValue());
     }
 
     @Override
     public void refresh() {
-        handler.searchChanged(txtSearch.getValue());
         handler.searchFor(txtSearch.getValue());
     }
 
