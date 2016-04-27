@@ -2,6 +2,8 @@ package org.kumoricon.presenter.report;
 
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.view.report.ReportView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -12,6 +14,9 @@ import java.util.List;
 public class AttendeeReportPresenter implements ReportPresenter {
     @Autowired
     private AttendeeRepository attendeeRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(AttendeeReportPresenter.class);
+
 
     public AttendeeReportPresenter() {
     }
@@ -81,6 +86,7 @@ public class AttendeeReportPresenter implements ReportPresenter {
         sb.append(buildTable("Pre Reg Check Ins By Day", attendeeRepository.findPreRegCheckInCountsByDate()));
         sb.append(buildAttendanceCounts(
                 attendeeRepository.findTotalAttendeeCount(), attendeeRepository.findWarmBodyCount()));
+        log.info("{} viewed Attendee Report", view.getCurrentUser());
         view.afterSuccessfulFetch(sb.toString());
     }
 

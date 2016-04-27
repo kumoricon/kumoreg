@@ -3,6 +3,8 @@ package org.kumoricon.presenter.report;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.report.StaffReportView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -14,12 +16,16 @@ public class StaffReportPresenter {
     @Autowired
     private UserRepository userRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(StaffReportPresenter.class);
+
     public StaffReportPresenter() {
     }
 
     public void showUserList(StaffReportView view) {
         List<User> users = userRepository.findAll();
         view.afterSuccessfulFetch(users);
+        log.info("{} viewed Staff Report", view.getCurrentUser());
+
     }
 
     public UserRepository getUserRepository() { return userRepository; }

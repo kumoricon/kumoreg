@@ -4,6 +4,8 @@ import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.view.report.ReportView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -14,6 +16,8 @@ import java.util.List;
 public class RoleReportPresenter implements ReportPresenter {
     @Autowired
     private RoleRepository roleRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(RoleReportPresenter.class);
 
     public RoleReportPresenter() {
     }
@@ -52,5 +56,6 @@ public class RoleReportPresenter implements ReportPresenter {
         List<Role> roles = roleRepository.findAll();
         String report = buildTable("Role List", roles);
         view.afterSuccessfulFetch(report);
+        log.info("{} viewed Role Report", view.getCurrentUser());
     }
 }

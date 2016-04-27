@@ -6,6 +6,8 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.HomeView;
 import org.kumoricon.view.LoginView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -16,6 +18,9 @@ public class LoginPresenter {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(LoginPresenter.class);
+
 
     public LoginPresenter() {
     }
@@ -35,6 +40,7 @@ public class LoginPresenter {
             ui.setLoggedInUser(user);
             ui.buildMenu();
             view.navigateTo(HomeView.VIEW_NAME);
+            log.info("{} logged in", user);
         } else {
             view.loginFailed();
         }
