@@ -48,8 +48,8 @@ public class OrderPresenter implements PrintBadgeHandler {
     public void createNewOrder(OrderView view) {
         Order order = new Order();
         order.setOrderId(order.generateOrderId());
+        log.info("{} created new order {}", view.getCurrentUser(), order);
         orderRepository.save(order);
-        log.info(String.format("%s created new order %s", view.getCurrentUser(), order));
         view.navigateTo(view.VIEW_NAME + "/" + order.getId());
     }
 
@@ -58,7 +58,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         if (order != null) {
             view.afterSuccessfulFetch(order);
         } else {
-            log.error(String.format("%s tried to view order %s and it was not found.", view.getCurrentUser(), id));
+            log.error("{} tried to view order {} and it was not found.", view.getCurrentUser(), id);
             view.notifyError("Error: order " + id + " not found.");
         }
     }
@@ -66,8 +66,8 @@ public class OrderPresenter implements PrintBadgeHandler {
     public void cancelOrder(OrderView view) {
         Order order = view.getOrder();
         if (order.getAttendeeList().size() == 0 && !order.getPaid()) {
+            log.info("{} canceled empty order {}. It was deleted.", view.getCurrentUser(), order);
             orderRepository.delete(order);
-            log.info(String.format("%s canceled empty order %s. It was deleted.", view.getCurrentUser(), order));
         }
         view.navigateTo("");
     }
@@ -81,10 +81,10 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     public void addAttendeeToOrder(OrderView view, Attendee attendee) {
         Order order = view.getOrder();
+        log.info("{} added attendee {} to order {}", view.getCurrentUser(), attendee, order);
         order.addAttendee(attendee);
         order.setTotalAmount(getOrderTotal(order));
         order = orderRepository.save(order);
-        log.info(String.format("%s added attendee %s to order %s", view.getCurrentUser(), attendee, order));
         view.afterSuccessfulFetch(order);
     }
 
@@ -103,6 +103,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         if (attendee != null && !attendee.isCheckedIn()) {
             String name = attendee.getName();
             Order order = view.getOrder();
+            log.info("{} removed attendee {] from order {}. Attendee deleted.", view.getCurrentUser(), attendee, order);
             order.removeAttendee(attendee);
             attendee.setOrder(null);
 
@@ -110,8 +111,6 @@ public class OrderPresenter implements PrintBadgeHandler {
             Order result = orderRepository.save(order);
             view.afterSuccessfulFetch(result);
             attendeeRepository.delete(attendee);
-            log.info(String.format("%s removed attendee %s from order %s. Attendee was deleted.",
-                    view.getCurrentUser(), attendee, order));
             view.notify(name + " deleted");
             view.afterSuccessfulFetch(order);
         }
@@ -137,10 +136,10 @@ public class OrderPresenter implements PrintBadgeHandler {
     }
 
     public void orderComplete(OrderView view, Order currentOrder) {
+        log.info("{} completed order {} and took payment ${}",
+                view.getCurrentUser(), currentOrder, currentOrder.getTotalAmount());
         currentOrder.paymentComplete(view.getCurrentUser());
         orderRepository.save(currentOrder);
-        log.info(String.format("%s completed order %s and took payment $%s",
-                view.getCurrentUser(), currentOrder, currentOrder.getTotalAmount()));
         showAttendeeBadgeWindow(view, currentOrder.getAttendees());
     }
 
@@ -161,8 +160,8 @@ public class OrderPresenter implements PrintBadgeHandler {
         output.append(user.getFirstName().charAt(0));
         output.append(user.getLastName().charAt(0));
         output.append(String.format("%1$05d", user.getNextBadgeNumber()));
+        log.info("{} generated badge number {}", view.getCurrentUser(), output.toString().toUpperCase());
         userRepository.save(user);
-        log.info(String.format("%s generated badge number %s", view.getCurrentUser(), output.toString().toUpperCase()));
         return output.toString().toUpperCase();
     }
 
@@ -176,13 +175,7 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s printing badges for: ", view.getCurrentUser()));
-        for (Attendee attendee : attendeeList) {
-            sb.append(attendee.getName());
-            sb.append("; ");
-        }
-        log.info(sb.toString());
+        log.info("{} printing badge(s) for: {}", view.getCurrentUser(), attendeeList);
         view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
         view.showPrintBadgeWindow(attendeeList);
     }
@@ -190,6 +183,8 @@ public class OrderPresenter implements PrintBadgeHandler {
     @Override
     public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         BaseView view = printBadgeWindow.getParentView();
+        log.info("{} reported badge(s) printed successfully for {}",
+                printBadgeWindow.getParentView().getCurrentUser(), attendees);
         printBadgeWindow.close();
         view.notify("Order Complete");
         view.navigateTo("/");
@@ -197,14 +192,8 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s printing badges for: ", printBadgeWindow.getParentView().getCurrentUser()));
-        for (Attendee attendee : attendeeList) {
-            sb.append(attendee.getName());
-            sb.append("; ");
-        }
-        sb.append(" (Reprint from window)");
-        log.info(sb.toString());
+        log.info("{} printing badge(s) for {} (reprint during order)",
+                printBadgeWindow.getParentView().getCurrentUser(), attendeeList);
         printBadgeWindow.getParentView().notify(
                 badgePrintService.printBadgesForAttendees(attendeeList,
                         printBadgeWindow.getParentView().getCurrentClientIPAddress()));
