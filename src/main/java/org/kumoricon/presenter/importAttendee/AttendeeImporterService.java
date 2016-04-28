@@ -56,7 +56,7 @@ public class AttendeeImporterService {
     }
 
     public String importFromTSV(Reader inputReader, User user) throws Exception {
-        log.info("Starting data import");
+        log.info("{} starting data import", user);
         BufferedReader TSVFile = new BufferedReader(inputReader);
         String dataRow = TSVFile.readLine(); // Skip the header row
         Integer lineNumber = 1;
@@ -149,12 +149,12 @@ public class AttendeeImporterService {
             o.setPaid(isPaid);
         }
 
-        log.info("Saving " + ordersToAdd.size() + " orders and " + attendeesToAdd.size() + " attendees to database");
+        log.info("{} saving {} orders and {} attendees to database", user, ordersToAdd.size(), attendeesToAdd.size());
         orderRepository.save(ordersToAdd);
 
         userRepository.save(currentUser);
 
-        log.info("Done importing data");
+        log.info("{} done importing data", user);
         return String.format("Imported %s attendees and %s orders", attendeesToAdd.size(), ordersToAdd.size());
     }
 
