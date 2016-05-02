@@ -1,6 +1,5 @@
 package org.kumoricon.view.attendee;
 
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.navigator.View;
@@ -44,14 +43,6 @@ public class PreRegView extends BaseView implements View, AttendeePrintView{
         f.setMargin(false);
         f.setSpacing(false);
         txtSearch.setSizeFull();
-        txtSearch.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
-                search();
-            }
-        });
-        txtSearch.setImmediate(true);
-        txtSearch.setTextChangeEventMode(AbstractTextField.TextChangeEventMode.EAGER);
         f.addComponent(txtSearch);
 
         btnSearch = new Button("Search");
@@ -106,7 +97,6 @@ public class PreRegView extends BaseView implements View, AttendeePrintView{
 
     private void search() {
         handler.searchChanged(txtSearch.getValue());
-        handler.searchFor(txtSearch.getValue());
     }
 
 
