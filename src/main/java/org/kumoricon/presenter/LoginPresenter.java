@@ -40,7 +40,7 @@ public class LoginPresenter {
             ui.setLoggedInUser(user);
             ui.buildMenu();
             view.navigateTo(HomeView.VIEW_NAME);
-            log.info("{} logged in", user);
+            log.info("{} logged in from {}", user, view.getCurrentClientIPAddress());
         } else {
             view.loginFailed();
         }

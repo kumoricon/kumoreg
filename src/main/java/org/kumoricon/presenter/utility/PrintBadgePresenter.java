@@ -31,6 +31,7 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
 
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
+        log.info("{} printing test badges", view.getCurrentUser());
         // Because this is for test badges in this presenter, don't use any existing attendees - generate them
         attendeeList.clear();
         attendeeList.add(attendeeFactory.generateDemoAttendee());
@@ -44,6 +45,8 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
     @Override
     public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         if (printBadgeWindow != null) {
+            log.info("{} reports test badges printed successfully for {}",
+                    printBadgeWindow.getParentView().getCurrentUser(), attendees);
             printBadgeWindow.close();
         }
     }
@@ -55,6 +58,7 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
         }
         BaseView view = printBadgeWindow.getParentView();
         if (attendeeList.size() > 0) {
+            log.info("{} reprinting test badges for {}", view.getCurrentUser(), attendeeList);
             printBadges(view, attendeeList);
             view.notify("Reprinting badges");
         } else {
@@ -63,13 +67,7 @@ public class PrintBadgePresenter implements PrintBadgeHandler {
     }
 
     private void printBadges(BaseView view, List<Attendee> attendeeList) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("[%s] printing test badges for: ", view.getCurrentUser()));
-        for (Attendee attendee : attendeeList) {
-            sb.append(attendee.getName());
-            sb.append("; ");
-        }
-        log.info(sb.toString());
+        log.info("{} printing test badges for {}", view.getCurrentUser(), attendeeList);
         view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
     }
 }

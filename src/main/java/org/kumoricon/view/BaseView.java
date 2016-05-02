@@ -7,17 +7,22 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.PostConstruct;
 
 public class BaseView extends VerticalLayout implements View {
 
+    private static final Logger log = LoggerFactory.getLogger(BaseView.class);
+
     protected void checkPermissions() {
         // Check user permission
         if (getRequiredRight() != null) {
             User user = getCurrentUser();
             if (user != null && !user.hasRight(getRequiredRight())) {
+                log.error("{} access denied because they did not have right {}", user, getRequiredRight());
                 navigateTo("/");
                 Notification.show("Permission denied. Right " + getRequiredRight() + " is required.");
             }

@@ -168,7 +168,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
 
     public void searchChanged(String searchString) {
         if (searchString != null) {
-            view.navigateTo(view.VIEW_NAME + "/" + searchString.trim());
+            view.navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString.trim());
         }
     }
 

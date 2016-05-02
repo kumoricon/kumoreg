@@ -43,7 +43,7 @@ public class BadgeView extends BaseView implements View {
         if (parameters == null || parameters.equals("")) {
             closeBadgeEditWindow();
         } else {
-            handler.navigateToRole(this, viewChangeEvent.getParameters());
+            handler.navigateToBadge(this, viewChangeEvent.getParameters());
         }
     }
 

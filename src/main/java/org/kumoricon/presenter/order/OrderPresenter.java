@@ -56,6 +56,7 @@ public class OrderPresenter implements PrintBadgeHandler {
     public void showOrder(OrderView view, int id) {
         Order order = orderRepository.findOne(id);
         if (order != null) {
+            log.info("{} viewed order {}", view.getCurrentUser(), order);
             view.afterSuccessfulFetch(order);
         } else {
             log.error("{} tried to view order {} and it was not found.", view.getCurrentUser(), id);
@@ -73,6 +74,7 @@ public class OrderPresenter implements PrintBadgeHandler {
     }
 
     public void addNewAttendee(OrderView view) {
+        log.info("{} created new attendee", view.getCurrentUser());
         Attendee newAttendee = new Attendee();
         newAttendee.setBadgeNumber(generateBadgeNumber(view));
         newAttendee.setOrder(view.getOrder());
@@ -103,7 +105,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         if (attendee != null && !attendee.isCheckedIn()) {
             String name = attendee.getName();
             Order order = view.getOrder();
-            log.info("{} removed attendee {] from order {}. Attendee deleted.", view.getCurrentUser(), attendee, order);
+            log.info("{} removed attendee {} from order {}. Attendee deleted.", view.getCurrentUser(), attendee, order);
             order.removeAttendee(attendee);
             attendee.setOrder(null);
 
@@ -144,6 +146,7 @@ public class OrderPresenter implements PrintBadgeHandler {
     }
 
     public void selectAttendee(OrderView view, Attendee attendee) {
+        log.info("{} viewed attendee {}", view.getCurrentUser(), attendee);
         List<Badge> badgeTypesUserCanSee = new ArrayList<>();
         for (Badge badge : badgeRepository.findByVisibleTrue()) {
             if (badge.getRequiredRight() == null || view.currentUserHasRight(badge.getRequiredRight())) {
@@ -167,9 +170,10 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     public void saveAuthNumberClicked(OrderView view, String value) {
         Order order = view.getOrder();
+        log.info("{} set credit card authorization number {} for {}", view.getCurrentUser(), value, order);
         String oldNotes = "";
         if (order.getNotes() != null) { oldNotes = order.getNotes(); }
-        order.setNotes("Credit card authorization Number: " + value + "\n" + oldNotes);
+        order.setNotes("Credit card authorization number: " + value + "\n" + oldNotes);
         orderComplete(view, order);
     }
 

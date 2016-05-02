@@ -58,16 +58,16 @@ public class UserPresenter {
 
     public void saveUser(UserEditWindow window, User user) {
         UserView view = window.getParentView();
-        userRepository.save(user);
         log.info("{} saved user {}", view.getCurrentUser(), user);
+        userRepository.save(user);
         window.close();
         view.navigateTo(UserView.VIEW_NAME);
         showUserList(view);
     }
 
     public void showUserList(UserView view) {
-        List<User> users = userRepository.findAll();
         log.info("{} viewed user list", view.getCurrentUser());
+        List<User> users = userRepository.findAll();
         view.afterSuccessfulFetch(users);
     }
 
@@ -75,7 +75,12 @@ public class UserPresenter {
         if (parameters != null) {
             Integer id = Integer.parseInt(parameters);
             User user = userRepository.findOne(id);
-            view.selectUser(user);
+            if (user != null) {
+                view.selectUser(user);
+            } else {
+                log.error("{} tried to view user id {} but it was not found in the database",
+                        view.getCurrentUser(), id);
+            }
         }
     }
 

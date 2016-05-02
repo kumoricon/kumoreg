@@ -41,6 +41,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
     }
 
     public void searchFor(String searchString) {
+        log.info("{} searched preregistered attendees for {}", view.getCurrentUser(), searchString);
         view.getAttendeeBeanList().removeAllItems();
         if (searchString != null && !searchString.trim().isEmpty()) {
             searchString = searchString.trim();
@@ -59,6 +60,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
     }
 
     public void selectAttendee(Attendee attendee) {
+        log.info("{} viewed preregistered attendee {}", view.getCurrentUser(), attendee);
         if (attendee.getBadge().getWarningMessage() == null) {
             continueCheckIn(attendee);
         } else {
@@ -75,10 +77,16 @@ public class PreRegPresenter implements PrintBadgeHandler {
 
     public void showAttendee(PreRegView view, int id) {
         Attendee attendee = attendeeRepository.findOne(id);
-        view.showAttendee(attendee, badgeRepository.findAll());
+        if (attendee != null) {
+            view.showAttendee(attendee, badgeRepository.findAll());
+        } else {
+            log.error("{} tried to view preregistered attendee id {} but they were not found",
+                    view.getCurrentUser(), id);
+        }
     }
 
     public void checkInAttendee(PreRegCheckInWindow window, Attendee attendee) {
+        log.info("{} checked in preregistered attendee {}", window.getParentView().getCurrentUser(), attendee);
         if (attendee != null) {
             List<Attendee> attendeeList = new ArrayList<>();
             attendeeList.add(attendee);
@@ -92,14 +100,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
     @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         BaseView v = printBadgeWindow.getParentView();
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s printing badges for: ", v.getCurrentUser()));
-        for (Attendee attendee : attendeeList) {
-            sb.append(attendee.getName());
-            sb.append("; ");
-        }
-        sb.append(" (Reprint from window)");
-        log.info(sb.toString());
+        log.info("{} reprinting badges for preregistered attendee(s) {}", v.getCurrentUser(), attendeeList);
         printBadgeWindow.getParentView().notify(
                 badgePrintService.printBadgesForAttendees(attendeeList, v.getCurrentClientIPAddress()));
     }
@@ -125,19 +126,15 @@ public class PreRegPresenter implements PrintBadgeHandler {
 
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s printing badges for: ", view.getCurrentUser()));
-        for (Attendee attendee : attendeeList) {
-            sb.append(attendee.getName());
-            sb.append("; ");
-        }
-        log.info(sb.toString());
+        log.info("{} printing badges for preregistered attendee(s) {}", view.getCurrentUser(), attendeeList);
         view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
         view.showPrintBadgeWindow(attendeeList);
     }
 
     @Override
     public void badgePrintSuccess(PrintBadgeWindow window, List<Attendee> attendees) {
+        log.info("{} reports badges printed successfully for preregistered attendee(s) {}",
+                view.getCurrentUser(), attendees);
         for (Attendee attendee : attendees) {
             attendee.setCheckedIn(true);
         }

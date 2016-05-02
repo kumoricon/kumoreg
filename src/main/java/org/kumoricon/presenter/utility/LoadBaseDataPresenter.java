@@ -10,6 +10,8 @@ import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.view.utility.LoadBaseDataView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -29,10 +31,13 @@ public class LoadBaseDataPresenter {
     @Autowired
     private RightRepository rightRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(LoadBaseDataPresenter.class);
+
     public LoadBaseDataPresenter() {
     }
 
     public void loadDataButtonClicked(LoadBaseDataView view) {
+        log.info("{} loaded base data", view.getCurrentUser());
         StringBuilder results = new StringBuilder();
         if (targetTablesAreEmpty(results)) {
             addRights(results);
@@ -49,18 +54,22 @@ public class LoadBaseDataPresenter {
 
         Integer errors = 0;
         if (rightRepository.count() > 1) {
+            log.error("rights table is not empty");
             results.append("Error: rights table not empty.\n");
             errors++;
         }
         if (roleRepository.count() > 1) {
             results.append("Error: roles table not empty.\n");
+            log.error("roles table is not empty");
             errors++;
         }
         if (userRepository.count() > 1) {
             results.append("Error: users table not empty.\n");
+            log.error("users table is not empty");
             errors++;
         }
         if (badgeRepository.count() > 0) {
+            log.error("badges table is not empty");
             results.append("Error: badges table not empty.\n");
             errors++;
         }
@@ -69,6 +78,7 @@ public class LoadBaseDataPresenter {
             return true;
         } else {
             results.append("Aborting.\n");
+            log.error("Aborting base data import");
             return false;
         }
     }
@@ -108,7 +118,9 @@ public class LoadBaseDataPresenter {
         };
 
         for (String[] rightInfo : rights) {
-            rightRepository.save(new Right(rightInfo[0], rightInfo[1]));
+            log.info("Creating right {}", rightInfo[0]);
+            Right right = new Right(rightInfo[0], rightInfo[1]);
+            right = rightRepository.save(right);
         }
     }
 
@@ -140,6 +152,7 @@ public class LoadBaseDataPresenter {
         HashMap<String, Right> rightMap = getRightsHashMap();
 
         for (String roleName : roles.keySet()) {
+            log.info("Creating role {}", roleName);
             Role role = new Role(roleName);
             for (String rightName : roles.get(roleName)) {
                 if (rightMap.containsKey(rightName)) {
@@ -163,6 +176,7 @@ public class LoadBaseDataPresenter {
                               {"Ops", "User", "ops"}};
 
         for (String[] currentUser : userList) {
+            log.info("Creating user {}", currentUser[0]);
             User user = new User(currentUser[0], currentUser[1]);
             user.setUsername(currentUser[0]);
             Role role = roleRepository.findByNameIgnoreCase(currentUser[2]);
@@ -184,6 +198,7 @@ public class LoadBaseDataPresenter {
                 {"Saturday", "40", "40", "30"},
                 {"Sunday", "30", "30", "20"}};
         for (String[] currentBadge : badgeList) {
+            log.info("Creating badge {}", currentBadge[0]);
             Badge badge = BadgeFactory.badgeFactory(currentBadge[0], currentBadge[0],
                     Float.parseFloat(currentBadge[1]),
                     Float.parseFloat(currentBadge[2]),
@@ -193,42 +208,49 @@ public class LoadBaseDataPresenter {
         }
 
         // Create badge types with security restrictions below
+        log.info("Creating badge VIP");
         Badge vip = BadgeFactory.badgeFactory("VIP", "VIP", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
         results.append("    Creating " + vip.toString() + "\n");
         badgeRepository.save(vip);
 
+        log.info("Creating badge Artist");
         Badge artist = BadgeFactory.badgeFactory("Artist", "Weekend", 0f, 0f, 0f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
         results.append("    Creating " + artist.toString() + "\n");
         badgeRepository.save(artist);
 
+        log.info("Creating badge Exhibitor");
         Badge exhibitor = BadgeFactory.badgeFactory("Exhibitor", "Exhibitor", 0f, 0f, 0f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
         results.append("    Creating " + exhibitor.toString() + "\n");
         badgeRepository.save(exhibitor);
 
+        log.info("Creating badge Guest");
         Badge guest = BadgeFactory.badgeFactory("Guest", "Guest", 0f, 0f, 0f);
         guest.setRequiredRight("badge_type_guest");
         guest.setWarningMessage("Guest check in. See your coordinator!");
         results.append("    Creating " + guest.toString() + "\n");
         badgeRepository.save(guest);
 
+        log.info("Creating badge Press");
         Badge press = BadgeFactory.badgeFactory("Press", "Press", 0f, 0f, 0f);
         press.setRequiredRight("badge_type_press");
         press.setWarningMessage("Press check in. See your coordinator!");
         results.append("    Creating " + press.toString() + "\n");
         badgeRepository.save(press);
 
+        log.info("Creating badge Industry");
         Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);
         industry.setRequiredRight("badge_type_industry");
         industry.setWarningMessage("Industry check in. See your coordinator!");
         results.append("    Creating " + industry.toString() + "\n");
         badgeRepository.save(industry);
 
+        log.info("Creating badge Panelist");
         Badge panelist = BadgeFactory.badgeFactory("Panelist", "Panelist", 0f, 0f, 0f);
         panelist.setRequiredRight("badge_type_panelist");
         panelist.setWarningMessage("Panelist check in. See your coordinator!");

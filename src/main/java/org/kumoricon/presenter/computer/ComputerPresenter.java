@@ -37,6 +37,7 @@ public class ComputerPresenter {
     }
 
     public void showComputerList(ComputerView view) {
+        log.info("{} viewed computer list", view.getCurrentUser());
         List<Computer> computers = computerRepository.findAll();
         view.afterSuccessfulFetch(computers);
     }
