@@ -27,7 +27,7 @@ public class CloseOutTillPresenter {
 
     public void closeTill(CloseOutTillView view, User currentUser) {
         if (currentUser != null) {
-            log.info("{} closed out their till, session number {}", currentUser, currentUser.getSessionNumber());
+            log.info("{} closing out till, session number {}", currentUser, currentUser.getSessionNumber());
             StringBuilder output = new StringBuilder();
             output.append(String.format("User ID: %d (%s)\n", currentUser.getId(), currentUser.getUsername()));
             output.append(String.format("%s %s\n", currentUser.getFirstName(), currentUser.getLastName()));
@@ -41,6 +41,9 @@ public class CloseOutTillPresenter {
             for (Object[] line : results) {
                 output.append(String.format("%-40s\t%5d\t$%8.2f\n",
                         getPaymentType((Integer)line[0]), line[1], line[2]));
+                log.info("{} till session {}: Payment Type: {}, Attendees: {}, Total: ${}",
+                        currentUser, currentUser.getSessionNumber(), getPaymentType((Integer)line[0]),
+                        line[1], line[2]);
             }
             output.append("--------------------------------------------------------------------------------\n");
 
@@ -49,7 +52,7 @@ public class CloseOutTillPresenter {
             output.append("Session closed. New session number is: ");
             output.append(currentUser.getSessionNumber());
             view.showData(output.toString());
-            log.info("{} created new till session, number {}", currentUser, currentUser.getSessionNumber());
+            log.info("{} created new till session, number {}.", currentUser, currentUser.getSessionNumber());
             // Todo: Print report (to which printer?) as well
         }
     }
