@@ -6,12 +6,15 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
-import com.vaadin.ui.*;
-import org.kumoricon.component.SiteLogo;
-import org.kumoricon.component.SiteMenu;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.model.user.User;
-import org.kumoricon.view.ErrorView;
-import org.kumoricon.view.LoginView;
+import org.kumoricon.site.ErrorView;
+import org.kumoricon.site.LoginView;
+import org.kumoricon.site.SiteLogo;
+import org.kumoricon.site.SiteMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Theme("valo")
