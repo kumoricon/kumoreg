@@ -164,10 +164,14 @@ public class AttendeeDetailWindow extends Window {
 
         if (user.hasRight("attendee_edit") || user.hasRight("attendee_edit_notes")) {
             btnSave.setEnabled(true);
+            informationVerified.setEnabled(true);
+            consentFormReceived.setEnabled(true);
             if (user.hasRight("reprint_badge") || user.hasRight("reprint_badge_with_override")) {
                 btnSaveAndReprint.setEnabled(true);
             } else {
                 btnSaveAndReprint.setEnabled(false);
+                informationVerified.setEnabled(false);
+                consentFormReceived.setEnabled(false);
             }
         } else {
             btnSave.setEnabled(false);
