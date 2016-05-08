@@ -2,12 +2,10 @@ package org.kumoricon.site.attendee.prereg;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
-import org.kumoricon.site.attendee.form.AttendeeDetailForm;
-import org.kumoricon.site.attendee.form.AttendeePreRegDetailForm;
-import org.kumoricon.site.attendee.prereg.PreRegPresenter;
-import org.kumoricon.site.attendee.prereg.PreRegView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.site.attendee.form.AttendeeDetailForm;
+import org.kumoricon.site.attendee.form.AttendeePreRegDetailForm;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class PreRegCheckInWindow extends Window {
         setIcon(FontAwesome.USER);
         center();
         setModal(true);
-        setWidth(950, Unit.PIXELS);
+        setWidth(1100, Unit.PIXELS);
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);

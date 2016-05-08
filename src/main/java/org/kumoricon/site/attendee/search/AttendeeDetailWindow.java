@@ -2,13 +2,15 @@ package org.kumoricon.site.attendee.search;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
-import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class AttendeeDetailWindow extends Window {
         setIcon(FontAwesome.USER);
         center();
         setModal(true);
-        setWidth(950, Unit.PIXELS);
+        setWidth(1100, Unit.PIXELS);
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
