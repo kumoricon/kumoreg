@@ -199,7 +199,6 @@ public class AttendeeDetailForm extends GridLayout {
         checkBoxes.setMargin(false);
         checkBoxes.setSpacing(true);
         checkBoxes.addComponent(parentIsEmergencyContact);
-        checkBoxes.addComponent(parentFormReceived);
 
         parentIsEmergencyContact.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
@@ -244,6 +243,7 @@ public class AttendeeDetailForm extends GridLayout {
     protected FormLayout buildCheckedIn() {
         FormLayout f = new FormLayout();
         f.setMargin(false);
+        f.addComponent(parentFormReceived);
         f.addComponent(checkedIn);
         return f;
     }

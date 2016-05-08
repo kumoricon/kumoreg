@@ -3,21 +3,18 @@ package org.kumoricon.site.attendee.window;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
-import org.kumoricon.site.attendee.form.AttendeeDetailForm;
-import org.kumoricon.site.attendee.form.AttendeePreRegDetailForm;
-import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.form.AttendeeDetailForm;
+import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 
 import java.util.List;
 
 public class AttendeeDetailWindow extends Window {
 
     private AttendeeDetailForm form;
-    private CheckBox informationVerified = new CheckBox("Information Verified");
-    private CheckBox consentFormReceived = new CheckBox("Parental Consent Form Received");
     private Button btnSave;
     private Button btnCancel;
     private Button btnSaveAndReprint;
@@ -38,7 +35,7 @@ public class AttendeeDetailWindow extends Window {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
         verticalLayout.setSpacing(true);
-        form = new AttendeePreRegDetailForm();
+        form = new AttendeeDetailForm();
         form.setAllFieldsButCheckInDisabled();
         verticalLayout.addComponent(form);
         verticalLayout.addComponent(buildVerifiedCheckboxes());
@@ -46,35 +43,12 @@ public class AttendeeDetailWindow extends Window {
         setContent(verticalLayout);
     }
 
-    public Boolean informationVerified() {
-        if (informationVerified.getValue() == null) {
-            return false;
-        } else {
-            return informationVerified.getValue();
-        }
-    }
-
-    public Boolean parentalConsentFormReceived() {
-        if (consentFormReceived.getValue() == null) {
-            return false;
-        } else {
-            return consentFormReceived.getValue();
-        }
-    }
-
     public Attendee getAttendee() {return form.getAttendee(); }
 
     public void showAttendee(Attendee attendee) {
         form.show(attendee);
 
-        informationVerified.setValue(false);
-        consentFormReceived.setValue(attendee.getParentFormReceived());
         form.setAllFieldsButCheckInDisabled();
-        if (attendee.isMinor() && !attendee.getCheckedIn()) {
-            consentFormReceived.setEnabled(true);
-        } else {
-            consentFormReceived.setEnabled(false);
-        }
         setEditableFields(getParentView().getCurrentUser());
     }
 
@@ -87,8 +61,6 @@ public class AttendeeDetailWindow extends Window {
         HorizontalLayout h = new HorizontalLayout();
         h.setSpacing(true);
         h.setMargin(false);
-        h.addComponent(informationVerified);
-        h.addComponent(consentFormReceived);
         return h;
     }
 
@@ -164,14 +136,10 @@ public class AttendeeDetailWindow extends Window {
 
         if (user.hasRight("attendee_edit") || user.hasRight("attendee_edit_notes")) {
             btnSave.setEnabled(true);
-            informationVerified.setEnabled(true);
-            consentFormReceived.setEnabled(true);
             if (user.hasRight("reprint_badge") || user.hasRight("reprint_badge_with_override")) {
                 btnSaveAndReprint.setEnabled(true);
             } else {
                 btnSaveAndReprint.setEnabled(false);
-                informationVerified.setEnabled(false);
-                consentFormReceived.setEnabled(false);
             }
         } else {
             btnSave.setEnabled(false);
