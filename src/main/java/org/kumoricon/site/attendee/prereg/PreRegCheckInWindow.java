@@ -1,4 +1,4 @@
-package org.kumoricon.site.attendee.window;
+package org.kumoricon.site.attendee.prereg;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;

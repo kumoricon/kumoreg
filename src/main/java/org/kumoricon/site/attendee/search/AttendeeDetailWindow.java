@@ -1,4 +1,4 @@
-package org.kumoricon.site.attendee.window;
+package org.kumoricon.site.attendee.search;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.server.FontAwesome;
