@@ -3,7 +3,6 @@ package org.kumoricon.site.attendee.search;
 import com.vaadin.ui.Window;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.site.attendee.*;
-import org.kumoricon.site.attendee.window.AttendeeDetailWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;

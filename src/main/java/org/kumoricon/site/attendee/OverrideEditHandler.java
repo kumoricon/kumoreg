@@ -1,6 +1,7 @@
 package org.kumoricon.site.attendee;
 
-import org.kumoricon.site.attendee.window.AttendeeDetailWindow;
+
+import org.kumoricon.site.attendee.search.AttendeeDetailWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 
 public interface OverrideEditHandler {

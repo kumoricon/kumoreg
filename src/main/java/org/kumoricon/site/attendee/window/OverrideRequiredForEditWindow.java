@@ -3,6 +3,7 @@ package org.kumoricon.site.attendee.window;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import org.kumoricon.site.attendee.OverrideEditHandler;
+import org.kumoricon.site.attendee.search.AttendeeDetailWindow;
 
 
 public class OverrideRequiredForEditWindow extends Window {

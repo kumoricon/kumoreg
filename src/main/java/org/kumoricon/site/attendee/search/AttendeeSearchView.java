@@ -9,7 +9,6 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.site.attendee.window.AttendeeDetailWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
