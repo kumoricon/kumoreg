@@ -17,6 +17,12 @@ public class FieldFactory {
         return textField;
     }
 
+    public static final PasswordField createPasswordField(String name, int tabIndex) {
+        PasswordField passwordField = new PasswordField(name);
+        passwordField.setTabIndex(tabIndex);
+        return passwordField;
+    }
+
     public static final TextField createNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
         textField.addValidator(new RegexpValidator("[0-9]+", "This is not a number"));

@@ -45,6 +45,11 @@ public class LoginView extends BaseView implements View {
         usernameField.focus();
     }
 
+    public void showNewPasswordWindow() {
+        NewPasswordWindow window = new NewPasswordWindow(this, handler);
+        showWindow(window);
+    }
+
     public void loginFailed() {
         Notification.show("Error: Login failed", Notification.Type.HUMANIZED_MESSAGE);
         passwordField.selectAll();

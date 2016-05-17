@@ -28,6 +28,8 @@ public class User implements Serializable {
     private String phone;
     @NotNull
     private Boolean enabled;
+    @NotNull
+    private Boolean resetPassword;              // On login, prompt to reset password
     @ManyToOne(cascade=CascadeType.MERGE)
     private Role role;
     private String salt;
@@ -40,6 +42,7 @@ public class User implements Serializable {
         this.id = null;
         this.salt = "TempSalt"; // Todo: randomly generate salt
         this.enabled = true;
+        this.resetPassword = false;
         this.lastBadgeNumberCreated = 1213;     // Start at an arbitrary number instead of 0
         this.sessionNumber = 1;
     }
@@ -83,6 +86,14 @@ public class User implements Serializable {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public Boolean getResetPassword() { return resetPassword; }
+    public void setResetPassword(Boolean resetPassword) { this.resetPassword = resetPassword; }
+
+    public void resetPassword() {
+        setPassword(DEFAULT_PASSWORD);
+        this.resetPassword = true;
+    }
 
     public Integer getLastBadgeNumberCreated() { return lastBadgeNumberCreated; }
     public void setLastBadgeNumberCreated(Integer lastBadgeNumberCreated) { this.lastBadgeNumberCreated = lastBadgeNumberCreated; }

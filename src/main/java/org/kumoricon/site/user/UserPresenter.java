@@ -84,7 +84,7 @@ public class UserPresenter {
 
     public void resetPassword(UserEditWindow window, User user) {
         UserView view = window.getParentView();
-        user.setPassword("password");
+        user.resetPassword();
         try {
             userRepository.save(user);
             view.notify("Password reset for " + user.getUsername());
