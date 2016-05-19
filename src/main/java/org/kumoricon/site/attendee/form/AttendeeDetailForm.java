@@ -127,13 +127,7 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     public Attendee getAttendee() {
-        try {
-            fieldGroup.commit();
-            return attendeeBean.getBean();
-        } catch (FieldGroup.CommitException e) {
-            Notification.show(e.getMessage());
-        }
-        return null;
+        return attendeeBean.getBean();
     }
 
     public void setAllFieldsEnabled(Boolean enabled) {
