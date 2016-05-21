@@ -116,28 +116,26 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     public void setMinorFieldsEnabled(boolean isEnabled) {
-        parentFullName.setEnabled(isEnabled);
-        parentPhone.setEnabled(isEnabled);
-        parentIsEmergencyContact.setEnabled(isEnabled);
-        parentFormReceived.setEnabled(isEnabled);
+        AbstractField[] fields = {parentFullName, parentPhone, parentIsEmergencyContact, parentFormReceived};
+        for (AbstractField f : fields) {
+            f.setEnabled(isEnabled);
+            f.setValidationVisible(isEnabled);
+        }
     }
 
     public void setManualPriceEnabled(boolean enabled) {
         paidAmount.setEnabled(enabled);
+        paidAmount.setValidationVisible(true);
     }
 
     public Attendee getAttendee() {
         return attendeeBean.getBean();
     }
 
-    public void setAllFieldsEnabled(Boolean enabled) {
-        fieldGroup.setEnabled(enabled);
-    }
-
-
     public void setAllFieldsButCheckInDisabled() {
-        setAllFieldsEnabled(false);
+        setEditableFields(EditableFields.NONE);
         parentFormReceived.setEnabled(true);
+        parentFormReceived.setValidationVisible(true);
     }
 
 
@@ -265,17 +263,35 @@ public class AttendeeDetailForm extends GridLayout {
         firstName.selectAll();
     }
 
+    /**
+     * Enable or disable the fields specified by the EditableFields enum. Visible validation is also
+     * disabled on disabled fields - if a user can't edit a field, they can't fix validation errors
+     * @param fields EditableFields ENUM
+     */
     public void setEditableFields(EditableFields fields) {
         switch (fields) {
             case ALL:
-                fieldGroup.setEnabled(true);
+                for (Field field : fieldGroup.getFields()) {
+                    AbstractField af = (AbstractField)field;
+                    af.setEnabled(true);
+                    af.setValidationVisible(true);
+                }
                 break;
             case NOTES:
-                fieldGroup.setEnabled(false);
+                for (Field field : fieldGroup.getFields()) {
+                    AbstractField af = (AbstractField)field;
+                    af.setEnabled(false);
+                    af.setValidationVisible(false);
+                }
                 notes.setEnabled(true);
+                notes.setValidationVisible(true);
                 break;
             case NONE:
-                fieldGroup.setEnabled(false);
+                for (Field field : fieldGroup.getFields()) {
+                    AbstractField af = (AbstractField)field;
+                    af.setEnabled(false);
+                    af.setValidationVisible(false);
+                }
         }
     }
 
