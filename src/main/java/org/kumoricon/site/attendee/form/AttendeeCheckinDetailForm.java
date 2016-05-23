@@ -3,12 +3,13 @@ package org.kumoricon.site.attendee.form;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
+import org.kumoricon.site.attendee.DetailFormHandler;
 
 public class AttendeeCheckinDetailForm extends AttendeeDetailForm {
     // Subclass the attendee detail form and hide the "parental consent form received" checkbox
     // so that it can be displayed down near the bottom of the form instead
-    public AttendeeCheckinDetailForm() {
-        super();
+    public AttendeeCheckinDetailForm(DetailFormHandler handler) {
+        super(handler);
     }
 
     @Override
@@ -43,6 +44,12 @@ public class AttendeeCheckinDetailForm extends AttendeeDetailForm {
         return f;
     }
 
+    @Override
+    protected FormLayout buildNotes() {
+        // Don't show attendee history
+        FormLayout f = new FormLayout();
+        return f;
+    }
 
     @Override
     protected FormLayout buildCheckedIn() {

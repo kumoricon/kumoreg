@@ -6,9 +6,6 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.UserRepository;
-
-import org.kumoricon.site.utility.importattendee.AttendeeImporterService;
-import org.kumoricon.site.utility.importattendee.ImportAttendeeView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -68,6 +65,7 @@ public class ImportAttendeePresenter {
             try {
                 result = importer.importFromTSV(new FileReader(file), view.getCurrentUser());
             } catch (Exception e) {
+
                 result = e.getMessage();
             } finally {
                 file.delete();

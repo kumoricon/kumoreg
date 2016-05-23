@@ -2,16 +2,19 @@ package org.kumoricon.site.attendee.search;
 
 import com.vaadin.ui.Window;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import org.kumoricon.site.attendee.*;
-import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
-import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.attendee.AttendeeHistory;
+import org.kumoricon.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.*;
+import org.kumoricon.site.attendee.window.AddNoteWindow;
+import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
+import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
+import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +26,12 @@ import java.util.List;
 
 @Controller
 @Scope("request")
-public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler {
+public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler, AddNoteHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
+
+    @Autowired
+    private AttendeeHistoryRepository attendeeHistoryRepository;
 
     @Autowired
     private BadgeRepository badgeRepository;
@@ -198,5 +204,20 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void overrideEdit(AttendeeDetailWindow attendeeDetailWindow) {
         OverrideRequiredForEditWindow window = new OverrideRequiredForEditWindow(this, "attendee_edit", attendeeDetailWindow);
         view.showWindow(window);
+    }
+
+    @Override
+    public void addNote(AddNoteWindow window, String message) {
+        log.info("{} added note \"{}\" to {}", view.getCurrentUser(), message, window.getParentWindow().getAttendee());
+        AttendeeDetailWindow parentWindow = window.getParentWindow();
+        AttendeeHistory ah = new AttendeeHistory(view.getCurrentUser(), parentWindow.getAttendee(), message);
+        attendeeHistoryRepository.save(ah);
+        parentWindow.showHistory(attendeeHistoryRepository.findByAttendee(parentWindow.getAttendee()));
+        window.close();
+    }
+
+    @Override
+    public void addNoteCancel(AddNoteWindow window) {
+        window.close();
     }
 }

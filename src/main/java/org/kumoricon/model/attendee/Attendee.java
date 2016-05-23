@@ -4,6 +4,7 @@ import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
+import org.kumoricon.model.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "attendees")
@@ -44,7 +47,8 @@ public class Attendee implements Serializable {
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
     @Temporal(TemporalType.TIMESTAMP)
     public Date checkInTime;                    // Timestamp when checked in
-    private String notes;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attendee")
+    private List<AttendeeHistory> history;
     private boolean preRegistered;              // Did attendee register before con?
 
 
@@ -54,6 +58,7 @@ public class Attendee implements Serializable {
         this.paid = false;
         this.preRegistered = false;
         this.parentIsEmergencyContact = false;
+        this.history = new ArrayList<>();
     }
 
 
@@ -137,6 +142,16 @@ public class Attendee implements Serializable {
     public Order getOrder() { return order; }
     public void setOrder(Order order) { this.order = order; }
 
+    public List<AttendeeHistory> getHistory() { return history; }
+
+    public void setHistory(List<AttendeeHistory> history) { this.history = history; }
+
+    public void addHistoryEntry(User user, String message) {
+        if (user != null && message.trim() != "") {
+            history.add(new AttendeeHistory(user, this, message.trim()));
+        }
+    }
+
     public Boolean getCheckedIn() { return checkedIn; }
     public void setCheckedIn(Boolean checkedIn) {
         this.checkedIn = checkedIn;
@@ -149,9 +164,6 @@ public class Attendee implements Serializable {
     public Boolean isCheckedIn() { return checkedIn; }
 
     public Date getCheckInTime() { return checkInTime; }
-
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
 
     public void setPreRegistered(boolean preRegistered) { this.preRegistered = preRegistered; }
     public Boolean isPreRegistered() { return preRegistered; }

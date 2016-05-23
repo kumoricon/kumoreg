@@ -6,16 +6,23 @@ import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToDateConverter;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.ServiceException;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.site.attendee.DetailFormHandler;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.kumoricon.site.attendee.FieldFactory.*;
 
@@ -41,12 +48,14 @@ public class AttendeeDetailForm extends GridLayout {
     protected TextArea notes = createTextArea(null, 17);
     protected CheckBox checkedIn = createCheckBox("Attendee Checked In", 18);
     protected BeanItem<Attendee> attendeeBean;
-
+    protected Table history = new Table();
     protected FieldGroup fieldGroup;
+    private DetailFormHandler handler;
 
     public enum EditableFields {ALL, NOTES, NONE}
 
-    public AttendeeDetailForm() {
+    public AttendeeDetailForm(DetailFormHandler handler) {
+        this.handler = handler;
         birthDate.setConverter(new DateToLocalDateConverter());
         setColumns(2);
         setRows(5);
@@ -94,7 +103,7 @@ public class AttendeeDetailForm extends GridLayout {
         addComponent(buildEmergencyContactInfo(), 0, 1);
         addComponent(buildParentInfo(), 1, 1);
         addComponent(buildPassInfo(), 0, 2);
-        addComponent(buildNotes(), 1, 2);
+        addComponent(buildNotes(), 1, 2, 1, 3);
         addComponent(buildCheckedIn(), 0, 3);
 
 
@@ -112,7 +121,25 @@ public class AttendeeDetailForm extends GridLayout {
         }
         badge.select(attendee.getBadge());
         setMinorFieldsEnabled(attendee.isMinor());
+        showHistory(attendee.getHistory());
         firstName.focus();
+    }
+
+    public void showHistory(List<AttendeeHistory> attendeeHistories) {
+        if (attendeeHistories != null) {
+            BeanItemContainer<AttendeeHistory> historyItems = new BeanItemContainer<AttendeeHistory>(AttendeeHistory.class);
+            history.setContainerDataSource(historyItems);
+            history.setVisibleColumns("timestamp", "user", "message");
+            history.setColumnHeaders("Time", "User", "Message");
+            history.setConverter("user", new UserToStringConverter());
+            history.setConverter("timestamp", new StringToDateConverter(){
+                @Override
+                public DateFormat getFormat(Locale locale){
+                    return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+                }
+            });
+            historyItems.addAll(attendeeHistories);
+        }
     }
 
     public void setMinorFieldsEnabled(boolean isEnabled) {
@@ -125,10 +152,15 @@ public class AttendeeDetailForm extends GridLayout {
 
     public void setManualPriceEnabled(boolean enabled) {
         paidAmount.setEnabled(enabled);
-        paidAmount.setValidationVisible(true);
+        paidAmount.setValidationVisible(enabled);
     }
 
     public Attendee getAttendee() {
+        try {
+            fieldGroup.commit();
+        } catch (FieldGroup.CommitException e) {
+            System.out.println(e);
+        }
         return attendeeBean.getBean();
     }
 
@@ -224,11 +256,18 @@ public class AttendeeDetailForm extends GridLayout {
 
     protected FormLayout buildNotes() {
         FormLayout f = new FormLayout();
-        f.setCaption("Notes");
+        f.setCaption("History");
         f.setMargin(false);
         f.setSizeFull();
-        f.addComponent(notes);
-        notes.setSizeFull();
+        f.addComponent(history);
+        history.setSizeFull();
+        history.setEditable(false);
+        history.setNullSelectionAllowed(true);
+        history.setPageLength(5);
+        history.setColumnExpandRatio("message", 1.0f);
+        history.addItemClickListener((ItemClickEvent.ItemClickListener) event -> {
+            handler.showAttendeeHistory((AttendeeHistory) event.getItemId());
+        });
         return f;
     }
 

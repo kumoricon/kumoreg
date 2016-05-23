@@ -3,13 +3,16 @@ package org.kumoricon.site.attendee.prereg;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.form.AttendeePreRegDetailForm;
+import org.kumoricon.site.attendee.window.ViewNoteWindow;
 
 import java.util.List;
 
-public class PreRegCheckInWindow extends Window {
+public class PreRegCheckInWindow extends Window implements DetailFormHandler {
 
     private AttendeeDetailForm form;
     private CheckBox informationVerified = new CheckBox("Information Verified");
@@ -32,7 +35,7 @@ public class PreRegCheckInWindow extends Window {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
         verticalLayout.setSpacing(true);
-        form = new AttendeePreRegDetailForm();
+        form = new AttendeePreRegDetailForm(this);
         form.setAllFieldsButCheckInDisabled();
         verticalLayout.addComponent(form);
         verticalLayout.addComponent(buildVerifiedCheckboxes());
@@ -112,4 +115,10 @@ public class PreRegCheckInWindow extends Window {
 
     public PreRegView getParentView() { return parentView; }
     public void setParentView(PreRegView parentView) { this.parentView = parentView; }
+
+    @Override
+    public void showAttendeeHistory(AttendeeHistory attendeeHistory) {
+        ViewNoteWindow window = new ViewNoteWindow(attendeeHistory);
+        parentView.showWindow(window);
+    }
 }

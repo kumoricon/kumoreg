@@ -7,19 +7,24 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
+import org.kumoricon.site.attendee.window.AddNoteWindow;
+import org.kumoricon.site.attendee.window.ViewNoteWindow;
 
 import java.util.List;
 
-public class AttendeeDetailWindow extends Window {
+public class AttendeeDetailWindow extends Window implements DetailFormHandler {
 
     private AttendeeDetailForm form;
     private Button btnSave;
     private Button btnCancel;
     private Button btnSaveAndReprint;
+    private Button btnAddNote;
     private Button btnEdit;
 
     private AttendeeSearchPresenter handler;
@@ -37,7 +42,7 @@ public class AttendeeDetailWindow extends Window {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
         verticalLayout.setSpacing(true);
-        form = new AttendeeDetailForm();
+        form = new AttendeeDetailForm(this);
         form.setAllFieldsButCheckInDisabled();
         verticalLayout.addComponent(form);
         verticalLayout.addComponent(buildVerifiedCheckboxes());
@@ -76,6 +81,9 @@ public class AttendeeDetailWindow extends Window {
         btnEdit.addClickListener((Button.ClickListener) clickEvent -> {
            handler.overrideEdit(this);
         });
+        btnAddNote = new Button("Add Note");
+        btnAddNote.addClickListener((Button.ClickListener) clickEvent -> showAddNoteWindow());
+
         if (parentView.currentUserHasRight("reprint_badge")) {
             btnSaveAndReprint = new Button("Save and Reprint Badge");
         } else {
@@ -96,8 +104,14 @@ public class AttendeeDetailWindow extends Window {
         h.addComponent(btnSave);
         h.addComponent(btnEdit);
         h.addComponent(btnSaveAndReprint);
+        h.addComponent(btnAddNote);
         h.addComponent(btnCancel);
         return h;
+    }
+
+    private void showAddNoteWindow() {
+        AddNoteWindow window = new AddNoteWindow(handler, this);
+        parentView.showWindow(window);
     }
 
 
@@ -132,8 +146,10 @@ public class AttendeeDetailWindow extends Window {
             }
         } else if (user.hasRight("attendee_edit_notes")) {
             form.setEditableFields(AttendeeDetailForm.EditableFields.NOTES);
+            btnAddNote.setEnabled(true);
         } else {
             form.setEditableFields(AttendeeDetailForm.EditableFields.NONE);
+            btnAddNote.setEnabled(false);
         }
 
         if (user.hasRight("attendee_edit") || user.hasRight("attendee_edit_notes")) {
@@ -159,5 +175,15 @@ public class AttendeeDetailWindow extends Window {
             btnEdit.setEnabled(false);
             btnEdit.setVisible(false);
         }
+    }
+
+    public void showHistory(List<AttendeeHistory> histories) {
+        form.showHistory(histories);
+    }
+
+    @Override
+    public void showAttendeeHistory(AttendeeHistory attendeeHistory) {
+        ViewNoteWindow window = new ViewNoteWindow(attendeeHistory);
+        parentView.showWindow(window);
     }
 }
