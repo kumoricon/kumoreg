@@ -208,7 +208,10 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
 
     @Override
     public void addNote(AddNoteWindow window, String message) {
-        log.info("{} added note \"{}\" to {}", view.getCurrentUser(), message, window.getParentWindow().getAttendee());
+        log.info("{} added note \"{}\" to {}",
+                view.getCurrentUser(),
+                message.replaceAll("(\\r|\\n)+", " "),
+                window.getParentWindow().getAttendee());
         AttendeeDetailWindow parentWindow = window.getParentWindow();
         AttendeeHistory ah = new AttendeeHistory(view.getCurrentUser(), parentWindow.getAttendee(), message);
         attendeeHistoryRepository.save(ah);
