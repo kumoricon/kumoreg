@@ -92,6 +92,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
         log.info("{} checked in preregistered attendee {}", window.getParentView().getCurrentUser(), attendee);
         if (attendee != null) {
             attendee.setParentFormReceived(window.parentalConsentFormReceived());
+            attendee.addHistoryEntry(window.getParentView().getCurrentUser(), "Attendee Checked In");
             List<Attendee> attendeeList = new ArrayList<>();
             attendeeList.add(attendee);
             if (validateBeforeCheckIn(window, attendee)) {

@@ -148,7 +148,8 @@ public class Attendee implements Serializable {
     public void setHistory(List<AttendeeHistory> history) { this.history = history; }
 
     public void addHistoryEntry(User user, String message) {
-        if (user != null && message.trim() != "") {
+        if (user != null && message != null && message.trim() != "") {
+            if (history == null) { history = new ArrayList<>(); }
             history.add(new AttendeeHistory(user, this, message.trim()));
         }
     }

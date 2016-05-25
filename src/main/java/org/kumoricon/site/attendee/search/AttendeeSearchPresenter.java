@@ -81,6 +81,13 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
             if (view.currentUserHasRight("attendee_edit")) {
                 attendee.validate();        // Only validate fields if the user actually has the ability to edit them
             }
+            String historyMessage;
+            if (overrideUser != null) {
+                historyMessage = String.format("Badge reprinted with override by %s", overrideUser);
+            } else {
+                historyMessage = "Badge reprinted";
+            }
+            attendee.addHistoryEntry(view.getCurrentUser(), historyMessage);
             attendee = attendeeRepository.save(attendee);
             log.info("{} saved {}", view.getCurrentUser(), attendee);
         } catch (ValueException e) {
