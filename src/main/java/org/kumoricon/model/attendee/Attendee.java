@@ -48,6 +48,7 @@ public class Attendee implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     public Date checkInTime;                    // Timestamp when checked in
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attendee")
+    @OrderBy("timestamp desc")
     private List<AttendeeHistory> history;
     private boolean preRegistered;              // Did attendee register before con?
 
