@@ -43,7 +43,7 @@ public class UserPresenter {
         log.info("{} created new user", view.getCurrentUser());
         view.navigateTo(view.VIEW_NAME);
         User user = new User();
-        user.setPassword(user.DEFAULT_PASSWORD);
+        user.resetPassword();
         view.showUser(user, getAvailableRoles());
     }
 
