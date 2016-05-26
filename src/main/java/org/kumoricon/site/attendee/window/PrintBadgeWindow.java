@@ -9,6 +9,7 @@ import org.kumoricon.site.attendee.BadgeGenerator;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class PrintBadgeWindow extends Window {
         attendeeGrid.addColumn("lastName");
         attendeeGrid.addColumn("age");
         attendeeGrid.addColumn("badge");
+        attendeeGrid.getColumn("badge").setConverter(new BadgeToStringConverter());
         attendeeGrid.setSizeFull();
         attendeeGrid.setColumnOrder("firstName", "lastName", "age");
         attendeeGrid.setSelectionMode(Grid.SelectionMode.MULTI);

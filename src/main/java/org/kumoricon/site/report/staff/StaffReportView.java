@@ -9,6 +9,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.fieldconverter.RoleToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -33,7 +34,8 @@ public class StaffReportView extends BaseView implements View {
 
         addComponent(dataGrid);
         handler.showUserList(this);
-        dataGrid.setColumns(new String[] {"lastName", "firstName", "username", "phone", "role"});
+        dataGrid.setColumns("lastName", "firstName", "username", "phone", "role");
+        dataGrid.getColumn("role").setConverter(new RoleToStringConverter());
         dataGrid.setEditorEnabled(false);
         dataGrid.setHeightMode(HeightMode.ROW);
         dataGrid.setSelectionMode(Grid.SelectionMode.NONE);

@@ -16,6 +16,7 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -120,6 +121,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         attendeeList.setContainerDataSource(new BeanItemContainer<>(Attendee.class, order.getAttendeeList()));
         attendeeList.setVisibleColumns(new String[] { "firstName", "lastName", "badge", "paidAmount"});
         attendeeList.setColumnHeaders("First Name", "Last Name", "Badge Type", "Cost");
+        attendeeList.setConverter("badge", new BadgeToStringConverter());
 
         setEnabled(!order.getPaid());   // Disable editing if the order has been paid
     }

@@ -14,6 +14,8 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.attendee.DetailFormHandler;
+import org.kumoricon.site.fieldconverter.DateToLocalDateConverter;
+import org.kumoricon.site.fieldconverter.UserToStringConverter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

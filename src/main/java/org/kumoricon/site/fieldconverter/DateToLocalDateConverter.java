@@ -1,4 +1,4 @@
-package org.kumoricon.site.attendee.form;
+package org.kumoricon.site.fieldconverter;
 
 import com.vaadin.data.util.converter.Converter;
 
