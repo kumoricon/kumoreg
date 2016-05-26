@@ -26,7 +26,7 @@ public class Order {
     @NotNull
     private Boolean paid;
     private PaymentType paymentType;
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order")
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Attendee> attendeeList;
     private String notes;
