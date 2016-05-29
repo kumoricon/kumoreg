@@ -8,6 +8,7 @@ import org.kumoricon.model.role.RightRepository;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
+import org.kumoricon.model.user.UserFactory;
 import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,7 +177,7 @@ public class LoadBaseDataPresenter {
 
         for (String[] currentUser : userList) {
             log.info("Creating user {}", currentUser[0]);
-            User user = new User(currentUser[0], currentUser[1]);
+            User user = UserFactory.newUser(currentUser[0], currentUser[1]);
             user.setUsername(currentUser[0]);
             Role role = roleRepository.findByNameIgnoreCase(currentUser[2]);
             if (role == null) {

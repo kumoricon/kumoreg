@@ -38,22 +38,10 @@ public class User implements Serializable {
     @NotNull
     private Integer sessionNumber;              // Used for printing report when cashing out
 
-    public User() {
-        this.id = null;
-        this.salt = "TempSalt"; // Todo: randomly generate salt
-        this.enabled = true;
-        this.resetPassword = false;
-        this.lastBadgeNumberCreated = 1213;     // Start at an arbitrary number instead of 0
-        this.sessionNumber = 1;
-    }
-
-    public User(String firstName, String lastName) {
-        this();
-        setFirstName(firstName);
-        setLastName(lastName);
-        setPassword(DEFAULT_PASSWORD);
-        setUsername(generateUserName(firstName, lastName));
-    }
+    /**
+     * Creating a new user? Use UserFactory instead of creating the user object directly
+     */
+    public User() {}
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -129,20 +117,6 @@ public class User implements Serializable {
     public void setLastName(String lastName) { this.lastName = lastName; }
     public Integer getSessionNumber() { return sessionNumber; }
     public void setSessionNumber(Integer sessionNumber) { this.sessionNumber = sessionNumber; }
-
-    public static String generateUserName(String firstName, String lastName) {
-        // Remove anything that isn't a letter and combine to first initial + last name
-        // Doesn't do uniqueness checking
-        String username;
-        firstName = firstName.replaceAll("[^\\p{L}]", "");
-        if (firstName.length() > 0) {
-            firstName = firstName.substring(0, 1);
-        }
-        lastName = lastName.replaceAll("[^\\p{L}]", "");
-
-        username = firstName + lastName;
-        return username.toLowerCase();
-    }
 
     public String toString() {
         if (firstName != null && lastName != null) {

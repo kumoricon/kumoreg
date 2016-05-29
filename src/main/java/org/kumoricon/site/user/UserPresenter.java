@@ -3,6 +3,7 @@ package org.kumoricon.site.user;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
+import org.kumoricon.model.user.UserFactory;
 import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,7 @@ public class UserPresenter {
     public void addNewUser(UserView view) {
         log.info("{} created new user", view.getCurrentUser());
         view.navigateTo(view.VIEW_NAME);
-        User user = new User();
-        user.resetPassword();
+        User user = UserFactory.newUser();
         view.showUser(user, getAvailableRoles());
     }
 

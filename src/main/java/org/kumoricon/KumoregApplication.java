@@ -6,6 +6,7 @@ import org.kumoricon.model.role.RightRepository;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
+import org.kumoricon.model.user.UserFactory;
 import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class KumoregApplication {
             // If there are no users defined, create a user with the Admin role.
             if (userRepository.findAll().size() == 0) {
                 log.info("No users found. Creating default user 'admin' with password 'password'");
-                User defaultUser = new User("Admin", "User");
+                User defaultUser = UserFactory.newUser("Admin", "User");
                 Role adminRole = roleRepository.findByNameIgnoreCase("Admin");
                 defaultUser.setUsername("admin");
                 defaultUser.setPassword("password");
