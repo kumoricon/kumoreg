@@ -3,8 +3,10 @@ package org.kumoricon.site.badge;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.FieldFactory;
 import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
@@ -89,7 +91,9 @@ public class BadgeEditWindow extends Window {
         verticalLayout.addComponent(form);
         verticalLayout.addComponent(deleteNote);
         setContent(verticalLayout);
-        setContent(verticalLayout);
+
+        btnSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
     public void clearBadgeForm() {

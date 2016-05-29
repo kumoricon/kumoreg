@@ -1,7 +1,9 @@
 package org.kumoricon.site.attendee.prereg;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
@@ -41,6 +43,10 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
         verticalLayout.addComponent(buildVerifiedCheckboxes());
         verticalLayout.addComponent(buildSaveCancel());
         setContent(verticalLayout);
+
+        informationVerified.focus();
+        btnCheckIn.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        btnCheckIn.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
     public Boolean informationVerified() {

@@ -1,11 +1,13 @@
 package org.kumoricon.site.attendee.search;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
@@ -48,6 +50,9 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
         verticalLayout.addComponent(buildVerifiedCheckboxes());
         verticalLayout.addComponent(buildSaveCancel());
         setContent(verticalLayout);
+
+        btnSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
     public Attendee getAttendee() {return form.getAttendee(); }

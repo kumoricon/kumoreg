@@ -1,10 +1,12 @@
 package org.kumoricon.site.attendee.reg;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.site.attendee.DetailFormHandler;
@@ -72,6 +74,9 @@ public class AttendeeWindow extends Window implements DetailFormHandler{
         setContent(verticalLayout);
 
         attendeeDetailForm.selectFirstName();
+
+        save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        save.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
     public Attendee getAttendee() {

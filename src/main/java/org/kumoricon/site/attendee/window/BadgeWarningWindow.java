@@ -1,9 +1,11 @@
 package org.kumoricon.site.attendee.window;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
-import org.kumoricon.site.attendee.prereg.PreRegPresenter;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.site.attendee.prereg.PreRegPresenter;
 
 
 public class BadgeWarningWindow extends Window {
@@ -35,6 +37,9 @@ public class BadgeWarningWindow extends Window {
         btnAbort.addClickListener((Button.ClickListener) clickEvent -> handler.abortCheckIn());
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
+
+        btnAbort.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        btnAbort.addStyleName(ValoTheme.BUTTON_DANGER);
     }
 
 

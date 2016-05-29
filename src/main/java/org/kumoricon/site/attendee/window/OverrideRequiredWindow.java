@@ -1,7 +1,9 @@
 package org.kumoricon.site.attendee.window;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.OverrideHandler;
 import org.kumoricon.model.attendee.Attendee;
 
@@ -51,6 +53,9 @@ public class OverrideRequiredWindow extends Window {
         verticalLayout.addComponent(horizontalLayout);
         username.focus();
         setContent(verticalLayout);
+
+        override.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        override.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
 

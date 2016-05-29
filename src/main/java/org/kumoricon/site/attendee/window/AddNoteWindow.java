@@ -1,7 +1,9 @@
 package org.kumoricon.site.attendee.window;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.AddNoteHandler;
 import org.kumoricon.site.attendee.search.AttendeeDetailWindow;
 
@@ -46,6 +48,9 @@ public class AddNoteWindow extends Window {
         verticalLayout.addComponent(horizontalLayout);
         note.focus();
         setContent(verticalLayout);
+
+        save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        save.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
     public AttendeeDetailWindow getParentWindow() { return parentWindow; }

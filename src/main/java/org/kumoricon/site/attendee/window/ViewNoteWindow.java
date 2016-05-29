@@ -1,7 +1,9 @@
 package org.kumoricon.site.attendee.window;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.AttendeeHistory;
 
 
@@ -50,5 +52,8 @@ public class ViewNoteWindow extends Window {
                 attendeeHistory.getUser().getFirstName(),
                 attendeeHistory.getUser().getLastName()));
         note.setValue(attendeeHistory.getMessage());
+
+        close.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        close.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 }

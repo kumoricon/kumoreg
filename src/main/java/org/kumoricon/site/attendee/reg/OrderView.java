@@ -8,14 +8,14 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
-import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.site.attendee.FieldFactory;
-import org.kumoricon.site.attendee.form.AttendeeDetailForm;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.FieldFactory;
+import org.kumoricon.site.attendee.form.AttendeeDetailForm;
+import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -78,6 +78,8 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         addAttendee.addClickListener((Button.ClickListener) clickEvent -> handler.addNewAttendee(this));
         takeMoney.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney(this));
         cancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelOrder(this));
+
+        addAttendee.focus();
     }
 
     @Override

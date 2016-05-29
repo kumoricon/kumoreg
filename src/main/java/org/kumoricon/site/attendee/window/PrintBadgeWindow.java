@@ -1,10 +1,12 @@
 package org.kumoricon.site.attendee.window;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.BadgeGenerator;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
 import org.kumoricon.model.attendee.Attendee;
@@ -78,6 +80,9 @@ public class PrintBadgeWindow extends Window {
                 handler.badgePrintSuccess(this, attendeeList));
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
+
+        printedSuccessfully.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        printedSuccessfully.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
     public void showBadgesInBrowser(List<Attendee> attendeeList) {

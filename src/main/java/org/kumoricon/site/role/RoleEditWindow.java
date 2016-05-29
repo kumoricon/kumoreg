@@ -3,8 +3,10 @@ package org.kumoricon.site.role;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.FieldFactory;
 import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.Role;
@@ -68,6 +70,8 @@ public class RoleEditWindow extends Window {
         });
 
         setContent(form);
+        btnSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
 

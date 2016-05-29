@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.FieldFactory;
 
 
@@ -48,6 +49,9 @@ public class CreditCardAuthWindow extends Window {
         });
 
         setContent(formLayout);
+
+        save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        save.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
     public OrderPresenter getHandler() { return handler; }
