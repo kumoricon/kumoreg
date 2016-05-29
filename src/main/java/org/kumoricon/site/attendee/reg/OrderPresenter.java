@@ -101,7 +101,7 @@ public class OrderPresenter implements PrintBadgeHandler {
     }
 
     public void removeAttendeeFromOrder(OrderView view, Attendee attendee) {
-        if (attendee != null && !attendee.isCheckedIn()) {
+        if (attendee != null && !attendee.getCheckedIn()) {
             String name = attendee.getName();
             Order order = view.getOrder();
             log.info("{} removed attendee {} from order {}. Attendee deleted.", view.getCurrentUser(), attendee, order);

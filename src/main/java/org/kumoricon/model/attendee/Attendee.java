@@ -46,7 +46,7 @@ public class Attendee implements Serializable {
     private Order order;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
     @Temporal(TemporalType.TIMESTAMP)
-    public Date checkInTime;                    // Timestamp when checked in
+    private Date checkInTime;                    // Timestamp when checked in
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attendee")
     @OrderBy("timestamp desc")
     private List<AttendeeHistory> history;
@@ -63,6 +63,10 @@ public class Attendee implements Serializable {
     }
 
 
+    /**
+     * Returns true if attendee is < 18 years old or birthdate isn't set
+     * @return minor status
+     */
     public boolean isMinor() {
         if (birthDate != null) {
             return birthDate.isAfter(LocalDate.now().minusYears(18));
@@ -148,7 +152,7 @@ public class Attendee implements Serializable {
     public void setHistory(List<AttendeeHistory> history) { this.history = history; }
 
     public void addHistoryEntry(User user, String message) {
-        if (user != null && message != null && message.trim() != "") {
+        if (user != null && message != null && !message.trim().equals("")) {
             if (history == null) { history = new ArrayList<>(); }
             history.add(new AttendeeHistory(user, this, message.trim()));
         }
@@ -163,7 +167,6 @@ public class Attendee implements Serializable {
             checkInTime = null;
         }
     }
-    public Boolean isCheckedIn() { return checkedIn; }
 
     public Date getCheckInTime() { return checkInTime; }
 
@@ -235,7 +238,7 @@ public class Attendee implements Serializable {
     }
 
     public AgeRange getCurrentAgeRange() {
-        if (birthDate != null) {
+        if (birthDate != null && badge != null) {
             for (AgeRange ageRange : getBadge().getAgeRanges()) {
                 if (ageRange.isValidForAge(getAge())) {
                     return ageRange;
