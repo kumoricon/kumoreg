@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.FieldFactory;
 
 
@@ -39,7 +40,6 @@ public class NewPasswordWindow extends Window {
 
         password.focus();
 
-        save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         save.addClickListener((Button.ClickListener) clickEvent -> {
             if (password.isEmpty()) {
                 parentView.notify("Password can not be empty");
@@ -55,8 +55,9 @@ public class NewPasswordWindow extends Window {
                 close();
             }
         });
-
         setContent(formLayout);
+        save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        save.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
     public LoginPresenter getHandler() { return handler; }
