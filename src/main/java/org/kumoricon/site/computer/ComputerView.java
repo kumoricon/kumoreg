@@ -38,7 +38,7 @@ public class ComputerView extends BaseView implements View {
         layout.setSpacing(true);
         yourAddress = new Label("Your IP Address is: " + getCurrentClientIPAddress());
         layout.addComponent(yourAddress);
-        data.setCaption("Computers - Printer Mapping");
+        data.setCaption("Computer - Printer Mappings");
         data.setEditorEnabled(true);
         data.setSelectionMode(Grid.SelectionMode.SINGLE);
         data.setColumnReorderingAllowed(true);

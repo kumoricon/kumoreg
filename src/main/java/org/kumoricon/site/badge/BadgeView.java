@@ -59,7 +59,7 @@ public class BadgeView extends BaseView implements View {
         VerticalLayout leftPanel = new VerticalLayout();
         leftPanel.setMargin(true);
         leftPanel.setSpacing(true);
-        badgeList.setCaption("Roles");
+        badgeList.setCaption("Badge Types");
         badgeList.setNullSelectionAllowed(false);
         badgeList.setWidth(300, Unit.PIXELS);
         badgeList.setImmediate(true);
