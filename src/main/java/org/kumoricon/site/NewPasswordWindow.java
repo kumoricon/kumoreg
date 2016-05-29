@@ -19,7 +19,7 @@ public class NewPasswordWindow extends Window {
     private LoginView parentView;
 
     public NewPasswordWindow(LoginView parentView, LoginPresenter loginPresenter) {
-        super("Authorization Number");
+        super("Set Password");
         this.handler = loginPresenter;
         this.parentView = parentView;
         setIcon(FontAwesome.LOCK);
