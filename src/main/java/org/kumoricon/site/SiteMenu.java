@@ -3,10 +3,7 @@ package org.kumoricon.site;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.Accordion;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.attendee.prereg.PreRegView;
@@ -30,16 +27,21 @@ import org.kumoricon.site.utility.testbadge.TestBadgeView;
 @SpringComponent
 @UIScope
 public class SiteMenu extends VerticalLayout {
-    Accordion menu = new Accordion();
+    private Accordion menu = new Accordion();
 
-    User loggedInUser;
+    private User loggedInUser;
+
+    public SiteMenu() {}
 
     public SiteMenu(User loggedInUser) {
+        this(loggedInUser, null, null);
+    }
+
+    public SiteMenu(User loggedInUser, String version, String buildDate) {
         this.loggedInUser = loggedInUser;
         setSizeFull();
         setMargin(false);
         setSpacing(false);
-        setSizeFull();
 
         addComponent(buttonFactory("Home", FontAwesome.HOME, ""));
 
@@ -94,10 +96,25 @@ public class SiteMenu extends VerticalLayout {
         if (tab3.getComponentCount() > 0) { menu.addComponent(tab3); }
 
         addComponent(menu);
-        setExpandRatio(menu, 1.0f);
 
         addComponent(buttonFactory("Logout", FontAwesome.LOCK, LogoutView.VIEW_NAME));
 
+
+        VerticalLayout spacer = new VerticalLayout();
+        spacer.setHeight("100%");
+
+        if (version != null) {
+            Label lblVersion = new Label("Version " + version);
+            lblVersion.setSizeUndefined();
+            if (buildDate != null) {
+                lblVersion.setDescription("Build date: " + buildDate);
+            }
+            lblVersion.setSizeUndefined();
+            addComponent(spacer);
+            addComponent(lblVersion);
+            setExpandRatio(spacer, 1.0f);
+            setComponentAlignment(lblVersion, Alignment.BOTTOM_CENTER);
+        }
     }
 
 

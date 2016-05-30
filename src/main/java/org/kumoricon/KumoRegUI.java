@@ -16,6 +16,7 @@ import org.kumoricon.site.LoginView;
 import org.kumoricon.site.SiteLogo;
 import org.kumoricon.site.SiteMenu;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 @Theme("valo")
 @SpringUI
@@ -24,6 +25,14 @@ public class KumoRegUI extends UI {
     private SpringViewProvider viewProvider;
 
     private SiteMenu menu;
+
+
+    @Value("${info.build.version}")
+    private String version;
+
+    @Value("${info.build.buildDate}")
+    private String buildDate;
+
 
     @Autowired
     private SiteLogo logo;
@@ -50,6 +59,7 @@ public class KumoRegUI extends UI {
         // Left hand logo and menu
         leftPanel = new VerticalLayout();
         leftPanel.setWidth(200, Unit.PIXELS);
+        leftPanel.setHeight("100%");
         leftPanel.addComponent(logo);
         if (getLoggedInUser() != null) { buildMenu(); }
         root.addComponent(leftPanel);
@@ -95,8 +105,9 @@ public class KumoRegUI extends UI {
 
     public void buildMenu() {
         if (leftPanel.getComponentCount() == 1) {
-            menu = new SiteMenu(getLoggedInUser());
+            menu = new SiteMenu(getLoggedInUser(), version, buildDate);
             leftPanel.addComponent(menu);
+            leftPanel.setExpandRatio(menu, 1.0f);
         }
     }
 
