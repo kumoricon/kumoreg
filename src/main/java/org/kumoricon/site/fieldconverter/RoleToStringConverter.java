@@ -14,8 +14,8 @@ public class RoleToStringConverter implements Converter<String, Role> {
     @Override
     public String convertToPresentation(Role role, Class<? extends String> targetType, Locale locale) throws ConversionException {
         if (role == null) { return null; }
-        if (role.getName().isEmpty()) {
-            return String.format("Role ID " + role.getId());
+        if (role.getName() == null || role.getName().isEmpty()) {
+            return String.format("Role ID %s", role.getId());
         } else {
             return role.getName();
         }

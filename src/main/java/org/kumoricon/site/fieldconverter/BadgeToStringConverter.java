@@ -14,8 +14,8 @@ public class BadgeToStringConverter implements Converter<String, Badge> {
     @Override
     public String convertToPresentation(Badge badge, Class<? extends String> targetType, Locale locale) throws ConversionException {
         if (badge == null) { return null; }
-        if (badge.getName().isEmpty()) {
-            return String.format("Badge ID " + badge.getId());
+        if (badge.getName() == null || badge.getName().isEmpty()) {
+            return String.format("Badge ID %s", badge.getId());
         } else {
             return badge.getName();
         }

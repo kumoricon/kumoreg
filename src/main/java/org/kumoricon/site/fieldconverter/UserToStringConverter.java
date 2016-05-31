@@ -14,7 +14,7 @@ public class UserToStringConverter implements Converter<String, User> {
     @Override
     public String convertToPresentation(User user, Class<? extends String> targetType, Locale locale) throws ConversionException {
         if (user == null) { return null; }
-        if (user.getUsername().isEmpty()) {
+        if (user.getUsername() == null || user.getUsername().isEmpty()) {
             return user.getId().toString();
         } else {
             return user.getUsername();
