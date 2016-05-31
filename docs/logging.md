@@ -1,5 +1,8 @@
 #Logging
 
+The application server's log file is written to /var/log/kumoreg.log by default.
+
+
 ##Examples
 
 
