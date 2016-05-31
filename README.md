@@ -16,7 +16,6 @@ Convention Registration Management
 # Requirements
 - Java 8
 - MySQL
-- Tomcat
 
 
 # Table of Contents
