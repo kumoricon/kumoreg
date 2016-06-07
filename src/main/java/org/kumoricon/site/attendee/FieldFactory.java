@@ -37,9 +37,10 @@ public class FieldFactory {
         textField.addValidator(new RegexpValidator("[0-9 \\+x-]+",
                 "Must contain only numbers, dash, space, + or x"));
         textField.addValueChangeListener((Property.ValueChangeListener) event -> {
-            String input = event.getProperty().getValue().toString();
-            event.getProperty().setValue(FieldCleaner.cleanPhoneNumber(input));
-
+            if (event != null && event.getProperty() != null && event.getProperty().getValue() != null) {
+                String input = event.getProperty().getValue().toString();
+                    event.getProperty().setValue(FieldCleaner.cleanPhoneNumber(input));
+            }
         });
         textField.setTabIndex(tabIndex);
         return textField;
