@@ -34,7 +34,7 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
         center();
         setModal(true);
         setWidth(1100, Unit.PIXELS);
-        setHeight("760px");
+        setHeight(760, Unit.PIXELS);
 
         VerticalLayout verticalLayout = new VerticalLayout();
         form = new AttendeePreRegDetailForm(this);
