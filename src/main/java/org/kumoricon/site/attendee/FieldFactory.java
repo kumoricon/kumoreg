@@ -1,7 +1,9 @@
 package org.kumoricon.site.attendee;
 
+import com.vaadin.data.Property;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.*;
+import org.kumoricon.helper.FieldCleaner;
 
 public class FieldFactory {
     public static final TextField createTextField(String name) {
@@ -34,6 +36,11 @@ public class FieldFactory {
         TextField textField = createTextField(name);
         textField.addValidator(new RegexpValidator("[0-9 \\+x-]+",
                 "Must contain only numbers, dash, space, + or x"));
+        textField.addValueChangeListener((Property.ValueChangeListener) event -> {
+            String input = event.getProperty().getValue().toString();
+            event.getProperty().setValue(FieldCleaner.cleanPhoneNumber(input));
+
+        });
         textField.setTabIndex(tabIndex);
         return textField;
     }
