@@ -2,6 +2,7 @@ package org.kumoricon.site.attendee.prereg;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
@@ -33,10 +34,9 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
         center();
         setModal(true);
         setWidth(1100, Unit.PIXELS);
+        setHeight("760px");
 
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setMargin(true);
-        verticalLayout.setSpacing(true);
         form = new AttendeePreRegDetailForm(this);
         form.setAllFieldsButCheckInDisabled();
         verticalLayout.addComponent(form);
@@ -93,10 +93,9 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
         form.setAvailableBadges(availableBadges);
     }
 
-
     private HorizontalLayout buildVerifiedCheckboxes() {
         HorizontalLayout h = new HorizontalLayout();
-        h.setMargin(false);
+        h.setMargin(new MarginInfo(false, true, false, true));
         h.setSpacing(true);
         h.addComponent(informationVerified);
         h.addComponent(consentFormReceived);
@@ -105,7 +104,7 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
 
     private HorizontalLayout buildSaveCancel() {
         HorizontalLayout h = new HorizontalLayout();
-        h.setMargin(false);
+        h.setMargin(new MarginInfo(true, true, false, true));
         h.setSpacing(true);
 
         btnCheckIn.addClickListener((Button.ClickListener) clickEvent -> handler.checkInAttendee(this, getAttendee()));

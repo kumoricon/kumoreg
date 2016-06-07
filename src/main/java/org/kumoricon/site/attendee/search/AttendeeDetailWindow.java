@@ -3,6 +3,7 @@ package org.kumoricon.site.attendee.search;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
@@ -40,14 +41,12 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
         center();
         setModal(true);
         setWidth(1100, Unit.PIXELS);
+        setHeight("98%");
 
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setMargin(true);
-        verticalLayout.setSpacing(true);
         form = new AttendeeDetailForm(this);
         form.setAllFieldsButCheckInDisabled();
         verticalLayout.addComponent(form);
-        verticalLayout.addComponent(buildVerifiedCheckboxes());
         verticalLayout.addComponent(buildSaveCancel());
         setContent(verticalLayout);
 
@@ -68,18 +67,10 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
         form.setAvailableBadges(availableBadges);
     }
 
-
-    private HorizontalLayout buildVerifiedCheckboxes() {
-        HorizontalLayout h = new HorizontalLayout();
-        h.setSpacing(true);
-        h.setMargin(false);
-        return h;
-    }
-
     private HorizontalLayout buildSaveCancel() {
         HorizontalLayout h = new HorizontalLayout();
         h.setSpacing(true);
-        h.setMargin(true);
+        h.setMargin(new MarginInfo(false, true, false, true));
         btnSave = new Button("Save");
         btnCancel = new Button("Cancel");
         btnEdit = new Button("Edit (Override)");

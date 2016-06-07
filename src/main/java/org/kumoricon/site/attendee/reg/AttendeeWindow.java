@@ -2,6 +2,7 @@ package org.kumoricon.site.attendee.reg;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
@@ -34,14 +35,14 @@ public class AttendeeWindow extends Window implements DetailFormHandler{
         center();
         setModal(true);
         setWidth(1100, Unit.PIXELS);
+        setHeight("70%");
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
-        verticalLayout.setSpacing(true);
-
         verticalLayout.addComponent(attendeeDetailForm);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setMargin(new MarginInfo(false, true, false, true));
         horizontalLayout.setSpacing(true);
         horizontalLayout.addComponent(save);
         horizontalLayout.addComponent(cancel);
