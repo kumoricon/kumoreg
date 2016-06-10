@@ -108,7 +108,7 @@ public class LoadBaseDataPresenter {
             {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
             {"view_staff_report", "View staff report (lists name/phone numbers)"},
             {"view_role_report", "View registration system role report"},
-            {"view_panelist_report", "View panelist check in report"},
+            {"view_check_in_by_badge_report", "View check in time by badge type report"},
             {"manage_staff", "Add/edit users and reset passwords"},
             {"manage_pass_types", "Add/edit badge types"},
             {"manage_roles", "Add/edit security roles"},
@@ -132,13 +132,13 @@ public class LoadBaseDataPresenter {
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                                                "print_badge", "attendee_edit", "attendee_edit_notes",
                                                "attendee_override_price", "reprint_badge", "view_staff_report",
-                                               "view_check_in_by_hour_report", "view_panelist_report"});
+                                               "view_check_in_by_hour_report", "view_check_in_by_badge_report"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
                 "badge_type_industry", "badge_type_panelist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
-                "view_check_in_by_hour_report", "view_panelist_report"});
+                "view_check_in_by_hour_report", "view_check_in_by_badge_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_edit_notes",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
@@ -146,8 +146,8 @@ public class LoadBaseDataPresenter {
                 "badge_type_industry", "badge_type_panelist",
                 "view_role_report",
                 "view_attendance_report", "view_revenue_report", "view_staff_report", "view_check_in_by_hour_report",
-                "view_panelist_report"});
-        roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes", "view_panelist_report"});
+                "view_check_in_by_badge_report"});
+        roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes", "view_check_in_by_badge_report"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
 
