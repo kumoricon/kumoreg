@@ -1,9 +1,11 @@
 package org.kumoricon.model.attendee;
 
+import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -48,5 +50,9 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer> {
 
     @Query(value = "select a from Attendee a where a.badge in (select b from Badge b where b.name like '%Panelist%')")
     List<Attendee> findPanelists();
+
+    @Query(value = "select a from Attendee a where a.badge = ?1")
+    List<Attendee> findByBadgeType(Badge badge);
+
 
 }
