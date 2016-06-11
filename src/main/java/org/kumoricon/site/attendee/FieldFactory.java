@@ -1,9 +1,13 @@
 package org.kumoricon.site.attendee;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.*;
 import org.kumoricon.helper.FieldCleaner;
+
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class FieldFactory {
     public static final TextField createTextField(String name) {
@@ -62,7 +66,28 @@ public class FieldFactory {
     }
 
     public static final DateField createDateField(String name, int tabIndex) {
-        DateField dateField = new DateField(name);
+        DateField dateField = new DateField(name){
+            @Override
+            protected Date handleUnparsableDateString(String dateString) throws Converter.ConversionException {
+                // Try to parse date with - instead of /
+                String fields[] = dateString.split("-");
+                if (fields.length >= 3) {
+                    try {
+                        int year = Integer.parseInt(fields[2]);
+                        int month = Integer.parseInt(fields[0])-1;
+                        int day = Integer.parseInt(fields[1]);
+                        GregorianCalendar c = new GregorianCalendar(year, month, day);
+                        return c.getTime();
+                    } catch (NumberFormatException e) {
+                        throw new Converter.ConversionException("Not a number");
+                    }
+                }
+
+                // Bad date
+                throw new Converter
+                        .ConversionException("Your date needs two dashes or slashes and must be month/day/year");
+            }
+        };
         dateField.setTabIndex(tabIndex);
         return dateField;
     }
