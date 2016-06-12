@@ -36,6 +36,23 @@ public class FieldFactory {
         return textField;
     }
 
+    public static final TextField createNameField(String name) {
+        TextField textField = createTextField(name);
+        textField.addValueChangeListener((Property.ValueChangeListener) event -> {
+            if (event != null && event.getProperty() != null && event.getProperty().getValue() != null) {
+                String input = event.getProperty().getValue().toString();
+                event.getProperty().setValue(FieldCleaner.cleanName(input));
+            }
+        });
+        return textField;
+    }
+
+    public static final TextField createNameField(String name, int tabIndex) {
+        TextField textField = createNameField(name);
+        textField.setTabIndex(tabIndex);
+        return textField;
+    }
+
     public static final TextField createPhoneNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
         textField.addValidator(new RegexpValidator("[0-9 \\+x-]+",

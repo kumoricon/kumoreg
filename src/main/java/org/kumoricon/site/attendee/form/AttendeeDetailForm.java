@@ -30,8 +30,8 @@ import static org.kumoricon.site.attendee.FieldFactory.*;
 
 
 public class AttendeeDetailForm extends GridLayout {
-    protected TextField firstName = createTextField("First Name", 1);
-    protected TextField lastName = createTextField("Last Name", 2);
+    protected TextField firstName = createNameField("First Name", 1);
+    protected TextField lastName = createNameField("Last Name", 2);
     protected TextField badgeName = createTextField("Badge Name", 3);
     protected TextField badgeNumber = createTextField("Badge Number", 4);
     protected TextField phoneNumber = createPhoneNumberField("Phone", 5);
@@ -39,9 +39,9 @@ public class AttendeeDetailForm extends GridLayout {
     protected TextField email = createTextField("Email", 7);
     protected TextField zip = createTextField("Zip", 8);
     protected Label age = new Label("");
-    protected TextField emergencyContactFullName = createTextField("Full Name", 9);
+    protected TextField emergencyContactFullName = createNameField("Full Name", 9);
     protected TextField emergencyContactPhone = createPhoneNumberField("Phone", 10);
-    protected TextField parentFullName = createTextField("Full Name", 11);
+    protected TextField parentFullName = createNameField("Full Name", 11);
     protected TextField parentPhone = createPhoneNumberField("Phone", 12);
     protected CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 13);
     protected CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 14);

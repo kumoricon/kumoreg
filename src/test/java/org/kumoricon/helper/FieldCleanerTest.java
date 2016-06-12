@@ -5,6 +5,27 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class FieldCleanerTest {
+    @Test
+    public void testCleanNameTrimsWhitespace() throws Exception {
+        assertEquals("Test", FieldCleaner.cleanName("  Test  \n"));
+    }
+
+    @Test
+    public void testCleanNameHandlesNull() throws Exception {
+        assertEquals(null, FieldCleaner.cleanName(null));
+    }
+
+    @Test
+    public void testCleanNameCapitalizesFirstLetter() throws Exception {
+        assertEquals("John Smith", FieldCleaner.cleanName("john smith"));
+    }
+
+    @Test
+    public void testCleanNameDoesNotChangeOtherLetters() throws Exception {
+        // Don't try to fix capital inside words - MacDonald and Macdonald are both correct
+        assertEquals("Old McDonald", FieldCleaner.cleanName("old mcDonald"));
+        assertEquals("Old Mcdonald", FieldCleaner.cleanName("old mcdonald"));
+    }
 
     @Test
     public void testCleanPhoneNumberTrimsSpaces() throws Exception {

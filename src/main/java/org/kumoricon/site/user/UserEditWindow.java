@@ -17,8 +17,8 @@ import java.util.List;
 public class UserEditWindow extends Window {
 
     private TextField username = FieldFactory.createTextField("Username");
-    private TextField firstName = FieldFactory.createTextField("First Name");
-    private TextField lastName = FieldFactory.createTextField("Last Name");
+    private TextField firstName = FieldFactory.createNameField("First Name");
+    private TextField lastName = FieldFactory.createNameField("Last Name");
     private NativeSelect role = new NativeSelect("Role");
     private TextField phone = FieldFactory.createTextField("Phone");
     private CheckBox enabled = new CheckBox("Enabled");

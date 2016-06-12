@@ -28,4 +28,26 @@ public class FieldCleaner {
         }
         return output;
     }
+
+    /**
+     * Trims and capitalizes words in a String. Does not change the case of letters that are not after
+     * whitspace. (Ie, mcGregor -> McGregor)
+     * @param name Input String
+     * @return Capitalized String
+     */
+    public static String cleanName(String name) {
+        if (name == null) { return null; }
+
+        char[] characters = name.trim().toCharArray();
+        boolean lastIsBlank = true;
+
+        for (int i = 0; i < characters.length; i++) {
+            if (lastIsBlank && Character.isAlphabetic(characters[i])) {
+                characters[i] = Character.toUpperCase(characters[i]);
+            }
+            lastIsBlank = Character.isWhitespace(characters[i]);
+        }
+
+        return String.valueOf(characters);
+    }
 }
