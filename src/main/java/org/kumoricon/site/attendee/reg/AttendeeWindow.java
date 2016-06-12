@@ -35,7 +35,7 @@ public class AttendeeWindow extends Window implements DetailFormHandler{
         center();
         setModal(true);
         setWidth(1100, Unit.PIXELS);
-        setHeight(600, Unit.PIXELS);
+        setHeight(700, Unit.PIXELS);
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
