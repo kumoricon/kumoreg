@@ -20,6 +20,7 @@ Convention Registration Management
 
 # Table of Contents
 - [Installation](docs/installation.md)
+- [Change Log](CHANGES.md)
 - [Security](docs/security/introduction.md)
     - [Rights](docs/security/rights.md)
     - [Roles](docs/security/roles.md)
