@@ -36,6 +36,21 @@ public class CheckInByBadgeReportPresenter {
         view.afterAttendeeFetch(attendees);
     }
 
+    public void showAttendeeList(CheckInByBadgeReportView view, Integer badgeId) {
+        if (badgeId != null) {
+            Badge badge = badgeRepository.findOne(badgeId);
+            if (badge == null) {
+                log.error("{} viewed Check In Time Report for badge id {} but it was not found",
+                        view.getCurrentUser(), badgeId);
+                view.notifyError("Badge id " + badgeId.toString() + " not found");
+                view.navigateTo(CheckInByBadgeReportView.VIEW_NAME);
+//                view.afterAttendeeFetch(new ArrayList<>());
+            } else {
+                showAttendeeList(view, badge);
+            }
+        }
+    }
+
     public AttendeeRepository getAttendeeRepository() { return attendeeRepository; }
     public void setAttendeeRepository(AttendeeRepository attendeeRepository) {
         this.attendeeRepository = attendeeRepository;
