@@ -1,5 +1,7 @@
 Change Log
 ----------------
+- Version 0.9.2 (planned)
+  - Added back/forward button support to Check In by Badge report
 
 - Version 0.9.1 (6/13/2016)
   - Added scroll bars to modal attendee windows
