@@ -4,6 +4,7 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.service.print.ReportPrintService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class CloseOutTillPresenter {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private ReportPrintService reportPrintService;
 
     private static final Logger log = LoggerFactory.getLogger(CloseOutTillPresenter.class);
 
@@ -52,7 +56,7 @@ public class CloseOutTillPresenter {
             output.append(currentUser.getSessionNumber());
             view.showData(output.toString());
             log.info("{} created new till session, number {}.", currentUser, currentUser.getSessionNumber());
-            // Todo: Print report (to which printer?) as well
+            view.notify(reportPrintService.printReport(output.toString(), view.getCurrentClientIPAddress()));
         }
     }
 

@@ -4,7 +4,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.*;
-import org.kumoricon.helper.FieldCleaner;
+import org.kumoricon.service.FieldCleaner;
 
 import java.util.Date;
 import java.util.GregorianCalendar;

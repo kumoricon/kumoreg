@@ -1,6 +1,6 @@
 package org.kumoricon.site.utility.importattendee;
 
-import org.kumoricon.helper.FieldCleaner;
+import org.kumoricon.service.FieldCleaner;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;

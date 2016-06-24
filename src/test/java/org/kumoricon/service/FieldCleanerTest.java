@@ -1,4 +1,4 @@
-package org.kumoricon.helper;
+package org.kumoricon.service;
 
 import org.junit.Test;
 

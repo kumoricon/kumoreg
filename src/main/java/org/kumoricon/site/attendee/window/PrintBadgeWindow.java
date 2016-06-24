@@ -7,7 +7,7 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.kumoricon.site.attendee.BadgeGenerator;
+import org.kumoricon.service.print.BadgePrintFormatter;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.BaseView;
@@ -87,7 +87,7 @@ public class PrintBadgeWindow extends Window {
 
     public void showBadgesInBrowser(List<Attendee> attendeeList) {
         if (attendeeList.size() > 0) {
-            StreamResource.StreamSource source = new BadgeGenerator(attendeeList);
+            StreamResource.StreamSource source = new BadgePrintFormatter(attendeeList);
             String filename = "testbadge" + System.currentTimeMillis() + ".pdf";
             StreamResource resource = new StreamResource(source, filename);
 

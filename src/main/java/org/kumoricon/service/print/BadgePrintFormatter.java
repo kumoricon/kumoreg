@@ -1,5 +1,4 @@
-package org.kumoricon.site.attendee;
-
+package org.kumoricon.service.print;
 
 import com.vaadin.server.StreamResource;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -17,11 +16,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class BadgeGenerator implements StreamResource.StreamSource {
+public class BadgePrintFormatter implements StreamResource.StreamSource {
         private final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-        public BadgeGenerator(List<Attendee> attendees) {
-            PDDocument document = null;
+        public BadgePrintFormatter(List<Attendee> attendees) {
+            PDDocument document;
 
             try {
                 document = new PDDocument();

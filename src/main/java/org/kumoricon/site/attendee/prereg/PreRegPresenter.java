@@ -1,7 +1,7 @@
 package org.kumoricon.site.attendee.prereg;
 
 import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.site.attendee.BadgePrintService;
+import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
 import org.kumoricon.site.attendee.window.BadgeWarningWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;

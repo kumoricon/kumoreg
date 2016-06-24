@@ -2,6 +2,7 @@ package org.kumoricon.site.attendee.search;
 
 import com.vaadin.ui.Window;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.attendee.AttendeeHistoryRepository;
