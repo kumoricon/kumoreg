@@ -17,25 +17,41 @@ import java.io.InputStream;
 import java.util.List;
 
 public class BadgePrintFormatter implements StreamResource.StreamSource {
-        private final ByteArrayOutputStream os = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-        public BadgePrintFormatter(List<Attendee> attendees) {
-            PDDocument document;
+    private Integer xOffset = 0;
+    private Integer yOffset = 0;
 
-            try {
-                document = new PDDocument();
-                for (Attendee attendee : attendees) {
-                    PDPage currentPage = generatePage(attendee, document);
-                    document.addPage( currentPage );
-                }
+    public BadgePrintFormatter(List<Attendee> attendees) {
+        this(attendees, 0, 0);
+    }
 
-                document.save(os);
-                document.close();
+    /**
+     * Generates a PDF containing badges ready to be printed
+     * @param attendees Attendees to generate badges for
+     * @param xOffset Horizontal offset in points (1/72 inch)
+     * @param yOffset Vertical offset in points (1/72 inch)
+     */
+    public BadgePrintFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
+        PDDocument document;
+        this.xOffset = (xOffset == null) ? 0 : xOffset;
+        this.yOffset = (yOffset == null) ? 0 : yOffset;
 
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            document = new PDDocument();
+            for (Attendee attendee : attendees) {
+                PDPage currentPage = generatePage(attendee, document);
+                document.addPage( currentPage );
             }
+
+            document.save(os);
+            document.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+    }
 
 
     private PDPage generatePage(Attendee attendee, PDDocument document) throws IOException {
@@ -47,7 +63,7 @@ public class BadgePrintFormatter implements StreamResource.StreamSource {
 
         // Draw main name (badge name if set, otherwise real name)
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(240, 200);
+        contentStream.moveTextPositionByAmount(240+xOffset, 200+yOffset);
         contentStream.setFont( font, 24 );
         if (attendee.getBadgeName() != null) {
             contentStream.drawString(attendee.getBadgeName());
@@ -58,7 +74,7 @@ public class BadgePrintFormatter implements StreamResource.StreamSource {
 
         // Draw real name if badge name set
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(280, 180);
+        contentStream.moveTextPositionByAmount(280+xOffset, 180+yOffset);
         contentStream.setFont(font, 18);
         if (attendee.getBadgeName() != null) {
             contentStream.drawString(attendee.getFirstName() + " " + attendee.getLastName());
@@ -67,7 +83,7 @@ public class BadgePrintFormatter implements StreamResource.StreamSource {
 
         // Draw badge type
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(200, 128);
+        contentStream.moveTextPositionByAmount(200+xOffset, 128+yOffset);
         contentStream.setFont(PDType1Font.HELVETICA, 14);
         contentStream.drawString(attendee.getBadge().getDayText());
         contentStream.endText();
@@ -75,7 +91,7 @@ public class BadgePrintFormatter implements StreamResource.StreamSource {
 
         // Draw badge number, right-aligned
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(450, 128);
+        contentStream.moveTextPositionByAmount(450+xOffset, 128+yOffset);
         Float badgeNumberWidth = (PDType1Font.HELVETICA.getStringWidth(attendee.getBadgeNumber()) / 1000.0f) * 14;
         contentStream.moveTextPositionByAmount(-badgeNumberWidth, 0);
         contentStream.setFont(PDType1Font.HELVETICA, 14);
@@ -91,14 +107,14 @@ public class BadgePrintFormatter implements StreamResource.StreamSource {
         } else {
             contentStream.setNonStrokingColor(Color.black);
         }
-        contentStream.fillRect(200, 100, 250, 25);
+        contentStream.fillRect(200+xOffset, 100+yOffset, 250, 25);
 
         contentStream.setLineWidth(0.5f);
         contentStream.beginText();
         contentStream.setFont(font, 18);
         contentStream.setNonStrokingColor(Color.white);
         contentStream.setStrokingColor(Color.black);
-        contentStream.moveTextPositionByAmount(325, 105);
+        contentStream.moveTextPositionByAmount(325+xOffset, 105+yOffset);
         contentStream.appendRawCommands("2 Tr ");       // Set text rendering mode
 
         Float ageRangeWidth = ((font.getStringWidth(stripeText) / 1000.0f) * 18) / 2;
@@ -106,11 +122,9 @@ public class BadgePrintFormatter implements StreamResource.StreamSource {
         contentStream.drawString(stripeText);
         contentStream.endText();
 
-
         contentStream.close();
 
         return page;
-
     }
 
 

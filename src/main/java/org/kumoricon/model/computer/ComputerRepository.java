@@ -8,4 +8,5 @@ import java.util.List;
 @Service
 public interface ComputerRepository extends JpaRepository<Computer, Integer> {
     List<Computer> findByIpAddress(String ipAddress);
+    Computer findOneByIpAddress(String ipAddress);
 }

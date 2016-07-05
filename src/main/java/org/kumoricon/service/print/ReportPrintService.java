@@ -1,5 +1,6 @@
 package org.kumoricon.service.print;
 
+import org.kumoricon.model.computer.Computer;
 import org.springframework.stereotype.Service;
 
 import javax.print.PrintException;
@@ -15,11 +16,11 @@ public class ReportPrintService extends PrintService {
      */
     public String printReport(String reportText, String clientIPAddress) {
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
-            String printerName = computerService.findPrinterNameForComputer(clientIPAddress);
-//            InputStream stream = new ByteArrayInputStream( reportText.getBytes() );
-            ReportPrintFormatter formatter = new ReportPrintFormatter(reportText);
+            Computer client = computerService.findComputerByIP(clientIPAddress);
+            ReportPrintFormatter formatter =
+                    new ReportPrintFormatter(reportText, client.getxOffset(), client.getyOffset());
             try {
-                printDocument(formatter.getStream(), printerName);
+                printDocument(formatter.getStream(), client.getPrinterName());
             } catch (PrintException e) {
                 log.error(String.format("Error printing report for %s: %s",
                         clientIPAddress, e.getMessage()), e);

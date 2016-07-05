@@ -2,6 +2,9 @@ Change Log
 ----------------
 - Version 0.9.2 (planned)
   - Added back/forward button support to Check In by Badge report
+  - Print report to the user's printer when they close out their till
+  - Added configurable offset to Computers, which will move printed output for that computer by points (1/72 inch); works 
+    for both Badges and the Close Out Till report
 
 - Version 0.9.1 (6/13/2016)
   - Added scroll bars to modal attendee windows

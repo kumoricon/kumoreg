@@ -1,7 +1,9 @@
 package org.kumoricon.service.print;
 
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.computer.Computer;
 import org.springframework.stereotype.Service;
+
 import javax.print.PrintException;
 import java.util.List;
 
@@ -17,10 +19,11 @@ public class BadgePrintService extends PrintService {
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) {
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
-            BadgePrintFormatter badgePrintFormatter = new BadgePrintFormatter(attendees);
-            String printerName = computerService.findPrinterNameForComputer(clientIPAddress);
+            Computer client = computerService.findComputerByIP(clientIPAddress);
+            BadgePrintFormatter badgePrintFormatter =
+                    new BadgePrintFormatter(attendees, client.getxOffset(), client.getyOffset());
             try {
-                printDocument(badgePrintFormatter.getStream(), printerName);
+                printDocument(badgePrintFormatter.getStream(), client.getPrinterName());
             } catch (PrintException e) {
                 log.error(String.format("Error printing badge for %s: %s",
                         clientIPAddress, e.getMessage()), e);

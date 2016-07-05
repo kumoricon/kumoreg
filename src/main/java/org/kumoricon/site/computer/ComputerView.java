@@ -44,6 +44,10 @@ public class ComputerView extends BaseView implements View {
         data.setColumnReorderingAllowed(true);
         data.setContainerDataSource(computerList);
         data.removeColumn("id");
+        Grid.HeaderRow headerRow = data.getDefaultHeaderRow();
+        headerRow.getCell("printerName").setHtml("<div title='Name of printer as installed on server'>Printer Name</div>");
+        headerRow.getCell("xOffset").setHtml("<div title='Offset in points (1/72 inch) >0 moves right, <0 moves left'>X Offset</div>");
+        headerRow.getCell("yOffset").setHtml("<div title='Offset in points (1/72 inch) >0 moves up, <0 moves down'>Y Offset</div>");
 
         data.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
             @Override

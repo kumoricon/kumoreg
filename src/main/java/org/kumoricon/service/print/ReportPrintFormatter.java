@@ -22,13 +22,22 @@ public class ReportPrintFormatter implements StreamResource.StreamSource {
     private final Integer fontSize = 11;
     private Integer linesPerPage = 1;   // Will be recalculated below
 
+    private Integer xOffset;            // Horizontal offset in points (1/72 inch)
+    private Integer yOffset;            // Vertical offset in points (1/72 inch)
+
     /**
      * Generates a PDF of inputText on a monospaced font. Assumes 5.5" x 8.5" page. Handles newlines
      * and splitting text over multiple pages.
      * @param inputText text to print
      */
     public ReportPrintFormatter(String inputText) {
+        this(inputText, 0, 0);
+    }
+
+    public ReportPrintFormatter(String inputText, Integer xOffset, Integer yOffset) {
         if (inputText == null) { return; }
+        this.xOffset = (xOffset == null) ? 0 : xOffset;
+        this.yOffset = (yOffset == null) ? 0 : yOffset;
 
         PDDocument document;
         String[] lines = inputText.split("\n");
@@ -61,7 +70,7 @@ public class ReportPrintFormatter implements StreamResource.StreamSource {
 
         // Add report text to page
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(36, 360);
+        contentStream.moveTextPositionByAmount(36+xOffset, 360+yOffset);
         contentStream.setFont(font, fontSize);
         int lineNumber = startAt;
         while (lineNumber < startAt + linesPerPage && lineNumber < lines.length) {
