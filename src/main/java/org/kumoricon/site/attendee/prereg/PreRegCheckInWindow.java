@@ -33,6 +33,7 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
         setIcon(FontAwesome.USER);
         center();
         setModal(true);
+        setClosable(false);
         setWidth(1100, Unit.PIXELS);
         setHeight(760, Unit.PIXELS);
 

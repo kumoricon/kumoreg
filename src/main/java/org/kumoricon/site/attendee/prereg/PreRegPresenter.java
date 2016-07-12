@@ -39,7 +39,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
 
     public void searchChanged(String searchString) {
         if (searchString != null) {
-            view.navigateTo(view.VIEW_NAME + "/search/" + searchString.trim());
+            view.navigateTo(view.VIEW_NAME + "/" + searchString.trim());
         }
     }
 
@@ -126,6 +126,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
 
     public void cancelAttendee(PreRegCheckInWindow window) {
         window.close();
+        view.navigateTo(view.VIEW_NAME + "/" + view.getSearchString());
     }
 
 
@@ -147,7 +148,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
         Attendee attendee = attendees.get(0);
         window.close();
         window.getParentView().notify(String.format("%s %s is checked in", attendee.getFirstName(), attendee.getLastName()));
-        window.getParentView().navigateTo(PreRegView.VIEW_NAME + "/search/" + attendee.getOrder().getOrderId());
+        window.getParentView().navigateTo(PreRegView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
 
     }
 
@@ -156,10 +157,11 @@ public class PreRegPresenter implements PrintBadgeHandler {
 
     public void continueCheckIn(Attendee attendee) {
         if (warningWindow != null) { warningWindow.close(); }
-        view.navigateTo(PreRegView.VIEW_NAME + "/" + attendee.getId().toString());
+        view.navigateTo(PreRegView.VIEW_NAME + "/" + view.getSearchString() + "/" + attendee.getId().toString());
     }
 
     public void abortCheckIn() {
         if (warningWindow != null) { warningWindow.close(); }
+        view.navigateTo(PreRegView.VIEW_NAME + "/" + view.getSearchString());
     }
 }

@@ -8,16 +8,18 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
-import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ViewScope
 @SpringView(name = PreRegView.VIEW_NAME)
@@ -79,19 +81,43 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         String parameters = viewChangeEvent.getParameters();
-        if (parameters == null || parameters.replace("/search", "").equals("")) {
+        if (parameters == null || parameters.replace("/", "").equals("")) {
+            attendeeBeanList.removeAllItems();
             txtSearch.clear();
-            tblResult.clear();
-        } else if (parameters.matches("^search/.*")) {
-            String searchString = viewChangeEvent.getParameters().replace("search/", "");
-            tblResult.clear();
-            if (preRegCheckInWindow != null) {
-                preRegCheckInWindow.close();
-            }
-            txtSearch.setValue(searchString);
-            handler.searchFor(searchString);
+            closeCheckInWindow();
         } else {
-            handler.showAttendee(this, Integer.parseInt(parameters));
+            String pattern = "(?<search>\\w+)(?<id>/\\d+)?";
+            Pattern regex = Pattern.compile(pattern);
+            Matcher matcher = regex.matcher(parameters);
+            boolean success = matcher.find();
+            String searchString = success ? matcher.group("search") : null;
+            String attendeeNum = success ? matcher.group("id") : null;
+            Integer attendeeId;
+            try {
+                if (attendeeNum != null) {
+                    attendeeId = Integer.parseInt(attendeeNum.replace("/", ""));
+                } else {
+                    attendeeId = null;
+                }
+            } catch (NumberFormatException e) {
+                attendeeId = null;
+            }
+            if (searchString != null) {
+                txtSearch.setValue(searchString);
+                handler.searchFor(searchString);
+            }
+
+            if (attendeeId != null) {
+                handler.showAttendee(this, attendeeId);
+            } else {
+                closeCheckInWindow();
+            }
+        }
+    }
+
+    private void closeCheckInWindow() {
+        if (preRegCheckInWindow != null) {
+            preRegCheckInWindow.close();
         }
     }
 
@@ -114,6 +140,10 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
 
     public BeanItemContainer<Attendee> getAttendeeBeanList() {
         return attendeeBeanList;
+    }
+
+    public String getSearchString() {
+        return txtSearch.getValue();
     }
 
     public void setHandler(PreRegPresenter presenter) {
