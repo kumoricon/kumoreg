@@ -1,6 +1,6 @@
 Change Log
 ----------------
-- Version 0.9.2 (planned)
+- Version 0.9.2 (7/21/2016)
     - Added back/forward button support to Check In by Badge report
     - Print report to the user's printer when they close out their till
     - Added configurable offset to Computers, which will move printed output for that computer by points (1/72 inch); works 
