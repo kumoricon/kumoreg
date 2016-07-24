@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.kumoricon.service.validate.AttendeeValidator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,6 +38,9 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Autowired
     private BadgePrintService badgePrintService;
+
+    @Autowired
+    private AttendeeValidator attendeeValidator;
 
     @Autowired
     private UserRepository userRepository;
@@ -174,6 +179,10 @@ public class OrderPresenter implements PrintBadgeHandler {
         if (order.getNotes() != null) { oldNotes = order.getNotes(); }
         order.setNotes("Credit card authorization number: " + value + "\n" + oldNotes);
         orderComplete(view, order);
+    }
+
+    public Boolean validate(Attendee attendee) throws ValueException {
+        return attendeeValidator.validate(attendee);
     }
 
     @Override

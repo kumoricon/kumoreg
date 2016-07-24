@@ -16,7 +16,6 @@ import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.attendee.window.ViewNoteWindow;
 
-
 public class AttendeeWindow extends Window implements DetailFormHandler{
 
     AttendeeDetailForm attendeeDetailForm = new AttendeeCheckinDetailForm(this);
@@ -54,7 +53,7 @@ public class AttendeeWindow extends Window implements DetailFormHandler{
         save.addClickListener((Button.ClickListener) clickEvent -> {
             Attendee attendee = attendeeDetailForm.getAttendee();
             try {
-                attendee.validate();
+                handler.validate(attendee);
                 handler.addAttendeeToOrder(parentView, attendee);
                 close();
             } catch (ValueException e) {

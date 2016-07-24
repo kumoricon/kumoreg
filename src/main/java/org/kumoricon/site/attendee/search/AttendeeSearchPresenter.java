@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.kumoricon.service.validate.AttendeeValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,9 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     @Autowired
     private BadgePrintService badgePrintService;
 
+    @Autowired
+    private AttendeeValidator attendeeValidator;
+
     private static final Logger log = LoggerFactory.getLogger(AttendeeSearchPresenter.class);
 
     private AttendeeSearchView view;
@@ -64,7 +68,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void saveAttendee(AttendeeDetailWindow window, Attendee attendee) {
         BaseView view = window.getParentView();
         try {
-            attendee.validate();
+            attendeeValidator.validate(attendee);
             attendee = attendeeRepository.save(attendee);
             view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
             log.info("{} saved {}", view.getCurrentUser(), attendee);
@@ -80,7 +84,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void saveAttendeeAndReprintBadge(Window window, Attendee attendee, User overrideUser) {
         try {
             if (view.currentUserHasRight("attendee_edit")) {
-                attendee.validate();        // Only validate fields if the user actually has the ability to edit them
+                attendeeValidator.validate(attendee);        // Only validate fields if the user actually has the ability to edit them
             }
             String historyMessage;
             if (overrideUser != null) {
