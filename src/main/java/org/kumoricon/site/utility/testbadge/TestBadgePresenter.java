@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,24 +21,36 @@ import java.util.List;
 @Scope("request")
 public class TestBadgePresenter implements PrintBadgeHandler {
     private static final Logger log = LoggerFactory.getLogger(BadgePrintService.class);
+    private final AttendeeFactory attendeeFactory;
+    private final BadgePrintService badgePrintService;
 
     @Autowired
-    private AttendeeFactory attendeeFactory;
+    public TestBadgePresenter(BadgePrintService badgePrintService, AttendeeFactory attendeeFactory) {
+        this.badgePrintService = badgePrintService;
+        this.attendeeFactory = attendeeFactory;
+    }
 
-    @Autowired
-    private BadgePrintService badgePrintService;
+    /**
+     * Show the attendee badge window with the given number of automatically generated badges.
+     * Generates badges Adult - Child - Youth
+     * @param view View
+     * @param numberOfBadges Number of badges to generate, minimum: 1, maximum: 3)
+     */
+    public void showAttendeeBadgeWindow(AttendeePrintView view, Integer numberOfBadges) {
+        if (numberOfBadges == null) { numberOfBadges = 1; }
+        log.info("{} generating {} test badge(s)", view.getCurrentUser(), numberOfBadges);
+        List<Attendee> attendees = new ArrayList<>();
 
-    public TestBadgePresenter() {}
+        if (numberOfBadges >= 1) { attendees.add(attendeeFactory.generateDemoAttendee()); }
+        if (numberOfBadges >= 2) { attendees.add(attendeeFactory.generateChildAttendee()); }
+        if (numberOfBadges >= 3) { attendees.add(attendeeFactory.generateYouthAttendee()); }
+
+        showAttendeeBadgeWindow(view, attendees);
+    }
 
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
-        log.info("{} printing test badges", view.getCurrentUser());
-        // Because this is for test badges in this presenter, don't use any existing attendees - generate them
-        attendeeList.clear();
-        attendeeList.add(attendeeFactory.generateDemoAttendee());
-        attendeeList.add(attendeeFactory.generateYouthAttendee());
-        attendeeList.add(attendeeFactory.generateChildAttendee());
-
+        if (attendeeList == null) { return; }
         printBadges((BaseView) view, attendeeList);
         view.showPrintBadgeWindow(attendeeList);
     }
