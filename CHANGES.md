@@ -1,5 +1,8 @@
 Change Log
 ----------------
+- Version 0.9.3 (Pending)
+    
+
 - Version 0.9.2 (7/21/2016)
     - Added back/forward button support to Check In by Badge report
     - Print report to the user's printer when they close out their till
