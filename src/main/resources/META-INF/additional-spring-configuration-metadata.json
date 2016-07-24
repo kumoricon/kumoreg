@@ -1,9 +1,14 @@
 {
   "properties": [
     {
-      "name": "kumoreg.enablePrintingFromServer",
+      "name": "kumoreg.printing.enablePrintingFromServer",
       "type": "java.lang.Boolean",
       "description": "Print badges via printers installed locally on the server."
+    } ,
+    {
+      "name": "kumoreg.validation.attendee.requirePhoneOrEmail",
+      "type": "java.lang.Boolean",
+      "description": "Whether to require attendees to have either a phone or an email (default true)"
     }
   ]
 }
