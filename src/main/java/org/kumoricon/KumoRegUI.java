@@ -18,7 +18,7 @@ import org.kumoricon.site.SiteMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-@Theme("valo")
+@Theme("kumo")
 @SpringUI
 public class KumoRegUI extends UI {
     @Autowired
@@ -60,6 +60,7 @@ public class KumoRegUI extends UI {
         leftPanel = new VerticalLayout();
         leftPanel.setWidth(200, Unit.PIXELS);
         leftPanel.setHeight("100%");
+        leftPanel.addStyleName("kumoLeftMenu");
         leftPanel.addComponent(logo);
         if (getLoggedInUser() != null) { buildMenu(); }
         root.addComponent(leftPanel);

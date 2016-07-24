@@ -1,0 +1,9 @@
+@import "kumo";
+
+.kumo {
+  @include kumo;
+}
+
+.kumoLeftMenu {
+  background: url("img/menubackground.png") repeat-x bottom center;
+}

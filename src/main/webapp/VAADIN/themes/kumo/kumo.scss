@@ -1,0 +1,15 @@
+// Modify the base color of the theme
+$v-background-color: rgb(230, 239, 255);
+
+// Import valo after setting the parameters
+@import "../valo/valo";
+
+.kumo {
+  @include valo;
+
+  // Your theme's rules go here
+}
+
+@mixin kumo {
+
+}
