@@ -2,16 +2,16 @@ package org.kumoricon.service.validate;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Service
 public class AttendeeValidator {
     @Value("${kumoreg.validation.attendee.requirePhoneOrEmail:true}")
-    private Boolean requirePhoneAndEmail;
+    protected Boolean requirePhoneAndEmail;
 
     private static Boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
