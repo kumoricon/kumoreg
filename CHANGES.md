@@ -2,6 +2,8 @@ Change Log
 ----------------
 - Version 0.9.3 (Pending)
     - Select the number of badges to generate when printing test badges
+    - Added configuration option for requiring attendee phone or email
+    - Added custom (somewhat more colorful) theme
 
 - Version 0.9.2 (7/21/2016)
     - Added back/forward button support to Check In by Badge report
