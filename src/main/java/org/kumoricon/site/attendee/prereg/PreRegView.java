@@ -9,6 +9,7 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.window.BadgeWarningWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
@@ -126,5 +127,10 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
     public void showPrintBadgeWindow(List<Attendee> attendeeList) {
         PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
         showWindow(printBadgeWindow);
+    }
+
+    public void showBadgeWarningWindow(Attendee attendee){
+        BadgeWarningWindow warningWindow = new BadgeWarningWindow(attendee);
+        showWindow(warningWindow);
     }
 }
