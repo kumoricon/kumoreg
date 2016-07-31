@@ -28,7 +28,7 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
     @Autowired
     private PreRegPresenter handler;
 
-    private TextField txtSearch = new TextField("Last Name or Order ID");
+    private TextField txtSearch = new TextField("Last Name");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
