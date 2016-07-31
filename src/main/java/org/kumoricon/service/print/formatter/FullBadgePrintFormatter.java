@@ -1,6 +1,5 @@
-package org.kumoricon.service.print;
+package org.kumoricon.service.print.formatter;
 
-import com.vaadin.server.StreamResource;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -8,7 +7,6 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.kumoricon.model.attendee.Attendee;
-
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,23 +14,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class BadgePrintFormatter implements StreamResource.StreamSource {
+
+public class FullBadgePrintFormatter implements BadgePrintFormatter {
     private final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
     private Integer xOffset = 0;
     private Integer yOffset = 0;
 
-    public BadgePrintFormatter(List<Attendee> attendees) {
+    /**
+     * Generates a PDF containing badges ready to be printed. Full badges have all fields.
+     * @param attendees Attendees to generate badges for
+     */
+    public FullBadgePrintFormatter(List<Attendee> attendees) {
         this(attendees, 0, 0);
     }
 
     /**
-     * Generates a PDF containing badges ready to be printed
+     * Generates a PDF containing badges ready to be printed. Full badges have all fields.
      * @param attendees Attendees to generate badges for
      * @param xOffset Horizontal offset in points (1/72 inch)
      * @param yOffset Vertical offset in points (1/72 inch)
      */
-    public BadgePrintFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
+    public FullBadgePrintFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
         PDDocument document;
         this.xOffset = (xOffset == null) ? 0 : xOffset;
         this.yOffset = (yOffset == null) ? 0 : yOffset;

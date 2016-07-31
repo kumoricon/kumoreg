@@ -6,9 +6,14 @@
       "description": "Print badges via printers installed locally on the server."
     } ,
     {
+      "name": "kumoreg.printing.badgeFormat",
+      "type": "java.lang.String",
+      "description": "Badge format to use - 'lite' or 'full'."
+    },
+    {
       "name": "kumoreg.validation.attendee.requirePhoneOrEmail",
       "type": "java.lang.Boolean",
-      "description": "Whether to require attendees to have either a phone or an email (default true)"
+      "description": "Whether to require attendees to have either a phone or an email (default true)."
     }
   ]
 }

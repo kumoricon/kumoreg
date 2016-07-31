@@ -1,5 +1,6 @@
 package org.kumoricon.site.attendee;
 
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.model.attendee.Attendee;
 
@@ -9,4 +10,5 @@ public interface PrintBadgeHandler {
     void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList);
     void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees);
     void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList);
+    BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees);
 }

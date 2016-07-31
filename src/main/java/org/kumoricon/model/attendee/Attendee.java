@@ -24,6 +24,7 @@ public class Attendee implements Serializable {
     private String firstName;
     private String lastName;
     private String badgeName;                   // Badge name (optional)
+    @Column(unique=true)
     private String badgeNumber;
     private String zip;
     private String country;

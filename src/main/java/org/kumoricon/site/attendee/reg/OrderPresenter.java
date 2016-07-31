@@ -1,5 +1,6 @@
 package org.kumoricon.site.attendee.reg;
 
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
@@ -210,4 +211,10 @@ public class OrderPresenter implements PrintBadgeHandler {
                 badgePrintService.printBadgesForAttendees(attendeeList,
                         printBadgeWindow.getParentView().getCurrentClientIPAddress()));
     }
+
+    @Override
+    public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
+        return badgePrintService.getCurrentBadgeFormatter(attendees);
+    }
+
 }

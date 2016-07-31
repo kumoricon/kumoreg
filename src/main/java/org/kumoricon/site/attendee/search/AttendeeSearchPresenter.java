@@ -10,6 +10,7 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.*;
 import org.kumoricon.site.attendee.window.AddNoteWindow;
@@ -175,6 +176,11 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         } else {
             view.notify("No attendees selected");
         }
+    }
+
+    @Override
+    public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
+        return badgePrintService.getCurrentBadgeFormatter(attendees);
     }
 
     public void searchChanged(String searchString) {

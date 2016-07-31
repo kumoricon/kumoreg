@@ -1,5 +1,6 @@
 package org.kumoricon.site.attendee.prereg;
 
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
@@ -108,6 +109,11 @@ public class PreRegPresenter implements PrintBadgeHandler {
         log.info("{} reprinting badges for preregistered attendee(s) {}", v.getCurrentUser(), attendeeList);
         printBadgeWindow.getParentView().notify(
                 badgePrintService.printBadgesForAttendees(attendeeList, v.getCurrentClientIPAddress()));
+    }
+
+    @Override
+    public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
+        return badgePrintService.getCurrentBadgeFormatter(attendees);
     }
 
     public Boolean validateBeforeCheckIn(PreRegCheckInWindow window, Attendee attendee) {

@@ -1,5 +1,6 @@
 package org.kumoricon.site.utility.testbadge;
 
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
@@ -77,6 +78,11 @@ public class TestBadgePresenter implements PrintBadgeHandler {
         } else {
             view.notify("No attendees selected");
         }
+    }
+
+    @Override
+    public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
+        return badgePrintService.getCurrentBadgeFormatter(attendees);
     }
 
     private void printBadges(BaseView view, List<Attendee> attendeeList) {

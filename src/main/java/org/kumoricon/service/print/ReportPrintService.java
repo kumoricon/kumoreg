@@ -1,6 +1,7 @@
 package org.kumoricon.service.print;
 
 import org.kumoricon.model.computer.Computer;
+import org.kumoricon.service.print.formatter.ReportPrintFormatter;
 import org.springframework.stereotype.Service;
 
 import javax.print.PrintException;

@@ -2,6 +2,8 @@ package org.kumoricon.service.print;
 
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.computer.Computer;
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.print.PrintException;
@@ -9,6 +11,10 @@ import java.util.List;
 
 @Service
 public class BadgePrintService extends PrintService {
+    private final BadgeFormatterFactory badgeFormatterFactory;
+
+    @Autowired
+    public BadgePrintService(BadgeFormatterFactory badgeFormatterFactory) {this.badgeFormatterFactory = badgeFormatterFactory;}
 
     /**
      * Prints badges for a given list of attendees to either the appropriate printer name (from
@@ -21,7 +27,7 @@ public class BadgePrintService extends PrintService {
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
-                    new BadgePrintFormatter(attendees, client.getxOffset(), client.getyOffset());
+                    getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset());
             try {
                 printDocument(badgePrintFormatter.getStream(), client.getPrinterName());
             } catch (PrintException e) {
@@ -34,6 +40,27 @@ public class BadgePrintService extends PrintService {
         }
         return "Printed";
     }
+
+    /**
+     * Return the currently defined badge print formatter, which generates a PDF from the given attendees
+     * @param attendees Attendees to generate badges for
+     * @return BadgePrintFormatter
+     */
+    public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees) {
+        return getCurrentBadgeFormatter(attendees, 0, 0);
+    }
+
+    /**
+     * Return the currently defined badge print formatter, which generates a PDF from the given attendees
+     * @param attendees Attendees to generate badges for
+     * @param xOffset offset horizontally by x points (1/72 inch)
+     * @param yOffset offset vertically by x points (1/72 inch)
+     * @return BadgePrintFormatter
+     */
+    public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
+        return badgeFormatterFactory.getCurrentBadgeFormatter(attendees, xOffset, yOffset);
+    }
+
 
 
 }

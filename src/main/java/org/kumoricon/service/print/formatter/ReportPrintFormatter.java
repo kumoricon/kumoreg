@@ -1,4 +1,4 @@
-package org.kumoricon.service.print;
+package org.kumoricon.service.print.formatter;
 
 
 import com.vaadin.server.StreamResource;
