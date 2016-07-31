@@ -11,11 +11,10 @@ import org.kumoricon.site.attendee.prereg.PreRegPresenter;
 public class BadgeWarningWindow extends Window {
     Label lblMessage = new Label("");
     Button btnAbort = new Button("Abort");
-    private PreRegPresenter handler;
 
-    public BadgeWarningWindow(PreRegPresenter preRegCheckInPresenter, Attendee attendee) {
+    public BadgeWarningWindow(Attendee attendee) {
         super("Warning");
-        this.handler = preRegCheckInPresenter;
+
         setIcon(FontAwesome.WARNING);
         setModal(true);
         center();
@@ -34,15 +33,11 @@ public class BadgeWarningWindow extends Window {
         horizontalLayout.setSpacing(true);
         horizontalLayout.addComponent(btnAbort);
         btnAbort.focus();
-        btnAbort.addClickListener((Button.ClickListener) clickEvent -> handler.abortCheckIn());
+        btnAbort.addClickListener((Button.ClickListener) clickEvent -> this.close());
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
 
         btnAbort.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         btnAbort.addStyleName(ValoTheme.BUTTON_DANGER);
     }
-
-
-    public PreRegPresenter getHandler() { return handler; }
-    public void setHandler(PreRegPresenter handler) { this.handler = handler; }
 }

@@ -30,9 +30,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
     private BadgePrintService badgePrintService;
 
     private PreRegView view;
-    private BadgeWarningWindow warningWindow;
     private static final Logger log = LoggerFactory.getLogger(PreRegPresenter.class);
-
 
 
     public PreRegPresenter() {
@@ -73,8 +71,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
             if (requiredRight == null || view.currentUserHasRight(requiredRight)) {
                 continueCheckIn(attendee);
             } else {
-                warningWindow = new BadgeWarningWindow(this, attendee);
-                view.showWindow(warningWindow);
+                view.showBadgeWarningWindow(attendee);
             }
         }
     }
@@ -162,12 +159,6 @@ public class PreRegPresenter implements PrintBadgeHandler {
     public void setView(PreRegView view) { this.view = view; }
 
     public void continueCheckIn(Attendee attendee) {
-        if (warningWindow != null) { warningWindow.close(); }
         view.navigateTo(PreRegView.VIEW_NAME + "/" + view.getSearchString() + "/" + attendee.getId().toString());
-    }
-
-    public void abortCheckIn() {
-        if (warningWindow != null) { warningWindow.close(); }
-        view.navigateTo(PreRegView.VIEW_NAME + "/" + view.getSearchString());
     }
 }
