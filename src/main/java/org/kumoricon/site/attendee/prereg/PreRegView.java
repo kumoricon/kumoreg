@@ -12,6 +12,7 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.window.BadgeWarningWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,7 +31,7 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
     @Autowired
     private PreRegPresenter handler;
 
-    private TextField txtSearch = new TextField("Last Name or Order ID");
+    private TextField txtSearch = new TextField("Last Name");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
@@ -156,5 +157,10 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
     public void showPrintBadgeWindow(List<Attendee> attendeeList) {
         PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
         showWindow(printBadgeWindow);
+    }
+
+    public void showBadgeWarningWindow(Attendee attendee){
+        BadgeWarningWindow warningWindow = new BadgeWarningWindow(attendee);
+        showWindow(warningWindow);
     }
 }
