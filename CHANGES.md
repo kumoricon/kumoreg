@@ -5,6 +5,8 @@ Change Log
     - Added configuration option for requiring attendee phone or email
     - Added custom (somewhat more colorful) theme
     - Added Lite/Full badge formats and configuration option to choose between them
+    - On PreReg screen, changed label "Last Name or Order ID" to "Last Name" for clarity
+    - Attempted fix for scroll bars sometimes not appearing in Attendee edit window
 
 - Version 0.9.2 (7/21/2016)
     - Added back/forward button support to Check In by Badge report
