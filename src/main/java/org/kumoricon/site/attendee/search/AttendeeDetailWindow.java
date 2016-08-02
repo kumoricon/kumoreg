@@ -140,7 +140,7 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
             } else {
                 form.setManualPriceEnabled(false);
             }
-        } else if (user.hasRight("attendee_edit_notes")) {
+        } else if (user.hasRight("attendee_add_note")) {
             form.setEditableFields(AttendeeDetailForm.EditableFields.NOTES);
             btnAddNote.setEnabled(true);
         } else {
@@ -148,7 +148,7 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
             btnAddNote.setEnabled(false);
         }
 
-        if (user.hasRight("attendee_edit") || user.hasRight("attendee_edit_notes")) {
+        if (user.hasRight("attendee_edit") || user.hasRight("attendee_add_note")) {
             btnSave.setEnabled(true);
             if (user.hasRight("reprint_badge") || user.hasRight("reprint_badge_with_override")) {
                 btnSaveAndReprint.setEnabled(true);

@@ -90,7 +90,7 @@ public class LoadBaseDataPresenter {
             {"pre_reg_check_in", "Check in preregistered attendees"},
             {"attendee_search", "Search for and view attendees"},
             {"attendee_edit", "Edit attendees from search results"},
-            {"attendee_edit_notes", "Edit notes field on attendees, but no other fields"},
+            {"attendee_add_note", "Edit notes field on attendees, but no other fields"},
             {"attendee_edit_with_override", "Edit attendee if a user with attendee_edit right approves it"},
             {"attendee_override_price", "Manually set price for attendee"},
             {"print_badge", "Print badge on attendee check in"},
@@ -130,24 +130,24 @@ public class LoadBaseDataPresenter {
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
                                          "attendee_edit_with_override", "reprint_badge_with_override"});
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                                               "print_badge", "attendee_edit", "attendee_edit_notes",
+                                               "print_badge", "attendee_edit", "attendee_add_note",
                                                "attendee_override_price", "reprint_badge", "view_staff_report",
                                                "view_check_in_by_hour_report", "view_check_in_by_badge_report"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                "print_badge", "attendee_edit", "attendee_edit_notes",
+                "print_badge", "attendee_edit", "attendee_add_note",
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
                 "badge_type_industry", "badge_type_panelist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
                 "view_check_in_by_hour_report", "view_check_in_by_badge_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                "print_badge", "attendee_edit", "attendee_edit_notes",
+                "print_badge", "attendee_edit", "attendee_add_note",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
                 "badge_type_industry", "badge_type_panelist",
                 "view_role_report",
                 "view_attendance_report", "view_revenue_report", "view_staff_report", "view_check_in_by_hour_report",
                 "view_check_in_by_badge_report"});
-        roles.put("Ops", new String[] {"attendee_search", "attendee_edit_notes", "view_check_in_by_badge_report"});
+        roles.put("Ops", new String[] {"attendee_search", "attendee_add_note", "view_check_in_by_badge_report"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
 

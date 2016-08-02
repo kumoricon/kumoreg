@@ -12,7 +12,7 @@ Available rights are:
 | pre_reg_check_in              | Check in preregistered attendees                                |
 | attendee_search               | Search for and view attendees                                   |
 | attendee_edit                 | Edit attendees from search results                              |
-| attendee_edit_notes           | Edit notes field on attendees, but no other fields              |
+| attendee_add_note             | Add note to attendee                                            |
 | attendee_override_price       | Manually set price for attendee                                 |
 | attendee_edit_with_override   | Edit attendee if user with attendee_edit right approves it <sup>[1](#footnote1)</sup>|
 | print_badge                   | Print badge on attendee check in                                |
