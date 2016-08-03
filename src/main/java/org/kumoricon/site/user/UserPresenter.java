@@ -87,7 +87,7 @@ public class UserPresenter {
         user.resetPassword();
         try {
             userRepository.save(user);
-            view.notify("Password reset for " + user.getUsername());
+            view.notify("Changed password to \"password\" for user " + user.getUsername());
             log.info("{} reset password for {}", view.getCurrentUser(), user);
             window.close();
         } catch (Exception e) {
