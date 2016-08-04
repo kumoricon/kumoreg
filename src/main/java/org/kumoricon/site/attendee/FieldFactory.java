@@ -36,6 +36,20 @@ public class FieldFactory {
         return textField;
     }
 
+    /**
+     * Creates a field that accepts digits 0-9 and optionally beings with "-"
+     * @param name Field name
+     * @param tabIndex Tab index
+     * @return TextField
+     */
+    public static final TextField createNegativeNumberField(String name, int tabIndex) {
+        TextField textField = createTextField(name);
+        textField.addValidator(new RegexpValidator("-?[0-9]+", "This is not a number"));
+        textField.setTabIndex(tabIndex);
+        return textField;
+    }
+
+
     public static final TextField createNameField(String name) {
         TextField textField = createTextField(name);
         textField.addValueChangeListener((Property.ValueChangeListener) event -> {

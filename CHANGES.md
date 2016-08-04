@@ -7,6 +7,7 @@ Change Log
     - Added Lite/Full badge formats and configuration option to choose between them
     - On PreReg screen, changed label "Last Name or Order ID" to "Last Name" for clarity
     - Attempted fix for scroll bars sometimes not appearing in Attendee edit window
+    - Added printer offset fields to Print Test Badge screen for users with manage_devices right
 
 - Version 0.9.2 (7/21/2016)
     - Added back/forward button support to Check In by Badge report

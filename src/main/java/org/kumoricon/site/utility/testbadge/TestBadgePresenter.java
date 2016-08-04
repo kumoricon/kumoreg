@@ -1,13 +1,15 @@
 package org.kumoricon.site.utility.testbadge;
 
-import org.kumoricon.service.print.formatter.BadgePrintFormatter;
-import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.service.print.BadgePrintService;
-import org.kumoricon.site.attendee.PrintBadgeHandler;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeFactory;
+import org.kumoricon.model.computer.Computer;
+import org.kumoricon.model.computer.ComputerService;
+import org.kumoricon.service.print.BadgePrintService;
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.PrintBadgeHandler;
+import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,13 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     private static final Logger log = LoggerFactory.getLogger(BadgePrintService.class);
     private final AttendeeFactory attendeeFactory;
     private final BadgePrintService badgePrintService;
+    private final ComputerService computerService;
 
     @Autowired
-    public TestBadgePresenter(BadgePrintService badgePrintService, AttendeeFactory attendeeFactory) {
+    public TestBadgePresenter(BadgePrintService badgePrintService, AttendeeFactory attendeeFactory, ComputerService computerService) {
         this.badgePrintService = badgePrintService;
         this.attendeeFactory = attendeeFactory;
+        this.computerService = computerService;
     }
 
     /**
@@ -36,25 +40,48 @@ public class TestBadgePresenter implements PrintBadgeHandler {
      * Generates badges Adult - Child - Youth
      * @param view View
      * @param numberOfBadges Number of badges to generate, minimum: 1, maximum: 3)
+     * @param xOffset Horizontal offset in points
+     * @param yOffset Vertical offset in points
      */
-    public void showAttendeeBadgeWindow(AttendeePrintView view, Integer numberOfBadges) {
+    public void showAttendeeBadgeWindow(AttendeePrintView view, Integer numberOfBadges, Integer xOffset, Integer yOffset) {
         if (numberOfBadges == null) { numberOfBadges = 1; }
-        log.info("{} generating {} test badge(s)", view.getCurrentUser(), numberOfBadges);
+        if (xOffset == null) { xOffset = 0; }
+        if (yOffset == null) { yOffset = 0; }
+
+        log.info("{} generating {} test badge(s) with horizontal offset {} vertical offset {}",
+                view.getCurrentUser(), numberOfBadges, xOffset, yOffset);
         List<Attendee> attendees = new ArrayList<>();
 
         if (numberOfBadges >= 1) { attendees.add(attendeeFactory.generateDemoAttendee()); }
         if (numberOfBadges >= 2) { attendees.add(attendeeFactory.generateChildAttendee()); }
         if (numberOfBadges >= 3) { attendees.add(attendeeFactory.generateYouthAttendee()); }
 
-        showAttendeeBadgeWindow(view, attendees);
+        log.info("{} printing test badges for {}", view.getCurrentUser(), attendees);
+        showAttendeeBadgeWindow(view, attendees, xOffset, yOffset);
+    }
+
+    public void showCurrentOffsets(TestBadgeView view, String ipAddress) {
+        Computer currentClient = computerService.findComputerByIP(ipAddress);
+        if (currentClient != null) {
+            view.setXOffset(currentClient.getxOffset());
+            view.setYOffset(currentClient.getyOffset());
+        }
     }
 
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
         if (attendeeList == null) { return; }
-        printBadges((BaseView) view, attendeeList);
+        printBadges((BaseView) view, attendeeList, null, null);
         view.showPrintBadgeWindow(attendeeList);
     }
+
+    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
+        if (attendeeList == null) { return; }
+        printBadges((BaseView) view, attendeeList, xOffset, yOffset);
+        view.showPrintBadgeWindow(attendeeList);
+    }
+
+
 
     @Override
     public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
@@ -70,10 +97,10 @@ public class TestBadgePresenter implements PrintBadgeHandler {
         if (printBadgeWindow == null) {
             return;
         }
-        BaseView view = printBadgeWindow.getParentView();
+        TestBadgeView view = (TestBadgeView) printBadgeWindow.getParentView();
         if (attendeeList.size() > 0) {
-            log.info("{} reprinting test badges for {}", view.getCurrentUser(), attendeeList);
-            printBadges(view, attendeeList);
+            log.info("{} reprinting test badges for {}",
+                    view.getCurrentUser(), attendeeList, view.getXOffset(), view.getYOffset());
             view.notify("Reprinting badges");
         } else {
             view.notify("No attendees selected");
@@ -85,8 +112,7 @@ public class TestBadgePresenter implements PrintBadgeHandler {
         return badgePrintService.getCurrentBadgeFormatter(attendees);
     }
 
-    private void printBadges(BaseView view, List<Attendee> attendeeList) {
-        log.info("{} printing test badges for {}", view.getCurrentUser(), attendeeList);
-        view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
+    private void printBadges(BaseView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
+        view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset));
     }
 }
