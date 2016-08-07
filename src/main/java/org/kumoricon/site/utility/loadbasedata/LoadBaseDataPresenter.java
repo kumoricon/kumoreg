@@ -128,10 +128,11 @@ public class LoadBaseDataPresenter {
         results.append("Creating roles\n");
         HashMap<String, String[]> roles = new HashMap<>();
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
-                                         "attendee_edit_with_override", "reprint_badge_with_override"});
+                                         "attendee_add_note", "attendee_edit_with_override",
+                                         "reprint_badge_with_override"});
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                                                "print_badge", "attendee_edit", "attendee_add_note",
-                                               "attendee_override_price", "reprint_badge", "view_staff_report",
+                                               "reprint_badge", "view_staff_report",
                                                "view_check_in_by_hour_report", "view_check_in_by_badge_report"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note",
