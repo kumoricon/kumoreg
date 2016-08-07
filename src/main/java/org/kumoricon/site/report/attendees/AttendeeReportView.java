@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 @SpringView(name = AttendeeReportView.VIEW_NAME)
 public class AttendeeReportView extends BaseView implements View, ReportView {
     public static final String VIEW_NAME = "attendeeReport";
-    public static final String REQUIRED_RIGHT = "view_attendee_report";
+    public static final String REQUIRED_RIGHT = "view_attendance_report";
     @Autowired
     private AttendeeReportPresenter handler;
 
