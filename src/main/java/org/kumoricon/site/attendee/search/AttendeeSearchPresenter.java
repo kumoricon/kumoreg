@@ -112,8 +112,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
                 log.info("{} reprinting badge(s) for {}", view.getCurrentUser(), attendee);
                 showAttendeeBadgeWindow(view, attendeeList);
             } else {
-                overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge", attendeeList);
-                view.showWindow(overrideRequiredWindow);
+                view.showOverrideRequiredWindow(this, attendeeList);
             }
         } else {
             if (overrideUser.hasRight("reprint_badge")) {
@@ -124,8 +123,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
                 view.notifyError("Override user does not have the required right");
                 log.error("{} requested an override to reprint a badge for {} but {} did not have the reprint_badge right",
                         view.getCurrentUser(), attendee, overrideUser);
-                overrideRequiredWindow = new OverrideRequiredWindow(this, "reprint_badge", attendeeList);
-                view.showWindow(overrideRequiredWindow);
+                view.showOverrideRequiredWindow(this, attendeeList);
             }
         }
     }
@@ -202,7 +200,6 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         }
     }
 
-
     @Override
     public void overrideEditLogin(OverrideRequiredForEditWindow window, String username, String password, AttendeeDetailWindow attendeeDetailWindow) {
         User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
@@ -220,8 +217,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void overrideEditCancel(OverrideRequiredForEditWindow window) { window.close(); }
 
     public void overrideEdit(AttendeeDetailWindow attendeeDetailWindow) {
-        OverrideRequiredForEditWindow window = new OverrideRequiredForEditWindow(this, "attendee_edit", attendeeDetailWindow);
-        view.showWindow(window);
+        view.showOverrideEditWindow(this, attendeeDetailWindow);
     }
 
     @Override

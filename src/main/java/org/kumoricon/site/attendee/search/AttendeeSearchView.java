@@ -14,6 +14,8 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
+import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -127,5 +129,16 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
     public void showPrintBadgeWindow(List<Attendee> attendeeList) {
         PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
         showWindow(printBadgeWindow);
+    }
+
+    public void showOverrideRequiredWindow(AttendeeSearchPresenter presenter, List<Attendee> attendeeList)
+    {
+        OverrideRequiredWindow overrideRequiredWindow = new OverrideRequiredWindow(presenter, "reprint_badge", attendeeList);
+        showWindow(overrideRequiredWindow);
+    }
+
+    public void showOverrideEditWindow(AttendeeSearchPresenter presenter, AttendeeDetailWindow attendeeDetailWindow) {
+        OverrideRequiredForEditWindow window = new OverrideRequiredForEditWindow(presenter, "attendee_edit", attendeeDetailWindow);
+        showWindow(window);
     }
 }
