@@ -36,7 +36,7 @@ public class BadgePrintService extends PrintService {
                 return("Error printing. No printers found? More information in server logs");
             }
         } else {
-            return("Printing from server not enabled. Select \"Show Badges in Browser\".");
+            return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
         return "Printed";
     }
@@ -62,7 +62,7 @@ public class BadgePrintService extends PrintService {
                 return("Error printing. No printers found? More information in server logs");
             }
         } else {
-            return("Printing from server not enabled. Select \"Show Badges in Browser\".");
+            return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
         return "Printed";
     }
