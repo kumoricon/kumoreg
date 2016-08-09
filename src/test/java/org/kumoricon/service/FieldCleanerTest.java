@@ -36,7 +36,7 @@ public class FieldCleanerTest {
     @Test
     public void testCleanPhoneNumberRemovesCharacters() throws Exception {
         String testNumber = "(123) 456-2712 And stuff";
-        assertEquals("123-456-2712", FieldCleaner.cleanPhoneNumber(testNumber));
+        assertEquals("(123) 456-2712", FieldCleaner.cleanPhoneNumber(testNumber));
     }
 
     @Test
@@ -46,9 +46,9 @@ public class FieldCleanerTest {
     }
 
     @Test
-    public void testCleanPhoneNumberAddsDashes() throws Exception {
+    public void testCleanPhoneNumberAddsParens() throws Exception {
         String testNumber = "1234567890";
-        assertEquals("123-456-7890", FieldCleaner.cleanPhoneNumber(testNumber));
+        assertEquals("(123) 456-7890", FieldCleaner.cleanPhoneNumber(testNumber));
     }
 
     @Test
