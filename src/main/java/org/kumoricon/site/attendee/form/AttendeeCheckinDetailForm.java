@@ -53,8 +53,10 @@ public class AttendeeCheckinDetailForm extends AttendeeDetailForm {
 
     @Override
     protected FormLayout buildCheckedIn() {
+        // show the parent form recieved checkbox, but not the "Checked In" checkbox
         FormLayout f = new FormLayout();
-        // Don't show the checked in checkbox on the check in form
+        f.setMargin(false);
+        f.addComponent(parentFormReceived);
         return f;
     }
 }
