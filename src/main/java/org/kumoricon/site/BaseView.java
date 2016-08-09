@@ -92,4 +92,11 @@ public class BaseView extends VerticalLayout implements View {
         // If you override the enter method, make sure to call super.enter(viewChangeEvent)
         checkPermissions();
     }
+
+    public void setLoggedInUser(User user) {
+        KumoRegUI ui = (KumoRegUI)KumoRegUI.getCurrent();
+        if (ui != null) {
+            ui.setLoggedInUser(user);
+        }
+    }
 }

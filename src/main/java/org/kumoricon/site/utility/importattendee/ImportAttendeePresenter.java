@@ -72,6 +72,9 @@ public class ImportAttendeePresenter {
             }
             view.appendStatus(result);
 
+            // Refresh user info in UI
+            view.setLoggedInUser(userRepository.findOne(view.getCurrentUser().getId()));
+
         }
 
         public void uploadFailed(Upload.FailedEvent event) {

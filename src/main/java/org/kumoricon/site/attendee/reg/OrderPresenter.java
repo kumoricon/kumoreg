@@ -1,10 +1,6 @@
 package org.kumoricon.site.attendee.reg;
 
-import org.kumoricon.service.print.formatter.BadgePrintFormatter;
-import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.service.print.BadgePrintService;
-import org.kumoricon.site.attendee.PrintBadgeHandler;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;
@@ -13,14 +9,18 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.service.print.BadgePrintService;
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
+import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.PrintBadgeHandler;
+import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import org.kumoricon.service.validate.AttendeeValidator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -146,7 +146,9 @@ public class OrderPresenter implements PrintBadgeHandler {
         log.info("{} completed order {} and took payment ${}",
                 view.getCurrentUser(), currentOrder, currentOrder.getTotalAmount());
         currentOrder.paymentComplete(view.getCurrentUser());
+
         orderRepository.save(currentOrder);
+
         showAttendeeBadgeWindow(view, currentOrder.getAttendees());
     }
 
@@ -170,6 +172,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         output.append(String.format("%1$05d", user.getNextBadgeNumber()));
         log.info("{} generated badge number {}", view.getCurrentUser(), output.toString().toUpperCase());
         userRepository.save(user);
+        view.setLoggedInUser(user);
         return output.toString().toUpperCase();
     }
 
@@ -183,6 +186,11 @@ public class OrderPresenter implements PrintBadgeHandler {
     }
 
     public Boolean validate(Attendee attendee) throws ValueException {
+        if (attendee.isMinor()) {   // Move parent form received in to attendeeValidator???
+            if (attendee.getParentFormReceived() == null || !attendee.getParentFormReceived()) {
+                throw new ValueException("Error: Parental consent form has not been received");
+            }
+        }
         return attendeeValidator.validate(attendee);
     }
 
