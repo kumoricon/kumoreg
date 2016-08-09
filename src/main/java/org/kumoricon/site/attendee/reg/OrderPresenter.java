@@ -222,7 +222,7 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Override
     public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
-        return badgePrintService.getCurrentBadgeFormatter(attendees);
+        return badgePrintService.getCurrentBadgeFormatter(attendees, printBadgeWindow.getParentView().getCurrentClientIPAddress());
     }
 
 }

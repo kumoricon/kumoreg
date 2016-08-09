@@ -79,6 +79,17 @@ public class BadgePrintService extends PrintService {
     /**
      * Return the currently defined badge print formatter, which generates a PDF from the given attendees
      * @param attendees Attendees to generate badges for
+     * @param ipAddress IP address of current client computer
+     * @return
+     */
+    public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, String ipAddress) {
+        Computer client = computerService.findComputerByIP(ipAddress);
+        return getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset());
+    }
+
+    /**
+     * Return the currently defined badge print formatter, which generates a PDF from the given attendees
+     * @param attendees Attendees to generate badges for
      * @param xOffset offset horizontally by x points (1/72 inch)
      * @param yOffset offset vertically by x points (1/72 inch)
      * @return BadgePrintFormatter

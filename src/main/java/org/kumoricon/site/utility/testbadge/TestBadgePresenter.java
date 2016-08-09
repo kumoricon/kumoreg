@@ -109,7 +109,8 @@ public class TestBadgePresenter implements PrintBadgeHandler {
 
     @Override
     public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
-        return badgePrintService.getCurrentBadgeFormatter(attendees);
+        TestBadgeView view = (TestBadgeView) printBadgeWindow.getParentView();
+        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset());
     }
 
     private void printBadges(BaseView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
