@@ -1,7 +1,9 @@
 Change Log
 ----------------
 - Version 0.9.4 (Pending)
-
+    - Fixed duplicate badge number creation
+    - Format phone numbers as (xxx) xxx-xxxx instead of xxx-xxx-xxxx
+    - Added parental consent form received checkbox to At-Con registration screen
 
 - Version 0.9.3 (8/6/2016)
     - Select the number of badges to generate when printing test badges

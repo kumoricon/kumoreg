@@ -18,7 +18,7 @@ public class FieldCleaner {
         String output;
         String p = phoneNumber.replaceAll("[^\\+0-9]", "");
         if (p.matches("\\d{10}")) {
-            output = p.substring(0, 3) + "-" + p.substring(3, 6) + "-" + p.substring(6, 10);
+            output = "(" + p.substring(0, 3) + ") " + p.substring(3, 6) + "-" + p.substring(6, 10);
         } else {
             output = phoneNumber.replaceAll("[^\\+0-9x -]", "").trim();
             output = output.replaceAll("\\s\\s+", " ");                 // Multiple spaces to single space
@@ -31,7 +31,7 @@ public class FieldCleaner {
 
     /**
      * Trims and capitalizes words in a String. Does not change the case of letters that are not after
-     * whitspace. (Ie, mcGregor -> McGregor)
+     * whitespace. (Ie, mcGregor -> McGregor)
      * @param name Input String
      * @return Capitalized String
      */
