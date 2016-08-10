@@ -41,6 +41,7 @@ public class CheckInByBadgeReportView extends BaseView implements View {
         badgeType.setTextInputAllowed(false);
         badgeType.setNullSelectionAllowed(false);
         badgeType.setNewItemsAllowed(false);
+        badgeType.setWidth("400px");
         badgeType.addValueChangeListener((Property.ValueChangeListener) event -> {
             if (event.getProperty() != null) {
                 Badge b = (Badge) event.getProperty().getValue();

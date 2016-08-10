@@ -264,6 +264,7 @@ public class AttendeeDetailForm extends GridLayout {
         f.setSizeFull();
         f.addComponent(history);
         history.setSizeFull();
+        history.setWidth("450px");
         history.setEditable(false);
         history.setNullSelectionAllowed(true);
         history.setPageLength(5);

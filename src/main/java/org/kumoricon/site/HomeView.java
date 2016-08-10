@@ -31,7 +31,7 @@ public class HomeView extends BaseView implements View {
     void init() {
         addComponent(welcome);
 
-        passTypesTable.setWidth(600, Unit.PIXELS);
+        passTypesTable.setWidth(750, Unit.PIXELS);
         passTypesTable.setHeightMode(HeightMode.ROW);
         passTypesTable.addColumn("badgeName", String.class);
         passTypesTable.addColumn("adult", BigDecimal.class);
@@ -46,6 +46,7 @@ public class HomeView extends BaseView implements View {
 
         adult.setRenderer(new NumberRenderer("$%.2f", Locale.ENGLISH));
         adult.setHeaderCaption("Adult (18+)");
+
         youth.setRenderer(new NumberRenderer("$%.2f", Locale.ENGLISH));
         youth.setHeaderCaption("Youth (13 - 17)");
         child.setRenderer(new NumberRenderer("$%.2f", Locale.ENGLISH));
