@@ -56,6 +56,22 @@ public class AttendeeReportPresenter implements ReportPresenter {
         return sb.toString();
     }
 
+    private static String buildTableWithRevenue(String title, List<Object[]> data) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<h2>" + title + "</h2>");
+        sb.append("<table border=\"1\"><tr><td>Date</td><td> Checked In</td><td>Dollar Amount</td></tr>");
+        for (Object[] line : data) {
+            sb.append("<tr>");
+            sb.append("<td>" + line[0].toString() + "</td>");
+            sb.append("<td align=\"right\">" + line[1].toString() + "</td>");
+            sb.append("<td align=\"right\">$" + line[2].toString() + "</td>");
+            sb.append("</tr>");
+        }
+        sb.append("</table>");
+        return sb.toString();
+    }
+
+
     private static String buildAttendanceCounts( Integer totalAttendance, Integer warmBodyCount) {
         StringBuilder sb = new StringBuilder();
         sb.append("<h2>Total Attendance Counts</h2>");
@@ -83,8 +99,13 @@ public class AttendeeReportPresenter implements ReportPresenter {
     public void fetchReportData(ReportView view) {
         StringBuilder sb = new StringBuilder();
         sb.append(getTotalsByBadgeType());
-        sb.append(buildTable("At Con Check Ins By Day", attendeeRepository.findAtConCheckInCountsByDate()));
-        sb.append(buildTable("Pre Reg Check Ins By Day", attendeeRepository.findPreRegCheckInCountsByDate()));
+        if (view.currentUserHasRight("view_attendance_report_revenue")) {
+            sb.append(buildTableWithRevenue("At Con Check Ins By Day", attendeeRepository.findAtConCheckInCountsByDate()));
+            sb.append(buildTableWithRevenue("Pre Reg Check Ins By Day", attendeeRepository.findPreRegCheckInCountsByDate()));
+        } else {
+            sb.append(buildTable("At Con Check Ins By Day", attendeeRepository.findAtConCheckInCountsByDate()));
+            sb.append(buildTable("Pre Reg Check Ins By Day", attendeeRepository.findPreRegCheckInCountsByDate()));
+        }
         sb.append(buildAttendanceCounts(
                 attendeeRepository.findTotalAttendeeCount(), attendeeRepository.findWarmBodyCount()));
         log.info("{} viewed Attendee Report", view.getCurrentUser());

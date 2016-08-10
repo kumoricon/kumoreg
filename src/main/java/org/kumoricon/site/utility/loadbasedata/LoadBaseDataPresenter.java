@@ -118,7 +118,7 @@ public class LoadBaseDataPresenter {
             {"badge_type_industry", "Select/check in the \"Industry\" badge type"},
             {"badge_type_panelist", "Select/check in the \"Panelist\" badge type"},
             {"view_attendance_report", "View attendance report (counts only)"},
-            {"view_revenue_report", "View revenue report"},
+            {"view_attendance_report_revenue", "View attendance report (with revenue totals)"},
             {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
             {"view_staff_report", "View staff report (lists name/phone numbers)"},
             {"view_role_report", "View registration system role report"},
@@ -152,7 +152,7 @@ public class LoadBaseDataPresenter {
                 "print_badge", "attendee_edit", "attendee_add_note",
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
                 "badge_type_industry", "badge_type_panelist",
-                "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
+                "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report", "view_attendance_report",
                 "view_check_in_by_hour_report", "view_check_in_by_badge_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note",
@@ -160,7 +160,7 @@ public class LoadBaseDataPresenter {
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
                 "badge_type_industry", "badge_type_panelist",
                 "view_role_report",
-                "view_attendance_report", "view_revenue_report", "view_staff_report", "view_check_in_by_hour_report",
+                "view_attendance_report", "view_attendance_report_revenue", "view_staff_report", "view_check_in_by_hour_report",
                 "view_check_in_by_badge_report"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note", "view_check_in_by_badge_report"});
 
