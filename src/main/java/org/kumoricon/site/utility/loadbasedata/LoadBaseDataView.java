@@ -21,7 +21,8 @@ public class LoadBaseDataView extends BaseView implements View {
     private LoadBaseDataPresenter handler;
 
     private Label description = new Label("Load base rights, roles, and example users");
-    private Button loadData = new Button("Load Data");
+    private Button loadData = new Button("Load Full Data (Weekend)");
+    private Button loadLiteData = new Button("Load Lite Data (Single Day)");
     private TextArea results = new TextArea();
 
     @PostConstruct
@@ -29,12 +30,14 @@ public class LoadBaseDataView extends BaseView implements View {
         setSizeFull();
         addComponent(description);
         addComponent(loadData);
+        addComponent(loadLiteData);
         addComponent(results);
         results.setSizeFull();
         results.setEnabled(false);
         setExpandRatio(results, 1.0f);
 
         loadData.addClickListener((Button.ClickListener) clickEvent -> handler.loadDataButtonClicked(this));
+        loadLiteData.addClickListener((Button.ClickListener) clickEvent -> handler.loadLiteDataButtonClicked(this));
     }
 
     @Override

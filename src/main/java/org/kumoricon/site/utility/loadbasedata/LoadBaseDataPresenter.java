@@ -37,7 +37,7 @@ public class LoadBaseDataPresenter {
     }
 
     public void loadDataButtonClicked(LoadBaseDataView view) {
-        log.info("{} loaded base data", view.getCurrentUser());
+        log.info("{} loaded full base data", view.getCurrentUser());
         StringBuilder results = new StringBuilder();
         if (targetTablesAreEmpty(results)) {
             addRights(results);
@@ -47,6 +47,20 @@ public class LoadBaseDataPresenter {
         }
         view.addResult(results.toString());
     }
+
+    public void loadLiteDataButtonClicked(LoadBaseDataView view) {
+        log.info("{} loaded lite base data", view.getCurrentUser());
+        StringBuilder results = new StringBuilder();
+        if (targetTablesAreEmpty(results)) {
+            addRights(results);
+            addRoles(results);
+            addUsers(results);
+            addLiteBadges(results);
+        }
+        view.addResult(results.toString());
+
+    }
+
 
     private Boolean targetTablesAreEmpty(StringBuilder results) {
         // Abort if there is more than one right, role, or user - it should just have the admin user
@@ -258,6 +272,65 @@ public class LoadBaseDataPresenter {
         results.append("    Creating " + panelist.toString() + "\n");
         badgeRepository.save(panelist);
     }
+
+    private void addLiteBadges(StringBuilder results) {
+        results.append("Creating badges\n");
+
+        log.info("Creating badge Kumoricon Lite");
+        Badge lite = BadgeFactory.badgeFactory("Kumoricon Lite", "Sunday", 10, 10, 10);
+        results.append("    Creating " + lite.toString() + "\n");
+        badgeRepository.save(lite);
+
+        log.info("Creating badge Kumoricon Lite - Manga Donation");
+        Badge liteDonation = BadgeFactory.badgeFactory("Kumoricon Lite - Manga Donation", "Sunday", 0, 0, 0);
+        results.append("    Creating " + liteDonation.toString() + "\n");
+        badgeRepository.save(liteDonation);
+
+
+        // Create badge types with security restrictions below
+        log.info("Creating badge Artist");
+        Badge artist = BadgeFactory.badgeFactory("Artist", "Weekend", 0f, 0f, 0f);
+        artist.setRequiredRight("badge_type_artist");
+        artist.setWarningMessage("Artist check in. See your coordinator!");
+        results.append("    Creating " + artist.toString() + "\n");
+        badgeRepository.save(artist);
+
+        log.info("Creating badge Exhibitor");
+        Badge exhibitor = BadgeFactory.badgeFactory("Exhibitor", "Exhibitor", 0f, 0f, 0f);
+        exhibitor.setRequiredRight("badge_type_exhibitor");
+        exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
+        results.append("    Creating " + exhibitor.toString() + "\n");
+        badgeRepository.save(exhibitor);
+
+        log.info("Creating badge Guest");
+        Badge guest = BadgeFactory.badgeFactory("Guest", "Guest", 0f, 0f, 0f);
+        guest.setRequiredRight("badge_type_guest");
+        guest.setWarningMessage("Guest check in. See your coordinator!");
+        results.append("    Creating " + guest.toString() + "\n");
+        badgeRepository.save(guest);
+
+        log.info("Creating badge Press");
+        Badge press = BadgeFactory.badgeFactory("Press", "Press", 0f, 0f, 0f);
+        press.setRequiredRight("badge_type_press");
+        press.setWarningMessage("Press check in. See your coordinator!");
+        results.append("    Creating " + press.toString() + "\n");
+        badgeRepository.save(press);
+
+        log.info("Creating badge Industry");
+        Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);
+        industry.setRequiredRight("badge_type_industry");
+        industry.setWarningMessage("Industry check in. See your coordinator!");
+        results.append("    Creating " + industry.toString() + "\n");
+        badgeRepository.save(industry);
+
+        log.info("Creating badge Panelist");
+        Badge panelist = BadgeFactory.badgeFactory("Panelist", "Panelist", 0f, 0f, 0f);
+        panelist.setRequiredRight("badge_type_panelist");
+        panelist.setWarningMessage("Panelist check in. See your coordinator!");
+        results.append("    Creating " + panelist.toString() + "\n");
+        badgeRepository.save(panelist);
+    }
+
 
     private HashMap<String, Right> getRightsHashMap() {
         HashMap<String, Right> rightHashMap = new HashMap<>();
