@@ -69,8 +69,8 @@ public class FieldFactory {
 
     public static final TextField createPhoneNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
-        textField.addValidator(new RegexpValidator("[0-9 \\+x-]+",
-                "Must contain only numbers, dash, space, + or x"));
+        textField.addValidator(new RegexpValidator("[0-9 \\+\\-\\(\\)x]{10,25}",
+                "Must contain 10-25 characters, only numbers, dash, space, parenthesis, + or x"));
         textField.addValueChangeListener((Property.ValueChangeListener) event -> {
             if (event != null && event.getProperty() != null && event.getProperty().getValue() != null) {
                 String input = event.getProperty().getValue().toString();
