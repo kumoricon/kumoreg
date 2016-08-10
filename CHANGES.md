@@ -5,6 +5,8 @@ Change Log
     - Format phone numbers as (xxx) xxx-xxxx instead of xxx-xxx-xxxx
     - Added parental consent form received checkbox to At-Con registration screen
     - Use computer specific offsets when displaying badge PDFs in browser
+    - Added base data for one-day events
+    - Removed unnecessary error logging from BadgePresenter
 
 - Version 0.9.3 (8/6/2016)
     - Select the number of badges to generate when printing test badges

@@ -26,8 +26,6 @@ public class BadgePresenter {
             log.info("{} viewed badge {}", view.getCurrentUser(), badge);
             view.navigateTo(BadgeView.VIEW_NAME + "/" + badge.getId().toString());
             view.showBadge(badge);
-        } else {
-            log.error("{} tried to view a badge, but null was passed to BadgePresenter.badgeSelected()");
         }
     }
 
@@ -46,9 +44,9 @@ public class BadgePresenter {
     }
 
     public void cancelBadge(BadgeView view) {
+        view.clearSelection();
         view.navigateTo(BadgeView.VIEW_NAME);
         view.closeBadgeEditWindow();
-        view.clearSelection();
     }
 
     public void saveBadge(BadgeView view, Badge badge) {
