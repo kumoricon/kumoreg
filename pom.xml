@@ -91,6 +91,11 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<version>7.5.5</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	
@@ -103,8 +108,54 @@
 					<executable>true</executable>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<version>7.5.5</version>
+				<configuration>
+					<webappDirectory>${basedir}/resources/VAADIN/widgetsets
+					</webappDirectory>
+					<hostedWebapp>${basedir}/resources/VAADIN/widgetsets
+					</hostedWebapp>
+					<noServer>true</noServer>
+					<strict>true</strict>
+					<compileReport>false</compileReport>
+					<style>PRETTY</style>
+
+				</configuration>
+				<executions>
+				<execution>
+					<goals>
+						<goal>clean</goal>
+						<goal>resources</goal>
+						<goal>update-theme</goal>
+						<goal>update-widgetset</goal>
+						<goal>compile-theme</goal>
+						<goal>compile</goal>
+					</goals>
+				</execution>
+				</executions>
+			</plugin>
+			<plugin>
+			<artifactId>maven-clean-plugin</artifactId>
+			<configuration>
+				<filesets>
+					<fileset>
+						<directory>/resources/VAADIN/widgetsets</directory>
+					</fileset>
+				</filesets>
+			</configuration>
+			</plugin>
 		</plugins>
 		<resources>
+			<!-- include theme files -->
+			<resource>
+				<directory>src/main/webapp</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**</include>
+				</includes>
+			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>

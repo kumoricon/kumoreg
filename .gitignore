@@ -80,3 +80,6 @@ hs_err_pid*
 
 # Vaadin SCSS cache files
 *.cache
+addons.scss
+# Vaadin generated theme CSS files
+styles.css
