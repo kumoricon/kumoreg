@@ -148,6 +148,18 @@ public class LoadBaseDataPresenter {
                                                "print_badge", "attendee_edit", "attendee_add_note",
                                                "reprint_badge", "view_staff_report",
                                                "view_check_in_by_hour_report", "view_check_in_by_badge_report"});
+        roles.put("Coordinator - VIP Badges", new String[] {"at_con_registration", "pre_reg_check_in",
+                                                            "attendee_search", "print_badge", "attendee_edit",
+                                                            "attendee_add_note", "reprint_badge", "view_staff_report",
+                                                            "view_check_in_by_hour_report",
+                                                            "view_check_in_by_badge_report", "badge_type_vip"});
+        roles.put("Coordinator - Other Badges", new String[] {"at_con_registration", "pre_reg_check_in",
+                                                              "attendee_search", "print_badge", "attendee_edit",
+                                                              "attendee_add_note", "reprint_badge", "view_staff_report",
+                                                              "view_check_in_by_hour_report",
+                                                              "view_check_in_by_badge_report", "badge_type_artist",
+                                                              "badge_type_exhibitor", "badge_type_guest",
+                                                              "badge_type_panelist", "badge_type_industry"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note",
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
