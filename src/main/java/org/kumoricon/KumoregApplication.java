@@ -1,6 +1,5 @@
 package org.kumoricon;
 
-import javafx.application.Application;
 import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.RightRepository;
 import org.kumoricon.model.role.Role;
@@ -17,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class KumoregApplication {
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
+    private static final Logger log = LoggerFactory.getLogger(KumoregApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(KumoregApplication.class, args);
