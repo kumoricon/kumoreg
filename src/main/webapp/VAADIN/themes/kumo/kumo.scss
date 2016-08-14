@@ -1,6 +1,9 @@
 // Modify the base color of the theme
 $v-background-color: rgb(230, 239, 255);
 
+// Disable animation
+$v-animations-enabled: false;
+
 // Import valo after setting the parameters
 @import "../valo/valo";
 
