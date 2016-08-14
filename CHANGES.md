@@ -8,6 +8,9 @@ Change Log
     - Added base data for one-day events
     - Removed unnecessary error logging from BadgePresenter
     - Added revenue to Attendance report with right view_attendance_report_revenue
+    - Added roles for VIP and other special badge (press, etc) check in
+    - Disabled animations to improve browser performance
+    - Fixed bug that would keep application from starting with OpenJDK
 
 - Version 0.9.3 (8/6/2016)
     - Select the number of badges to generate when printing test badges
