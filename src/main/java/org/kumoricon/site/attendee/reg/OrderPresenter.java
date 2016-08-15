@@ -129,9 +129,15 @@ public class OrderPresenter implements PrintBadgeHandler {
             view.notify("Error: No attendees in order");
             return;
         }
-        if (currentOrder.getPaymentType() == null) {
+
+        if (currentOrder.getPaymentType() == null && currentOrder.getTotalAmount().compareTo(BigDecimal.ZERO) > 0) {
             view.notify("Error: Payment type not selected");
             return;
+        }
+
+        // If the order total is $0 (all badges are free), just set payment type to cash automatically
+        if (currentOrder.getTotalAmount().compareTo(BigDecimal.ZERO) == 0) {
+            currentOrder.setPaymentType(Order.PaymentType.CASH);
         }
 
         if (currentOrder.getPaymentType().equals(Order.PaymentType.CREDIT)) {

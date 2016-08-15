@@ -12,6 +12,7 @@ Change Log
     - Disabled animations to improve browser performance
     - Fixed bug that would keep application from starting with OpenJDK
     - Added Staff badge type to Lite data
+    - For orders with a total of $0, payment type no longer required; it will be set to cash automatically
 
 - Version 0.9.3 (8/6/2016)
     - Select the number of badges to generate when printing test badges
