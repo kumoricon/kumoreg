@@ -11,6 +11,7 @@ Change Log
     - Added roles for VIP and other special badge (press, etc) check in
     - Disabled animations to improve browser performance
     - Fixed bug that would keep application from starting with OpenJDK
+    - Added Staff badge type to Lite data
 
 - Version 0.9.3 (8/6/2016)
     - Select the number of badges to generate when printing test badges

@@ -1,5 +1,6 @@
 package org.kumoricon.site.utility.loadbasedata;
 
+import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeFactory;
 import org.kumoricon.model.badge.BadgeRepository;
@@ -58,7 +59,6 @@ public class LoadBaseDataPresenter {
             addLiteBadges(results);
         }
         view.addResult(results.toString());
-
     }
 
 
@@ -117,6 +117,7 @@ public class LoadBaseDataPresenter {
             {"badge_type_guest", "Select/check in the \"Guest\" badge type"},
             {"badge_type_industry", "Select/check in the \"Industry\" badge type"},
             {"badge_type_panelist", "Select/check in the \"Panelist\" badge type"},
+            {"badge_type_staff", "Select/check in the \"Staff\" badge type"},
             {"view_attendance_report", "View attendance report (counts only)"},
             {"view_attendance_report_revenue", "View attendance report (with revenue totals)"},
             {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
@@ -163,7 +164,7 @@ public class LoadBaseDataPresenter {
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note",
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
-                "badge_type_industry", "badge_type_panelist",
+                "badge_type_industry", "badge_type_panelist", "badge_type_staff",
                 "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report", "view_attendance_report",
                 "view_check_in_by_hour_report", "view_check_in_by_badge_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
@@ -341,6 +342,21 @@ public class LoadBaseDataPresenter {
         panelist.setWarningMessage("Panelist check in. See your coordinator!");
         results.append("    Creating " + panelist.toString() + "\n");
         badgeRepository.save(panelist);
+
+        log.info("Creating badge Staff");
+        Badge staff = BadgeFactory.badgeFactory("Staff", "Staff", 0f, 0f, 0f);
+        staff.setRequiredRight("badge_type_staff");
+        staff.setWarningMessage("Staff check in. See your coordinator!");
+        // Clear stripe color and text - it's already printed
+        for (AgeRange a : staff.getAgeRanges()) {
+            a.setStripeColor("#FFFFFF");
+            a.setStripeText("");
+        }
+        results.append("    Creating " + staff.toString() + "\n");
+        badgeRepository.save(staff);
+
+
+
     }
 
 
