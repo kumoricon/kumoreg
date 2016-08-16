@@ -160,4 +160,20 @@ public class PreRegPresenter implements PrintBadgeHandler {
     public void continueCheckIn(Attendee attendee) {
         view.navigateTo(PreRegView.VIEW_NAME + "/" + view.getSearchString() + "/" + attendee.getId().toString());
     }
+
+    /**
+     * Enable the check in button for the given window if attendee info has been verified and the consent form
+     * has been received for minors.
+     * @param window Pre Reg check in window
+     */
+    public void checkIfAttendeeCanCheckIn(PreRegCheckInWindow window) {
+        Attendee attendee = window.getAttendee();
+        if (attendee.isMinor() && !window.parentalConsentFormReceived()) {
+            window.setCheckInButtonEnabled(false);
+        } else if (window.informationVerified()) {
+            window.setCheckInButtonEnabled(true);
+        } else {
+            window.setCheckInButtonEnabled(false);
+        }
+    }
 }

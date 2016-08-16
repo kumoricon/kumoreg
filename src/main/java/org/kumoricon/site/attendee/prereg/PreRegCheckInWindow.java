@@ -1,5 +1,6 @@
 package org.kumoricon.site.attendee.prereg;
 
+import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
@@ -45,25 +46,29 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
         verticalLayout.addComponent(buildSaveCancel());
         setContent(verticalLayout);
 
+        informationVerified.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> checkIfVerified());
+        consentFormReceived.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> checkIfVerified());
+
         informationVerified.focus();
         btnCheckIn.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         btnCheckIn.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
+
+    public void checkIfVerified() {
+        handler.checkIfAttendeeCanCheckIn(this);
+    }
+
+    public void setCheckInButtonEnabled(Boolean enabled) {
+        this.btnCheckIn.setEnabled(enabled);
+    }
+
     public Boolean informationVerified() {
-        if (informationVerified.getValue() == null) {
-            return false;
-        } else {
-            return informationVerified.getValue();
-        }
+        return Boolean.TRUE.equals(informationVerified.getValue());
     }
 
     public Boolean parentalConsentFormReceived() {
-        if (consentFormReceived.getValue() == null) {
-            return false;
-        } else {
-            return consentFormReceived.getValue();
-        }
+        return Boolean.TRUE.equals(consentFormReceived.getValue());
     }
 
     public Attendee getAttendee() {return form.getAttendee(); }
@@ -88,6 +93,7 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
             informationVerified.setEnabled(true);
             btnCheckIn.setCaption("Check In");
         }
+        checkIfVerified();
     }
 
     public void setAvailableBadges(List<Badge> availableBadges) {
