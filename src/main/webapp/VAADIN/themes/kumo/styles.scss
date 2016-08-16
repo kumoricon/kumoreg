@@ -7,3 +7,18 @@
 .kumoLeftMenu {
   background: url("img/menubackground.png") repeat-x bottom center;
 }
+
+// For tables with the .kumoHandPointer class, change the cursor over the header and cells to the
+// pointer
+.kumoHandPointer .v-table-caption-container {
+  cursor: pointer;
+}
+.kumoHandPointer .v-table-cell-wrapper {
+  cursor: pointer;
+}
+
+// For tables with the .kumoHeaderOnlyHandPointer class, only change the cursor to pointer for the header
+// Used for tables that can be sorted but individual items can't be clicked on
+.kumoHeaderOnlyHandPointer .v-grid-header {
+  cursor: pointer;
+}

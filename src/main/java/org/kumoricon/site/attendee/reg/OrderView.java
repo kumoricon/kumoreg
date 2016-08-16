@@ -56,6 +56,8 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         attendeeList.setContainerDataSource(attendeeBeanList);
         attendeeList.setPageLength(5);
         attendeeList.setWidth(600, Unit.PIXELS);
+        attendeeList.addStyleName("kumoHandPointer");
+
 
         orderInfo.addComponent(attendeeList);
         attendeeList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->

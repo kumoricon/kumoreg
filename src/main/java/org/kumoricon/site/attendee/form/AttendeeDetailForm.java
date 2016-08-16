@@ -270,6 +270,7 @@ public class AttendeeDetailForm extends GridLayout {
         history.setNullSelectionAllowed(true);
         history.setPageLength(5);
         history.setColumnExpandRatio("message", 1.0f);
+        history.addStyleName("kumoHandPointer");
         history.addItemClickListener((ItemClickEvent.ItemClickListener) event -> {
             handler.showAttendeeHistory((AttendeeHistory) event.getItemId());
         });

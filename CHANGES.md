@@ -13,7 +13,9 @@ Change Log
     - Fixed bug that would keep application from starting with OpenJDK
     - Added Staff badge type to Lite data
     - For orders with a total of $0, payment type no longer required; it will be set to cash automatically
-
+    - Disable pre reg check in button until information has been verified and consent form has been received for minors
+    - For tables that are clickable, change pointer to hand instead of arrow
+    
 - Version 0.9.3 (8/6/2016)
     - Select the number of badges to generate when printing test badges
     - Added configuration option for requiring attendee phone or email

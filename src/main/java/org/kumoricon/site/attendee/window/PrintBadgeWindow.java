@@ -50,6 +50,7 @@ public class PrintBadgeWindow extends Window {
         attendeeGrid.addColumn("badge");
         attendeeGrid.getColumn("badge").setConverter(new BadgeToStringConverter());
         attendeeGrid.setSizeFull();
+        attendeeGrid.addStyleName("kumoHeaderOnlyHandPointer");
         attendeeGrid.setColumnOrder("firstName", "lastName", "age");
         attendeeGrid.setSelectionMode(Grid.SelectionMode.MULTI);
         verticalLayout.addComponent(attendeeGrid);

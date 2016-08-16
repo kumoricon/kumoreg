@@ -8,14 +8,14 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
-import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
+import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
+import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
+import org.kumoricon.site.attendee.window.PrintBadgeWindow;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         tblResult.setContainerDataSource(attendeeBeanList);
         tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "badgeNumber", "age", "zip", "checkedIn"});
         tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Badge Number", "Age", "Zip", "Checked In");
-
+        tblResult.addStyleName("kumoHandPointer");
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
 
             handler.showAttendee((Integer) itemClickEvent.getItem().getItemProperty("id").getValue());

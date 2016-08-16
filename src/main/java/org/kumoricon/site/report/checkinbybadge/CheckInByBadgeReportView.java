@@ -69,6 +69,7 @@ public class CheckInByBadgeReportView extends BaseView implements View {
         dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
         dataGrid.setWidth(1100, Unit.PIXELS);
         dataGrid.setHeightMode(HeightMode.ROW);
+        dataGrid.addStyleName("kumoHeaderOnlyHandPointer");
         setExpandRatio(dataGrid, .9f);
     }
 

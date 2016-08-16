@@ -58,6 +58,7 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
         tblResult.setContainerDataSource(attendeeBeanList);
         tblResult.setVisibleColumns(new String[] { "firstName", "lastName", "badgeName", "age", "zip", "checkedIn" });
         tblResult.setColumnHeaders("First Name", "Last Name", "Badge Name", "Age", "Zip", "Checked In");
+        tblResult.addStyleName("kumoHandPointer");
 
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
                 handler.selectAttendee((Attendee)itemClickEvent.getItemId()));
