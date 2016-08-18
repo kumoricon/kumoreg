@@ -1,6 +1,6 @@
 Change Log
 ----------------
-- Version 0.9.4 (Pending)
+- Version 0.9.4 (8/17/2016)
     - Fixed duplicate badge number creation
     - Format phone numbers as (xxx) xxx-xxxx instead of xxx-xxx-xxxx
     - Added parental consent form received checkbox to At-Con registration screen
