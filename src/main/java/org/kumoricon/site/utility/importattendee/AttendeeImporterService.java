@@ -1,6 +1,5 @@
 package org.kumoricon.site.utility.importattendee;
 
-import org.kumoricon.service.FieldCleaner;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;
@@ -9,6 +8,7 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.service.FieldCleaner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,8 +74,8 @@ public class AttendeeImporterService {
             dataRow = TSVFile.readLine();
             if (dataRow == null || dataRow.trim().length() == 0) { continue; }  // Skip blank lines
             String[] dataArray = dataRow.split("\t");
-            if (dataArray.length != 19) {
-                throw new Exception(String.format("Error: Line %s doesn't have 19 fields. Missing data?", lineNumber));
+            if (dataArray.length < 18 || dataArray.length > 19) {
+                throw new Exception(String.format("Error: Line %s doesn't have 18 or 19 fields. Missing data?", lineNumber));
             }
             Attendee attendee = new Attendee();
             attendee.setFirstName(dataArray[0]);
@@ -118,6 +118,7 @@ public class AttendeeImporterService {
                 throw new Exception("Badge type " + dataArray[16] + " not found on line " + lineNumber);
             }
 
+            System.out.println(dataArray[17]);
             if (orders.containsKey(dataArray[17])) {
                 Order currentOrder = orders.get(dataArray[17]);
                 attendee.setOrder(currentOrder);
@@ -133,7 +134,7 @@ public class AttendeeImporterService {
                 ordersToAdd.add(o);
                 attendee.setOrder(o);
             }
-            if (!dataArray[18].isEmpty() && !dataArray[18].toString().trim().isEmpty()) {
+            if (dataArray.length == 19 && !dataArray[18].isEmpty() && !dataArray[18].toString().trim().isEmpty()) {
                 attendee.addHistoryEntry(currentUser, dataArray[18]);
             }
             attendee.setPreRegistered(true);

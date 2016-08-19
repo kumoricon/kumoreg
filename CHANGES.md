@@ -1,5 +1,8 @@
 Change Log
 ----------------
+- Version 0.9.5 (pending)
+    - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)
+
 - Version 0.9.4 (8/17/2016)
     - Fixed duplicate badge number creation
     - Format phone numbers as (xxx) xxx-xxxx instead of xxx-xxx-xxxx
