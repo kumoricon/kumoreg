@@ -1,7 +1,8 @@
 Change Log
 ----------------
-- Version 0.9.5 (pending)
+- Version 0.9.5 (08/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)
+    - Moved the Lite badge color stripe up a point. (Alignment done; matches current badge stock)
 
 - Version 0.9.4 (8/17/2016)
     - Fixed duplicate badge number creation
