@@ -80,7 +80,7 @@ public class LiteBadgePrintFormatter implements BadgePrintFormatter {
         } else {
             contentStream.setNonStrokingColor(Color.black);
         }
-        contentStream.fillRect(150+xOffset, 89+yOffset, 310, 44);
+        contentStream.fillRect(150+xOffset, 90+yOffset, 310, 44);
 
         contentStream.setLineWidth(0.5f);
         contentStream.beginText();
