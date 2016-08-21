@@ -44,6 +44,11 @@ public class Order {
             public String toString() { return "Check/Money Order"; }
         }, CREDIT {
             public String toString() { return "Credit Card"; }
+        };
+
+        public static PaymentType fromInteger(Integer typeId) {
+            PaymentType[] orderTypes = PaymentType.values();
+            return orderTypes[typeId];
         }
     }
 
