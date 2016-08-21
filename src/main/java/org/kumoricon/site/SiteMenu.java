@@ -16,6 +16,7 @@ import org.kumoricon.site.report.attendees.AttendeeReportView;
 import org.kumoricon.site.report.checkinbyhour.CheckInByHourReportView;
 import org.kumoricon.site.report.role.RoleReportView;
 import org.kumoricon.site.report.staff.StaffReportView;
+import org.kumoricon.site.report.till.TillReportView;
 import org.kumoricon.site.role.RoleView;
 import org.kumoricon.site.user.UserView;
 import org.kumoricon.site.utility.closeouttill.CloseOutTillView;
@@ -82,6 +83,8 @@ public class SiteMenu extends VerticalLayout {
                 buttonFactory("Staff", FontAwesome.USERS, StaffReportView.VIEW_NAME));
         addButtonTo(tab2, "view_role_report",
                 buttonFactory("Roles", FontAwesome.GROUP, RoleReportView.VIEW_NAME));
+        addButtonTo(tab2, "view_till_report",
+                buttonFactory("Tills", FontAwesome.DOLLAR, TillReportView.VIEW_NAME));
         if (tab2.getComponentCount() > 0) { menu.addComponent(tab2); }
 
         Layout tab3 = new VerticalLayout();

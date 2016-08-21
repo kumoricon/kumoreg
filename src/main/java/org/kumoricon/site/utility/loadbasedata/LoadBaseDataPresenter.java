@@ -126,6 +126,8 @@ public class LoadBaseDataPresenter {
             {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
             {"view_staff_report", "View staff report (lists name/phone numbers)"},
             {"view_role_report", "View registration system role report"},
+            {"view_check_in_by_badge_report", "View check in time by badge type report"},
+            {"view_till_report", "View till report"},
             {"manage_staff", "Add/edit users and reset passwords"},
             {"manage_pass_types", "Add/edit badge types"},
             {"manage_roles", "Add/edit security roles"},
