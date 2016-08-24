@@ -74,7 +74,7 @@ public class BaseView extends VerticalLayout implements View {
     }
 
     public void notify(String message) { Notification.show(message); }
-    public void notifyError(String message) { Notification.show(message, Notification.Type.ERROR_MESSAGE); }
+    public void notifyError(String message) { Notification.show(message, Notification.Type.WARNING_MESSAGE); }
 
     @PostConstruct
     protected void initLayout() {
