@@ -74,17 +74,20 @@ public class AttendeeDetailForm extends GridLayout {
         birthDate.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             Integer currentAge = getAgeFromDate(birthDate.getValue());
                 if (currentAge != null) {
-                age.setValue(String.format("(%s years old)", currentAge));
-                setMinorFieldsEnabled(currentAge < 18);
-                try {
-                    if (!badge.isEmpty()) {
-                        Badge thisBadge = (Badge) badge.getConvertedValue();
-                        paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                    age.setValue(String.format("(%s years old)", currentAge));
+                    setMinorFieldsEnabled(currentAge < 18);
+                    try {
+                        if (!badge.isEmpty()) {
+                            Badge thisBadge = (Badge) badge.getConvertedValue();
+                            paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                        }
+                    } catch(ServiceException e) {
+                        Notification.show(e.getMessage());
                     }
-                } catch(ServiceException e) {
-                    Notification.show(e.getMessage());
+                } else {
+                    age.setValue("");
+                    paidAmount.setValue(null);
                 }
-            }
         });
 
 

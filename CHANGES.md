@@ -2,6 +2,9 @@ Change Log
 ----------------
 - Version 0.9.6 (pending)
     - Changed error message to disappear automatically after a few seconds, instead of requiring a click
+    - Allow MMDDYYYY in birthdate field (as well as MM/DD/YYY and MM-DD-YYYY). It will be converted to MM/DD/YYYY 
+      automatically.
+    - When birthdate field is cleared, also remove paid amount and the age in years from the form.
 
 - Version 0.9.5 (08/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)
