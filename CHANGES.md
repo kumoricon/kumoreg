@@ -7,6 +7,7 @@ Change Log
     - When birthdate field is cleared, also remove paid amount and the age in years from the form
     - Added editable badge prefix to users, rather than basing it on the first letter of their names 
     - Rearranged fields on User edit window to be more convenient; sername and badge prefix will be auto generated
+    - Added configuration option to display "training mode" banner behind left menu
 
 - Version 0.9.5 (08/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)
