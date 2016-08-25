@@ -33,6 +33,8 @@ public class KumoRegUI extends UI {
     @Value("${info.build.buildDate}")
     private String buildDate;
 
+    @Value("${kumoreg.trainingMode}")
+    private boolean trainingMode;
 
     @Autowired
     private SiteLogo logo;
@@ -61,19 +63,16 @@ public class KumoRegUI extends UI {
         leftPanel.setWidth(200, Unit.PIXELS);
         leftPanel.setHeight("100%");
         leftPanel.addStyleName("kumoLeftMenu");
+
         leftPanel.addComponent(logo);
+
+        if (trainingMode) {
+            addStyleName("kumoTrainingMode");
+        }
+
+
         if (getLoggedInUser() != null) { buildMenu(); }
         root.addComponent(leftPanel);
-
-//        final CssLayout navigationBar = new CssLayout();
-//        navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-//        navigationBar.addComponent(createNavigationButton("Home",
-//                HomeView.VIEW_NAME));
-//        navigationBar.addComponent(createNavigationButton("UI Scoped View",
-//                UIScopedView.VIEW_NAME));
-//        navigationBar.addComponent(createNavigationButton("View Scoped View",
-//                ViewScopedView.VIEW_NAME));
-//        root.addComponent(navigationBar);
 
         final Panel viewContainer = new Panel();
         viewContainer.setSizeFull();

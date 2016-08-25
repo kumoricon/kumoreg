@@ -22,3 +22,8 @@
 .kumoHeaderOnlyHandPointer .v-grid-header {
   cursor: pointer;
 }
+
+// Modifies the left hand menu when in training mode
+.kumoTrainingMode {
+  background: url("img/trainingbackground.png");
+}
