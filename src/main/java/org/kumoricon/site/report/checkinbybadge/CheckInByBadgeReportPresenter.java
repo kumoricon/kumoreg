@@ -28,7 +28,7 @@ public class CheckInByBadgeReportPresenter {
     }
 
     public void showAttendeeList(CheckInByBadgeReportView view, Badge badge) {
-        log.info("{} viewed Check In Time Report for {}", view.getCurrentUser(), badge);
+        log.info("{} viewed Check In Time Report for {}", view.getCurrentUsername(), badge);
         if (badge == null) {
             view.afterAttendeeFetch(new ArrayList<>());
         }
@@ -41,7 +41,7 @@ public class CheckInByBadgeReportPresenter {
             Badge badge = badgeRepository.findOne(badgeId);
             if (badge == null) {
                 log.error("{} viewed Check In Time Report for badge id {} but it was not found",
-                        view.getCurrentUser(), badgeId);
+                        view.getCurrentUsername(), badgeId);
                 view.notifyError("Badge id " + badgeId.toString() + " not found");
                 view.navigateTo(CheckInByBadgeReportView.VIEW_NAME);
 //                view.afterAttendeeFetch(new ArrayList<>());

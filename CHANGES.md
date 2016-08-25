@@ -8,6 +8,7 @@ Change Log
     - Added editable badge prefix to users, rather than basing it on the first letter of their names 
     - Rearranged fields on User edit window to be more convenient; sername and badge prefix will be auto generated
     - Added configuration option to display "training mode" banner behind left menu
+    - Log IP address in place of username for users that aren't logged in when they view a page
 
 - Version 0.9.5 (08/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)

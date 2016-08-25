@@ -61,7 +61,7 @@ public class LoginPresenter {
 
     void setNewPassword(LoginView view, String newPassword) {
         log.info("{} set new password on login from {}",
-                view.getCurrentUser(), view.getCurrentClientIPAddress());
+                view.getCurrentUsername(), view.getCurrentClientIPAddress());
         User currentUser = userRepository.findOne(view.getCurrentUser().getId());
         currentUser.setPassword(newPassword);
         currentUser.setResetPassword(false);

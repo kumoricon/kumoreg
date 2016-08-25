@@ -23,7 +23,7 @@ public class BadgePresenter {
 
     public void badgeSelected(BadgeView view, Badge badge) {
         if (badge != null) {
-            log.info("{} viewed badge {}", view.getCurrentUser(), badge);
+            log.info("{} viewed badge {}", view.getCurrentUsername(), badge);
             view.navigateTo(BadgeView.VIEW_NAME + "/" + badge.getId().toString());
             view.showBadge(badge);
         }
@@ -37,7 +37,7 @@ public class BadgePresenter {
     }
 
     public void addNewBadge(BadgeView view) {
-        log.info("{} created new badge", view.getCurrentUser());
+        log.info("{} created new badge", view.getCurrentUsername());
         view.navigateTo(BadgeView.VIEW_NAME);
         Badge newBadge = BadgeFactory.emptyBadgeFactory();
         view.showBadge(newBadge);
@@ -50,14 +50,14 @@ public class BadgePresenter {
     }
 
     public void saveBadge(BadgeView view, Badge badge) {
-        log.info("{} saved badge {}", view.getCurrentUser(), badge);
+        log.info("{} saved badge {}", view.getCurrentUsername(), badge);
         badgeRepository.save(badge);
         view.navigateTo(BadgeView.VIEW_NAME);
         showBadgeList(view);
     }
 
     public void showBadgeList(BadgeView view) {
-        log.info("{} viewed badge list", view.getCurrentUser());
+        log.info("{} viewed badge list", view.getCurrentUsername());
         List<Badge> badges = badgeRepository.findAll();
         view.afterSuccessfulFetch(badges);
     }
@@ -70,7 +70,7 @@ public class BadgePresenter {
                 view.selectBadge(badge);
             } else {
                 log.error("{} tried to view badge id {} but it was not found in the database",
-                    view.getCurrentUser(), id);
+                    view.getCurrentUsername(), id);
             }
         }
     }
@@ -78,7 +78,7 @@ public class BadgePresenter {
 // Currently not used because badges may be set as not visible, but may not be deleted outright
 //    public void deleteBadge(BadgeView view, Badge badge) {
 //        if (badge.getId() != null) {
-//            log.info("{} deleted badge {}", view.getCurrentUser(), badge);
+//            log.info("{} deleted badge {}", view.getCurrentUsername(), badge);
 //            badgeRepository.delete(badge);
 //            view.navigateTo(view.VIEW_NAME);
 //            showBadgeList(view);

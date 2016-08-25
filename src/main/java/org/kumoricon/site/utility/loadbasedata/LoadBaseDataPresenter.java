@@ -38,7 +38,7 @@ public class LoadBaseDataPresenter {
     }
 
     public void loadDataButtonClicked(LoadBaseDataView view) {
-        log.info("{} loaded full base data", view.getCurrentUser());
+        log.info("{} loaded full base data", view.getCurrentUsername());
         StringBuilder results = new StringBuilder();
         if (targetTablesAreEmpty(results)) {
             addRights(results);
@@ -50,7 +50,7 @@ public class LoadBaseDataPresenter {
     }
 
     public void loadLiteDataButtonClicked(LoadBaseDataView view) {
-        log.info("{} loaded lite base data", view.getCurrentUser());
+        log.info("{} loaded lite base data", view.getCurrentUsername());
         StringBuilder results = new StringBuilder();
         if (targetTablesAreEmpty(results)) {
             addRights(results);

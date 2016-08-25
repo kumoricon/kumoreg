@@ -43,7 +43,7 @@ public class RolePresenter {
         view.navigateTo(RoleView.VIEW_NAME);
         Role role = new Role();
         view.showRole(role, rightRepository.findAll());
-        log.info("{} added new role", view.getCurrentUser());
+        log.info("{} added new role", view.getCurrentUsername());
     }
 
     public void cancel(RoleEditWindow window) {
@@ -59,13 +59,13 @@ public class RolePresenter {
         window.close();
         view.navigateTo(RoleView.VIEW_NAME);
         showRoleList(view);
-        log.info("{} saved role {}", view.getCurrentUser(), role);
+        log.info("{} saved role {}", view.getCurrentUsername(), role);
     }
 
     public void showRoleList(RoleView view) {
         List<Role> roles = roleRepository.findAll();
         view.afterSuccessfulFetch(roles);
-        log.info("{} viewed role list", view.getCurrentUser());
+        log.info("{} viewed role list", view.getCurrentUsername());
     }
 
     public void navigateToRole(RoleView view, String parameters) {
@@ -73,7 +73,7 @@ public class RolePresenter {
             Integer id = Integer.parseInt(parameters);
             Role role = roleRepository.findOne(id);
             view.selectRole(role);
-            log.info("{} viewed role {}", view.getCurrentUser(), role);
+            log.info("{} viewed role {}", view.getCurrentUsername(), role);
         }
     }
 }

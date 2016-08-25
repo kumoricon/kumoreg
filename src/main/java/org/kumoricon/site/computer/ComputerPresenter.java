@@ -21,14 +21,14 @@ public class ComputerPresenter {
     }
 
     public void addNewComputer(ComputerView view) {
-        log.info("{} added new computer", view.getCurrentUser());
+        log.info("{} added new computer", view.getCurrentUsername());
         Computer computer = new Computer();
         saveComputer(view, computer);
     }
 
 
     public void saveComputer(ComputerView view, Computer computer) {
-        log.info("{} saved computer {}", view.getCurrentUser(), computer);
+        log.info("{} saved computer {}", view.getCurrentUsername(), computer);
         computerRepository.save(computer);
         view.notify("Saved");
         view.navigateTo(ComputerView.VIEW_NAME);
@@ -36,13 +36,13 @@ public class ComputerPresenter {
     }
 
     public void showComputerList(ComputerView view) {
-        log.info("{} viewed computer list", view.getCurrentUser());
+        log.info("{} viewed computer list", view.getCurrentUsername());
         List<Computer> computers = computerRepository.findAll();
         view.afterSuccessfulFetch(computers);
     }
 
     public void deleteComputer(ComputerView view, Computer computer) {
-        log.info("{} deleted computer {}", view.getCurrentUser(), computer);
+        log.info("{} deleted computer {}", view.getCurrentUsername(), computer);
         computerRepository.delete(computer);
         view.notify("Deleted " + computer.getIpAddress());
         view.afterSuccessfulFetch(computerRepository.findAll());

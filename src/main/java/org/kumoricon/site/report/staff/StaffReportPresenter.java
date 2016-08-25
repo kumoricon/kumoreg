@@ -23,7 +23,7 @@ public class StaffReportPresenter {
     public void showUserList(StaffReportView view) {
         List<User> users = userRepository.findAll();
         view.afterSuccessfulFetch(users);
-        log.info("{} viewed Staff Report", view.getCurrentUser());
+        log.info("{} viewed Staff Report", view.getCurrentUsername());
 
     }
 

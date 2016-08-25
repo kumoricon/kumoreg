@@ -13,7 +13,7 @@ public class LogoutPresenter {
     }
 
     public void logout(LogoutView view) {
-        log.info("{} logged out via logout button", view.getCurrentUser());
+        log.info("{} logged out via logout button", view.getCurrentUsername());
         KumoRegUI ui = (KumoRegUI)KumoRegUI.getCurrent();
         ui.setLoggedInUser(null);
         ui.removeMenu();

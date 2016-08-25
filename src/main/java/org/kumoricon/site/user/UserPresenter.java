@@ -27,7 +27,7 @@ public class UserPresenter {
 
     public void userSelected(UserView view, User user) {
         if (user != null) {
-            log.info("{} viewed user {}", view.getCurrentUser(), user);
+            log.info("{} viewed user {}", view.getCurrentUsername(), user);
             view.navigateTo(view.VIEW_NAME + "/" + user.getId().toString());
             view.showUser(user, getAvailableRoles());
         }
@@ -41,7 +41,7 @@ public class UserPresenter {
     }
 
     public void addNewUser(UserView view) {
-        log.info("{} created new user", view.getCurrentUser());
+        log.info("{} created new user", view.getCurrentUsername());
         view.navigateTo(view.VIEW_NAME);
         User user = UserFactory.newUser();
         view.showUser(user, getAvailableRoles());
@@ -56,7 +56,7 @@ public class UserPresenter {
 
     public void saveUser(UserEditWindow window, User user) {
         UserView view = window.getParentView();
-        log.info("{} saved user {}", view.getCurrentUser(), user);
+        log.info("{} saved user {}", view.getCurrentUsername(), user);
         userRepository.save(user);
         window.close();
         view.navigateTo(UserView.VIEW_NAME);
@@ -64,7 +64,7 @@ public class UserPresenter {
     }
 
     public void showUserList(UserView view) {
-        log.info("{} viewed user list", view.getCurrentUser());
+        log.info("{} viewed user list", view.getCurrentUsername());
         List<User> users = userRepository.findAll();
         view.afterSuccessfulFetch(users);
     }
@@ -77,7 +77,7 @@ public class UserPresenter {
                 view.selectUser(user);
             } else {
                 log.error("{} tried to view user id {} but it was not found in the database",
-                        view.getCurrentUser(), id);
+                        view.getCurrentUsername(), id);
             }
         }
     }
@@ -88,11 +88,11 @@ public class UserPresenter {
         try {
             userRepository.save(user);
             view.notify("Changed password to \"password\" for user " + user.getUsername());
-            log.info("{} reset password for {}", view.getCurrentUser(), user);
+            log.info("{} reset password for {}", view.getCurrentUsername(), user);
             window.close();
         } catch (Exception e) {
             view.notifyError(e.getMessage());
-            log.error("{} got error while resetting password for {}. {}", view.getCurrentUser(), user, e);
+            log.error("{} got error while resetting password for {}. {}", view.getCurrentUsername(), user, e);
         }
     }
 

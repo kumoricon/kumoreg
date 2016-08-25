@@ -49,14 +49,14 @@ public class TestBadgePresenter implements PrintBadgeHandler {
         if (yOffset == null) { yOffset = 0; }
 
         log.info("{} generating {} test badge(s) with horizontal offset {} vertical offset {}",
-                view.getCurrentUser(), numberOfBadges, xOffset, yOffset);
+                view.getCurrentUsername(), numberOfBadges, xOffset, yOffset);
         List<Attendee> attendees = new ArrayList<>();
 
         if (numberOfBadges >= 1) { attendees.add(attendeeFactory.generateDemoAttendee()); }
         if (numberOfBadges >= 2) { attendees.add(attendeeFactory.generateChildAttendee()); }
         if (numberOfBadges >= 3) { attendees.add(attendeeFactory.generateYouthAttendee()); }
 
-        log.info("{} printing test badges for {}", view.getCurrentUser(), attendees);
+        log.info("{} printing test badges for {}", view.getCurrentUsername(), attendees);
         showAttendeeBadgeWindow(view, attendees, xOffset, yOffset);
     }
 
@@ -100,7 +100,7 @@ public class TestBadgePresenter implements PrintBadgeHandler {
         TestBadgeView view = (TestBadgeView) printBadgeWindow.getParentView();
         if (attendeeList.size() > 0) {
             log.info("{} reprinting test badges for {}",
-                    view.getCurrentUser(), attendeeList, view.getXOffset(), view.getYOffset());
+                    view.getCurrentUsername(), attendeeList, view.getXOffset(), view.getYOffset());
             view.notify("Reprinting badges");
         } else {
             view.notify("No attendees selected");

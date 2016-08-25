@@ -63,6 +63,19 @@ public class BaseView extends VerticalLayout implements View {
     }
 
     /**
+     * Returns string representing the current user, or their IP address if not logged in
+     * @return User
+     */
+    public String getCurrentUsername() {
+        User user = getCurrentUser();
+        if (user != null) {
+            return user.toString();
+        } else {
+            return String.format("[%s]", getCurrentClientIPAddress());
+        }
+    }
+
+    /**
      * Refresh any data in the current view. Override this!
      */
     public void refresh() {

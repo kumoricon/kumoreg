@@ -61,10 +61,10 @@ public class OrderPresenter implements PrintBadgeHandler {
     public void showOrder(OrderView view, int id) {
         Order order = orderRepository.findOne(id);
         if (order != null) {
-            log.info("{} viewed order {}", view.getCurrentUser(), order);
+            log.info("{} viewed order {}", view.getCurrentUsername(), order);
             view.afterSuccessfulFetch(order);
         } else {
-            log.error("{} tried to view order {} and it was not found.", view.getCurrentUser(), id);
+            log.error("{} tried to view order {} and it was not found.", view.getCurrentUsername(), id);
             view.notifyError("Error: order " + id + " not found.");
         }
     }
@@ -72,14 +72,14 @@ public class OrderPresenter implements PrintBadgeHandler {
     public void cancelOrder(OrderView view) {
         Order order = view.getOrder();
         if (order.getAttendeeList().size() == 0 && !order.getPaid()) {
-            log.info("{} canceled empty order {}. It was deleted.", view.getCurrentUser(), order);
+            log.info("{} canceled empty order {}. It was deleted.", view.getCurrentUsername(), order);
             orderRepository.delete(order);
         }
         view.navigateTo("");
     }
 
     public void addNewAttendee(OrderView view) {
-        log.info("{} created new attendee", view.getCurrentUser());
+        log.info("{} created new attendee", view.getCurrentUsername());
         Attendee newAttendee = new Attendee();
         newAttendee.setBadgeNumber(generateBadgeNumber(view));
         newAttendee.setOrder(view.getOrder());
@@ -88,7 +88,7 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     public void addAttendeeToOrder(OrderView view, Attendee attendee) {
         Order order = view.getOrder();
-        log.info("{} added attendee {} to order {}", view.getCurrentUser(), attendee, order);
+        log.info("{} added attendee {} to order {}", view.getCurrentUsername(), attendee, order);
         order.addAttendee(attendee);
         order.setTotalAmount(getOrderTotal(order));
         order = orderRepository.save(order);
@@ -110,7 +110,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         if (attendee != null && !attendee.getCheckedIn()) {
             String name = attendee.getName();
             Order order = view.getOrder();
-            log.info("{} removed attendee {} from order {}. Attendee deleted.", view.getCurrentUser(), attendee, order);
+            log.info("{} removed attendee {} from order {}. Attendee deleted.", view.getCurrentUsername(), attendee, order);
             order.removeAttendee(attendee);
             attendee.setOrder(null);
 
@@ -150,7 +150,7 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     public void orderComplete(OrderView view, Order currentOrder) {
         log.info("{} completed order {} and took payment ${}",
-                view.getCurrentUser(), currentOrder, currentOrder.getTotalAmount());
+                view.getCurrentUsername(), currentOrder, currentOrder.getTotalAmount());
         currentOrder.paymentComplete(view.getCurrentUser());
 
         orderRepository.save(currentOrder);
@@ -159,7 +159,7 @@ public class OrderPresenter implements PrintBadgeHandler {
     }
 
     public void selectAttendee(OrderView view, Attendee attendee) {
-        log.info("{} viewed attendee {}", view.getCurrentUser(), attendee);
+        log.info("{} viewed attendee {}", view.getCurrentUsername(), attendee);
         List<Badge> badgeTypesUserCanSee = new ArrayList<>();
         for (Badge badge : badgeRepository.findByVisibleTrue()) {
             if (badge.getRequiredRight() == null || view.currentUserHasRight(badge.getRequiredRight())) {
@@ -174,7 +174,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         User user = userRepository.findOne(view.getCurrentUser().getId());
         String badgeNumber = String.format("%1S%2$05d", user.getBadgePrefix(), user.getNextBadgeNumber());
 
-        log.info("{} generated badge number {}", view.getCurrentUser(), badgeNumber);
+        log.info("{} generated badge number {}", view.getCurrentUsername(), badgeNumber);
         userRepository.save(user);
         view.setLoggedInUser(user);
         return badgeNumber;
@@ -182,7 +182,7 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     public void saveAuthNumberClicked(OrderView view, String value) {
         Order order = view.getOrder();
-        log.info("{} set credit card authorization number {} for {}", view.getCurrentUser(), value, order);
+        log.info("{} set credit card authorization number {} for {}", view.getCurrentUsername(), value, order);
         String oldNotes = "";
         if (order.getNotes() != null) { oldNotes = order.getNotes(); }
         order.setNotes("Credit card authorization number: " + value + "\n" + oldNotes);
@@ -200,7 +200,7 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
-        log.info("{} printing badge(s) for: {}", view.getCurrentUser(), attendeeList);
+        log.info("{} printing badge(s) for: {}", view.getCurrentUsername(), attendeeList);
         view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
         view.showPrintBadgeWindow(attendeeList);
     }
