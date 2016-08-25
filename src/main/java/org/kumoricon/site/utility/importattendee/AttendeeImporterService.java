@@ -163,10 +163,7 @@ public class AttendeeImporterService {
     }
 
     private String generateBadgeNumber(Integer badgeNumber) {
-        StringBuilder output = new StringBuilder();
-        output.append("ONL");
-        output.append(String.format("%1$05d", badgeNumber));
-        return output.toString().toUpperCase();
+        return String.format("ONL%1$05d", badgeNumber);
     }
 
 
