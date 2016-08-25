@@ -30,6 +30,18 @@ public class UserFactoryTest {
         assertEquals("generateUserName handles null", "", UserFactory.generateUserName(null, null));
     }
 
+    @Test
+    public void generateBadgePrefix() throws Exception {
+        User user = UserFactory.newUser("Test", "User");
+        assertEquals("badgePrefix is first and last initials", "TU", user.getBadgePrefix());
+    }
+
+    @Test
+    public void generateBadgePrefixIsUppercase() throws Exception {
+        User user = UserFactory.newUser("test", "user");
+        assertEquals("badgePrefix is uppercase", "TU", user.getBadgePrefix());
+    }
+
     /**
      * Make sure required fields are initialized for a new user
      * @param user User record

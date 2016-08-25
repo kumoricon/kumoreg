@@ -172,14 +172,12 @@ public class OrderPresenter implements PrintBadgeHandler {
     @Transactional
     private String generateBadgeNumber(OrderView view) {
         User user = userRepository.findOne(view.getCurrentUser().getId());
-        StringBuilder output = new StringBuilder();
-        output.append(user.getFirstName().charAt(0));
-        output.append(user.getLastName().charAt(0));
-        output.append(String.format("%1$05d", user.getNextBadgeNumber()));
-        log.info("{} generated badge number {}", view.getCurrentUser(), output.toString().toUpperCase());
+        String badgeNumber = String.format("%1S%2$05d", user.getBadgePrefix(), user.getNextBadgeNumber());
+
+        log.info("{} generated badge number {}", view.getCurrentUser(), badgeNumber);
         userRepository.save(user);
         view.setLoggedInUser(user);
-        return output.toString().toUpperCase();
+        return badgeNumber;
     }
 
     public void saveAuthNumberClicked(OrderView view, String value) {

@@ -34,6 +34,9 @@ public class User implements Serializable {
     private Role role;
     private String salt;
     @NotNull
+    @Column(unique = true)
+    private String badgePrefix;                 // User will generate badges with this prefix
+    @NotNull
     private Integer lastBadgeNumberCreated;
     @NotNull
     private Integer sessionNumber;              // Used for printing report when cashing out
@@ -82,6 +85,9 @@ public class User implements Serializable {
         setPassword(DEFAULT_PASSWORD);
         this.resetPassword = true;
     }
+
+    public String getBadgePrefix() { return badgePrefix; }
+    public void setBadgePrefix(String badgePrefix) { this.badgePrefix = badgePrefix; }
 
     public Integer getLastBadgeNumberCreated() { return lastBadgeNumberCreated; }
     public void setLastBadgeNumberCreated(Integer lastBadgeNumberCreated) { this.lastBadgeNumberCreated = lastBadgeNumberCreated; }

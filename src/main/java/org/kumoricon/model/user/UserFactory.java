@@ -35,6 +35,7 @@ public class UserFactory {
         User u = newUser();
         u.setFirstName(firstName);
         u.setLastName(lastName);
+        u.setBadgePrefix(firstName.substring(0, 1).toUpperCase() + lastName.substring(0, 1).toUpperCase());
         u.setUsername(generateUserName(firstName, lastName));
         return u;
     }
