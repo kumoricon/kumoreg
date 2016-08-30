@@ -11,6 +11,7 @@ Change Log
     - Log IP address in place of username for users that aren't logged in when they view a page
     - Added a prompt when logging out if user needs to close their till (has orders worth more than $0 
       in current session)
+    - Added confirmation window when canceling an order
 
 - Version 0.9.5 (08/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)

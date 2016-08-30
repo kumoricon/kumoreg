@@ -15,6 +15,7 @@ import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.FieldFactory;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
+import org.kumoricon.site.attendee.window.ConfirmationWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
 
         addAttendee.addClickListener((Button.ClickListener) clickEvent -> handler.addNewAttendee(this));
         takeMoney.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney(this));
-        cancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelOrder(this));
+        cancel.addClickListener((Button.ClickListener) clickEvent -> showConfirmCancelWindow());
 
         addAttendee.focus();
     }
@@ -154,5 +155,14 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
     public void showPrintBadgeWindow(List<Attendee> attendeeList) {
         PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
         showWindow(printBadgeWindow);
+    }
+
+    public void showConfirmCancelWindow() {
+        ConfirmationWindow window = new ConfirmationWindow(this, "Are you sure you want to cancel this order?");
+        showWindow(window);
+    }
+
+    public void confirmCancelOrder() {
+        handler.cancelOrder(this);
     }
 }
