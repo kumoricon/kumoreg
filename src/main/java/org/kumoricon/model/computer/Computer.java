@@ -1,6 +1,7 @@
 package org.kumoricon.model.computer;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "computers")
@@ -12,6 +13,8 @@ public class Computer {
     /**
      * Client computer's IP address
      */
+    @NotNull
+    @Column(unique=true)
     private String ipAddress;
     /**
      * Name of printer as it is installed on the server
