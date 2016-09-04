@@ -171,7 +171,7 @@ public class LoadBaseDataPresenter {
                 "print_badge", "attendee_edit", "attendee_add_note",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
                 "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
-                "badge_type_industry", "badge_type_panelist",
+                "badge_type_industry", "badge_type_panelist", "badge_type_staff",
                 "view_role_report",
                 "view_attendance_report", "view_attendance_report_revenue", "view_staff_report", "view_check_in_by_hour_report",
                 "view_check_in_by_badge_report"});
