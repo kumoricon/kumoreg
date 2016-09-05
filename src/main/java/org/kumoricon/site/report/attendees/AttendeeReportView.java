@@ -32,9 +32,8 @@ public class AttendeeReportView extends BaseView implements View, ReportView {
         handler.fetchReportData(this);
         setExpandRatio(data, 1f);
         data.setSizeFull();
-        data.setWidthUndefined();
+        data.setWidth("100%");
     }
-
 
     @Override
     public void afterSuccessfulFetch(String data) {
