@@ -1,0 +1,18 @@
+# Kumoreg Systemd init file for training server
+[Unit]
+Description=kumoreg registration management system training server
+Requires=mariadb.service
+Requires=cups.service
+After=network.target
+After=cups.service
+After=mariadb.service
+After=syslog.target
+
+[Service]
+User=kumoreg
+Group=kumoreg
+ExecStart=/usr/bin/java -jar /usr/local/kumoreg/kumoreg.jar --spring.config.location=/usr/local/kumoreg/application-training.properties
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

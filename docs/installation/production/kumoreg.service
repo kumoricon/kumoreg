@@ -1,0 +1,18 @@
+# Kumoreg Systemd init file
+[Unit]
+Description=kumoreg registration management system
+Requires=mariadb.service
+Requires=cups.service
+After=network.target
+After=cups.service
+After=mariadb.service
+After=syslog.target
+
+[Service]
+User=kumoreg
+Group=kumoreg
+ExecStart=/usr/local/kumoreg/kumoreg.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

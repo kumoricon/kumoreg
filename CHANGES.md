@@ -14,6 +14,9 @@ Change Log
     - Added confirmation window when canceling an order
     - When adding Computer/Printer mapping in admin panel, default computer's IP address to current client's address, 
       and printer's IP address to the current network.
+    - Director role can use the staff badge type
+    - Fixed text wrapping on Attendee Report
+    - Added example automated deployment scripts, see [Installation](docs/installation.md)
 
 - Version 0.9.5 (08/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)

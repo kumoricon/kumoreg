@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# Shortcut script for adding specific model printers from the command line
 
 USAGE="
 
@@ -36,11 +36,13 @@ fi
 if [ ${2} = "8610" ]; then
     echo "Adding HP Inkjet Pro 8610 on ${1}"
     lpadmin -p ${1} -v socket://${1} -m drv:///hp/hpcups.drv/hp-officejet_pro_8600.ppd -o media=na_invoice_5.5x8.5in -o printer-error-policy=abort-job  -E
+    lpoptions -p ${1} -o PageSize=Custom.8.5x5.5in -o media=Custom.8.5x5.5in
 
 
 elif [ ${2} = "251" ]; then
     echo "Adding HP Laserjet Pro 200 M251NW on ${1}"
     lpadmin -p ${1} -v socket://${1} -m lsb/usr/HP/hp-laserjet_200_color_m251-ps.ppd.gz -o PageSize=Custom.8.5x5.5i -o media=Custom.8.5x5.5in -o printer-error-policy=abort-job -E
+    lpoptions -p ${1} -o PageSize=Custom.8.5x5.5in -o media=Custom.8.5x5.5in
 
 else
     echo "Error: printer model not found. Must be one of:
