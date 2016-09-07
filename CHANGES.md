@@ -6,9 +6,9 @@ Change Log
       automatically
     - When birthdate field is cleared, also remove paid amount and the age in years from the form
     - Added editable badge prefix to users, rather than basing it on the first letter of their names 
-    - Rearranged fields on User edit window to be more convenient; sername and badge prefix will be auto generated
+    - Rearranged fields on User edit window to be more convenient; username and badge prefix will be auto generated
     - Added configuration option to display "training mode" banner behind left menu
-    - Log IP address in place of username for users that aren't logged in when they view a page
+    - Log IP address in place of username for users that are not logged in when they view a page
     - Added a prompt when logging out if user needs to close their till (has orders worth more than $0 
       in current session)
     - Added confirmation window when canceling an order
@@ -17,6 +17,7 @@ Change Log
     - Director role can use the staff badge type
     - Fixed text wrapping on Attendee Report
     - Added example automated deployment scripts, see [Installation](docs/installation.md)
+    - Stopped logging all reformatted phone numbers (still available with debug level)
 
 - Version 0.9.5 (08/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)
@@ -60,7 +61,7 @@ Change Log
 
 - Version 0.9.1 (6/13/2016)
     - Added scroll bars to modal attendee windows
-    - Accept "-" or "/" in birthdates
+    - Accept "-" or "/" in birth dates
     - Extended Panelist report to work for any badge type and renamed it to "Check In by Badge"
     - Format names and telephone numbers on blur
     - Updated documentation

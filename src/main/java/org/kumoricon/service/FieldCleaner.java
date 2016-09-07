@@ -24,7 +24,7 @@ public class FieldCleaner {
             output = output.replaceAll("\\s\\s+", " ");                 // Multiple spaces to single space
         }
         if (!phoneNumber.equals(output)) {
-            log.info("While reformatting phone numbers, changed \"{}\" to \"{}\"", phoneNumber, output);
+            log.debug("While reformatting phone numbers, changed \"{}\" to \"{}\"", phoneNumber, output);
         }
         return output;
     }
@@ -47,7 +47,11 @@ public class FieldCleaner {
             }
             lastIsBlank = Character.isWhitespace(characters[i]);
         }
+        String output = String.valueOf(characters);
+        if (!name.equals(output)) {
+            log.debug("While reformatting name, changed \"{}\" to \"{}\"", name, output);
+        }
 
-        return String.valueOf(characters);
+        return output;
     }
 }
