@@ -60,8 +60,8 @@ public class Computer {
         }
     }
 
-//    @Override
-//    public int hashCode() {
-//        return getId().hashCode();
-//    }
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

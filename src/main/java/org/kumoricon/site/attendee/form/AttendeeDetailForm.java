@@ -343,7 +343,7 @@ public class AttendeeDetailForm extends GridLayout {
         }
     }
 
-    class CustomFieldGroupFieldFactory extends DefaultFieldGroupFieldFactory {
+    static class CustomFieldGroupFieldFactory extends DefaultFieldGroupFieldFactory {
         @Override
         public <T extends Field> T createField(Class<?> dataType, Class<T> fieldType) {
             if (LocalDate.class.isAssignableFrom(dataType)) {

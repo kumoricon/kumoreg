@@ -88,9 +88,6 @@ public class KumoRegUI extends UI {
                 if (currentUser == null && !(event.getNewView() instanceof LoginView)) {
                     event.getNavigator().navigateTo(LoginView.VIEW_NAME);
                     return false;
-//                } else if (!currentUser.hasRight("test")) {
-//                    Notification.show("Permission denied", Notification.Type.ERROR_MESSAGE);
-//                    return false;
                 } else {
                     return true;
                 }

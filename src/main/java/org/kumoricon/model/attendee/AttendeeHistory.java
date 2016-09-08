@@ -31,8 +31,14 @@ public class AttendeeHistory {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public Date getTimestamp() { return timestamp; }
-    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
+    public Date getTimestamp() {
+        if (timestamp == null) return null;
+        return new Date(timestamp.getTime());
+    }
+    public void setTimestamp(Date timestamp) {
+        if (timestamp == null) this.timestamp = null;
+        else this.timestamp = new Date(timestamp.getTime());
+    }
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }

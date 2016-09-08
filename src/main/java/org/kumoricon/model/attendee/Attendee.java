@@ -166,7 +166,10 @@ public class Attendee implements Serializable {
         }
     }
 
-    public Date getCheckInTime() { return checkInTime; }
+    public Date getCheckInTime() {
+        if (checkInTime == null) return null;
+        return new Date(checkInTime.getTime());
+    }
 
     public void setPreRegistered(boolean preRegistered) { this.preRegistered = preRegistered; }
     public Boolean isPreRegistered() { return preRegistered; }

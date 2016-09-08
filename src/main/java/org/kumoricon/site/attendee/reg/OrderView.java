@@ -1,6 +1,5 @@
 package org.kumoricon.site.attendee.reg;
 
-import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.navigator.View;
@@ -43,8 +42,6 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
     private Button cancel = new Button("Cancel");
     private BeanItemContainer<Attendee> attendeeBeanList;
     private Order currentOrder;
-
-    protected FieldGroup fieldGroup;
 
     @PostConstruct
     public void init() {

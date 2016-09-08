@@ -7,9 +7,9 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.kumoricon.site.attendee.FieldFactory;
 import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.site.attendee.FieldFactory;
 
 
 public class BadgeEditWindow extends Window {
@@ -94,13 +94,6 @@ public class BadgeEditWindow extends Window {
 
         btnSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
-    }
-
-    public void clearBadgeForm() {
-        name.clear();
-        dayText.clear();
-        visible.clear();
-        tblAgeRanges.removeAllItems();
     }
 
     public Badge getBadge() {

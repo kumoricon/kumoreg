@@ -23,7 +23,6 @@ public class UserEditWindow extends Window {
     private TextField badgePrefix = FieldFactory.createTextField("Badge Prefix");
     private NativeSelect role = new NativeSelect("Role");
     private TextField phone = FieldFactory.createTextField("Phone");
-    private CheckBox enabled = new CheckBox("Enabled");
 
     private final BeanFieldGroup<User> userBeanFieldGroup = new BeanFieldGroup<>(User.class);
 

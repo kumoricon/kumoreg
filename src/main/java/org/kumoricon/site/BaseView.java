@@ -3,6 +3,7 @@ package org.kumoricon.site;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import org.kumoricon.KumoRegUI;
@@ -97,7 +98,7 @@ public class BaseView extends VerticalLayout implements View {
     }
 
     public String getCurrentClientIPAddress() {
-        return getUI().getCurrent().getPage().getWebBrowser().getAddress();
+        return UI.getCurrent().getPage().getWebBrowser().getAddress();
     }
 
 

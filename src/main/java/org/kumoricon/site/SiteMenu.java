@@ -12,8 +12,8 @@ import org.kumoricon.site.attendee.search.AttendeeSearchView;
 import org.kumoricon.site.badge.BadgeView;
 import org.kumoricon.site.computer.ComputerView;
 import org.kumoricon.site.report.attendees.AttendeeReportView;
-import org.kumoricon.site.report.checkinbyhour.CheckInByHourReportView;
 import org.kumoricon.site.report.checkinbybadge.CheckInByBadgeReportView;
+import org.kumoricon.site.report.checkinbyhour.CheckInByHourReportView;
 import org.kumoricon.site.report.role.RoleReportView;
 import org.kumoricon.site.report.staff.StaffReportView;
 import org.kumoricon.site.role.RoleView;
@@ -115,15 +115,6 @@ public class SiteMenu extends VerticalLayout {
             setExpandRatio(spacer, 1.0f);
             setComponentAlignment(lblVersion, Alignment.BOTTOM_CENTER);
         }
-    }
-
-
-    private Button buttonFactory(String name) {
-        return buttonFactory(name, null, name.toLowerCase());
-    }
-
-    private Button buttonFactory(String name, FontAwesome icon) {
-        return buttonFactory(name, icon, name.toLowerCase());
     }
 
     private Button buttonFactory(String name, FontAwesome icon, String action) {

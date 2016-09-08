@@ -6,7 +6,10 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.*;
+import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
@@ -25,7 +28,6 @@ public class UserView extends BaseView implements View {
     private UserPresenter handler;
     private ListSelect userList = new ListSelect("Users");
     private Button btnAddNew = new Button("Add New");
-    private Layout leftPanel;
 
     @PostConstruct
     public void init() {

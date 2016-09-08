@@ -66,7 +66,6 @@ public class PreRegPresenter implements PrintBadgeHandler {
             continueCheckIn(attendee);
         } else {
             String requiredRight = attendee.getBadge().getRequiredRight();
-            String warningMessage = attendee.getBadge().getWarningMessage();
             if (requiredRight == null || view.currentUserHasRight(requiredRight)) {
                 continueCheckIn(attendee);
             } else {
