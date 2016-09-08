@@ -35,8 +35,32 @@ public class Role implements Serializable {
 
     public void addRight(Right right) { rights.add(right); }
     public void addRights(Set<Right> rights) { this.rights.addAll(rights); }
-    public void removeRight(String right) { rights.remove(right); }
-    public Set<Right> getRights() { return new HashSet<Right>(rights); }
+
+    /**
+     * Removes the right with the given name. Name is not case sensitive
+     * @param name Name of right
+     */
+    public void removeRight(String name) {
+        if (this.name == null) return;
+        name = name.toLowerCase();
+        Right target = null;
+        for (Right r : rights) {
+            if (r.getName().equals(name)) {
+                target = r;
+            }
+        }
+        if (target != null) {
+            rights.remove(target);
+        }
+    }
+
+    public Set<Right> getRights() { return new HashSet<>(rights); }
+
+    /**
+     * Returns true if this role has the given right, or if this role has the "super_admin" right.
+     * @param name Name of Right
+     * @return
+     */
     public boolean hasRight(String name) {
         if (name == null) { return false; }
         name = name.toLowerCase();
