@@ -324,6 +324,7 @@ public class AttendeeDetailForm extends GridLayout {
                     af.setEnabled(true);
                     af.setValidationVisible(true);
                 }
+                history.setEnabled(true);
                 break;
             case NOTES:
                 for (Field field : fieldGroup.getFields()) {
@@ -331,6 +332,7 @@ public class AttendeeDetailForm extends GridLayout {
                     af.setEnabled(false);
                     af.setValidationVisible(false);
                 }
+                history.setEnabled(true);
                 notes.setEnabled(true);
                 notes.setValidationVisible(true);
                 break;
@@ -339,6 +341,7 @@ public class AttendeeDetailForm extends GridLayout {
                     AbstractField af = (AbstractField)field;
                     af.setEnabled(false);
                     af.setValidationVisible(false);
+                    history.setEnabled(true);
                 }
         }
     }
