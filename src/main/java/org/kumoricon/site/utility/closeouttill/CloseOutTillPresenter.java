@@ -35,7 +35,7 @@ public class CloseOutTillPresenter {
             output.append(String.format("User ID: %d (%s)%n", currentUser.getId(), currentUser.getUsername()));
             output.append(String.format("%s %s%n", currentUser.getFirstName(), currentUser.getLastName()));
             output.append(String.format("%s%n", LocalDateTime.now()));
-            output.append("--------------------------------------------------------------------------------%n");
+            output.append("--------------------------------------------------------------------------------\n");
             output.append(String.format("Session Number: %d%n%n", currentUser.getSessionNumber()));
 
             List<Object[]> results = orderRepository.getSessionOrderCountsAndTotals(
@@ -48,7 +48,7 @@ public class CloseOutTillPresenter {
                         currentUser, currentUser.getSessionNumber(), getPaymentType((Integer)line[0]),
                         line[1], line[2]);
             }
-            output.append("--------------------------------------------------------------------------------%n");
+            output.append("--------------------------------------------------------------------------------\n");
 
             currentUser.setSessionNumber(currentUser.getSessionNumber() + 1);
             userRepository.save(currentUser);
