@@ -49,19 +49,21 @@ public class Computer {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Computer))
-            return false;
-        if (this.getId() == null) {
-            return this == other;
-        } else {
-            Computer o = (Computer) other;
-            return this.getId().equals(o.getId());
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Computer)) return false;
+
+        Computer computer = (Computer) o;
+
+        if (ipAddress != null ? !ipAddress.equals(computer.ipAddress) : computer.ipAddress != null) return false;
+        return printerName != null ? printerName.equals(computer.printerName) : computer.printerName == null;
+
     }
 
     @Override
     public int hashCode() {
-        return getId().hashCode();
+        int result = ipAddress != null ? ipAddress.hashCode() : 0;
+        result = 31 * result + (printerName != null ? printerName.hashCode() : 0);
+        return result;
     }
 }

@@ -15,6 +15,7 @@ public class Badge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
+    @Column(unique=true)
     private String name;
     private String dayText;     // Friday/Saturday/Sunday/Weekend/VIP
     private String warningMessage;
@@ -83,7 +84,6 @@ public class Badge {
         final Badge otherBadge = (Badge) other;
 
         return otherBadge.getName().equals(getName());
-
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Role implements Serializable {
     private Set<Right> rights;
 
     public Role() {
-        this.rights = new HashSet<Right>();
+        this.rights = new HashSet<>();
     }
 
     public Role(String name) {
@@ -59,7 +59,7 @@ public class Role implements Serializable {
     /**
      * Returns true if this role has the given right, or if this role has the "super_admin" right.
      * @param name Name of Right
-     * @return
+     * @return boolean
      */
     public boolean hasRight(String name) {
         if (name == null) { return false; }
@@ -80,14 +80,14 @@ public class Role implements Serializable {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Role))
-            return false;
-        if (this.getId() == null) {
-            return this == other;
-        } else {
-            Role o = (Role) other;
-            return this.getId().equals(o.getId());
-        }
+        if (this == other) return true;
+        if ( !(other instanceof Role) ) return false;
+
+        final Role role = (Role) other;
+
+        if ( !role.getName().equals( getName() ) ) return false;
+
+        return true;
     }
 
     @Override

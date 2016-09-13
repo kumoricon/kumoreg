@@ -3,11 +3,16 @@ package org.kumoricon.model.attendee;
 import org.kumoricon.model.user.User;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Represents a timestamped message or event that is associated with an attendee. May be
+ * generated (for example, when they check in) or entered manually by a user.
+ */
 @Entity
 @Table(name = "attendeehistory")
-public class AttendeeHistory {
+public class AttendeeHistory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -56,5 +61,4 @@ public class AttendeeHistory {
             return String.format("[History %s: %s %s]", id, timestamp, message);
         }
     }
-
 }

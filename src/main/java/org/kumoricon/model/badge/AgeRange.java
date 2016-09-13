@@ -79,8 +79,6 @@ public class AgeRange {
     }
 
     public BigDecimal getCost() { return cost; }
-    public void setCost(double cost) { setCost(BigDecimal.valueOf(cost)); }
-    public void setCost(String cost) { setCost(new BigDecimal(cost)); }
     public void setCost(BigDecimal cost) {
         if (cost.compareTo(BigDecimal.ZERO) >= 0) {
             this.cost = cost;
@@ -101,20 +99,30 @@ public class AgeRange {
         return String.format("%s (%s-%s): $%s", name, minAge, maxAge, cost.setScale(2).toString());
     }
 
+
     @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof AgeRange))
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AgeRange)) return false;
+
+        AgeRange ageRange = (AgeRange) o;
+
+        if (minAge != ageRange.minAge) return false;
+        if (maxAge != ageRange.maxAge) return false;
+        if (!name.equals(ageRange.name)) return false;
+        if (stripeColor != null ? !stripeColor.equals(ageRange.stripeColor) : ageRange.stripeColor != null)
             return false;
-        if (this.getId() == null) {
-            return this == other;
-        } else {
-            AgeRange o = (AgeRange) other;
-            return this.getId().equals(o.getId());
-        }
+        return stripeText != null ? stripeText.equals(ageRange.stripeText) : ageRange.stripeText == null;
+
     }
 
     @Override
     public int hashCode() {
-        return getName().hashCode();
+        int result = name.hashCode();
+        result = 31 * result + minAge;
+        result = 31 * result + maxAge;
+        result = 31 * result + (stripeColor != null ? stripeColor.hashCode() : 0);
+        result = 31 * result + (stripeText != null ? stripeText.hashCode() : 0);
+        return result;
     }
 }

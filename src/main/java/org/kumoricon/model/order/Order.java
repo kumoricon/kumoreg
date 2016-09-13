@@ -20,6 +20,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Length(min = 32, max = 32)
+    @NotNull
     private String orderId;
     @Min(0)
     private BigDecimal totalAmount;
@@ -118,17 +119,13 @@ public class Order {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Order))
-            return false;
-        if (this.getId() == null) {
-            return this == other;
-        } else {
-            final Order o = (Order) other;
-            if (!id.equals(o.getId())) return false;
-            if (!orderId.equals(o.getOrderId())) return false;
+        if (this == other) return true;
+        if ( !(other instanceof Order) ) return false;
 
-            return true;
-        }
+        final Order order = (Order) other;
+        if ( !order.getOrderId().equals( getOrderId() ) ) return false;
+
+        return true;
     }
 
     @Override

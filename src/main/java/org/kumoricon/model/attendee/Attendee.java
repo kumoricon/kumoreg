@@ -179,23 +179,30 @@ public class Attendee implements Serializable {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if ( !(other instanceof Attendee) ) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Attendee)) return false;
 
-        final Attendee otherAttendee = (Attendee) other;
+        Attendee attendee = (Attendee) o;
 
-        if (!id.equals(otherAttendee.getId())) return false;
-        if (!badgeNumber.equals(otherAttendee.getBadgeNumber())) return false;
+        if (firstName != null ? !firstName.equals(attendee.firstName) : attendee.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(attendee.lastName) : attendee.lastName != null) return false;
+        if (badgeName != null ? !badgeName.equals(attendee.badgeName) : attendee.badgeName != null) return false;
+        if (badgeNumber != null ? !badgeNumber.equals(attendee.badgeNumber) : attendee.badgeNumber != null)
+            return false;
+        if (zip != null ? !zip.equals(attendee.zip) : attendee.zip != null) return false;
+        return country != null ? country.equals(attendee.country) : attendee.country == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result =0;
-        if (id != null) { result = id.hashCode(); }
-        if (badgeNumber != null) { result = (result * 29) + badgeNumber.hashCode(); }
+        int result = firstName != null ? firstName.hashCode() : 0;
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (badgeName != null ? badgeName.hashCode() : 0);
+        result = 31 * result + (badgeNumber != null ? badgeNumber.hashCode() : 0);
+        result = 31 * result + (zip != null ? zip.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
         return result;
     }
 

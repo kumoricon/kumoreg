@@ -33,14 +33,13 @@ public class Right implements Serializable, Comparable {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Right))
-            return false;
-        if (this.getId() == null) {
-            return this == other;
-        } else {
-            Right o = (Right) other;
-            return this.getId().equals(o.getId());
-        }
+        if (this == other) return true;
+        if ( !(other instanceof Right) ) return false;
+
+        final Right right = (Right) other;
+
+        if ( !right.getName().equals( getName() ) ) return false;
+        return true;
     }
 
     @Override

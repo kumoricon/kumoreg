@@ -125,23 +125,22 @@ public class User implements Serializable {
     public void setSessionNumber(Integer sessionNumber) { this.sessionNumber = sessionNumber; }
 
     public String toString() {
-        if (firstName != null && lastName != null) {
+        if (id != null) {
             return String.format("[User %s: %s]", id, username);
         } else {
-            return username;
+            return String.format("[%s]", username);
         }
     }
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof User))
-            return false;
-        if (this.getId() == null) {
-            return this == other;
-        } else {
-            User o = (User) other;
-            return this.getId().equals(o.getId());
-        }
+        if (this == other) return true;
+        if ( !(other instanceof User) ) return false;
+
+        final User user = (User) other;
+        if (!user.getUsername().equals( getUsername())) return false;
+
+        return true;
     }
 
     @Override

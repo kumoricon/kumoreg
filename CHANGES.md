@@ -18,6 +18,9 @@ Change Log
     - Fixed text wrapping on Attendee Report
     - Added example automated deployment scripts, see [Installation](docs/installation.md)
     - Stopped logging all reformatted phone numbers (still available with debug level)
+    - Minor bugfixes on till report
+    - Always allow Notes/History table to scroll when viewing attendee
+    - Model cleanup - made equals()/hashcode() consistent
 
 - Version 0.9.5 (08/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)
