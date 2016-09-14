@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 0.9.6 (pending)
+- Version 0.9.7 (Pending)
+
+- Version 0.9.6 (9/13/2016)
     - Changed error message to disappear automatically after a few seconds, instead of requiring a click
     - Allow MMDDYYYY in birthdate field (as well as MM/DD/YYY and MM-DD-YYYY). It will be converted to MM/DD/YYYY 
       automatically
@@ -22,7 +24,7 @@ Change Log
     - Always allow Notes/History table to scroll when viewing attendee
     - Model cleanup - made equals()/hashcode() consistent
 
-- Version 0.9.5 (08/20/2016)
+- Version 0.9.5 (8/20/2016)
     - Attendee importer will work when there are only 18 fields instead of 19 (notes field is missing/blank)
     - Moved the Lite badge color stripe up a point. (Alignment done; matches current badge stock)
 
