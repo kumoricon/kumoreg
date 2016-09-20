@@ -63,7 +63,10 @@ public class User implements Serializable {
     }
 
     public Boolean checkPassword(String password) {
-        return (hashPassword(password, salt).equals(this.password));
+        if (password == null) return false;
+        String hash = hashPassword(password, salt);
+
+        return hash != null && hash.equals(this.password);
     }
 
     public Role getRole() { return role; }
@@ -101,15 +104,10 @@ public class User implements Serializable {
         char[] passwordChars = password.toCharArray();
         byte[] saltBytes = salt.getBytes();
 
-        PBEKeySpec spec = new PBEKeySpec(
-                passwordChars,
-                saltBytes,
-                1000,
-                256);
-        byte[] hashedPassword;
+        PBEKeySpec spec = new PBEKeySpec(passwordChars, saltBytes, 1000, 256);
         try {
             SecretKeyFactory key = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            hashedPassword = key.generateSecret(spec).getEncoded();
+            byte[] hashedPassword = key.generateSecret(spec).getEncoded();
             return String.format("%x", new BigInteger(hashedPassword));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -138,19 +136,17 @@ public class User implements Serializable {
         if ( !(other instanceof User) ) return false;
 
         final User user = (User) other;
-        if (!user.getUsername().equals( getUsername())) return false;
-
-        return true;
+        if (user.getUsername() == null) {
+            return null == getUsername();
+        } else {
+            return user.getUsername().equals(getUsername());
+        }
     }
 
     @Override
     public int hashCode() { return getUsername().hashCode(); }
 
     public boolean hasRight(String right) {
-        if (role == null) {
-            return false;
-        } else {
-            return role.hasRight(right);
-        }
+        return role != null && role.hasRight(right);
     }
 }
