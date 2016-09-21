@@ -8,11 +8,11 @@ import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.attendee.prereg.PreRegView;
 import org.kumoricon.site.attendee.reg.OrderView;
+import org.kumoricon.site.attendee.search.AttendeeSearchByBadgeView;
 import org.kumoricon.site.attendee.search.AttendeeSearchView;
 import org.kumoricon.site.badge.BadgeView;
 import org.kumoricon.site.computer.ComputerView;
 import org.kumoricon.site.report.attendees.AttendeeReportView;
-import org.kumoricon.site.report.checkinbybadge.CheckInByBadgeReportView;
 import org.kumoricon.site.report.checkinbyhour.CheckInByHourReportView;
 import org.kumoricon.site.report.role.RoleReportView;
 import org.kumoricon.site.report.staff.StaffReportView;
@@ -54,6 +54,8 @@ public class SiteMenu extends VerticalLayout {
                 buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegView.VIEW_NAME));
         addButtonTo(reg, "attendee_search",
                 buttonFactory("Attendee Search", FontAwesome.SEARCH, AttendeeSearchView.VIEW_NAME));
+        addButtonTo(reg, "attendee_search",
+                buttonFactory("Search by Badge", FontAwesome.BARCODE, AttendeeSearchByBadgeView.VIEW_NAME));
         if (reg.getComponentCount() > 0) { menu.addComponent(reg); }
 
         Layout tab1 = new VerticalLayout();
@@ -76,8 +78,6 @@ public class SiteMenu extends VerticalLayout {
                 buttonFactory("Attendance", FontAwesome.FILE_TEXT_O, AttendeeReportView.VIEW_NAME));
         addButtonTo(tab2, "view_check_in_by_hour_report",
                 buttonFactory("Check Ins by Hour", FontAwesome.CLOCK_O, CheckInByHourReportView.VIEW_NAME));
-        addButtonTo(tab2, "view_check_in_by_badge_report",
-                buttonFactory("Check In By Badge", FontAwesome.LIST, CheckInByBadgeReportView.VIEW_NAME));
         addButtonTo(tab2, "view_staff_report",
                 buttonFactory("Staff", FontAwesome.USERS, StaffReportView.VIEW_NAME));
         addButtonTo(tab2, "view_role_report",

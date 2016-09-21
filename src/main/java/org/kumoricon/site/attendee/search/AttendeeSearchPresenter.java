@@ -6,6 +6,7 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.model.attendee.AttendeeRepository;
+import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
@@ -236,5 +237,34 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     @Override
     public void addNoteCancel(AddNoteWindow window) {
         window.close();
+    }
+
+    public void showAttendeeList(AttendeeSearchByBadgeView view, Integer badgeId) {
+        if (badgeId != null) {
+            Badge badge = badgeRepository.findOne(badgeId);
+            if (badge == null) {
+                log.error("{} viewed attendees for badge id {} but it was not found",
+                        view.getCurrentUsername(), badgeId);
+                view.notifyError("Badge id " + badgeId.toString() + " not found");
+                view.navigateTo(AttendeeSearchByBadgeView.VIEW_NAME);
+            } else {
+                showAttendeeList(view, badge);
+            }
+        }
+
+    }
+
+    public void showAttendeeList(AttendeeSearchByBadgeView view, Badge badge) {
+        log.info("{} viewed attendees with badge {}", view.getCurrentUsername(), badge);
+        if (badge == null) {
+            view.afterAttendeeFetch(new ArrayList<>());
+        }
+        List<Attendee> attendees = attendeeRepository.findByBadgeType(badge);
+        view.afterAttendeeFetch(attendees);
+    }
+
+
+    public void showBadgeTypes(AttendeeSearchByBadgeView view) {
+        view.afterBadgeTypeFetch(badgeRepository.findByVisibleTrue());
     }
 }

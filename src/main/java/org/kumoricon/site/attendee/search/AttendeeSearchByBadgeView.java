@@ -1,16 +1,16 @@
-package org.kumoricon.site.report.checkinbybadge;
+package org.kumoricon.site.attendee.search;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
-import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.AttendeePrintView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ViewScope
-@SpringView(name = CheckInByBadgeReportView.VIEW_NAME)
-public class CheckInByBadgeReportView extends BaseView implements View {
-    public static final String VIEW_NAME = "checkInByBadgeReport";
-    public static final String REQUIRED_RIGHT = "view_check_in_by_badge_report";
+@SpringView(name = AttendeeSearchByBadgeView.VIEW_NAME)
+public class AttendeeSearchByBadgeView extends AttendeeSearchView implements View, AttendeePrintView {
+    public static final String VIEW_NAME = "attendeeSearchByBadge";
+    public static final String REQUIRED_RIGHT = "attendee_search";
 
     @Autowired
-    private CheckInByBadgeReportPresenter handler;
+    private AttendeeSearchPresenter handler;
 
     private Label badgeTypeLabel = new Label("Badge Type:" );
     private ComboBox badgeType = new ComboBox();
@@ -33,6 +33,8 @@ public class CheckInByBadgeReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
+        handler.setView(this);
+        setSizeFull();
         HorizontalLayout header = new HorizontalLayout();
         header.setSpacing(true);
         badgeType.setPageLength(15);
@@ -65,23 +67,27 @@ public class CheckInByBadgeReportView extends BaseView implements View {
         handler.showBadgeTypes(this);
         dataGrid.setColumns(new String[] {"lastName", "firstName", "badgeName", "badgeNumber",
                 "checkedIn", "checkInTime"});
+        dataGrid.getColumn("lastName").setMinimumWidth(250);
+        dataGrid.getColumn("firstName").setMinimumWidth(250);
+        dataGrid.getColumn("badgeName").setMinimumWidth(250);
+        dataGrid.getColumn("badgeName").setExpandRatio(1);
+        dataGrid.getColumn("badgeNumber").setMinimumWidth(150);
+        dataGrid.getColumn("checkedIn").setMinimumWidth(100);
+        dataGrid.getColumn("checkedIn").setWidth(100);
+        dataGrid.getColumn("checkInTime").setMinimumWidth(300);
+        dataGrid.getColumn("checkInTime").setExpandRatio(1);
         dataGrid.setEditorEnabled(false);
         dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        dataGrid.setWidth(1100, Unit.PIXELS);
-        dataGrid.setHeightMode(HeightMode.ROW);
         dataGrid.addStyleName("kumoHeaderOnlyHandPointer");
-        setExpandRatio(dataGrid, .9f);
+        dataGrid.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
+                handler.showAttendee((Integer) itemClickEvent.getItem().getItemProperty("id").getValue()));
+        dataGrid.setSizeFull();
+        setExpandRatio(dataGrid, 1.0f);
     }
 
     public void afterAttendeeFetch(List<Attendee> attendees) {
-        if (attendees.size() < 1) {
-            dataGrid.setHeightByRows(1);
-        } else if (attendees.size() < 20) {
-            dataGrid.setHeightByRows(attendees.size());
-        } else {
-            dataGrid.setHeightByRows(20);
-        }
         dataGrid.setContainerDataSource(new BeanItemContainer<>(Attendee.class, attendees));
+        dataGrid.recalculateColumnWidths();
     }
 
     public void afterBadgeTypeFetch(List<Badge> badges) {
@@ -90,7 +96,7 @@ public class CheckInByBadgeReportView extends BaseView implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        super.enter(viewChangeEvent);
+        checkPermissions();
         String parameters = viewChangeEvent.getParameters();
         if (parameters != null && !parameters.isEmpty()) {
             Integer parameter = null;
@@ -124,7 +130,15 @@ public class CheckInByBadgeReportView extends BaseView implements View {
         }
     }
 
+    @Override
+    public void refresh() {
+        handler.showAttendeeList(this, (Badge) badgeType.getValue());
+    }
+
+
     public String getRequiredRight() {
         return REQUIRED_RIGHT;
     }
+
+
 }
