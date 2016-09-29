@@ -6,6 +6,8 @@ import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ import java.io.OutputStream;
 @Controller
 @Scope("request")
 public class ImportAttendeePresenter {
+    private static final Logger log = LoggerFactory.getLogger(ImportAttendeePresenter.class);
+
     @Autowired
     private AttendeeRepository attendeeRepository;
 
@@ -51,6 +55,7 @@ public class ImportAttendeePresenter {
                 file = new File("/tmp/" + filename);
                 fos = new FileOutputStream(file);
             } catch (final java.io.FileNotFoundException e) {
+                log.error("When importing attendees, could not open file {}", e.getMessage(), e);
                 view.notifyError("Could not open file<br/>" + e.getMessage());
                 return null;
             }
@@ -63,12 +68,16 @@ public class ImportAttendeePresenter {
             String result = "";
 
             try {
-                result = importer.importFromTSV(new FileReader(file), view.getCurrentUser());
+                FileReader reader = new FileReader(file);
+                result = importer.importFromTSV(reader, view.getCurrentUser());
+                reader.close();
             } catch (Exception e) {
-
+                log.error("Error importing attendees: ", e.getMessage());
                 result = e.getMessage();
             } finally {
-                file.delete();
+                if (!file.delete()) {
+                    log.error("Error deleting file " + file.getAbsolutePath());
+                }
             }
             view.appendStatus(result);
 
