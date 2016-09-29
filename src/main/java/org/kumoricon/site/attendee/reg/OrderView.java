@@ -121,7 +121,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         paymentType.select(order.getPaymentType());
 
         attendeeList.setContainerDataSource(new BeanItemContainer<>(Attendee.class, order.getAttendeeList()));
-        attendeeList.setVisibleColumns(new String[] { "firstName", "lastName", "badge", "paidAmount"});
+        attendeeList.setVisibleColumns("firstName", "lastName", "badge", "paidAmount");
         attendeeList.setColumnHeaders("First Name", "Last Name", "Badge Type", "Cost");
         attendeeList.setConverter("badge", new BadgeToStringConverter());
 

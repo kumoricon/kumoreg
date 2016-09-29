@@ -106,7 +106,7 @@ public class BadgeEditWindow extends Window {
         BeanItemContainer<AgeRange> ageRanges = new BeanItemContainer<>(AgeRange.class);
         ageRanges.addAll(badge.getAgeRanges());
         tblAgeRanges.setContainerDataSource(ageRanges);
-        tblAgeRanges.setVisibleColumns(new String[] { "name", "minAge", "maxAge", "cost", "stripeColor", "stripeText"});
+        tblAgeRanges.setVisibleColumns("name", "minAge", "maxAge", "cost", "stripeColor", "stripeText");
         tblAgeRanges.setColumnHeaders("Name", "Minimum Age", "Maximum Age", "Cost", "Stripe Color", "Stripe Text");
     }
 
