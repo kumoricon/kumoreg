@@ -2,7 +2,7 @@ package org.kumoricon.site.attendee.search;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.event.ItemClickEvent;
+import com.vaadin.data.util.converter.StringToDateConverter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -14,8 +14,11 @@ import org.kumoricon.site.attendee.AttendeePrintView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @ViewScope
 @SpringView(name = AttendeeSearchByBadgeView.VIEW_NAME)
@@ -29,7 +32,8 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
     private Label badgeTypeLabel = new Label("Badge Type:" );
     private ComboBox badgeType = new ComboBox();
     private Button refresh = new Button("Refresh");
-    private Grid dataGrid = new Grid("Attendees");
+    private BeanItemContainer<Attendee> attendeeContainer = new BeanItemContainer<>(Attendee.class);
+    private Table attendeeTable = new Table("Attendees");
 
     @PostConstruct
     public void init() {
@@ -62,32 +66,24 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
         header.addComponent(refresh);
 
         addComponent(header);
-        addComponent(dataGrid);
-
+        addComponent(attendeeTable);
+        setExpandRatio(attendeeTable, 1.0f);
         handler.showBadgeTypes(this);
-        dataGrid.setColumns(new String[] {"lastName", "firstName", "badgeName", "badgeNumber",
-                "checkedIn", "checkInTime"});
-        dataGrid.getColumn("lastName").setMinimumWidth(250);
-        dataGrid.getColumn("firstName").setMinimumWidth(250);
-        dataGrid.getColumn("badgeName").setMinimumWidth(250);
-        dataGrid.getColumn("badgeName").setExpandRatio(1);
-        dataGrid.getColumn("badgeNumber").setMinimumWidth(150);
-        dataGrid.getColumn("checkedIn").setMinimumWidth(100);
-        dataGrid.getColumn("checkedIn").setWidth(100);
-        dataGrid.getColumn("checkInTime").setMinimumWidth(300);
-        dataGrid.getColumn("checkInTime").setExpandRatio(1);
-        dataGrid.setEditorEnabled(false);
-        dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        dataGrid.addStyleName("kumoHeaderOnlyHandPointer");
-        dataGrid.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
-                handler.showAttendee((Integer) itemClickEvent.getItem().getItemProperty("id").getValue()));
-        dataGrid.setSizeFull();
-        setExpandRatio(dataGrid, 1.0f);
+        attendeeTable.setContainerDataSource(attendeeContainer);
+        attendeeTable.setVisibleColumns("lastName", "firstName", "badgeName", "badgeNumber", "checkedIn", "checkInTime");
+        attendeeTable.setColumnHeaders("Last Name", "First Name", "Badge Name", "Badge Number", "Checked In", "Check In Time");
+        attendeeTable.setConverter("checkInTime", new StringToDateConverter(){
+            @Override
+            public DateFormat getFormat(Locale locale){
+                return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+            }
+        });
+        attendeeTable.setSizeFull();
     }
 
     public void afterAttendeeFetch(List<Attendee> attendees) {
-        dataGrid.setContainerDataSource(new BeanItemContainer<>(Attendee.class, attendees));
-        dataGrid.recalculateColumnWidths();
+        attendeeContainer.removeAllItems();
+        attendeeContainer.addAll(attendees);
     }
 
     public void afterBadgeTypeFetch(List<Badge> badges) {
