@@ -6,7 +6,6 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.user.User;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "attendees")
-public class Attendee implements Serializable {
+public class Attendee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -7,12 +7,11 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.math.BigInteger;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User {
     public static final String DEFAULT_PASSWORD = "password";
 
     @Id

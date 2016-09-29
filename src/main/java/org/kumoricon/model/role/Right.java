@@ -2,11 +2,10 @@ package org.kumoricon.model.role;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "rights")
-public class Right implements Serializable, Comparable {
+public class Right implements Comparable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

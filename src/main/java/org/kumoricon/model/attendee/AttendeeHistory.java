@@ -3,7 +3,6 @@ package org.kumoricon.model.attendee;
 import org.kumoricon.model.user.User;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +11,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "attendeehistory")
-public class AttendeeHistory implements Serializable {
+public class AttendeeHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
