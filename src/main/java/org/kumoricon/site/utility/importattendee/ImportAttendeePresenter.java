@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.OutputStream;
+import java.io.*;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 @Controller
@@ -68,7 +67,7 @@ public class ImportAttendeePresenter {
             String result = "";
 
             try {
-                FileReader reader = new FileReader(file);
+                InputStreamReader reader = new InputStreamReader(new FileInputStream(file), UTF_8);
                 result = importer.importFromTSV(reader, view.getCurrentUser());
                 reader.close();
             } catch (Exception e) {

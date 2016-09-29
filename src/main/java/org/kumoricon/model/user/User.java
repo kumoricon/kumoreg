@@ -9,9 +9,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Entity
 @Table(name = "users")
-public class User {
+public class User  {
     public static final String DEFAULT_PASSWORD = "password";
 
     @Id
@@ -101,7 +103,7 @@ public class User {
 
     private static String hashPassword(String password, String salt){
         char[] passwordChars = password.toCharArray();
-        byte[] saltBytes = salt.getBytes();
+        byte[] saltBytes = salt.getBytes(UTF_8);
 
         PBEKeySpec spec = new PBEKeySpec(passwordChars, saltBytes, 1000, 256);
         try {
