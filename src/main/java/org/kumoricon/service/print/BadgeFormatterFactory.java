@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Returns an appropriate BadgeFormatter object based on settings in the configuration file. This is used to
+ * easily switch between badge layouts at different events.
+ */
 @Component
 public class BadgeFormatterFactory {
     @Value("${kumoreg.printing.badgeFormat}")
@@ -18,6 +22,13 @@ public class BadgeFormatterFactory {
 
     private static final Logger log = LoggerFactory.getLogger(BadgeFormatterFactory.class);
 
+    /**
+     * Returns configured BadgeFormatter
+     * @param attendees List of Attendees to generate badges for
+     * @param xOffset Horizontal print offset in points (1/72 inch)
+     * @param yOffset Vertical print offset in points (1/72 inch)
+     * @return BadgePrintFormatter
+     */
     public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
         if ("lite".equals(currentFormatter)) {
             return new LiteBadgePrintFormatter(attendees, xOffset, yOffset);

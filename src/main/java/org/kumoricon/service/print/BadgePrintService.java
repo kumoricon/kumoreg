@@ -14,7 +14,9 @@ public class BadgePrintService extends PrintService {
     private final BadgeFormatterFactory badgeFormatterFactory;
 
     @Autowired
-    public BadgePrintService(BadgeFormatterFactory badgeFormatterFactory) {this.badgeFormatterFactory = badgeFormatterFactory;}
+    public BadgePrintService(BadgeFormatterFactory badgeFormatterFactory) {
+        this.badgeFormatterFactory = badgeFormatterFactory;
+    }
 
     /**
      * Prints badges for a given list of attendees to either the appropriate printer name (from

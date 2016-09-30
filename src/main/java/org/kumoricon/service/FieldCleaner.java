@@ -8,8 +8,8 @@ public class FieldCleaner {
 
     /**
      * Removes characters from the given string except for [0-9 -] and formats it nicely. If
-     * it's a 10 digit number, returns the format 123-456-7890. Otherwise, just returns
-     * whatever digits, dashes and spaces exist.
+     * it's a 10 digit number, returns the format (123) 456-7890. Otherwise, just returns
+     * whatever digits, dashes, "x", and spaces exist. ("x" for extensions)
      * @param phoneNumber String
      * @return String
      */

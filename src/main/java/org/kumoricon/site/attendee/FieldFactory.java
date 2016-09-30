@@ -9,14 +9,27 @@ import org.kumoricon.service.FieldCleaner;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * Helpers for generating different Vaadin form fields
+ */
 public class FieldFactory {
+    /**
+     * Returns a TextField with the given name that will show an empty string instead of "null" for null values
+     * @param name Field Name
+     * @return TextField
+     */
     public static TextField createTextField(String name) {
-        // Creates a TextField object and sets it to show an empty string for null values
         TextField textField = new TextField(name);
         textField.setNullRepresentation("");
         return textField;
     }
 
+    /**
+     * Returns a TextField with the given name that will show an empty string instead of "null" for null values
+     * @param name Field Name
+     * @param tabIndex Tab Index
+     * @return TextField
+     */
     public static TextField createTextField(String name, int tabIndex) {
         TextField textField = createTextField(name);
         textField.setTabIndex(tabIndex);
@@ -29,6 +42,12 @@ public class FieldFactory {
         return passwordField;
     }
 
+    /**
+     * Returns a TextField that will only accept digits (no . or -). Shows empty for null values.
+     * @param name Field Name
+     * @param tabIndex Tab Index
+     * @return TextField
+     */
     public static TextField createNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
         textField.addValidator(new RegexpValidator("[0-9]+", "This is not a number"));
@@ -37,7 +56,7 @@ public class FieldFactory {
     }
 
     /**
-     * Creates a field that accepts digits 0-9 and optionally beings with "-"
+     * Returns a field that accepts digits 0-9 and optionally beings with "-". Shows empty for null values.
      * @param name Field name
      * @param tabIndex Tab index
      * @return TextField
@@ -50,23 +69,43 @@ public class FieldFactory {
     }
 
 
+    /**
+     * Returns a field that will automatically capitalize names on blur (tab-out). Shows empty for null values.
+     * See {@link FieldCleaner#cleanName FieldCleaner} for capitalization rules
+     * @param name Field Name
+     * @return TextField
+     */
     public static TextField createNameField(String name) {
         TextField textField = createTextField(name);
         textField.addValueChangeListener((Property.ValueChangeListener) event -> {
             if (event != null && event.getProperty() != null && event.getProperty().getValue() != null) {
-                String input = event.getProperty().getValue().toString();
-                event.getProperty().setValue(FieldCleaner.cleanName(input));
+                String input = event.getProperty().getValue().toString();event.getProperty().setValue(FieldCleaner.cleanName(input));
             }
         });
         return textField;
     }
 
+    /**
+     * Returns a field that will automatically capitalize names on blur (tab-out)
+     * See {@link FieldCleaner#cleanName(String) FieldCleaner} for capitalization rules
+     * @param name Field Name
+     * @param tabIndex Tab Index
+     * @return TextField
+     */
     public static TextField createNameField(String name, int tabIndex) {
         TextField textField = createNameField(name);
         textField.setTabIndex(tabIndex);
         return textField;
     }
 
+    /**
+     * Returns a TextField with validation rules to only allow phone numbers. Shows empty for null values.
+     * Must contain 10-25 characters; Only allows digits, -, space, (, ), + or x; on blur, attempts to reformat the
+     * phone number to (xxx) xxx-xxxx format (see {@link FieldCleaner#cleanPhoneNumber(String) FieldCleaner} for rules
+     * @param name Field Name
+     * @param tabIndex Tab Index
+     * @return TextField
+     */
     public static TextField createPhoneNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
         textField.addValidator(new RegexpValidator("[0-9 \\+\\-\\(\\)x]{10,25}",
@@ -81,6 +120,13 @@ public class FieldFactory {
         return textField;
     }
 
+    /**
+     * Returns TextField that only allows digits and optionally a single period in the
+     * middle of the number. Shows empty for null values.
+     * @param name Field Name
+     * @param tabIndex Tab Index
+     * @return TextField
+     */
     public static TextField createDecimalField(String name, int tabIndex) {
         TextField textField = createTextField(name);
         textField.addValidator(new RegexpValidator("[0-9]*\\.?[0-9]+", "This is not a number"));
@@ -89,13 +135,24 @@ public class FieldFactory {
     }
 
 
+    /**
+     * Returns a TextField that is disabled by default. Shows empty for null values.
+     * @param name Field Name
+     * @return TextField
+     */
     public static TextField createDisabledTextField(String name) {
-        // Creates a TextField object that defaults to being disabled
         TextField textField = createTextField(name);
         textField.setEnabled(false);
         return textField;
     }
 
+    /**
+     * Returns a DateField that will attempt to parse dates in MMDDYYYY and MM-DD-YYYY formats as well
+     * as the built-in MM/DD/YYYY format
+     * @param name Name of field
+     * @param tabIndex Tab Index
+     * @return DateField
+     */
     public static DateField createDateField(String name, int tabIndex) {
         PopupDateField dateField = new PopupDateField(name){
             @Override
@@ -157,6 +214,11 @@ public class FieldFactory {
         return nativeSelect;
     }
 
+    /**
+     * Returns a TextArea that shows as empty for null values
+     * @param name Field Name
+     * @return TextArea
+     */
     public static TextArea createTextArea(String name) {
         // Creates TextArea object and sets it to show an empty string for null values
         TextArea textArea = new TextArea(name);
@@ -164,12 +226,23 @@ public class FieldFactory {
         return textArea;
     }
 
+    /**
+     * Returns a TextArea that shows as empty for null values
+     * @param name Field Name
+     * @param tabIndex Tab Index
+     * @return TextArea
+     */
     public static TextArea createTextArea(String name, int tabIndex) {
         TextArea textArea = createTextArea(name);
         textArea.setTabIndex(tabIndex);
         return textArea;
     }
 
+    /**
+     * Returns a TextArea that shows as empty for null values and is disabled by default
+     * @param name Field Name
+     * @return TextArea
+     */
     public static TextArea createDisabledTextArea(String name) {
         TextArea textArea = createTextArea(name);
         textArea.setEnabled(false);

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Validates an attendee object. Can be configured with options set in the configuration file.
+ */
 @Service
 public class AttendeeValidator {
     @Value("${kumoreg.validation.attendee.requirePhoneOrEmail:true}")
