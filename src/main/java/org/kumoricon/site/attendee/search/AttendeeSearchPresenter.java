@@ -107,7 +107,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         List<Attendee> attendeeList = new ArrayList<>();
         attendeeList.add(attendee);
         // If no override user, check permissions on the current user
-        OverrideRequiredWindow overrideRequiredWindow;
+
         if (overrideUser == null) {
             if (view.currentUserHasRight("reprint_badge")) {
                 log.info("{} reprinting badge(s) for {}", view.getCurrentUsername(), attendee);
@@ -141,7 +141,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
         if (overrideUser != null && overrideUser.checkPassword(password) && overrideUser.hasRight("reprint_badge")) {
             log.info("{} got reprint badges override from {}", view.getCurrentUsername(), overrideUser);
-            saveAttendeeAndReprintBadge(window, (Attendee)targets.get(0), overrideUser);
+            saveAttendeeAndReprintBadge(window, targets.get(0), overrideUser);
         } else {
             view.notify("Bad username or password");
         }

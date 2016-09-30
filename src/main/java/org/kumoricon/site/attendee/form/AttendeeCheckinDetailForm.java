@@ -47,8 +47,7 @@ public class AttendeeCheckinDetailForm extends AttendeeDetailForm {
     @Override
     protected FormLayout buildNotes() {
         // Don't show attendee history
-        FormLayout f = new FormLayout();
-        return f;
+        return new FormLayout();
     }
 
     @Override

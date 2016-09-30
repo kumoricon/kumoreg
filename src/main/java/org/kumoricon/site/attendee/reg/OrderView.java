@@ -50,7 +50,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         orderInfo.addComponent(orderId);
         addComponent(orderInfo);
 
-        attendeeBeanList = new BeanItemContainer<>(Attendee.class, new ArrayList<Attendee>());
+        attendeeBeanList = new BeanItemContainer<>(Attendee.class, new ArrayList<>());
         attendeeList.setContainerDataSource(attendeeBeanList);
         attendeeList.setPageLength(5);
         attendeeList.setWidth(600, Unit.PIXELS);

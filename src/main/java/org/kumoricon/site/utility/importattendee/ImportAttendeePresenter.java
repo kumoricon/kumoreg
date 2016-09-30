@@ -88,7 +88,7 @@ public class ImportAttendeePresenter {
         public void uploadFailed(Upload.FailedEvent event) {
             view.notifyError(event.toString());
         }
-    };
+    }
 
     public ImportAttendeeView getView() { return view; }
     public void setView(ImportAttendeeView view) { this.view = view; }

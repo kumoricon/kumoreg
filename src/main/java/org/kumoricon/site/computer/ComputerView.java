@@ -27,7 +27,7 @@ public class ComputerView extends BaseView implements View {
 
     private Grid data = new Grid();
     private Label yourAddress;
-    private BeanItemContainer<Computer> computerList = new BeanItemContainer<Computer>(Computer.class);
+    private BeanItemContainer<Computer> computerList = new BeanItemContainer<>(Computer.class);
     private Button btnAddNew = new Button("Add");
     private Button btnDelete = new Button("Delete");
 

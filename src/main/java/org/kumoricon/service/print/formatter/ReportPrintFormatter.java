@@ -86,10 +86,10 @@ public class ReportPrintFormatter implements StreamResource.StreamSource {
 
     }
 
-    @Override
     /**
      * Returns stream containing PDF
      */
+    @Override
     public InputStream getStream() {
         return new ByteArrayInputStream(os.toByteArray());
     }

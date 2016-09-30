@@ -123,9 +123,8 @@ public class Order {
         if ( !(other instanceof Order) ) return false;
 
         final Order order = (Order) other;
-        if ( !order.getOrderId().equals( getOrderId() ) ) return false;
+        return order.getOrderId().equals(getOrderId());
 
-        return true;
     }
 
     @Override

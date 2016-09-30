@@ -96,9 +96,8 @@ public class AgeRange {
     }
 
     public String toString() {
-        return String.format("%s (%s-%s): $%s", name, minAge, maxAge, cost.setScale(2).toString());
+        return String.format("%s (%s-%s): $%s", name, minAge, maxAge, cost.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
     }
-
 
     @Override
     public boolean equals(Object o) {

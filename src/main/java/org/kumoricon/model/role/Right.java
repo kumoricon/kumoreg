@@ -37,8 +37,7 @@ public class Right implements Comparable {
 
         final Right right = (Right) other;
 
-        if ( !right.getName().equals( getName() ) ) return false;
-        return true;
+        return right.getName().equals(getName());
     }
 
     @Override

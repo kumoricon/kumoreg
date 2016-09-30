@@ -27,7 +27,7 @@ public class Badge {
 
     public Badge() {
         visible = true;
-        ageRanges = new ArrayList<AgeRange>(4);
+        ageRanges = new ArrayList<>(4);
     }
 
     public Badge(String name) {

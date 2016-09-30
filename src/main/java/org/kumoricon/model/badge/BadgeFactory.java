@@ -1,7 +1,7 @@
 package org.kumoricon.model.badge;
 
 public class BadgeFactory {
-    public static final Badge badgeFactory(String name, String dayText,
+    public static Badge badgeFactory(String name, String dayText,
                                            double adultCost, double youthCost, double childCost) {
         Badge b = new Badge();
         b.setName(name);
@@ -13,7 +13,7 @@ public class BadgeFactory {
         return b;
     }
 
-    public static final Badge emptyBadgeFactory() {
+    public static Badge emptyBadgeFactory() {
         Badge b = new Badge();
         b.setName("");
         b.setDayText("");

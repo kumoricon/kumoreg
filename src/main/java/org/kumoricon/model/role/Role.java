@@ -84,9 +84,8 @@ public class Role {
 
         final Role role = (Role) other;
 
-        if ( !role.getName().equals( getName() ) ) return false;
+        return role.getName().equals(getName());
 
-        return true;
     }
 
     @Override

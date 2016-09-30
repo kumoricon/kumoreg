@@ -51,7 +51,7 @@ public class UserFactory {
      * uniqueness checking with existing users
      * @param firstName First Name
      * @param lastName Last Name
-     * @return
+     * @return username
      */
     protected static String generateUserName(String firstName, String lastName) {
         String username;

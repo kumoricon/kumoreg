@@ -13,15 +13,13 @@ public class AttendeePreRegDetailForm extends AttendeeDetailForm {
 
     @Override
     protected FormLayout buildCheckedIn() {
-        FormLayout f = new FormLayout();
         // Don't show the consent form or checked in checkbox here
-        return f;
+        return new FormLayout();
     }
 
     @Override
     protected FormLayout buildNotes() {
-        FormLayout f = new FormLayout();
         // Don't show history on prereg checkin screen
-        return f;
+        return new FormLayout();
     }
 }

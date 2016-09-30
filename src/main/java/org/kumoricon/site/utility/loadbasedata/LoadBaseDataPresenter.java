@@ -134,7 +134,7 @@ public class LoadBaseDataPresenter {
         for (String[] rightInfo : rights) {
             log.info("Creating right {}", rightInfo[0]);
             Right right = new Right(rightInfo[0], rightInfo[1]);
-            right = rightRepository.save(right);
+            rightRepository.save(right);
         }
     }
 

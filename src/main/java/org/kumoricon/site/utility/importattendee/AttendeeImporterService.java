@@ -134,7 +134,7 @@ public class AttendeeImporterService {
                 ordersToAdd.add(o);
                 attendee.setOrder(o);
             }
-            if (dataArray.length == 19 && !dataArray[18].isEmpty() && !dataArray[18].toString().trim().isEmpty()) {
+            if (dataArray.length == 19 && !dataArray[18].isEmpty() && !dataArray[18].trim().isEmpty()) {
                 attendee.addHistoryEntry(currentUser, dataArray[18]);
             }
             attendee.setPreRegistered(true);

@@ -42,7 +42,7 @@ public class CloseOutTillPresenter {
                     currentUser.getId(), currentUser.getSessionNumber());
             output.append(String.format("%-40s\t%s\t%s%n", "Payment Type", "Count", "Total"));
             for (Object[] line : results) {
-                output.append(String.format("%-40s\t%5d\t$%8.2f%n",
+                output.append(String.format("%-40s\t%5s\t$%8.2f%n",
                         getPaymentType((Integer)line[0]), line[1], line[2]));
                 log.info("{} till session {}: Payment Type: {}, Orders: {}, Total: ${}",
                         currentUser, currentUser.getSessionNumber(), getPaymentType((Integer)line[0]),

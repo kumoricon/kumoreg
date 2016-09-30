@@ -69,7 +69,7 @@ public class UserView extends BaseView implements View {
     }
 
     public void afterSuccessfulFetch(List<User> users) {
-        userList.setContainerDataSource(new BeanItemContainer<User>(User.class, users));
+        userList.setContainerDataSource(new BeanItemContainer<>(User.class, users));
     }
 
     public void showUser(User user, List<Role> roles) {

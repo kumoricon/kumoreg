@@ -80,7 +80,7 @@ public class BadgePrintService extends PrintService {
      * Return the currently defined badge print formatter, which generates a PDF from the given attendees
      * @param attendees Attendees to generate badges for
      * @param ipAddress IP address of current client computer
-     * @return
+     * @return BadgeFormatter
      */
     public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, String ipAddress) {
         Computer client = computerService.findComputerByIP(ipAddress);

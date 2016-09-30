@@ -42,7 +42,7 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
     public void init() {
         handler.setView(this);
         setSizeFull();
-        attendeeBeanList = new BeanItemContainer<Attendee>(Attendee.class, new ArrayList<Attendee>());
+        attendeeBeanList = new BeanItemContainer<>(Attendee.class, new ArrayList<>());
 
         FormLayout f = new FormLayout();
         f.setMargin(false);

@@ -71,7 +71,7 @@ public class RoleView extends BaseView implements View {
     }
 
     public void afterSuccessfulFetch(List<Role> roles) {
-        roleList.setContainerDataSource(new BeanItemContainer<Role>(Role.class, roles));
+        roleList.setContainerDataSource(new BeanItemContainer<>(Role.class, roles));
     }
 
     public void showRole(Role role, List<Right> rights) {

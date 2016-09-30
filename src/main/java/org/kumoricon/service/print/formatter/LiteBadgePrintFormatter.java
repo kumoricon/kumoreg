@@ -24,7 +24,7 @@ public class LiteBadgePrintFormatter implements BadgePrintFormatter {
 
     /**
      * Generates a PDF containing badges ready to be printed. Lite badges have no badge name or number.
-     * @param attendees
+     * @param attendees Attendees to print badges for
      */
     public LiteBadgePrintFormatter(List<Attendee> attendees) {
         this(attendees, 0, 0);

@@ -73,26 +73,22 @@ public class AttendeeReportPresenter implements ReportPresenter {
 
 
     private static String buildAttendanceCounts( Integer totalAttendance, Integer warmBodyCount) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<h2>Total Attendance Counts</h2>");
-        sb.append("<table border=\"1\">");
-        sb.append("<tr>");
-        sb.append("<td>Total Attendance</td>");
-        sb.append(String.format("<td align=\"right\">%d</td>", totalAttendance));
-        sb.append("</tr>");
-        sb.append("<td>Warm Body Count</td>");
-        sb.append(String.format("<td align=\"right\">%d</td>", warmBodyCount));
-        sb.append("</tr>");
-        sb.append("</table>");
-        sb.append("<b>Total Attendance:</b> <i>Unique, paid</i> attendees who checked in. This means that weekend " +
+        return "<h2>Total Attendance Counts</h2>" +
+                "<table border=\"1\">" +
+                "<tr>" +
+                "<td>Total Attendance</td>" +
+                "<td align=\"right\">" + totalAttendance + "</td></tr>" +
+                "<td>Warm Body Count</td>" +
+                "<td align=\"right\">" + warmBodyCount + "</td></tr>" +
+                "</table>" +
+                "<b>Total Attendance:</b> <i>Unique, paid</i> attendees who checked in. This means that weekend " +
                 "badges are counted only once, and the count is a number of unique individual attendees who " +
                 "registered in a given year. Attendance figures count paid membership purchases at standard or VIP " +
                 "rates (staff, exhibitors, artists, guests, industry, press, and complimentary badges are not " +
-                "counted).<br>");
-        sb.append("<b>Warm Body Count:</b> All attendees (paid and gratis) who checked in<br>");
-        sb.append("Attendees with multiple single day badges are counted as a single attendee based on " +
-                "first name, last name, birthdate, and zip code<br>");
-        return sb.toString();
+                "counted).<br>" +
+                "<b>Warm Body Count:</b> All attendees (paid and gratis) who checked in<br>" +
+                "Attendees with multiple single day badges are counted as a single attendee based on " +
+                "first name, last name, birthdate, and zip code<br>";
     }
 
     @Override

@@ -106,7 +106,7 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
             // If the badge selection box isn't already set to the parameter in the URL, change it.
             // This will fire the value change listener again
             boolean selectionChanged = false;
-            if (currentValue == null || !parameter.equals(currentValue.getId())) {
+            if (parameter != null && (currentValue == null || !parameter.equals(currentValue.getId()))) {
                 for (Object item : badgeType.getItemIds()) {
                     Badge badge = (Badge) item;
                     if (parameter.equals(badge.getId())) {

@@ -66,7 +66,7 @@ public class AttendeeDetailForm extends GridLayout {
         setColumnExpandRatio(0, 1);
         setColumnExpandRatio(1, 2);
 
-        fieldGroup = new BeanFieldGroup<Attendee>(Attendee.class);
+        fieldGroup = new BeanFieldGroup<>(Attendee.class);
         fieldGroup.setFieldFactory(new CustomFieldGroupFieldFactory());
         fieldGroup.bindMemberFields(this);
 
@@ -133,7 +133,7 @@ public class AttendeeDetailForm extends GridLayout {
 
     public void showHistory(List<AttendeeHistory> attendeeHistories) {
         if (attendeeHistories != null) {
-            BeanItemContainer<AttendeeHistory> historyItems = new BeanItemContainer<AttendeeHistory>(AttendeeHistory.class);
+            BeanItemContainer<AttendeeHistory> historyItems = new BeanItemContainer<>(AttendeeHistory.class);
             history.setContainerDataSource(historyItems);
             history.setVisibleColumns("timestamp", "user", "message");
             history.setColumnHeaders("Time", "User", "Message");
@@ -304,7 +304,7 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     public void setAvailableBadges(List<Badge> availableBadges) {
-        badge.setContainerDataSource(new BeanItemContainer<Badge>(Badge.class, availableBadges));
+        badge.setContainerDataSource(new BeanItemContainer<>(Badge.class, availableBadges));
     }
 
     public void selectFirstName() {
