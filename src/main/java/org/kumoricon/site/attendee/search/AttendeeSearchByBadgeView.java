@@ -3,6 +3,7 @@ package org.kumoricon.site.attendee.search;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToDateConverter;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -78,6 +79,9 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
                 return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
             }
         });
+        attendeeTable.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
+                handler.showAttendee((Integer) itemClickEvent.getItem().getItemProperty("id").getValue()));
+
         attendeeTable.setSizeFull();
     }
 
