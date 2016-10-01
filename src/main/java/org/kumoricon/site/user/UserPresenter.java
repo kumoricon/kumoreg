@@ -8,6 +8,7 @@ import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -65,7 +66,7 @@ public class UserPresenter {
 
     public void showUserList(UserView view) {
         log.info("{} viewed user list", view.getCurrentUsername());
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAll(new Sort(Sort.Direction.ASC, "username"));
         view.afterSuccessfulFetch(users);
     }
 
