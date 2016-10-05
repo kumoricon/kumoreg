@@ -56,37 +56,90 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
 
     }
 
+    private class ResizeOptions {
+        public PDFont      font = PDType1Font.HELVETICA_BOLD;
+        public float       size = 14;
+        public float       minFontSize = 10;
+        public float       maxTextWidth = 0;
+        public int         lines = 1;
+        public float       lineSize = size * 1.3f;
+
+        public ResizeOptions() {}
+        public ResizeOptions(ResizeOptions other) {
+            this.font = other.font;
+            this.size = other.size;
+            this.minFontSize = other.minFontSize;
+            this.maxTextWidth = other.maxTextWidth;
+            this.lines = other.lines;
+            this.lineSize = other.lineSize;
+        }
+    }
+    private void drawStringWithResizing(PDPageContentStream contentStream, float x, float y, String text, ResizeOptions optOrig) throws IOException {
+        ResizeOptions opt = new ResizeOptions(optOrig);
+        float textSize = opt.font.getStringWidth(text); // in thousandths of font pt size.
+        float size = opt.size;
+
+        // Calculate the correct font size, based on our restrictions
+        if (textSize * (size/1000.0f) <= opt.maxTextWidth) {
+            // Great! Fits already
+        }
+        else{
+            size = opt.maxTextWidth * 1000.0f / textSize;
+            if (size < opt.minFontSize) {
+                // XXX: Bail. At least log that this happened.
+                size = opt.minFontSize;
+            }
+        }
+
+        // Actually draw the text
+        contentStream.beginText();
+        contentStream.moveTextPositionByAmount(x, y);
+        contentStream.setFont(opt.font, size);
+        contentStream.drawString(text);
+        contentStream.endText();
+    }
 
     private PDPage generatePage(Attendee attendee, PDDocument document) throws IOException {
         PDPage page = new PDPage(new PDRectangle(612f, 396f));
         PDFont font = PDType1Font.HELVETICA_BOLD;
         PDPageContentStream contentStream = new PDPageContentStream(document, page);
+        ResizeOptions resizeOpt = new ResizeOptions();
+        String badgeName = attendee.getBadgeName();
+        String realName = attendee.getFirstName() + " " + attendee.getLastName();
+
+        if (badgeName.matches("^\\s*$")) {
+            badgeName = null;
+        }
+        String name = badgeName;
 
         // Positions are measured from the bottom left corner of the page at 72 DPI
 
+        // Set up global transformation matrix according to xOffset, yOffset.
+        // NOTE: if we want to support per-printer/per-client scaling, we would replace the 1's
+        // below, with xScale and yScale.
+        contentStream.concatenate2CTM(1, 0, 0, 1, xOffset, yOffset);
+
         // Draw main name (badge name if set, otherwise real name)
-        contentStream.beginText();
-        contentStream.moveTextPositionByAmount(240+xOffset, 200+yOffset);
-        contentStream.setFont( font, 24 );
-        if (attendee.getBadgeName() != null) {
-            contentStream.drawString(attendee.getBadgeName());
-        } else {
-            contentStream.drawString(attendee.getFirstName() + " " + attendee.getLastName());
+        resizeOpt.size = 24;
+        resizeOpt.lines = 1;
+        resizeOpt.maxTextWidth = 206;
+        if (name == null) {
+            name = realName;
         }
-        contentStream.endText();
+        drawStringWithResizing(contentStream, 240, 200, name, resizeOpt);
 
         // Draw real name if badge name set
-        contentStream.beginText();
-        contentStream.moveTextPositionByAmount(280+xOffset, 180+yOffset);
-        contentStream.setFont(font, 18);
-        if (attendee.getBadgeName() != null) {
-            contentStream.drawString(attendee.getFirstName() + " " + attendee.getLastName());
+        if (badgeName != null) {
+            resizeOpt.size = 18;
+            resizeOpt.minFontSize = 8;
+            resizeOpt.lines = 1;
+            resizeOpt.maxTextWidth = 166;
+            drawStringWithResizing(contentStream, 280, 180, realName, resizeOpt);
         }
-        contentStream.endText();
 
         // Draw badge type
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(200+xOffset, 128+yOffset);
+        contentStream.moveTextPositionByAmount(200, 128);
         contentStream.setFont(PDType1Font.HELVETICA, 14);
         contentStream.drawString(attendee.getBadge().getDayText());
         contentStream.endText();
@@ -94,7 +147,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
 
         // Draw badge number, right-aligned
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(450+xOffset, 128+yOffset);
+        contentStream.moveTextPositionByAmount(450, 128);
         Float badgeNumberWidth = (PDType1Font.HELVETICA.getStringWidth(attendee.getBadgeNumber()) / 1000.0f) * 14;
         contentStream.moveTextPositionByAmount(-badgeNumberWidth, 0);
         contentStream.setFont(PDType1Font.HELVETICA, 14);
@@ -110,14 +163,14 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         } else {
             contentStream.setNonStrokingColor(Color.black);
         }
-        contentStream.fillRect(200+xOffset, 100+yOffset, 250, 25);
+        contentStream.fillRect(200, 100, 250, 25);
 
         contentStream.setLineWidth(0.5f);
         contentStream.beginText();
         contentStream.setFont(font, 18);
         contentStream.setNonStrokingColor(Color.white);
         contentStream.setStrokingColor(Color.black);
-        contentStream.moveTextPositionByAmount(325+xOffset, 105+yOffset);
+        contentStream.moveTextPositionByAmount(325, 105);
         contentStream.appendRawCommands("2 Tr ");       // Set text rendering mode
 
         Float ageRangeWidth = ((font.getStringWidth(stripeText) / 1000.0f) * 18) / 2;
