@@ -61,7 +61,8 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         public float       size = 14;
         public float       minFontSize = 10;
         public float       maxTextWidth = 0;
-        public int         lines = 1;
+        public boolean     centered = true; // Should possibly be a Right | Left | Center enum?
+        public int         lines = 1; // To support splitting into multiple lines. Currently unsupported.
         public float       lineSize = size * 1.3f;
 
         public ResizeOptions() {}
@@ -70,6 +71,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
             this.size = other.size;
             this.minFontSize = other.minFontSize;
             this.maxTextWidth = other.maxTextWidth;
+            this.centered = other.centered;
             this.lines = other.lines;
             this.lineSize = other.lineSize;
         }
@@ -86,9 +88,14 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         else{
             size = opt.maxTextWidth * 1000.0f / textSize;
             if (size < opt.minFontSize) {
-                // XXX: Bail. At least log that this happened.
+                // We have utterly failed to fit the text with the minimum font size,
+                // So we're forced to use that.
                 size = opt.minFontSize;
             }
+        }
+
+        if (opt.centered) {
+            x -= textSize * (size/(2*1000.0f));
         }
 
         // Actually draw the text
@@ -126,7 +133,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         if (name == null) {
             name = realName;
         }
-        drawStringWithResizing(contentStream, 240, 200, name, resizeOpt);
+        drawStringWithResizing(contentStream, 325, 200, name, resizeOpt);
 
         // Draw real name if badge name set
         if (badgeName != null) {
@@ -134,7 +141,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
             resizeOpt.minFontSize = 8;
             resizeOpt.lines = 1;
             resizeOpt.maxTextWidth = 166;
-            drawStringWithResizing(contentStream, 280, 180, realName, resizeOpt);
+            drawStringWithResizing(contentStream, 325, 180, realName, resizeOpt);
         }
 
         // Draw badge type
