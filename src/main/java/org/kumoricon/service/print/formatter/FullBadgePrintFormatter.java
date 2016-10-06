@@ -114,7 +114,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         String badgeName = attendee.getBadgeName();
         String realName = attendee.getFirstName() + " " + attendee.getLastName();
 
-        if (badgeName.matches("^\\s*$")) {
+        if (badgeName != null && badgeName.matches("^\\s*$")) {
             badgeName = null;
         }
         String name = badgeName;
