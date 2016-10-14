@@ -2,6 +2,9 @@
 
 To install a single instance of KumoReg, skip to Manual Installation below.
 
+## 
+Todo: update w/ Ubuntu script in install/install-ubuntu.sh
+
 ## Automatic installation via script
 Scripts to install a production and training instance of KumoReg and all its requirements 
 on a CentOS 7 server via SSH.

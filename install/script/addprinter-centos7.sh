@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Shortcut script for adding specific model printers from the command line
+# Tested on Centos 7
 
 USAGE="
 

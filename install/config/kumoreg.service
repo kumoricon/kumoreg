@@ -1,11 +1,11 @@
 # Kumoreg Systemd init file
 [Unit]
 Description=kumoreg registration management system
-Requires=mariadb.service
+Requires=mysql.service
 Requires=cups.service
 After=network.target
 After=cups.service
-After=mariadb.service
+After=mysql.service
 After=syslog.target
 
 [Service]
