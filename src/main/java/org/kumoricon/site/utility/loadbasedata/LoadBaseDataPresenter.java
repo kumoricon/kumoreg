@@ -110,7 +110,8 @@ public class LoadBaseDataPresenter {
             {"print_badge", "Print badge on attendee check in"},
             {"reprint_badge", "Reprint attendee badges after attendee is checked in"},
             {"reprint_badge_with_override", "Reprint badge if a user with reprint_badge right approves it"},
-            {"badge_type_press", "Select/check in the \"Press\" badge type"},
+            {"badge_type_emerging_press", "Select/check in the \"Emerging Press\" badge type"},
+            {"badge_type_standard_press", "Select/check in the \"Standard Press\" badge type"},
             {"badge_type_vip", "Select/check in the \"VIP\" badge type"},
             {"badge_type_artist", "Select/check in the \"Artist\" badge type"},
             {"badge_type_exhibitor", "Select/check in the \"Exhibitor\" badge type"},
@@ -160,18 +161,17 @@ public class LoadBaseDataPresenter {
                                                               "badge_type_panelist", "badge_type_industry"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note",
-                "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
-                "badge_type_industry", "badge_type_panelist", "badge_type_staff",
-                "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report", "view_attendance_report",
-                "view_check_in_by_hour_report"});
+                "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
+                "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
+                "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
+                "view_attendance_report", "view_check_in_by_hour_report"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
-                "badge_type_vip", "badge_type_press", "badge_type_artist", "badge_type_exhibitor", "badge_type_guest",
-                "badge_type_industry", "badge_type_panelist", "badge_type_staff",
-                "view_role_report",
-                "view_attendance_report", "view_attendance_report_revenue", "view_staff_report",
-                "view_check_in_by_hour_report"});
+                "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
+                "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
+                "badge_type_staff", "view_role_report", "view_attendance_report", "view_attendance_report_revenue",
+                "view_staff_report", "view_check_in_by_hour_report"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
@@ -261,12 +261,19 @@ public class LoadBaseDataPresenter {
         results.append("    Creating " + guest.toString() + "\n");
         badgeRepository.save(guest);
 
-        log.info("Creating badge Press");
-        Badge press = BadgeFactory.badgeFactory("Press", "Press", 0f, 0f, 0f);
-        press.setRequiredRight("badge_type_press");
-        press.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + press.toString() + "\n");
-        badgeRepository.save(press);
+        log.info("Creating badge Emerging Press");
+        Badge ePress = BadgeFactory.badgeFactory("Emerging Press", "E Press", 0f, 0f, 0f);
+        ePress.setRequiredRight("badge_type_emerging_press");
+        ePress.setWarningMessage("Press check in. See your coordinator!");
+        results.append("    Creating " + ePress.toString() + "\n");
+        badgeRepository.save(ePress);
+
+        log.info("Creating badge Standard Press");
+        Badge spress = BadgeFactory.badgeFactory("Standard Press", "S Press", 0f, 0f, 0f);
+        spress.setRequiredRight("badge_type_standard_press");
+        spress.setWarningMessage("Press check in. See your coordinator!");
+        results.append("    Creating " + spress.toString() + "\n");
+        badgeRepository.save(spress);
 
         log.info("Creating badge Industry");
         Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);
@@ -319,12 +326,19 @@ public class LoadBaseDataPresenter {
         results.append("    Creating " + guest.toString() + "\n");
         badgeRepository.save(guest);
 
-        log.info("Creating badge Press");
-        Badge press = BadgeFactory.badgeFactory("Press", "Press", 0f, 0f, 0f);
-        press.setRequiredRight("badge_type_press");
-        press.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + press.toString() + "\n");
-        badgeRepository.save(press);
+        log.info("Creating badge Emerging Press");
+        Badge ePress = BadgeFactory.badgeFactory("Emerging Press", "E Press", 0f, 0f, 0f);
+        ePress.setRequiredRight("badge_type_emerging_press");
+        ePress.setWarningMessage("Press check in. See your coordinator!");
+        results.append("    Creating " + ePress.toString() + "\n");
+        badgeRepository.save(ePress);
+
+        log.info("Creating badge Standard Press");
+        Badge spress = BadgeFactory.badgeFactory("Standard Press", "S Press", 0f, 0f, 0f);
+        spress.setRequiredRight("badge_type_standard_press");
+        spress.setWarningMessage("Press check in. See your coordinator!");
+        results.append("    Creating " + spress.toString() + "\n");
+        badgeRepository.save(spress);
 
         log.info("Creating badge Industry");
         Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);

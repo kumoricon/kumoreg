@@ -18,7 +18,8 @@ Available rights are:
 | print_badge                   | Print badge on attendee check in                                |
 | reprint_badge                 | Reprint attendee badges after attendee is checked in            |
 | reprint_badge_with_override   | Reprint badge if a user with reprint_badge right approves it    |
-| badge_type_press              | Select/check in the \"Press\" badge type                        |
+| badge_type_emerging_press     | Select/check in the \"Emerging Press\" badge type               |
+| badge_type_standard_press     | Select/check in the \"Standard Press\" badge type               |
 | badge_type_vip                | Select/check in the \"VIP\" badge type                          |
 | badge_type_artist             | Select/check in the \"Artist\" badge type                       |
 | badge_type_exhibitor          | Select/check in the \"Exhibitor\" badge type                    |
