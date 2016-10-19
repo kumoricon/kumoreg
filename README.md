@@ -25,3 +25,4 @@ Convention Registration Management
     - [Rights](docs/security/rights.md)
     - [Roles](docs/security/roles.md)
 - [Data Import Format](docs/PreRegDataImportFormat.md)
+- [Development Notes](docs/development.md)

@@ -4,6 +4,7 @@ Change Log
     - Removed Check In by Badge Report, added Search by Badge Type screen. (Attendees can be 
       edited from the Search by Badge Type screen with the proper permission)
     - Long names (and badge names) will be resized to fit on the badge (to a certain point)
+    - Added automated install script for Ubuntu 16.04, updated installation instructions
 
 - Version 0.9.6 (9/13/2016)
     - Changed error message to disappear automatically after a few seconds, instead of requiring a click

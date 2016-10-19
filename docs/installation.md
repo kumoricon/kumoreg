@@ -2,12 +2,26 @@
 
 To install a single instance of KumoReg, skip to Manual Installation below.
 
-## 
-Todo: update w/ Ubuntu script in install/install-ubuntu.sh
-
 ## Automatic installation via script
 Scripts to install a production and training instance of KumoReg and all its requirements 
-on a CentOS 7 server via SSH.
+on a fresh Ubuntu 16.04 server. X-Y-Z is the version number.
+
+**This will install Java, CUPS, MariaDB and overwrite the default configurations.**
+
+1) Copy kumoreg-X-Y-Z-bundle.tar.gz to the server
+2) On the server, run:
+
+```
+tar -xzvf kumoreg-X-Y-Z-bundle.tar.gz
+cd kumoreg-X-Y-Z
+```
+
+3) Set the database password in:
+    - ```config/application.properties```
+    - ```config/application-training.properties```
+    - ```and script/database.sql```
+
+4) Run ```sudo ./install-ubuntu.sh```
 
 Kumoreg will be installed in /usr/local/kumoreg
 
@@ -20,33 +34,6 @@ Kumoreg will be installed in /usr/local/kumoreg
 Services will be configured to start on boot via SystemD, which also handles logging.
 
 
-1. Set up a CentOS 7 server based on the minimal ISO.
-    - When prompted during install, create a user with administrative rights.
-    - The timezone should be your actual timezone, not GMT.
-2. After setup is complete, log in to the server and allow members of the wheel group to run
-   sudo without entering a password. Run:
-   
-    ```sudo visudo```
-   
-    Find the lines:
-    ```
-    ## Same thing without a password
-    # %wheel        ALL=(ALL)       NOPASSWD: ALL
-    ```
-    And change them to:
-    ```
-    ## Same thing without a password
-    %wheel        ALL=(ALL)       NOPASSWD: ALL    
-    ```
-    (```Esc```, then ```:wq``` to quit vi)
-3. Build KumoReg from source. Change to the source directory, then run:
-    ```mvn clean; mvn package```
-3. Change to docs/installation/deployscripts. Edit the configuration options in installkumoreg.sh
-4. To start the install, run:
-    ``` ./installkumoreg.sh <username@servername>```
-    
-    For example:
-    ```./installkumoreg.sh jason@192.168.1.53```
 5. Go to **KumoReg configuration**, below.
     
     
@@ -83,7 +70,7 @@ Services will be configured to start on boot via SystemD, which also handles log
 2. Log in as admin / password
 3. Load base data from Utilities > Load Base Data
 4. If necessary:
-    - Set up printers in CUPS at https://servername:631 or user the ```addprinter.sh``` script
+    - Set up printers in CUPS at https://servername:631 or user the ```addprinter``` script
     - Configure Roles under Administration > Roles
     - Configure Users under Administration > Users
     - Configure Badge Types under Administration > Badge Types

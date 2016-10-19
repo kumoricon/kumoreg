@@ -1,0 +1,30 @@
+<assembly>
+    <id>bundle</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>docs</directory>
+            <outputDirectory>kumoreg-${project.version}/docs</outputDirectory>
+            <includes>
+                <include>**</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>install</directory>
+            <outputDirectory>kumoreg-${project.version}</outputDirectory>
+            <includes>
+                <include>**</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>kumoreg-${project.version}</outputDirectory>
+            <includes>
+                <include>KumoReg-${project.version}.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
