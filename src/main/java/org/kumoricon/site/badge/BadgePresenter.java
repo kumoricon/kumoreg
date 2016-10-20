@@ -39,7 +39,7 @@ public class BadgePresenter {
     public void addNewBadge(BadgeView view) {
         log.info("{} created new badge", view.getCurrentUsername());
         view.navigateTo(BadgeView.VIEW_NAME);
-        Badge newBadge = BadgeFactory.emptyBadgeFactory();
+        Badge newBadge = BadgeFactory.createEmptyBadge();
         view.showBadge(newBadge);
     }
 

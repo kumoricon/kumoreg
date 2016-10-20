@@ -45,6 +45,7 @@ public class LoadBaseDataPresenter {
             addRoles(results);
             addUsers(results);
             addBadges(results);
+            addSpecialtyBadges(results);
         }
         view.addResult(results.toString());
     }
@@ -57,6 +58,7 @@ public class LoadBaseDataPresenter {
             addRoles(results);
             addUsers(results);
             addLiteBadges(results);
+            addSpecialtyBadges(results);
         }
         view.addResult(results.toString());
     }
@@ -224,7 +226,7 @@ public class LoadBaseDataPresenter {
                 {"Sunday", "30", "30", "20"}};
         for (String[] currentBadge : badgeList) {
             log.info("Creating badge {}", currentBadge[0]);
-            Badge badge = BadgeFactory.badgeFactory(currentBadge[0], currentBadge[0],
+            Badge badge = BadgeFactory.createBadge(currentBadge[0], currentBadge[0],
                     Float.parseFloat(currentBadge[1]),
                     Float.parseFloat(currentBadge[2]),
                     Float.parseFloat(currentBadge[3]));
@@ -234,56 +236,65 @@ public class LoadBaseDataPresenter {
 
         // Create badge types with security restrictions below
         log.info("Creating badge VIP");
-        Badge vip = BadgeFactory.badgeFactory("VIP", "VIP", 300, 300, 300);
+        Badge vip = BadgeFactory.createBadge("VIP", "VIP", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
         results.append("    Creating " + vip.toString() + "\n");
         badgeRepository.save(vip);
+    }
 
+    /**
+     * Creates specialty badges (artist, exhibitor, etc)
+     * @param results StringBuilder to append status messages to
+     */
+    private void addSpecialtyBadges(StringBuilder results) {
         log.info("Creating badge Artist");
-        Badge artist = BadgeFactory.badgeFactory("Artist", "Weekend", 0f, 0f, 0f);
+        Badge artist = BadgeFactory.createBadge("Artist", "Weekend", 0f, 0f, 0f, "#5900A3");
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
         results.append("    Creating " + artist.toString() + "\n");
         badgeRepository.save(artist);
 
         log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.badgeFactory("Exhibitor", "Exhibitor", 0f, 0f, 0f);
+        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", "Exhibitor", 0f, 0f, 0f, "#00597C");
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
+        for (AgeRange a : artist.getAgeRanges()) {
+            a.setStripeColor("#1DE5D1");
+        }
         results.append("    Creating " + exhibitor.toString() + "\n");
         badgeRepository.save(exhibitor);
 
         log.info("Creating badge Guest");
-        Badge guest = BadgeFactory.badgeFactory("Guest", "Guest", 0f, 0f, 0f);
+        Badge guest = BadgeFactory.createBadge("Guest", "Guest", 0f, 0f, 0f, "#62F442");
         guest.setRequiredRight("badge_type_guest");
         guest.setWarningMessage("Guest check in. See your coordinator!");
         results.append("    Creating " + guest.toString() + "\n");
         badgeRepository.save(guest);
 
         log.info("Creating badge Emerging Press");
-        Badge ePress = BadgeFactory.badgeFactory("Emerging Press", "E Press", 0f, 0f, 0f);
+        Badge ePress = BadgeFactory.createBadge("Emerging Press", "E Press", 0f, 0f, 0f, "#1DE5D1");
         ePress.setRequiredRight("badge_type_emerging_press");
         ePress.setWarningMessage("Press check in. See your coordinator!");
         results.append("    Creating " + ePress.toString() + "\n");
         badgeRepository.save(ePress);
 
         log.info("Creating badge Standard Press");
-        Badge spress = BadgeFactory.badgeFactory("Standard Press", "S Press", 0f, 0f, 0f);
-        spress.setRequiredRight("badge_type_standard_press");
-        spress.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + spress.toString() + "\n");
-        badgeRepository.save(spress);
+        Badge sPress = BadgeFactory.createBadge("Standard Press", "S Press", 0f, 0f, 0f, "#1DE5D1");
+        sPress.setRequiredRight("badge_type_standard_press");
+        sPress.setWarningMessage("Press check in. See your coordinator!");
+        results.append("    Creating " + sPress.toString() + "\n");
+        badgeRepository.save(sPress);
 
         log.info("Creating badge Industry");
-        Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);
+        Badge industry = BadgeFactory.createBadge("Industry", "Industry", 0f, 0f, 0f, "#FF00FC");
         industry.setRequiredRight("badge_type_industry");
         industry.setWarningMessage("Industry check in. See your coordinator!");
         results.append("    Creating " + industry.toString() + "\n");
         badgeRepository.save(industry);
 
         log.info("Creating badge Panelist");
-        Badge panelist = BadgeFactory.badgeFactory("Panelist", "Panelist", 0f, 0f, 0f);
+        Badge panelist = BadgeFactory.createBadge("Panelist", "Panelist", 0f, 0f, 0f, "#FFA500");
         panelist.setRequiredRight("badge_type_panelist");
         panelist.setWarningMessage("Panelist check in. See your coordinator!");
         results.append("    Creating " + panelist.toString() + "\n");
@@ -294,68 +305,17 @@ public class LoadBaseDataPresenter {
         results.append("Creating badges\n");
 
         log.info("Creating badge Kumoricon Lite");
-        Badge lite = BadgeFactory.badgeFactory("Kumoricon Lite", "Sunday", 10, 10, 10);
+        Badge lite = BadgeFactory.createBadge("Kumoricon Lite", "Sunday", 10, 10, 10);
         results.append("    Creating " + lite.toString() + "\n");
         badgeRepository.save(lite);
 
         log.info("Creating badge Kumoricon Lite - Manga Donation");
-        Badge liteDonation = BadgeFactory.badgeFactory("Kumoricon Lite - Manga Donation", "Sunday", 0, 0, 0);
+        Badge liteDonation = BadgeFactory.createBadge("Kumoricon Lite - Manga Donation", "Sunday", 0, 0, 0);
         results.append("    Creating " + liteDonation.toString() + "\n");
         badgeRepository.save(liteDonation);
 
-
-        // Create badge types with security restrictions below
-        log.info("Creating badge Artist");
-        Badge artist = BadgeFactory.badgeFactory("Artist", "Weekend", 0f, 0f, 0f);
-        artist.setRequiredRight("badge_type_artist");
-        artist.setWarningMessage("Artist check in. See your coordinator!");
-        results.append("    Creating " + artist.toString() + "\n");
-        badgeRepository.save(artist);
-
-        log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.badgeFactory("Exhibitor", "Exhibitor", 0f, 0f, 0f);
-        exhibitor.setRequiredRight("badge_type_exhibitor");
-        exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
-        results.append("    Creating " + exhibitor.toString() + "\n");
-        badgeRepository.save(exhibitor);
-
-        log.info("Creating badge Guest");
-        Badge guest = BadgeFactory.badgeFactory("Guest", "Guest", 0f, 0f, 0f);
-        guest.setRequiredRight("badge_type_guest");
-        guest.setWarningMessage("Guest check in. See your coordinator!");
-        results.append("    Creating " + guest.toString() + "\n");
-        badgeRepository.save(guest);
-
-        log.info("Creating badge Emerging Press");
-        Badge ePress = BadgeFactory.badgeFactory("Emerging Press", "E Press", 0f, 0f, 0f);
-        ePress.setRequiredRight("badge_type_emerging_press");
-        ePress.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + ePress.toString() + "\n");
-        badgeRepository.save(ePress);
-
-        log.info("Creating badge Standard Press");
-        Badge spress = BadgeFactory.badgeFactory("Standard Press", "S Press", 0f, 0f, 0f);
-        spress.setRequiredRight("badge_type_standard_press");
-        spress.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + spress.toString() + "\n");
-        badgeRepository.save(spress);
-
-        log.info("Creating badge Industry");
-        Badge industry = BadgeFactory.badgeFactory("Industry", "Industry", 0f, 0f, 0f);
-        industry.setRequiredRight("badge_type_industry");
-        industry.setWarningMessage("Industry check in. See your coordinator!");
-        results.append("    Creating " + industry.toString() + "\n");
-        badgeRepository.save(industry);
-
-        log.info("Creating badge Panelist");
-        Badge panelist = BadgeFactory.badgeFactory("Panelist", "Panelist", 0f, 0f, 0f);
-        panelist.setRequiredRight("badge_type_panelist");
-        panelist.setWarningMessage("Panelist check in. See your coordinator!");
-        results.append("    Creating " + panelist.toString() + "\n");
-        badgeRepository.save(panelist);
-
         log.info("Creating badge Staff");
-        Badge staff = BadgeFactory.badgeFactory("Staff", "Staff", 0f, 0f, 0f);
+        Badge staff = BadgeFactory.createBadge("Staff", "Staff", 0f, 0f, 0f);
         staff.setRequiredRight("badge_type_staff");
         staff.setWarningMessage("Staff check in. See your coordinator!");
         // Clear stripe color and text - it's already printed
@@ -365,9 +325,6 @@ public class LoadBaseDataPresenter {
         }
         results.append("    Creating " + staff.toString() + "\n");
         badgeRepository.save(staff);
-
-
-
     }
 
 
