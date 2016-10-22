@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.kumoricon.model.attendee.Attendee;
+
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -76,6 +77,16 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
             this.lineSize = other.lineSize;
         }
     }
+
+    /**
+     * Draws the given string, optionally supports scaling to fit.
+     * @param contentStream Open stream to draw in to
+     * @param x Left side of text, or center point of text if centered (1/72 inch)
+     * @param y Bottom of text, in points (1/72 inch)
+     * @param text Text to draw
+     * @param optOrig Resize Options
+     * @throws IOException
+     */
     private void drawStringWithResizing(PDPageContentStream contentStream, float x, float y, String text, ResizeOptions optOrig) throws IOException {
         ResizeOptions opt = new ResizeOptions(optOrig);
         float textSize = opt.font.getStringWidth(text); // in thousandths of font pt size.
@@ -129,38 +140,26 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         // Draw main name (badge name if set, otherwise real name)
         resizeOpt.size = 24;
         resizeOpt.lines = 1;
-        resizeOpt.maxTextWidth = 206;
+        resizeOpt.maxTextWidth = 160;
         if (name == null) {
             name = realName;
         }
-        drawStringWithResizing(contentStream, 325, 200, name, resizeOpt);
+        drawStringWithResizing(contentStream, 360, 150, name, resizeOpt);
 
         // Draw real name if badge name set
         if (badgeName != null) {
             resizeOpt.size = 18;
-            resizeOpt.minFontSize = 8;
+            resizeOpt.minFontSize = 6;
             resizeOpt.lines = 1;
-            resizeOpt.maxTextWidth = 166;
-            drawStringWithResizing(contentStream, 325, 180, realName, resizeOpt);
+            resizeOpt.maxTextWidth = 140;
+            drawStringWithResizing(contentStream, 320, 131, realName, resizeOpt);
         }
 
-        // Draw badge type
-        contentStream.beginText();
-        contentStream.moveTextPositionByAmount(200, 128);
-        contentStream.setFont(PDType1Font.HELVETICA, 14);
-        contentStream.drawString(attendee.getBadge().getDayText());
-        contentStream.endText();
-
-
         // Draw badge number, right-aligned
-        contentStream.beginText();
-        contentStream.moveTextPositionByAmount(450, 128);
-        Float badgeNumberWidth = (PDType1Font.HELVETICA.getStringWidth(attendee.getBadgeNumber()) / 1000.0f) * 14;
-        contentStream.moveTextPositionByAmount(-badgeNumberWidth, 0);
-        contentStream.setFont(PDType1Font.HELVETICA, 14);
-        contentStream.drawString(attendee.getBadgeNumber());
-        contentStream.moveTextPositionByAmount(badgeNumberWidth, 0);
-        contentStream.endText();
+        resizeOpt.size = 14;
+        resizeOpt.maxTextWidth = 38;
+        drawStringWithResizing(contentStream, 415, 131, attendee.getBadgeNumber(), resizeOpt);
+
 
         // Draw age color stripe
         String stripeText = "VOID";
@@ -177,12 +176,19 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         contentStream.setFont(font, 18);
         contentStream.setNonStrokingColor(Color.white);
         contentStream.setStrokingColor(Color.black);
-        contentStream.moveTextPositionByAmount(325, 105);
+        contentStream.moveTextPositionByAmount(445, 105);
         contentStream.appendRawCommands("2 Tr ");       // Set text rendering mode
 
-        Float ageRangeWidth = ((font.getStringWidth(stripeText) / 1000.0f) * 18) / 2;
+        // Draw age range text in color stripe
+        Float ageRangeWidth = ((font.getStringWidth(stripeText) / 1000.0f) * 18);
         contentStream.moveTextPositionByAmount(-ageRangeWidth, 0);
         contentStream.drawString(stripeText);
+        contentStream.endText();
+
+        // Draw badge type in color stripe
+        contentStream.beginText();
+        contentStream.moveTextPositionByAmount(205, 105);
+        contentStream.drawString(attendee.getBadge().getDayText());
         contentStream.endText();
 
         contentStream.close();
@@ -191,9 +197,12 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
     }
 
 
+    /**
+     * Returns the output of PDF generation
+     * @return PDF contents as byte array
+     */
     @Override
     public InputStream getStream() {
-        // Here we return the pdf contents as a byte-array
         return new ByteArrayInputStream(os.toByteArray());
     }
 
