@@ -27,11 +27,13 @@ public class TillReportView extends BaseView implements View {
 
         addComponent(refresh);
         addComponent(data);
-        data.setContentMode(ContentMode.PREFORMATTED);
+        data.setContentMode(ContentMode.HTML);
         setExpandRatio(data, 1f);
         data.setSizeFull();
 
         refresh.addClickListener((Button.ClickListener) clickEvent -> { refresh.setCaption("Refresh"); handler.showAllTills(this); });
+
+        handler.showAllTills(this);
     }
 
     public void showData(String report) { data.setValue(report); }
