@@ -18,7 +18,7 @@ apt-get -y upgrade
 apt-get -y install openjdk-8-jdk vim
 
 # Install cups 
-apt-get -y install cups hplip
+apt-get -y install cups hplip cups-bsd
 systemctl stop cups
 mv -n /etc/cups/cupsd.conf /etc/cups/cupsd.conf.orig
 mv config/cupsd.conf /etc/cups/
