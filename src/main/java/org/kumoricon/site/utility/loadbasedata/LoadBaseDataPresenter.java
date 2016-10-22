@@ -250,14 +250,14 @@ public class LoadBaseDataPresenter {
      */
     private void addSpecialtyBadges(StringBuilder results) {
         log.info("Creating badge Artist");
-        Badge artist = BadgeFactory.createBadge("Artist", "Weekend", 0f, 0f, 0f, "#5900A3");
+        Badge artist = BadgeFactory.createBadge("Artist", "Artist", 0f, 0f, 0f, "#800080");
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
         results.append("    Creating " + artist.toString() + "\n");
         badgeRepository.save(artist);
 
         log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", "Exhibitor", 0f, 0f, 0f, "#00597C");
+        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", "Exhibitor", 0f, 0f, 0f, "#00FFFF");
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
         for (AgeRange a : artist.getAgeRanges()) {

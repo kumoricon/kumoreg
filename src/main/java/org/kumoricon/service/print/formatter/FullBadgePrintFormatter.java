@@ -144,7 +144,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         if (name == null) {
             name = realName;
         }
-        drawStringWithResizing(contentStream, 360, 150, name, resizeOpt);
+        drawStringWithResizing(contentStream, 360, 165, name, resizeOpt);
 
         // Draw real name if badge name set
         if (badgeName != null) {
@@ -152,13 +152,13 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
             resizeOpt.minFontSize = 6;
             resizeOpt.lines = 1;
             resizeOpt.maxTextWidth = 140;
-            drawStringWithResizing(contentStream, 320, 131, realName, resizeOpt);
+            drawStringWithResizing(contentStream, 310, 143, realName, resizeOpt);
         }
 
-        // Draw badge number, right-aligned
+        // Draw badge number, centered
         resizeOpt.size = 14;
         resizeOpt.maxTextWidth = 38;
-        drawStringWithResizing(contentStream, 415, 131, attendee.getBadgeNumber(), resizeOpt);
+        drawStringWithResizing(contentStream, 407, 145, attendee.getBadgeNumber(), resizeOpt);
 
 
         // Draw age color stripe
@@ -169,25 +169,25 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         } else {
             contentStream.setNonStrokingColor(Color.black);
         }
-        contentStream.fillRect(200, 100, 250, 25);
+        contentStream.fillRect(155, 92, 300, 45);
 
         contentStream.setLineWidth(0.5f);
-        contentStream.beginText();
-        contentStream.setFont(font, 18);
-        contentStream.setNonStrokingColor(Color.white);
-        contentStream.setStrokingColor(Color.black);
-        contentStream.moveTextPositionByAmount(445, 105);
-        contentStream.appendRawCommands("2 Tr ");       // Set text rendering mode
 
         // Draw age range text in color stripe
-        Float ageRangeWidth = ((font.getStringWidth(stripeText) / 1000.0f) * 18);
+        contentStream.beginText();
+        contentStream.setFont(font, 32);
+        contentStream.setNonStrokingColor(Color.white);
+        contentStream.setStrokingColor(Color.black);
+        contentStream.moveTextPositionByAmount(438, 105);
+        contentStream.appendRawCommands("2 Tr ");       // Set text rendering mode
+        Float ageRangeWidth = ((font.getStringWidth(stripeText) / 1000.0f) * 32);
         contentStream.moveTextPositionByAmount(-ageRangeWidth, 0);
         contentStream.drawString(stripeText);
         contentStream.endText();
 
         // Draw badge type in color stripe
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(205, 105);
+        contentStream.moveTextPositionByAmount(167, 105);
         contentStream.drawString(attendee.getBadge().getDayText());
         contentStream.endText();
 
