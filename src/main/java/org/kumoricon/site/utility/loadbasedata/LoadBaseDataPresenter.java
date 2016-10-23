@@ -148,6 +148,13 @@ public class LoadBaseDataPresenter {
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
                                          "attendee_add_note", "attendee_edit_with_override",
                                          "reprint_badge_with_override"});
+        roles.put("Staff - Specialty Badges", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
+                                         "attendee_add_note", "attendee_edit_with_override",
+                                         "reprint_badge_with_override", "badge_type_artist",
+                                         "badge_type_standard_press", "badge_type_emerging_press",
+                                         "badge_type_exhibitor", "badge_type_guest",
+                                         "badge_type_panelist", "badge_type_industry"});
+
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                                                "print_badge", "attendee_edit", "attendee_add_note",
                                                "reprint_badge", "view_staff_report",
@@ -156,10 +163,11 @@ public class LoadBaseDataPresenter {
                                                             "attendee_search", "print_badge", "attendee_edit",
                                                             "attendee_add_note", "reprint_badge", "view_staff_report",
                                                             "view_check_in_by_hour_report", "badge_type_vip"});
-        roles.put("Coordinator - Other Badges", new String[] {"at_con_registration", "pre_reg_check_in",
+        roles.put("Coordinator - Specialty Badges", new String[] {"at_con_registration", "pre_reg_check_in",
                                                               "attendee_search", "print_badge", "attendee_edit",
                                                               "attendee_add_note", "reprint_badge", "view_staff_report",
                                                               "view_check_in_by_hour_report", "badge_type_artist",
+                                                              "badge_type_standard_press", "badge_type_emerging_press",
                                                               "badge_type_exhibitor", "badge_type_guest",
                                                               "badge_type_panelist", "badge_type_industry"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
@@ -174,7 +182,7 @@ public class LoadBaseDataPresenter {
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "view_role_report", "view_attendance_report", "view_attendance_report_revenue",
-                "view_staff_report", "view_check_in_by_hour_report"});
+                "view_staff_report", "view_check_in_by_hour_report", "view_till_report"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
@@ -240,6 +248,14 @@ public class LoadBaseDataPresenter {
         Badge vip = BadgeFactory.createBadge("VIP", "VIP", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
+        // VIP badges have pre-printed color bars, and should just have the names
+        // and badge names printed. Clear the day text and stripe text, set the
+        // color bar to white so it isn't printed
+        vip.setDayText("");
+        for (AgeRange a : vip.getAgeRanges()) {
+            a.setStripeColor("#FFFFFF");
+            a.setStripeText("");
+        }
         results.append("    Creating " + vip.toString() + "\n");
         badgeRepository.save(vip);
     }
@@ -260,7 +276,7 @@ public class LoadBaseDataPresenter {
         Badge exhibitor = BadgeFactory.createBadge("Exhibitor", "Exhibitor", 0f, 0f, 0f, "#00FFFF");
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
-        for (AgeRange a : artist.getAgeRanges()) {
+        for (AgeRange a : exhibitor.getAgeRanges()) {
             a.setStripeColor("#1DE5D1");
         }
         results.append("    Creating " + exhibitor.toString() + "\n");
