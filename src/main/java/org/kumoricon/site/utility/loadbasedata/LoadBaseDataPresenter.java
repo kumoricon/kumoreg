@@ -4,6 +4,8 @@ import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeFactory;
 import org.kumoricon.model.badge.BadgeRepository;
+import org.kumoricon.model.blacklist.BlacklistName;
+import org.kumoricon.model.blacklist.BlacklistRepository;
 import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.RightRepository;
 import org.kumoricon.model.role.Role;
@@ -32,6 +34,9 @@ public class LoadBaseDataPresenter {
     @Autowired
     private RightRepository rightRepository;
 
+    @Autowired
+    private BlacklistRepository blacklistRepository;
+
     private static final Logger log = LoggerFactory.getLogger(LoadBaseDataPresenter.class);
 
     public LoadBaseDataPresenter() {
@@ -46,6 +51,7 @@ public class LoadBaseDataPresenter {
             addUsers(results);
             addBadges(results);
             addSpecialtyBadges(results);
+            addBlacklistedNames(results);
         }
         view.addResult(results.toString());
     }
@@ -59,6 +65,7 @@ public class LoadBaseDataPresenter {
             addUsers(results);
             addLiteBadges(results);
             addSpecialtyBadges(results);
+            addBlacklistedNames(results);
         }
         view.addResult(results.toString());
     }
@@ -103,6 +110,7 @@ public class LoadBaseDataPresenter {
         results.append("Creating rights\n");
         String[][] rights = {
             {"at_con_registration", "Add new attendees via At-Con Registration and close till"},
+            {"at_con_registration_blacklist", "Allow at-con registration for names on the blacklist"},
             {"pre_reg_check_in", "Check in preregistered attendees"},
             {"attendee_search", "Search for and view attendees"},
             {"attendee_edit", "Edit attendees from search results"},
@@ -171,7 +179,7 @@ public class LoadBaseDataPresenter {
                                                               "badge_type_exhibitor", "badge_type_guest",
                                                               "badge_type_panelist", "badge_type_industry"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                "print_badge", "attendee_edit", "attendee_add_note",
+                "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
@@ -316,6 +324,11 @@ public class LoadBaseDataPresenter {
         panelist.setWarningMessage("Panelist check in. See your coordinator!");
         results.append("    Creating " + panelist.toString() + "\n");
         badgeRepository.save(panelist);
+    }
+
+    private void addBlacklistedNames(StringBuilder results) {
+        results.append("Adding 'Blacklist Test' to name blacklist");
+        blacklistRepository.save(new BlacklistName("Blacklist", "Test"));
     }
 
     private void addLiteBadges(StringBuilder results) {

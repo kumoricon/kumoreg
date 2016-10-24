@@ -5,6 +5,7 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
+import org.kumoricon.model.blacklist.BlacklistService;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
@@ -45,6 +46,10 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BlacklistService blacklistService;
+
     private static final Logger log = LoggerFactory.getLogger(OrderPresenter.class);
 
     public OrderPresenter() {
@@ -88,11 +93,25 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     public void addAttendeeToOrder(OrderView view, Attendee attendee) {
         Order order = view.getOrder();
-        log.info("{} added attendee {} to order {}", view.getCurrentUsername(), attendee, order);
-        order.addAttendee(attendee);
+
+        if (!blacklistService.isOnBlacklist(attendee)) {
+            log.info("{} added attendee {} to order {}", view.getCurrentUsername(), attendee, order);
+            order.addAttendee(attendee);
+        } else {
+            if (view.currentUserHasRight("at_con_registration_blacklist")) {
+                log.info("{} added blacklisted attendee {} to order {}", view.getCurrentUsername(), attendee, order);
+                view.showBlacklistConfirmationWindow();
+                order.addAttendee(attendee);
+            } else {
+                view.showBlacklistWarningWindow();
+                log.info("{} tried to add {} to {} but attendee is on blacklist. Attendee not added.",
+                        view.getCurrentUser(), attendee, order);
+            }
+        }
         order.setTotalAmount(getOrderTotal(order));
         order = orderRepository.save(order);
         view.afterSuccessfulFetch(order);
+
     }
 
     private static BigDecimal getOrderTotal(Order order) {

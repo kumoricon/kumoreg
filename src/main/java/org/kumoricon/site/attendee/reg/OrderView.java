@@ -16,6 +16,7 @@ import org.kumoricon.site.attendee.FieldFactory;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.window.ConfirmationWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
+import org.kumoricon.site.attendee.window.WarningWindow;
 import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -161,5 +162,21 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
 
     public void confirmCancelOrder() {
         handler.cancelOrder(this);
+    }
+
+    /**
+     * Message shown to users who do not have the right allowing them to check in someone on the blacklist
+     */
+    public void showBlacklistWarningWindow() {
+        WarningWindow window = new WarningWindow("Please send this person to the manager's booth right away");
+        showWindow(window);
+    }
+
+    /**
+     * Message shown to users who have the right allowing them to check in someone on the blacklist
+     */
+    public void showBlacklistConfirmationWindow() {
+        WarningWindow window = new WarningWindow("This person matches a name on the attendee blacklist");
+        showWindow(window);
     }
 }

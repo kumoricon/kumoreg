@@ -1,6 +1,7 @@
 Change Log
 ----------------
 - Version 0.9.8 (Pending)
+    - Added blacklist warning messages (at-con check in only)
 
 - Version 0.9.7 (10/21/2016)
     - Removed Check In by Badge Report, added Search by Badge Type screen. (Attendees can be 
