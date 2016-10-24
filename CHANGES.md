@@ -1,6 +1,8 @@
 Change Log
 ----------------
 - Version 0.9.8 (Pending)
+    - Till report only displays closed sessions, displays same start and end time for all
+      payment types in session
     - Added blacklist warning messages (at-con check in only)
 
 - Version 0.9.7 (10/21/2016)

@@ -4,6 +4,8 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ public class TillReportPresenter {
 
     @Autowired
     UserRepository userRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(TillReportPresenter.class);
 
     public static String getTillReportStr(User currentUser, Integer sessionNum, List<Object[]> results) {
         StringBuilder output = new StringBuilder();
@@ -39,6 +43,7 @@ public class TillReportPresenter {
     }
 
     public void showAllTills(TillReportView view) {
+        log.info("{} viewed Till Report", view.getCurrentUsername());
         StringBuilder output = new StringBuilder();
         List<Object[]> results = orderRepository.getAllOrderCountsAndTotals();
 
