@@ -43,7 +43,8 @@ is 15 characters.
 <a name="2"></a>2: If empty/null, a badge number will be generated during import.
 
 <a name="3"></a>3: Paid = "N" indicates that money needs to be taken before a badge is printed and the attendee
-is allowed in to con. Attendees who have free badges (children under 6) should be "Y".
+is allowed in to con. Attendees who have free badges (children under 6) should be "Y". All attendees in a given 
+order must be paid or all attendees in an order must be not paid.
 
 <a name="4"></a>4: Valid badge types: 
 
@@ -52,7 +53,8 @@ is allowed in to con. Attendees who have free badges (children under 6) should b
 - Artist
 - Exhibitor
 - Guest
-- Press
+- Emerging Press
+- Standard Press
 - Industry
 - Panelist
 

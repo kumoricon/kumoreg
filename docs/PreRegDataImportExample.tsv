@@ -1,6 +1,6 @@
 First Name	Last Name	Badge Name	Badge Number	Zipcode	Country	Phone Number	Email Address	Birthdate	Emergency Contact Name	Emergency Contact Phone	Parent is Emergency Contact	Parent Name	Parent Phone	Paid	Amount	Pass Type	Order ID	Notes
-Abby	Normal	Normal-San		97209	USA	1231231234	abby@example.com	1985/01/17	Bill Smith	1234567890	N			Y	45	Weekend	psuq9etox4vzhp9ish0ne5nx51foblib	Test attendee
-Timmy	Normal			97209	USA	1231231234		2000/03/24	Abby Normal	1231231234	Y	Abby Normal	1231231234	Y	35	Weekend	psuq9etox4vzhp9ish0ne5nx51foblib	Test attendee
-Bill	McMoneybags	AllTheCash		97201	USA	3332224444	sorich@example.com	1979/05/03	Granny McMoneybags	1112228888	N			Y	300	VIP	pfsn4i5g3b0abnyuq0cxj556qly08raz	Another Test
-Martha	McMoneybags			97201	USA	3332224445	hubbyisrich@example.com	1995/11/12	Granny McMoneybags	1112228888	N			Y	300	VIP	pfsn4i5g3b0abnyuq0cxj556qly08raz	Another Test
-John	Doe	John the Ninja		12345	United States of America	4445556666	john@example.com	1980/12/24	Anna Smith	6667778888	N			Y	50	Weekend	x3tflqnrfwjwtf9u6js3n044bu60e2s2	Last Test
+Abby	Normal	Normal-San		97209	USA	1231231234	abby@example.com	1985-01-17	Bill Smith	1234567890	N			Y	45	Weekend	psuq9etox4vzhp9ish0ne5nx51foblib	Test attendee
+Timmy	Normal			97209	USA	1231231234		2000-03-24	Abby Normal	1231231234	Y	Abby Normal	1231231234	Y	35	Weekend	psuq9etox4vzhp9ish0ne5nx51foblib	Test attendee
+Bill	McMoneybags	AllTheCash		97201	USA	3332224444	sorich@example.com	1979-05-03	Granny McMoneybags	1112228888	N			Y	300	VIP	pfsn4i5g3b0abnyuq0cxj556qly08raz	Another Test
+Martha	McMoneybags			97201	USA	3332224445	hubbyisrich@example.com	1995-11-12	Granny McMoneybags	1112228888	N			Y	300	VIP	pfsn4i5g3b0abnyuq0cxj556qly08raz	Another Test
+John	Doe	John the Ninja		12345	United States of America	4445556666	john@example.com	1980-12-24	Anna Smith	6667778888	N			Y	50	Weekend	x3tflqnrfwjwtf9u6js3n044bu60e2s2	Last Test
