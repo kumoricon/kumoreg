@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class AttendeeImporterService {
     private AttendeeRepository attendeeRepository;
@@ -123,7 +124,9 @@ public class AttendeeImporterService {
                 Order currentOrder = orders.get(dataArray[17]);
                 attendee.setOrder(currentOrder);
                 currentOrder.addAttendee(attendee);
-                currentOrder.setTotalAmount(currentOrder.getTotalAmount().add(attendee.getPaidAmount()));
+                if (attendee.getPaid()) {
+                    currentOrder.setTotalAmount(currentOrder.getTotalAmount().add(attendee.getPaidAmount()));
+                }
             } else {
                 Order o = new Order();
                 o.setOrderId(dataArray[17]);
@@ -143,15 +146,11 @@ public class AttendeeImporterService {
         TSVFile.close();
 
         log.info("Read " + lineNumber + " lines");
-
-        // Check to make sure all attendees in order have paid and set paid flag accordingly
+        log.info("Setting paid/unpaid status in {} orders", ordersToAdd.size());
         for (Order o : ordersToAdd) {
-            Boolean isPaid = true;
-            for (Attendee a : o.getAttendeeList()) {
-                if (a.getPaid() == false) { isPaid = false; }
-            }
-            o.setPaid(isPaid);
+            validatePaidStatus(o);
         }
+
 
         log.info("{} saving {} orders and {} attendees to database", user, ordersToAdd.size(), attendeesToAdd.size());
         orderRepository.save(ordersToAdd);
@@ -160,6 +159,30 @@ public class AttendeeImporterService {
 
         log.info("{} done importing data", user);
         return String.format("Imported %s attendees and %s orders", attendeesToAdd.size(), ordersToAdd.size());
+    }
+
+    /**
+     * Validate and set paid status. Modifies items in place.
+     * Makes sure that all attendees in the order have paid, or all have not paid, and sets the
+     * order as paid accordingly.
+     * @param order Orders with attendees to validate
+     * @throws Exception Raises exception if any order has no attendees in it.
+     */
+    static void validatePaidStatus(Order order) throws Exception {
+        if (order == null) { return; }
+        Set<Attendee> attendees = order.getAttendeeList();
+        if (attendees.size() == 0) {
+            log.error("Error: Order {} has 0 attendees. This shouldn't happen!", order);
+            throw new Exception("Error: Order " + order + " has 0 attendees. This shouldn't happen!");
+        }
+        Boolean isPaid = attendees.iterator().next().getPaid();
+        for (Attendee a : attendees) {
+            if (a.getPaid() != isPaid) {
+                log.error("Error: Order {} has both paid and unpaid. This shouldn't happen!", order);
+                throw new Exception("Error: Order " + order + " has both paid and unpaid attendees");
+            }
+        }
+        order.setPaid(isPaid);
     }
 
     private String generateBadgeNumber(Integer badgeNumber) {

@@ -13,6 +13,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Represents a single order. It is assumed that either all attendees in an order have not paid,
+ * or all attendees in an order have paid - no support for partial orders. This shouldn't come up
+ * during regular usage, but could with imported data.
+ */
 @Entity
 @Table(name = "orders")
 public class Order {

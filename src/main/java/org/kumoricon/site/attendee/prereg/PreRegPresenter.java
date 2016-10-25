@@ -8,6 +8,7 @@ import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
+import org.kumoricon.site.attendee.reg.OrderView;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,15 @@ public class PreRegPresenter implements PrintBadgeHandler {
     public void showAttendee(PreRegView view, int id) {
         Attendee attendee = attendeeRepository.findOne(id);
         if (attendee != null) {
-            view.showAttendee(attendee, badgeRepository.findAll());
+            if (attendee.getPaid()) {
+                // Show prereg check in window that just asks to confirm information
+                view.showAttendee(attendee, badgeRepository.findAll());
+            } else {
+                // Attendee hasn't paid, redirect to at-con registration flow with the order in progress
+                log.info("{} checking in prereg attendee {} that had not paid, redirecting to order {}",
+                        view.getCurrentUsername(), attendee, attendee.getOrder());
+                view.navigateTo(OrderView.VIEW_NAME + "/" + attendee.getOrder().getId());
+            }
         } else {
             log.error("{} tried to view preregistered attendee id {} but they were not found",
                     view.getCurrentUsername(), id);

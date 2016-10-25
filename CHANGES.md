@@ -4,6 +4,9 @@ Change Log
     - Till report only displays closed sessions, displays same start and end time for all
       payment types in session
     - Added blacklist warning messages (at-con check in only)
+    - When checking in a prereg attendee, if they have not paid redirect to the at-con order flow 
+      with their order open.
+    - When importing attendees, verify that every attendee in an order has either paid or not paid
 
 - Version 0.9.7 (10/21/2016)
     - Removed Check In by Badge Report, added Search by Badge Type screen. (Attendees can be 
