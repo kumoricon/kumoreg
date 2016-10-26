@@ -109,7 +109,6 @@ public class AttendeeImporterService {
             try {
                 attendee.setPaidAmount(new BigDecimal(dataArray[15]));
             } catch (NumberFormatException e) {
-                System.out.println(dataArray[15]);
                 attendee.setPaidAmount(BigDecimal.ZERO);
             }
             if (badges.containsKey(dataArray[16])) {
@@ -119,7 +118,6 @@ public class AttendeeImporterService {
                 throw new Exception("Badge type " + dataArray[16] + " not found on line " + lineNumber);
             }
 
-            System.out.println(dataArray[17]);
             if (orders.containsKey(dataArray[17])) {
                 Order currentOrder = orders.get(dataArray[17]);
                 attendee.setOrder(currentOrder);
