@@ -112,6 +112,7 @@ public class LoadBaseDataPresenter {
             {"at_con_registration", "Add new attendees via At-Con Registration and close till"},
             {"at_con_registration_blacklist", "Allow at-con registration for names on the blacklist"},
             {"pre_reg_check_in", "Check in preregistered attendees"},
+            {"pre_reg_check_in_edit", "Edit preregistered attendee information during check in"},
             {"attendee_search", "Search for and view attendees"},
             {"attendee_edit", "Edit attendees from search results"},
             {"attendee_add_note", "Edit notes field on attendees, but no other fields"},
@@ -161,36 +162,38 @@ public class LoadBaseDataPresenter {
                                          "reprint_badge_with_override", "badge_type_artist",
                                          "badge_type_standard_press", "badge_type_emerging_press",
                                          "badge_type_exhibitor", "badge_type_guest",
-                                         "badge_type_panelist", "badge_type_industry"});
+                                         "badge_type_panelist", "badge_type_industry", "pre_reg_check_in_edit"});
 
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                                                "print_badge", "attendee_edit", "attendee_add_note",
                                                "reprint_badge", "view_staff_report",
-                                               "view_check_in_by_hour_report"});
+                                               "view_check_in_by_hour_report", "pre_reg_check_in_edit"});
         roles.put("Coordinator - VIP Badges", new String[] {"at_con_registration", "pre_reg_check_in",
                                                             "attendee_search", "print_badge", "attendee_edit",
                                                             "attendee_add_note", "reprint_badge", "view_staff_report",
-                                                            "view_check_in_by_hour_report", "badge_type_vip"});
+                                                            "view_check_in_by_hour_report", "badge_type_vip",
+                                                            "pre_reg_check_in_edit"});
         roles.put("Coordinator - Specialty Badges", new String[] {"at_con_registration", "pre_reg_check_in",
                                                               "attendee_search", "print_badge", "attendee_edit",
                                                               "attendee_add_note", "reprint_badge", "view_staff_report",
                                                               "view_check_in_by_hour_report", "badge_type_artist",
                                                               "badge_type_standard_press", "badge_type_emerging_press",
                                                               "badge_type_exhibitor", "badge_type_guest",
-                                                              "badge_type_panelist", "badge_type_industry"});
+                                                              "badge_type_panelist", "badge_type_industry",
+                                                              "pre_reg_check_in_edit"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
-                "view_attendance_report", "view_check_in_by_hour_report", "view_till_report"});
+                "view_attendance_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "view_role_report", "view_attendance_report", "view_attendance_report_revenue",
-                "view_staff_report", "view_check_in_by_hour_report", "view_till_report"});
+                "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();

@@ -1,10 +1,12 @@
 package org.kumoricon.site.attendee.prereg;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.service.print.formatter.BadgePrintFormatter;
+import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
@@ -28,6 +30,9 @@ public class PreRegPresenter implements PrintBadgeHandler {
     private BadgeRepository badgeRepository;
     @Autowired
     private BadgePrintService badgePrintService;
+    @Autowired
+    private AttendeeValidator attendeeValidator;
+
 
     private PreRegView view;
     private static final Logger log = LoggerFactory.getLogger(PreRegPresenter.class);
@@ -121,6 +126,12 @@ public class PreRegPresenter implements PrintBadgeHandler {
     }
 
     public Boolean validateBeforeCheckIn(PreRegCheckInWindow window, Attendee attendee) {
+        try {
+            attendeeValidator.validate(attendee);
+        } catch (ValueException e) {
+            view.notifyError(e.getMessage());
+            return false;
+        }
         if (attendee.isMinor()) {
             if (!window.parentalConsentFormReceived()) {
                 window.getParentView().notify("Error: Parental consent form has not been received");

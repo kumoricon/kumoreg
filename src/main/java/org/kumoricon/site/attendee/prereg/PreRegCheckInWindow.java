@@ -9,6 +9,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.model.user.User;
 import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.form.AttendeePreRegDetailForm;
@@ -76,9 +77,10 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
     public void showAttendee(Attendee attendee) {
         form.show(attendee);
 
+
         informationVerified.setValue(false);
         consentFormReceived.setValue(attendee.getParentFormReceived());
-        form.setAllFieldsButCheckInDisabled();
+        setEditableFields(parentView.getCurrentUser());
         if (attendee.isMinor() && !attendee.getCheckedIn()) {
             consentFormReceived.setEnabled(true);
         } else {
@@ -94,6 +96,30 @@ public class PreRegCheckInWindow extends Window implements DetailFormHandler {
             btnCheckIn.setCaption("Check In");
         }
         checkIfVerified();
+    }
+
+    private void setEditableFields(User user) {
+        if (user.hasRight("pre_reg_check_in_edit")) {
+            form.setEditableFields(AttendeeDetailForm.EditableFields.ALL);
+            form.setMinorFieldsEnabled(form.getAttendee().isMinor());
+
+            if (user.hasRight("attendee_override_price")) {
+                form.setManualPriceEnabled(true);
+            } else {
+                form.setManualPriceEnabled(false);
+            }
+        } else {
+            form.setEditableFields(AttendeeDetailForm.EditableFields.NONE);
+        }
+
+        // Override not implemented yet
+//        if (user.hasRight("attendee_edit_with_override") && !user.hasRight("attendee_edit")) {
+//            btnEdit.setEnabled(true);
+//            btnEdit.setVisible(true);
+//        } else {
+//            btnEdit.setEnabled(false);
+//            btnEdit.setVisible(false);
+//        }
     }
 
     public void setAvailableBadges(List<Badge> availableBadges) {

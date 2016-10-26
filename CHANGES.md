@@ -1,5 +1,8 @@
 Change Log
 ----------------
+- Version 1.0.1 (10/26/2016)
+    - Allow editing on prereg check in window if user has attenee_edit right
+    
 - Version 1.0.0 (10/22/2016)
     - Till report only displays closed sessions, displays same start and end time for all
       payment types in session

@@ -11,6 +11,7 @@ Available rights are:
 | at_con_registration           | Add new attendees via At-Con Registration and close till        |
 | at_con_registration_blacklist | Allow at-con registration for names on the blacklist            |
 | pre_reg_check_in              | Check in preregistered attendees                                |
+| pre_reg_check_in_edit         | Edit preregistered attendees during check in                    |
 | attendee_search               | Search for and view attendees                                   |
 | attendee_edit                 | Edit attendees from search results                              |
 | attendee_add_note             | Add note to attendee                                            |
