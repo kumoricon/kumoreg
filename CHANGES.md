@@ -1,10 +1,10 @@
 Change Log
 ----------------
-- Version 0.9.8 (Pending)
+- Version 1.0.0 (10/22/2016)
     - Till report only displays closed sessions, displays same start and end time for all
       payment types in session
     - Added blacklist warning messages (at-con check in only)
-    - When checking in a prereg attendee, if they have not paid redirect to the at-con order flow 
+    - When checking in a pre registered attendee, if they have not paid redirect to the at-con order flow 
       with their order open.
     - When importing attendees, verify that every attendee in an order has either paid or not paid
 
