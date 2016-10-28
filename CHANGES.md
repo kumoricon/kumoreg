@@ -1,5 +1,8 @@
 Change Log
 ----------------
+- Version 1.0.2 (10/27/2016)
+    - Bugfix: refresh search view after "save and reprint badge"
+
 - Version 1.0.1 (10/26/2016)
     - Allow editing on prereg check in window if user has attenee_edit right
     

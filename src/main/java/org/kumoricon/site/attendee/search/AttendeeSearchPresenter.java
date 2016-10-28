@@ -97,6 +97,7 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
             attendee.addHistoryEntry(view.getCurrentUser(), historyMessage);
             attendee = attendeeRepository.save(attendee);
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
+            view.refresh();
         } catch (ValueException e) {
             view.notifyError(e.getMessage());
             log.error("{} tried to save {} and got error {}", view.getCurrentUsername(), attendee, e.getMessage());
