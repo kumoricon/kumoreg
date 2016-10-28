@@ -1,5 +1,8 @@
 Change Log
 ----------------
+- Version 1.0.3 (pending)
+    - Bugfix: Till report won't scroll when longer than one screen high
+
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"
 

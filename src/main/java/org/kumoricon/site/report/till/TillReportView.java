@@ -24,12 +24,12 @@ public class TillReportView extends BaseView implements View {
     @PostConstruct
     public void init() {
         setSizeFull();
-
+        setHeightUndefined();
         addComponent(refresh);
         addComponent(data);
         data.setContentMode(ContentMode.HTML);
         setExpandRatio(data, 1f);
-        data.setSizeFull();
+        data.setHeightUndefined();
 
         refresh.addClickListener((Button.ClickListener) clickEvent -> { refresh.setCaption("Refresh"); handler.showAllTills(this); });
 
