@@ -1,6 +1,7 @@
 package org.kumoricon.model.user;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.kumoricon.model.Record;
 import org.kumoricon.model.role.Role;
 
 import javax.crypto.SecretKeyFactory;
@@ -13,12 +14,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Entity
 @Table(name = "users")
-public class User  {
+public class User extends Record {
     public static final String DEFAULT_PASSWORD = "password";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     @NotNull
     @Column(unique=true)
     private String username;
@@ -46,9 +44,6 @@ public class User  {
      * Creating a new user? Use UserFactory instead of creating the user object directly
      */
     public User() {}
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) {
@@ -127,25 +122,9 @@ public class User  {
         if (id != null) {
             return String.format("[User %s: %s]", id, username);
         } else {
-            return String.format("[%s]", username);
+            return String.format("[User: %s]", username);
         }
     }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if ( !(other instanceof User) ) return false;
-
-        final User user = (User) other;
-        if (user.getUsername() == null) {
-            return null == getUsername();
-        } else {
-            return user.getUsername().equals(getUsername());
-        }
-    }
-
-    @Override
-    public int hashCode() { return getUsername().hashCode(); }
 
     public boolean hasRight(String right) {
         return role != null && role.hasRight(right);

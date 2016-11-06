@@ -3,6 +3,7 @@ package org.kumoricon.model.order;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
+import org.kumoricon.model.Record;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.user.User;
 
@@ -20,10 +21,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "orders")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Order extends Record {
     @Length(min = 32, max = 32)
     @NotNull
     private String orderId;
@@ -78,9 +76,6 @@ public class Order {
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
     public Set<Attendee> getAttendeeList() { return attendeeList; }
     public void setAttendeeList(Set<Attendee> attendeeList) { this.attendeeList = attendeeList; }
     public void addAttendee(Attendee attendee) {
@@ -127,20 +122,11 @@ public class Order {
         }
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if ( !(other instanceof Order) ) return false;
-
-        final Order order = (Order) other;
-        return order.getOrderId().equals(getOrderId());
-
-    }
-
-    @Override
-    public int hashCode() { return getOrderId().hashCode(); }
-
     public String toString() {
-        return String.format("[Order %s: %s]", id, orderId);
+        if (id != null) {
+            return String.format("[Order %s: %s]", id, orderId);
+        } else {
+            return String.format("[Order: %s]", orderId);
+        }
     }
 }

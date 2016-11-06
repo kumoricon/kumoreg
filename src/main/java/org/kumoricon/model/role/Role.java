@@ -1,5 +1,7 @@
 package org.kumoricon.model.role;
 
+import org.kumoricon.model.Record;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -7,10 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "roles")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Role extends Record {
     @NotNull
     @Column(unique=true)
     private String name;
@@ -70,26 +69,14 @@ public class Role {
     }
 
     public String toString() {
-        return String.format("[Role %s: %s]", id, name);
+        if (id != null) {
+            return String.format("[Role %s: %s]", id, name);
+        } else {
+            return String.format("[Role: %s]", name);
+        }
     }
 
     public void clearRights() {
         this.rights.clear();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if ( !(other instanceof Role) ) return false;
-
-        final Role role = (Role) other;
-
-        return role.getName().equals(getName());
-
-    }
-
-    @Override
-    public int hashCode() {
-        return getName().hashCode();
     }
 }

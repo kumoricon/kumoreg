@@ -1,6 +1,9 @@
 package org.kumoricon.model.badge;
 
-import javax.persistence.*;
+import org.kumoricon.model.Record;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -8,10 +11,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "ageranges")
-public class AgeRange {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class AgeRange extends Record {
     @NotNull
     private String name;
     @Min(0)
@@ -48,10 +48,6 @@ public class AgeRange {
 
     public String getStripeText() { return stripeText; }
     public void setStripeText(String stripeText) { this.stripeText = stripeText; }
-
-
-    public Integer getId() { return id; }
-    public void setId(int id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -96,32 +92,6 @@ public class AgeRange {
     }
 
     public String toString() {
-        return String.format("%s (%s-%s): $%s", name, minAge, maxAge, cost.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AgeRange)) return false;
-
-        AgeRange ageRange = (AgeRange) o;
-
-        if (minAge != ageRange.minAge) return false;
-        if (maxAge != ageRange.maxAge) return false;
-        if (!name.equals(ageRange.name)) return false;
-        if (stripeColor != null ? !stripeColor.equals(ageRange.stripeColor) : ageRange.stripeColor != null)
-            return false;
-        return stripeText != null ? stripeText.equals(ageRange.stripeText) : ageRange.stripeText == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + minAge;
-        result = 31 * result + maxAge;
-        result = 31 * result + (stripeColor != null ? stripeColor.hashCode() : 0);
-        result = 31 * result + (stripeText != null ? stripeText.hashCode() : 0);
-        return result;
+        return String.format("[AgeRange: %s (%s-%s): $%s]", name, minAge, maxAge, cost.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
     }
 }

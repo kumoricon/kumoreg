@@ -1,5 +1,6 @@
 package org.kumoricon.model.attendee;
 
+import org.kumoricon.model.Record;
 import org.kumoricon.model.user.User;
 
 import javax.persistence.*;
@@ -11,10 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "attendeehistory")
-public class AttendeeHistory {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class AttendeeHistory extends Record {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
     @ManyToOne
@@ -31,9 +29,6 @@ public class AttendeeHistory {
         this.attendee = attendee;
         this.timestamp = new Date();
     }
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
 
     public Date getTimestamp() {
         if (timestamp == null) return null;
@@ -54,10 +49,14 @@ public class AttendeeHistory {
     public void setMessage(String message) { this.message = message; }
 
     public String toString() {
-        if (message != null && message.length() > 100) {
-            return String.format("[History %s: %s %s...]", id, timestamp, message.substring(0, 100));
+        String truncatedMessage = "";
+        if (message != null) {
+            truncatedMessage = message.length() > 100 ? message.substring(0, 100) + "..." : message;
+        }
+        if (id != null) {
+            return String.format("[History %s: %s %s]", id, timestamp, truncatedMessage);
         } else {
-            return String.format("[History %s: %s %s]", id, timestamp, message);
+            return String.format("[History: %s %s]", timestamp, truncatedMessage);
         }
     }
 }

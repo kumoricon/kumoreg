@@ -1,6 +1,7 @@
 package org.kumoricon.model.badge;
 
 import com.vaadin.server.ServiceException;
+import org.kumoricon.model.Record;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,10 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "badges")
-public class Badge {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Badge extends Record {
     @NotNull
     @Column(unique=true)
     private String name;
@@ -34,9 +32,6 @@ public class Badge {
         this();
         setName(name);
     }
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -75,24 +70,12 @@ public class Badge {
         throw new ServiceException("Error: No valid age range found in badge {} for age {}".format(this.name, age));
     }
 
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if ( !(other instanceof Badge) ) return false;
-
-        final Badge otherBadge = (Badge) other;
-
-        return otherBadge.getName().equals(getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
     public String toString() {
-        return String.format("[Badge %s: %s]", id, name);
+        if (id != null) {
+            return String.format("[Badge %s: %s]", id, name);
+        } else {
+            return String.format("[Badge: %s]", name);
+        }
     }
 
 }

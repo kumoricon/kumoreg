@@ -1,15 +1,15 @@
 package org.kumoricon.model.computer;
 
-import javax.persistence.*;
+import org.kumoricon.model.Record;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "computers")
-public class Computer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class Computer extends Record {
     /**
      * Client computer's IP address
      */
@@ -29,9 +29,6 @@ public class Computer {
      */
     private Integer yOffset;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
     public String getIpAddress() { return ipAddress; }
     public void setIpAddress(String ipAddress) { this.ipAddress = ipAddress; }
 
@@ -45,25 +42,11 @@ public class Computer {
     public void setyOffset(Integer yOffset) { this.yOffset = yOffset; }
 
     public String toString() {
-        return String.format("[Computer %s: %s]", id, ipAddress);
+        if (id != null) {
+            return String.format("[Computer %s: %s]", id, ipAddress);
+        } else {
+            return String.format("[Computer: %s]", ipAddress);
+        }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Computer)) return false;
-
-        Computer computer = (Computer) o;
-
-        if (ipAddress != null ? !ipAddress.equals(computer.ipAddress) : computer.ipAddress != null) return false;
-        return printerName != null ? printerName.equals(computer.printerName) : computer.printerName == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = ipAddress != null ? ipAddress.hashCode() : 0;
-        result = 31 * result + (printerName != null ? printerName.hashCode() : 0);
-        return result;
-    }
 }

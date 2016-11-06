@@ -1,7 +1,8 @@
 Change Log
 ----------------
-- Version 1.0.3 (pending)
+- Version 2.0.0 (pending)
     - Bugfix: Till report won't scroll when longer than one screen high
+    - Database schema/model changes. Not compatible with previous databases
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

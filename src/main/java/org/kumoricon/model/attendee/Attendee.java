@@ -1,5 +1,6 @@
 package org.kumoricon.model.attendee;
 
+import org.kumoricon.model.Record;
 import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
@@ -16,10 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "attendees")
-public class Attendee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Attendee extends Record {
     private String firstName;
     private String lastName;
     private String badgeName;                   // Badge name (optional)
@@ -73,9 +71,6 @@ public class Attendee {
             return true;    // If birthdate isn't set for some reason, treat them as a minor.
         }
     }
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -173,36 +168,13 @@ public class Attendee {
     public void setPreRegistered(boolean preRegistered) { this.preRegistered = preRegistered; }
     public Boolean isPreRegistered() { return preRegistered; }
 
+    @Override
     public String toString() {
-        return String.format("[Attendee %s: %s %s]", id, firstName, lastName);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Attendee)) return false;
-
-        Attendee attendee = (Attendee) o;
-
-        if (firstName != null ? !firstName.equals(attendee.firstName) : attendee.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(attendee.lastName) : attendee.lastName != null) return false;
-        if (badgeName != null ? !badgeName.equals(attendee.badgeName) : attendee.badgeName != null) return false;
-        if (badgeNumber != null ? !badgeNumber.equals(attendee.badgeNumber) : attendee.badgeNumber != null)
-            return false;
-        if (zip != null ? !zip.equals(attendee.zip) : attendee.zip != null) return false;
-        return country != null ? country.equals(attendee.country) : attendee.country == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = firstName != null ? firstName.hashCode() : 0;
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (badgeName != null ? badgeName.hashCode() : 0);
-        result = 31 * result + (badgeNumber != null ? badgeNumber.hashCode() : 0);
-        result = 31 * result + (zip != null ? zip.hashCode() : 0);
-        result = 31 * result + (country != null ? country.hashCode() : 0);
-        return result;
+        if (id != null) {
+            return String.format("[Attendee %s: %s %s]", id, firstName, lastName);
+        } else {
+            return String.format("[Attendee: %s %s]", firstName, lastName);
+        }
     }
 
     public AgeRange getCurrentAgeRange() {

@@ -1,18 +1,20 @@
 package org.kumoricon.model.blacklist;
 
-import javax.persistence.*;
+import org.kumoricon.model.Record;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "blacklist")
-public class BlacklistName {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class BlacklistName extends Record {
     @NotNull
     private String firstName;
     @NotNull
     private String lastName;
+
+    public BlacklistName() {}
 
     public BlacklistName(String firstName, String lastName) {
         this.firstName = firstName;
@@ -28,25 +30,11 @@ public class BlacklistName {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BlacklistName)) return false;
-
-        BlacklistName that = (BlacklistName) o;
-
-        if (!firstName.equals(that.firstName)) return false;
-        return lastName.equals(that.lastName);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
-        return result;
-    }
-
     public String toString() {
-        return String.format("[Blacklist %s: %s %s]", id, firstName, lastName);
+        if (id != null) {
+            return String.format("[Blacklist %s: %s %s]", id, firstName, lastName);
+        } else {
+            return String.format("[Blacklist: %s %s]", firstName, lastName);
+        }
     }
 }

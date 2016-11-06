@@ -1,22 +1,19 @@
 package org.kumoricon.model.role;
 
-import javax.persistence.*;
+import org.kumoricon.model.Record;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "rights")
-public class Right implements Comparable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Right extends Record implements Comparable {
     @NotNull
     @Column(unique=true)
     private String name;
     private String description;
-
-    public String toString() {
-        return name;
-    }
 
     public Right() {}
 
@@ -58,6 +55,15 @@ public class Right implements Comparable {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    @Override
+    public String toString() {
+        if (id != null) {
+            return String.format("[Right %s: %s]", id, name);
+        } else {
+            return String.format("[Right: %s]", name);
+        }
+    }
 
     @Override
     public int compareTo(Object o) {

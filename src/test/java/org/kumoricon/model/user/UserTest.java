@@ -77,25 +77,4 @@ public class UserTest {
         user.setPassword("testing123");
         assertTrue(user.checkPassword("testing123"));
     }
-
-    @Test
-    public void testEquals() throws Exception {
-        User user1 = new User();
-        User user2 = new User();
-        user1.setUsername("bob");
-        user2.setUsername("bob");
-
-        assertEquals(user1, user2);
-    }
-
-    @Test
-    public void testEqualsNullUsername() throws Exception {
-        User user1 = new User();
-        User user2 = new User();
-        user1.setUsername(null);
-        user2.setUsername(null);
-
-        assertEquals(user1, user2);
-    }
-
 }
