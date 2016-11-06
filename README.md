@@ -14,9 +14,14 @@ Convention Registration Management
 [![Report](docs/screenshots/report_t.png)](docs/screenshots/report.png)
    
 # Requirements
-- Java 8
-- MySQL
-
+- Server:
+  - Java 8
+  - MySQL
+  - CUPS
+- Clients:
+  - Web browser
+  - IP Addresses that don't change (either statically mapped or assigned via DHCP)
+  - Works best at 1920x1080 resolution
 
 # Table of Contents
 - [Installation](docs/installation.md)
