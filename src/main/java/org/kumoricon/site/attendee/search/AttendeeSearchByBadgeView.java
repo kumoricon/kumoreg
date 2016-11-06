@@ -86,8 +86,12 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
     }
 
     public void afterAttendeeFetch(List<Attendee> attendees) {
+        Object[] sortBy = {attendeeTable.getSortContainerPropertyId()};
+        boolean[] sortOrder = {attendeeTable.isSortAscending()};
+
         attendeeContainer.removeAllItems();
         attendeeContainer.addAll(attendees);
+        attendeeTable.sort(sortBy, sortOrder);
     }
 
     public void afterBadgeTypeFetch(List<Badge> badges) {

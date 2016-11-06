@@ -124,8 +124,11 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
     }
 
     public void afterSuccessfulFetch(List<Attendee> attendees) {
+        Object[] sortBy = {tblResult.getSortContainerPropertyId()};
+        boolean[] sortOrder = {tblResult.isSortAscending()};
         attendeeBeanList.removeAllItems();
         attendeeBeanList.addAll(attendees);
+        tblResult.sort(sortBy, sortOrder);
     }
 
     private void search() {

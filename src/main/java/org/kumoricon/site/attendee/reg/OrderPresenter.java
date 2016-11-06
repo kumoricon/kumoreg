@@ -59,7 +59,7 @@ public class OrderPresenter implements PrintBadgeHandler {
         Order order = new Order();
         order.setOrderId(order.generateOrderId());
         log.info("{} created new order {}", view.getCurrentUser(), order);
-        orderRepository.save(order);
+        order = orderRepository.save(order);
         view.navigateTo(view.VIEW_NAME + "/" + order.getId());
     }
 

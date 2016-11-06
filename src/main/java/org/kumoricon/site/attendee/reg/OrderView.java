@@ -112,6 +112,9 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
     }
 
     public void afterSuccessfulFetch(Order order) {
+        Object[] sortBy = {attendeeList.getSortContainerPropertyId()};
+        boolean[] sortOrder = {attendeeList.isSortAscending()};
+
         this.currentOrder = order;
         orderId.setValue(order.getOrderId());
         total.setValue(order.getTotalAmount().toString());
@@ -125,6 +128,8 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         attendeeList.setVisibleColumns("firstName", "lastName", "badge", "paid", "paidAmount");
         attendeeList.setColumnHeaders("First Name", "Last Name", "Badge Type", "Paid", "Cost");
         attendeeList.setConverter("badge", new BadgeToStringConverter());
+
+        attendeeList.sort(sortBy, sortOrder);
 
         setEnabled(!order.getPaid());   // Disable editing if the order has been paid
     }

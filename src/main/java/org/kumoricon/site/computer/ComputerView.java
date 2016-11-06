@@ -98,8 +98,12 @@ public class ComputerView extends BaseView implements View {
     }
 
     public void afterSuccessfulFetch(List<Computer> computers) {
+        // Todo: re-sort items after refreshing, but need to replace editing in the grid with
+        // a real edit window first
+        //List<SortOrder> sortBy = data.getSortOrder();
         computerList.removeAllItems();
         computerList.addAll(computers);
+        //data.sort(sortBy);
     }
 
     public void clearSelection() { data.select(null); }

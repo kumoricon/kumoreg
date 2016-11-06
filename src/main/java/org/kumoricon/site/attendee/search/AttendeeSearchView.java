@@ -95,8 +95,12 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
     }
 
     public void afterSuccessfulFetch(List<Attendee> attendees) {
+        Object[] sortBy = {tblResult.getSortContainerPropertyId()};
+        boolean[] sortOrder = {tblResult.isSortAscending()};
+
         attendeeBeanList.removeAllItems();
         attendeeBeanList.addAll(attendees);
+        tblResult.sort(sortBy, sortOrder);
     }
 
     private void search() {
