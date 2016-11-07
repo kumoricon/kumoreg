@@ -1,85 +1,56 @@
-package org.kumoricon.site.report.attendeeExport;
+package org.kumoricon.site.report.export.data;
 
 import com.vaadin.server.StreamResource;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
+@Service
+public class AttendeeTSVExport extends BaseTSVExport implements Export {
+    private static String FILENAME="attendees.csv";
 
-@Controller
-public class AttendeeExportPresenter {
-    @Autowired
     private AttendeeRepository attendeeRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(AttendeeExportPresenter.class);
-
-
-    public AttendeeExportPresenter() {
+    @Autowired
+    public AttendeeTSVExport(AttendeeRepository repository) {
+        this.attendeeRepository = repository;
     }
 
-    private static String format(Boolean input) {
-        if (input == null) return "\t";
-        return input.toString() + "\t";
-    }
-
-    private static String format(String input) {
-        if (input == null || input.trim().equals("")) {
-            return "\t";
-        } else {
-            return input.trim() + "\t";
-        }
-    }
-
-    private static String format(LocalDate input) {
-        if (input == null) return "\t";
-        return input.toString() + "\t";
-    }
-
-    private static String format(Date input) {
-        if (input == null) return "\t";
-        return input.toString() + "\t";
-    }
-
-    private static String format(BigDecimal input) {
-        if (input == null) return "\t";
-        return input.toString() + "\t";
+    private String buildHeader() {
+        String header = "ID\t" +
+                "First Name\t" +
+                "Last Name\t" +
+                "Badge Name\t" +
+                "Badge Number\t" +
+                "ZIP\t" +
+                "Country\t" +
+                "Phone Number\t" +
+                "Email\t" +
+                "Birthdate\t" +
+                "Emergency Contact\t" +
+                "Emergency Phone\t" +
+                "Parent Name\t" +
+                "Parent Phone\t" +
+                "Parent Form Rec'd?\t" +
+                "Preregistered\t" +
+                "Badge Type\t" +
+                "Checked In?\t" +
+                "Check In Time\t" +
+                "Paid?\t" +
+                "Paid Amount\t" +
+                "\n";
+        return header;
     }
 
     private String buildTable(List<Attendee> data) {
         StringBuilder sb = new StringBuilder();
-        sb.append("ID\t");
-        sb.append("First Name\t");
-        sb.append("Last Name\t");
-        sb.append("Badge Name\t");
-        sb.append("Badge Number\t");
-        sb.append("ZIP\t");
-        sb.append("Country\t");
-        sb.append("Phone Number\t");
-        sb.append("Email\t");
-        sb.append("Birthdate\t");
-        sb.append("Emergency Contact\t");
-        sb.append("Emergency Phone\t");
-        sb.append("Parent Name\t");
-        sb.append("Parent Phone\t");
-        sb.append("Parent Form Rec'd?\t");
-        sb.append("Preregistered\t");
-        sb.append("Badge Type\t");
-        sb.append("Checked In?\t");
-        sb.append("Check In Time\t");
-        sb.append("Paid?\t");
-        sb.append("Paid Amount\t");
-        sb.append("\n");
+        sb.append(buildHeader());
 
         for (Attendee attendee : data) {
             sb.append(format(attendee.getId().toString()));
@@ -109,14 +80,19 @@ public class AttendeeExportPresenter {
         return sb.toString();
     }
 
-    public StreamResource createExportContent(AttendeeExportView view) {
-        log.info("{} downloaded Attendee Export", view.getCurrentUser());
+    public StreamResource getStream() {
         return new StreamResource(new StreamResource.StreamSource() {
             @Override
             public InputStream getStream () {
                 String output = buildTable(attendeeRepository.findAll());
                 return new ByteArrayInputStream(output.getBytes(Charset.forName("UTF-8")));
             }
-        }, "attendees.csv");
+        }, getFilename());
     }
+
+    public String getFilename() {
+        return FILENAME;
+    }
+
+
 }

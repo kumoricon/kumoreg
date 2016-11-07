@@ -4,6 +4,7 @@ Change Log
     - Bugfix: Till report won't scroll when longer than one screen high
     - Database schema/model changes. Not compatible with previous databases
     - Maintain sort order in search results after editing an attendee
+    - Added attendee export to tab-separated file
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"
