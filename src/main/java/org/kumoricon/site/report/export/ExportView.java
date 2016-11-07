@@ -19,14 +19,18 @@ public class ExportView extends BaseView implements View {
     @Autowired
     private ExportPresenter handler;
 
-    private Button attendeeExportBtn = new Button("Attendee Export");
+    private Button attendeeExportBtn = new Button("Download Attendee list as TSV");
+    private Button tillExportBtn = new Button("Download Till report as TSV");
 
     @PostConstruct
     public void init() {
-        attendeeExportBtn.setCaption("Download Attendee list as TSV");
         addComponent(attendeeExportBtn);
         FileDownloader attendeeDownloader = new FileDownloader(handler.createAttendeeExport(this));
         attendeeDownloader.extend(attendeeExportBtn);
+
+        addComponent(tillExportBtn);
+        FileDownloader tillDownloader = new FileDownloader(handler.createTillExport(this));
+        tillDownloader.extend(tillExportBtn);
     }
 
     public String getRequiredRight() {
