@@ -37,6 +37,7 @@ Available rights are:
 | view_role_report              | View registration system role report                            |
 | view_check_in_by_badge_report | View check ins by badge type report                             |
 | view_till_report              | View till report                                                |
+| view_export                   | Export information/reports                                      |
 |                               |                                                                 |
 | manage_staff                  | Add/edit users and reset passwords                              |
 | manage_pass_types             | Add/edit badge types                                            |
