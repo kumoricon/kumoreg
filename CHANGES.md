@@ -6,6 +6,7 @@ Change Log
     - Maintain sort order in search results after editing an attendee
     - Search by first name, last name, and badge name instead of just last name.
     - Added attendee export to tab-separated file
+    - Added till export to tab-separated file
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"
