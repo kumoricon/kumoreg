@@ -8,6 +8,7 @@ Change Log
     - Added attendee export to tab-separated file
     - Added till export to tab-separated file
     - Fixed Reprint Badge button on Test Badge window
+    - Added friendly error message when trying to print and no printer can be found
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

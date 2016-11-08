@@ -24,19 +24,14 @@ public class BadgePrintService extends PrintService {
      * @param attendees List of attendees
      * @param clientIPAddress Client computer's IP address
      * @return String Result message
+     * @throws PrintException Printer error
      */
-    public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset) {
+    public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset) throws PrintException {
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
                     getCurrentBadgeFormatter(attendees, xOffset, yOffset);
-            try {
-                printDocument(badgePrintFormatter.getStream(), client.getPrinterName());
-            } catch (PrintException e) {
-                log.error(String.format("Error printing badge for %s: %s",
-                        clientIPAddress, e.getMessage()), e);
-                return("Error printing. No printers found? More information in server logs");
-            }
+            printDocument(badgePrintFormatter.getStream(), client.getPrinterName());
         } else {
             return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
@@ -50,19 +45,14 @@ public class BadgePrintService extends PrintService {
      * @param attendees List of attendees
      * @param clientIPAddress Client computer's IP address
      * @return String Result message
+     * @throws PrintException Printer Error
      */
-    public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) {
+    public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) throws PrintException {
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
                     getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset());
-            try {
-                printDocument(badgePrintFormatter.getStream(), client.getPrinterName());
-            } catch (PrintException e) {
-                log.error(String.format("Error printing badge for %s: %s",
-                        clientIPAddress, e.getMessage()), e);
-                return("Error printing. No printers found? More information in server logs");
-            }
+            printDocument(badgePrintFormatter.getStream(), client.getPrinterName());
         } else {
             return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }

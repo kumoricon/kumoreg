@@ -46,8 +46,9 @@ public abstract class PrintService {
      * no match is found.
      * @param name Printer name (case insensitive)
      * @return PrintService
+     * @throws PrintException Exception if printer not found and default printer isn't set
      */
-    public javax.print.PrintService findPrinter(String name) {
+    public javax.print.PrintService findPrinter(String name) throws PrintException {
         name = name.toLowerCase().trim();
         javax.print.PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
 
@@ -61,8 +62,9 @@ public abstract class PrintService {
             log.warn("Printer \"{}\" not found, using default printer \"{}\"", name, printer.getName());
             return printer;
         }
-        log.error("Printer \"%s\" not found, no default printer found. Set a printer as default.", name);
-        return null;
+
+        log.error("Printer \"{}\" not found, no default printer found. Set a printer as default.", name);
+        throw new PrintException("Error: Printer named '" + name + "' does not exist and no default printer set");
     }
 
     /**
