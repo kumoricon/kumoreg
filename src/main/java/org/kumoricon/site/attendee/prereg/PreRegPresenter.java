@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import javax.print.PrintException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,8 +117,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         BaseView v = printBadgeWindow.getParentView();
         log.info("{} reprinting badges for preregistered attendee(s) {}", v.getCurrentUser(), attendeeList);
-        printBadgeWindow.getParentView().notify(
-                badgePrintService.printBadgesForAttendees(attendeeList, v.getCurrentClientIPAddress()));
+        printBadges(printBadgeWindow.getParentView(), attendeeList);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class PreRegPresenter implements PrintBadgeHandler {
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
         log.info("{} printing badges for preregistered attendee(s) {}", view.getCurrentUsername(), attendeeList);
-        view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress()));
+        printBadges((BaseView) view, attendeeList);
         view.showPrintBadgeWindow(attendeeList);
     }
 
@@ -193,6 +193,22 @@ public class PreRegPresenter implements PrintBadgeHandler {
             window.setCheckInButtonEnabled(true);
         } else {
             window.setCheckInButtonEnabled(false);
+        }
+    }
+
+    /**
+     * Print badges for the given attendees and display any error or result messages
+     * @param view Current view
+     * @param attendeeList Attendees to print badges for
+     */
+    private void printBadges(BaseView view, List<Attendee> attendeeList) {
+        try {
+            String result = badgePrintService.printBadgesForAttendees(
+                    attendeeList, view.getCurrentClientIPAddress());
+            view.notify(result);
+        } catch (PrintException e) {
+            log.error("Error printing badges for {}", view.getCurrentUsername(), e);
+            view.notifyError(e.getMessage());
         }
     }
 }
