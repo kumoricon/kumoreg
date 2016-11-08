@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import javax.print.PrintException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +103,7 @@ public class TestBadgePresenter implements PrintBadgeHandler {
             log.info("{} reprinting test badges for {}",
                     view.getCurrentUsername(), attendeeList, view.getXOffset(), view.getYOffset());
             view.notify("Reprinting badges");
+            printBadges(view, attendeeList, view.getXOffset(), view.getYOffset());
         } else {
             view.notify("No attendees selected");
         }
@@ -114,6 +116,12 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     }
 
     private void printBadges(BaseView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
-        view.notify(badgePrintService.printBadgesForAttendees(attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset));
+        try {
+            String result = badgePrintService.printBadgesForAttendees(
+                    attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset);
+            view.notify(result);
+        } catch (PrintException e) {
+            view.notifyError(e.getMessage());
+        }
     }
 }

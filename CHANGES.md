@@ -7,6 +7,7 @@ Change Log
     - Search by first name, last name, and badge name instead of just last name.
     - Added attendee export to tab-separated file
     - Added till export to tab-separated file
+    - Fixed Reprint Badge button on Test Badge window
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"
