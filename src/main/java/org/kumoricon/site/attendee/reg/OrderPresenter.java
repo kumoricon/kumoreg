@@ -10,11 +10,10 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
-import org.kumoricon.service.print.BadgePrintService;
-import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.BadgePrintingPresenter;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
@@ -23,13 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.PrintException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class OrderPresenter implements PrintBadgeHandler {
+public class OrderPresenter extends BadgePrintingPresenter implements PrintBadgeHandler {
     @Autowired
     private OrderRepository orderRepository;
 
@@ -38,9 +36,6 @@ public class OrderPresenter implements PrintBadgeHandler {
 
     @Autowired
     private AttendeeRepository attendeeRepository;
-
-    @Autowired
-    private BadgePrintService badgePrintService;
 
     @Autowired
     private AttendeeValidator attendeeValidator;
@@ -241,26 +236,4 @@ public class OrderPresenter implements PrintBadgeHandler {
                 printBadgeWindow.getParentView().getCurrentUser(), attendeeList);
         printBadges(printBadgeWindow.getParentView(), attendeeList);
     }
-
-    @Override
-    public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
-        return badgePrintService.getCurrentBadgeFormatter(attendees, printBadgeWindow.getParentView().getCurrentClientIPAddress());
-    }
-
-    /**
-     * Print badges for the given attendees and display any error or result messages
-     * @param view Current view
-     * @param attendeeList Attendees to print badges for
-     */
-    private void printBadges(BaseView view, List<Attendee> attendeeList) {
-        try {
-            String result = badgePrintService.printBadgesForAttendees(
-                    attendeeList, view.getCurrentClientIPAddress());
-            view.notify(result);
-        } catch (PrintException e) {
-            log.error("Error printing badges for {}", view.getCurrentUsername(), e);
-            view.notifyError(e.getMessage());
-        }
-    }
-
 }
