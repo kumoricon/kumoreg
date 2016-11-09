@@ -115,12 +115,20 @@ public class TestBadgePresenter implements PrintBadgeHandler {
         return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset());
     }
 
+    /**
+     * Print badges for the given attendees and display any error or result messages
+     * @param view Current view
+     * @param attendeeList Attendees to print badges for
+     * @param xOffset Printing X offset in points (1/72 inch)
+     * @param yOffset printing Y offset in points (1/72 inch)
+     */
     private void printBadges(BaseView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
         try {
             String result = badgePrintService.printBadgesForAttendees(
                     attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset);
             view.notify(result);
         } catch (PrintException e) {
+            log.error("Error printing badges for {}", view.getCurrentUsername(), e);
             view.notifyError(e.getMessage());
         }
     }
