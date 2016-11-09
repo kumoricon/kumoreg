@@ -10,8 +10,6 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
-import org.kumoricon.service.print.BadgePrintService;
-import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.*;
@@ -25,13 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import javax.print.PrintException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @Scope("request")
-public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler, AddNoteHandler {
+public class AttendeeSearchPresenter extends BadgePrintingPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler, AddNoteHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
 
@@ -43,9 +40,6 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private BadgePrintService badgePrintService;
 
     @Autowired
     private AttendeeValidator attendeeValidator;
@@ -179,11 +173,6 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
         }
     }
 
-    @Override
-    public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
-        return badgePrintService.getCurrentBadgeFormatter(attendees, printBadgeWindow.getParentView().getCurrentClientIPAddress());
-    }
-
     public void searchChanged(String searchString) {
         if (searchString != null) {
             view.navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString.trim());
@@ -269,21 +258,4 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void showBadgeTypes(AttendeeSearchByBadgeView view) {
         view.afterBadgeTypeFetch(badgeRepository.findByVisibleTrue());
     }
-
-    /**
-     * Print badges for the given attendees and display any error or result messages
-     * @param view Current view
-     * @param attendeeList Attendees to print badges for
-     */
-    private void printBadges(BaseView view, List<Attendee> attendeeList) {
-        try {
-            String result = badgePrintService.printBadgesForAttendees(
-                    attendeeList, view.getCurrentClientIPAddress());
-            view.notify(result);
-        } catch (PrintException e) {
-            log.error("Error printing badges for {}", view.getCurrentUsername(), e);
-            view.notifyError(e.getMessage());
-        }
-    }
-
 }

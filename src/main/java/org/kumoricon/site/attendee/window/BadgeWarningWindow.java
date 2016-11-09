@@ -5,7 +5,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.site.attendee.prereg.PreRegPresenter;
 
 
 public class BadgeWarningWindow extends Window {

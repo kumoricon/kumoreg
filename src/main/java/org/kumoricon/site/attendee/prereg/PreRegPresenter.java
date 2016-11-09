@@ -4,40 +4,31 @@ import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
-import org.kumoricon.service.print.BadgePrintService;
-import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.BadgePrintingPresenter;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
 import org.kumoricon.site.attendee.reg.OrderView;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import javax.print.PrintException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @Scope("request")
-public class PreRegPresenter implements PrintBadgeHandler {
+public class PreRegPresenter extends BadgePrintingPresenter implements PrintBadgeHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
     @Autowired
     private BadgeRepository badgeRepository;
     @Autowired
-    private BadgePrintService badgePrintService;
-    @Autowired
     private AttendeeValidator attendeeValidator;
 
-
     private PreRegView view;
-    private static final Logger log = LoggerFactory.getLogger(PreRegPresenter.class);
-
 
     public PreRegPresenter() {
     }
@@ -120,11 +111,6 @@ public class PreRegPresenter implements PrintBadgeHandler {
         printBadges(printBadgeWindow.getParentView(), attendeeList);
     }
 
-    @Override
-    public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
-        return badgePrintService.getCurrentBadgeFormatter(attendees, printBadgeWindow.getParentView().getCurrentClientIPAddress());
-    }
-
     public Boolean validateBeforeCheckIn(PreRegCheckInWindow window, Attendee attendee) {
         try {
             attendeeValidator.validate(attendee);
@@ -196,19 +182,4 @@ public class PreRegPresenter implements PrintBadgeHandler {
         }
     }
 
-    /**
-     * Print badges for the given attendees and display any error or result messages
-     * @param view Current view
-     * @param attendeeList Attendees to print badges for
-     */
-    private void printBadges(BaseView view, List<Attendee> attendeeList) {
-        try {
-            String result = badgePrintService.printBadgesForAttendees(
-                    attendeeList, view.getCurrentClientIPAddress());
-            view.notify(result);
-        } catch (PrintException e) {
-            log.error("Error printing badges for {}", view.getCurrentUsername(), e);
-            view.notifyError(e.getMessage());
-        }
-    }
 }
