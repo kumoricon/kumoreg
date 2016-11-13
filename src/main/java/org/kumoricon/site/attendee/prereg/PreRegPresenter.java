@@ -4,6 +4,7 @@ import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
+import org.kumoricon.service.AttendeeSearchService;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.service.validate.AttendeeValidator;
@@ -32,6 +33,8 @@ public class PreRegPresenter implements PrintBadgeHandler {
     private BadgePrintService badgePrintService;
     @Autowired
     private AttendeeValidator attendeeValidator;
+    @Autowired
+    private AttendeeSearchService attendeeSearchService;
 
 
     private PreRegView view;
@@ -48,21 +51,17 @@ public class PreRegPresenter implements PrintBadgeHandler {
     }
 
     public void searchFor(String searchString) {
-        log.info("{} searched preregistered attendees for {}", view.getCurrentUsername(), searchString);
         view.getAttendeeBeanList().removeAllItems();
-        if (searchString != null && !searchString.trim().isEmpty()) {
-            searchString = searchString.trim();
-            List<Attendee> attendees;
-            if (searchString.length() == 32) {
-                // OrderId is 32 characters long - anything else, search by last name
-                attendees = attendeeRepository.findByOrderNumber(searchString);
-            } else {
-                attendees = attendeeRepository.findNotCheckedInByLastName(searchString);
-            }
-            view.afterSuccessfulFetch(attendees);
-            if (attendees.isEmpty()) {
-                view.notify("No matching attendees found");
-            }
+        long start = System.currentTimeMillis();
+        List<Attendee> attendees = attendeeSearchService.search(searchString);
+        long finish = System.currentTimeMillis();
+        log.info("{} searched Attendees for \"{}\" and got {} results in {} ms",
+                view.getCurrentUsername(), searchString, attendees.size(), finish-start);
+
+        List<Attendee> results = attendeeSearchService.search(searchString);
+        view.afterSuccessfulFetch(results);
+        if (results.isEmpty()) {
+            view.notify("No matching attendees found");
         }
     }
 

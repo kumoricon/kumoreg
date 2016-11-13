@@ -31,7 +31,7 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
     @Autowired
     private PreRegPresenter handler;
 
-    private TextField txtSearch = new TextField("Last Name");
+    private TextField txtSearch = new TextField("Search");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
@@ -105,8 +105,11 @@ public class PreRegView extends BaseView implements View, AttendeePrintView {
                 attendeeId = null;
             }
             if (searchString != null) {
-                txtSearch.setValue(searchString);
-                handler.searchFor(searchString);
+                if (!searchString.equals(txtSearch.getValue())) {
+                    txtSearch.setValue(searchString);
+                } else {
+                    handler.searchFor(searchString);
+                }
             }
 
             if (attendeeId != null) {

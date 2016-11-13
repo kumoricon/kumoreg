@@ -10,6 +10,7 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.service.AttendeeSearchService;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.service.validate.AttendeeValidator;
@@ -33,6 +34,9 @@ import java.util.List;
 public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler, AddNoteHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
+
+    @Autowired
+    private AttendeeSearchService attendeeSearchService;
 
     @Autowired
     private AttendeeHistoryRepository attendeeHistoryRepository;
@@ -192,11 +196,13 @@ public class AttendeeSearchPresenter implements PrintBadgeHandler, OverrideHandl
     public void searchFor(String searchString) {
         if (searchString != null && !searchString.trim().isEmpty()) {
             searchString = searchString.trim();
-            List<Attendee> attendees = attendeeRepository.findByLastNameOrBadgeNumber(searchString);
-            log.info("{} searched Attendees for \"{}\" and got {} results", view.getCurrentUsername(), searchString, attendees.size());
-            if (attendees.size() > 0) {
-                view.afterSuccessfulFetch(attendees);
-            } else {
+            long start = System.currentTimeMillis();
+            List<Attendee> attendees = attendeeSearchService.search(searchString);
+            long finish = System.currentTimeMillis();
+            log.info("{} searched Attendees for \"{}\" and got {} results in {} ms",
+                    view.getCurrentUsername(), searchString, attendees.size(), finish-start);
+            view.afterSuccessfulFetch(attendees);
+            if (attendees.size() == 0) {
                 view.notify("No matching attendees found");
             }
         }

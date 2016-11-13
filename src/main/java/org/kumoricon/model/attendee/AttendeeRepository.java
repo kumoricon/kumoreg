@@ -3,14 +3,17 @@ package org.kumoricon.model.attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public interface AttendeeRepository extends JpaRepository<Attendee, Integer> {
-    List<Attendee> findByLastNameStartsWithIgnoreCase(String lastName);
+public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, JpaSpecificationExecutor {
+
+    @Query(value = "select a from Attendee a inner join a.order as o where o.orderId LIKE ?1 OR a.badgeNumber LIKE ?1")
+    List<Attendee> findByBadgeNumberOrOrderId(String searchString);
 
     @Query(value = "select a from Attendee a where a.lastName like ?1% or a.badgeNumber like ?1%")
     List<Attendee> findByLastNameOrBadgeNumber(String searchString);
@@ -53,6 +56,4 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer> {
 
     @Query(value = "select a from Attendee a where a.badge = ?1")
     List<Attendee> findByBadgeType(Badge badge);
-
-
 }

@@ -30,7 +30,7 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
     @Autowired
     private AttendeeSearchPresenter handler;
 
-    private TextField txtSearch = new TextField("Last Name or Badge Number");
+    private TextField txtSearch = new TextField("Search");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
@@ -89,7 +89,9 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         } else {
             String searchString = viewChangeEvent.getParameters();
             tblResult.clear();
-            txtSearch.setValue(searchString);
+            if (txtSearch.getValue() != null && !txtSearch.getValue().equals(searchString)) {
+                txtSearch.setValue(searchString);
+            }
             handler.searchFor(searchString);
         }
     }

@@ -16,7 +16,7 @@ public class ComputerService {
     /**
      * Finds a computer record or returns a Computer object with default information
      * (Destination printer "Default" with no offsets)
-     * @param ipAddress IP address to search for
+     * @param ipAddress IP address to mySearch for
      * @return Computer
      */
     public Computer findComputerByIP(String ipAddress) {

@@ -114,7 +114,7 @@ public class LoadBaseDataPresenter {
             {"pre_reg_check_in", "Check in preregistered attendees"},
             {"pre_reg_check_in_edit", "Edit preregistered attendee information during check in"},
             {"attendee_search", "Search for and view attendees"},
-            {"attendee_edit", "Edit attendees from search results"},
+            {"attendee_edit", "Edit attendees from mySearch results"},
             {"attendee_add_note", "Edit notes field on attendees, but no other fields"},
             {"attendee_edit_with_override", "Edit attendee if a user with attendee_edit right approves it"},
             {"attendee_override_price", "Manually set price for attendee"},
