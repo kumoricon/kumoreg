@@ -1,39 +1,45 @@
 package org.kumoricon.site.attendee.search;
 
+import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.user.User;
-import org.kumoricon.site.BaseView;
+import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.CheckInConfirmationHandler;
 import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.window.AddNoteWindow;
 import org.kumoricon.site.attendee.window.ViewNoteWindow;
 
 import java.util.List;
+import java.util.Set;
 
-public class AttendeeDetailWindow extends Window implements DetailFormHandler {
+public class AttendeeDetailWindow extends Window implements DetailFormHandler, CheckInConfirmationHandler {
 
     private AttendeeDetailForm form;
     private Button btnSave;
     private Button btnCancel;
+    private Button btnCheckIn;
     private Button btnSaveAndReprint;
     private Button btnAddNote;
     private Button btnEdit;
+    private PopupView checkInPopup;
+    private CheckBox attendeeInformationVerified;
+    private CheckBox parentalConsentFormReceived;
+    private Button btnInfoReceived;
+    HorizontalLayout buttonBar = new HorizontalLayout();
 
     private AttendeeSearchPresenter handler;
-    private BaseView parentView;
+    private AttendeePrintView parentView;
 
-    public AttendeeDetailWindow(BaseView parentView, AttendeeSearchPresenter handler) {
+    public AttendeeDetailWindow(AttendeePrintView parentView, AttendeeSearchPresenter handler) {
         super("Attendee Detail");
         this.handler = handler;
         this.parentView = parentView;
@@ -60,6 +66,7 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
         form.show(attendee);
 
         form.setAllFieldsButCheckInDisabled();
+        btnCheckIn.setEnabled(!attendee.getCheckedIn());
         setEditableFields(getParentView().getCurrentUser());
     }
 
@@ -68,15 +75,19 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
     }
 
     private HorizontalLayout buildSaveCancel() {
-        HorizontalLayout h = new HorizontalLayout();
-        h.setSpacing(true);
-        h.setMargin(new MarginInfo(false, true, false, true));
+        buttonBar.setSpacing(true);
+        buttonBar.setMargin(new MarginInfo(false, true, false, true));
         btnSave = new Button("Save");
         btnCancel = new Button("Cancel");
         btnEdit = new Button("Edit (Override)");
         btnEdit.addClickListener((Button.ClickListener) clickEvent -> {
            handler.overrideEdit(this);
         });
+
+        btnCheckIn = new Button("Check In");
+        btnCheckIn.addClickListener((Button.ClickListener) clickEvent -> showCheckInWindow());
+        btnCheckIn.setVisible(parentView.currentUserHasRight("pre_reg_check_in"));
+
         btnAddNote = new Button("Add Note");
         btnAddNote.addClickListener((Button.ClickListener) clickEvent -> showAddNoteWindow());
 
@@ -97,12 +108,17 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee(this));
         btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent ->
                 handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
-        h.addComponent(btnSave);
-        h.addComponent(btnEdit);
-        h.addComponent(btnSaveAndReprint);
-        h.addComponent(btnAddNote);
-        h.addComponent(btnCancel);
-        return h;
+        checkInPopup = buildCheckInPopupView();
+
+        buttonBar.addComponent(btnSave);
+        buttonBar.addComponent(btnEdit);
+        buttonBar.addComponent(btnSaveAndReprint);
+        buttonBar.addComponent(btnAddNote);
+        buttonBar.addComponent(btnCheckIn);
+        buttonBar.addComponent(checkInPopup);
+        buttonBar.addComponent(btnCancel);
+
+        return buttonBar;
     }
 
     private void showAddNoteWindow() {
@@ -114,8 +130,8 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
     public AttendeeSearchPresenter getHandler() { return handler; }
     public void setHandler(AttendeeSearchPresenter handler) { this.handler = handler; }
 
-    public BaseView getParentView() { return parentView; }
-    public void setParentView(BaseView parentView) { this.parentView = parentView; }
+    public AttendeePrintView getParentView() { return parentView; }
+    public void setParentView(AttendeePrintView parentView) { this.parentView = parentView; }
 
     public User getCurrentUser() {
         if (parentView != null) {
@@ -140,28 +156,30 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
             } else {
                 form.setManualPriceEnabled(false);
             }
-        } else if (user.hasRight("attendee_add_note")) {
-            form.setEditableFields(AttendeeDetailForm.EditableFields.NOTES);
-            btnAddNote.setEnabled(true);
         } else {
             form.setEditableFields(AttendeeDetailForm.EditableFields.NONE);
-            btnAddNote.setEnabled(false);
         }
 
-        if (user.hasRight("attendee_edit") || user.hasRight("attendee_add_note")) {
-            btnSave.setEnabled(true);
+        btnAddNote.setEnabled(user.hasRight("attendee_add_note"));
+
+        // save and reprint badge only if the attendee is already checked in
+        if (form.getAttendee() != null && form.getAttendee().getCheckedIn()) {
+            btnSaveAndReprint.setVisible(true);
             if (user.hasRight("reprint_badge") || user.hasRight("reprint_badge_with_override")) {
                 btnSaveAndReprint.setEnabled(true);
             } else {
                 btnSaveAndReprint.setEnabled(false);
             }
         } else {
+            btnSaveAndReprint.setVisible(false);
+        }
+
+        if (user.hasRight("attendee_edit")) {
+            btnSave.setEnabled(true);
+            btnSave.setVisible(true);
+        } else {
             btnSave.setEnabled(false);
-            if (user.hasRight("reprint_badge_with_override")) {
-                btnSaveAndReprint.setEnabled(true);
-            } else {
-                btnSaveAndReprint.setEnabled(false);
-            }
+            btnSave.setVisible(false);
         }
 
         if (user.hasRight("attendee_edit_with_override") && !user.hasRight("attendee_edit")) {
@@ -171,15 +189,75 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler {
             btnEdit.setEnabled(false);
             btnEdit.setVisible(false);
         }
+
+        if (user.hasRight("pre_reg_check_in") && form.getAttendee() != null && !form.getAttendee().getCheckedIn()) {
+            btnCheckIn.setVisible(true);
+            btnCheckIn.setEnabled(true);
+        } else {
+            btnCheckIn.setVisible(false);
+            btnCheckIn.setEnabled(false);
+        }
     }
 
-    public void showHistory(List<AttendeeHistory> histories) {
+    public void showHistory(Set<AttendeeHistory> histories) {
         form.showHistory(histories);
+    }
+
+    private void showCheckInWindow() {
+        Attendee attendee = form.getAttendee();
+        if (attendee != null) {
+            parentalConsentFormReceived.setVisible(attendee.isMinor());
+            checkInPopup.setPopupVisible(true);
+        }
+    }
+
+    private PopupView buildCheckInPopupView() {
+        attendeeInformationVerified = new CheckBox("Information Verified");
+        parentalConsentFormReceived = new CheckBox("Parental Consent Form Received");
+        btnInfoReceived = new Button("Save");
+        btnInfoReceived.setEnabled(false);
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSpacing(true);
+        layout.addComponent(attendeeInformationVerified);
+        layout.addComponent(parentalConsentFormReceived);
+        layout.addComponent(btnInfoReceived);
+
+        attendeeInformationVerified.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
+                btnInfoReceived.setEnabled(validateCheckInFields()));
+        parentalConsentFormReceived.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
+                btnInfoReceived.setEnabled(validateCheckInFields()));
+        btnInfoReceived.addClickListener((Button.ClickListener) clickEvent -> attendeeInformationVerified());
+
+        return new PopupView(null, layout);
+    }
+
+    private boolean validateCheckInFields() {
+        if (form.getAttendee().isMinor()) {
+            return attendeeInformationVerified.getValue() && parentalConsentFormReceived.getValue();
+        } else {
+            return attendeeInformationVerified.getValue();
+        }
     }
 
     @Override
     public void showAttendeeHistory(AttendeeHistory attendeeHistory) {
-        ViewNoteWindow window = new ViewNoteWindow(attendeeHistory);
+        Window window = new ViewNoteWindow(attendeeHistory);
         parentView.showWindow(window);
+    }
+
+    @Override
+    public void attendeeInformationVerified() {
+        Attendee attendee = form.getAttendee();
+        handler.checkInAttendee(this, attendee);
+    }
+
+    public boolean parentalConsentFormReceived() {
+        return parentalConsentFormReceived.getValue();
+    }
+
+
+    public boolean informationVerified() {
+        return attendeeInformationVerified.getValue();
     }
 }

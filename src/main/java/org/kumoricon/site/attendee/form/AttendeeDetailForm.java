@@ -6,25 +6,19 @@ import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.StringToDateConverter;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.ServiceException;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.fieldconverter.DateToLocalDateConverter;
-import org.kumoricon.site.fieldconverter.UserToStringConverter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static org.kumoricon.site.attendee.FieldFactory.*;
 
@@ -39,32 +33,38 @@ public class AttendeeDetailForm extends GridLayout {
     protected TextField email = createTextField("Email", 7);
     protected TextField zip = createTextField("Zip", 8);
     protected Label age = new Label("");
-    protected TextField emergencyContactFullName = createNameField("Full Name", 9);
-    protected TextField emergencyContactPhone = createPhoneNumberField("Phone", 10);
-    protected TextField parentFullName = createNameField("Full Name", 11);
-    protected TextField parentPhone = createPhoneNumberField("Phone", 12);
+    protected TextField emergencyContactFullName = createNameField("Emergency Contact Name", 9);
+    protected TextField emergencyContactPhone = createPhoneNumberField("Emergency Contact Phone", 10);
+    protected TextField parentFullName = createNameField("Parent Name", 11);
+    protected TextField parentPhone = createPhoneNumberField("Parent Phone", 12);
     protected CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 13);
     protected CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 14);
     protected NativeSelect badge = createNativeSelect("Pass Type", 15);
     protected TextField paidAmount = createTextField("Manual Price", 16);
-    protected TextArea notes = createTextArea(null, 17);
     protected CheckBox checkedIn = createCheckBox("Attendee Checked In", 18);
     protected BeanItem<Attendee> attendeeBean;
-    protected Table history = new Table();
+
+    protected VerticalLayout historyLayout = new VerticalLayout();
     protected FieldGroup fieldGroup;
     private DetailFormHandler handler;
 
-    public enum EditableFields {ALL, NOTES, NONE}
+    public void setParentFormReceivedVisible(boolean visible) {
+        parentFormReceived.setVisible(visible);
+    }
+
+    public enum EditableFields {ALL, NONE}
 
     public AttendeeDetailForm(DetailFormHandler handler) {
         this.handler = handler;
         birthDate.setConverter(new DateToLocalDateConverter());
-        setColumns(2);
-        setRows(5);
+        setColumns(3);
+        setRows(9);
         setMargin(true);
         setSpacing(true);
-        setColumnExpandRatio(0, 1);
-        setColumnExpandRatio(1, 2);
+        setWidth("100%");
+        setColumnExpandRatio(0, 0);
+        setColumnExpandRatio(1, 0);
+        setColumnExpandRatio(2, 1);
 
         fieldGroup = new BeanFieldGroup<>(Attendee.class);
         fieldGroup.setFieldFactory(new CustomFieldGroupFieldFactory());
@@ -90,29 +90,82 @@ public class AttendeeDetailForm extends GridLayout {
                 }
         });
 
-
         badge.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             // Field is read only when values are being added
             if (!badge.isReadOnly() && !badge.isEmpty() && !birthDate.isEmpty()) {
                 Badge thisBadge = (Badge) badge.getConvertedValue();
-                try {
-                    paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
-                } catch(ServiceException e) {
-                    Notification.show(e.getMessage());
+                // Don't change price automatically if attendee is already checked in
+                if (!checkedIn.getValue()) {
+                    try {
+                        paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                    } catch(ServiceException e) {
+                        Notification.show(e.getMessage());
+                    }
                 }
             }
         });
 
 
-        addComponent(buildAttendeeLeft(), 0, 0);
-        addComponent(buildAttendeeRight(), 1, 0);
-        addComponent(buildEmergencyContactInfo(), 0, 1);
-        addComponent(buildParentInfo(), 1, 1);
-        addComponent(buildPassInfo(), 0, 2);
-        addComponent(buildNotes(), 1, 2, 1, 3);
-        addComponent(buildCheckedIn(), 0, 3);
+        addComponent(firstName, 0, 0);
+        addComponent(lastName, 1, 0);
+        addComponent(badgeName, 0, 1);
+        addComponent(badgeNumber, 1, 1);
+        badgeNumber.setEnabled(false);
+        addComponent(phoneNumber, 0, 2);
+        HorizontalLayout h = new HorizontalLayout();
+        h.setSpacing(true);
+        h.setMargin(false);
+        h.setCaption("Birthdate");
+        birthDate.setCaption(null);         // Can't set this when the object is created, need to remove caption
+        h.addComponent(birthDate);
+        h.addComponent(age);
+        h.setComponentAlignment(birthDate, Alignment.MIDDLE_LEFT);
+        h.setComponentAlignment(age, Alignment.MIDDLE_LEFT);
+
+        addComponent(h, 1, 2);
+
+        addComponent(email, 0, 3);
+        addComponent(zip, 1, 3);
+
+        addComponent(emergencyContactFullName, 0, 4);
+        addComponent(emergencyContactPhone, 0, 5);
 
 
+        parentIsEmergencyContact.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+            if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
+                parentFullName.setValue(emergencyContactFullName.getValue());
+                parentPhone.setValue(emergencyContactPhone.getValue());
+            } else {
+                parentFullName.setValue(null);
+                parentPhone.setValue(null);
+                parentFullName.focus();
+            }
+        });
+
+        addComponent(parentFullName, 1, 4);
+        addComponent(parentPhone, 1, 5);
+        addComponent(parentIsEmergencyContact, 1, 6);
+
+        addComponent(badge, 0, 7);
+        badge.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        badge.setItemCaptionPropertyId("name");
+        badge.setNullSelectionAllowed(false);
+        addComponent(paidAmount, 1, 7);
+
+        addComponent(parentFormReceived, 0, 8);
+        addComponent(checkedIn, 1, 8);
+
+
+        Panel hist = new Panel("Notes/History");
+        hist.setWidth("100%");
+        hist.setHeight("100%");
+
+
+        historyLayout.setMargin(true);
+        historyLayout.setMargin(new MarginInfo(false, true, false, true));
+        historyLayout.setSpacing(true);
+        hist.setContent(historyLayout);
+        addComponent(hist, 2, 0, 2, 6);
     }
 
     public void show(Attendee attendee) {
@@ -127,24 +180,26 @@ public class AttendeeDetailForm extends GridLayout {
         }
         badge.select(attendee.getBadge());
         setMinorFieldsEnabled(attendee.isMinor());
+        checkedIn.setVisible(attendee.getCheckedIn()); // Hide checked in checkbox if attendee is not checked in
+        parentFormReceived.setVisible(attendee.getCheckedIn()); // Hide parentFormReceived if attendee is not checked in
+        badgeNumber.setEnabled(false);
         showHistory(attendee.getHistory());
         firstName.focus();
     }
 
-    public void showHistory(List<AttendeeHistory> attendeeHistories) {
+    public void showHistory(Set<AttendeeHistory> attendeeHistories) {
+        historyLayout.removeAllComponents();
+        Component c = null;
         if (attendeeHistories != null) {
-            BeanItemContainer<AttendeeHistory> historyItems = new BeanItemContainer<>(AttendeeHistory.class);
-            history.setContainerDataSource(historyItems);
-            history.setVisibleColumns("timestamp", "user", "message");
-            history.setColumnHeaders("Time", "User", "Message");
-            history.setConverter("user", new UserToStringConverter());
-            history.setConverter("timestamp", new StringToDateConverter(){
-                @Override
-                public DateFormat getFormat(Locale locale){
-                    return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
-                }
-            });
-            historyItems.addAll(attendeeHistories);
+            List<AttendeeHistory> sortedHistories = new ArrayList<>(attendeeHistories);
+            sortedHistories.sort(Comparator.comparing(AttendeeHistory::getTimestamp));
+            for (AttendeeHistory history : sortedHistories) {
+                c = new HistoryEntryLayout(history);
+                historyLayout.addComponent(c);
+            }
+        }
+        if (c != null) {
+            historyLayout.setExpandRatio(c, 1);
         }
     }
 
@@ -174,118 +229,6 @@ public class AttendeeDetailForm extends GridLayout {
         setEditableFields(EditableFields.NONE);
         parentFormReceived.setEnabled(true);
         parentFormReceived.setValidationVisible(true);
-    }
-
-
-    protected FormLayout buildAttendeeLeft() {
-        FormLayout f = new FormLayout();
-        f.setMargin(false);
-
-        f.addComponent(firstName);
-        f.addComponent(badgeName);
-        f.addComponent(phoneNumber);
-        f.addComponent(email);
-
-        return f;
-    }
-
-    protected FormLayout buildAttendeeRight() {
-        FormLayout f = new FormLayout();
-        f.setMargin(false);
-
-        HorizontalLayout h = new HorizontalLayout();
-        h.setSpacing(true);
-        h.setMargin(false);
-        h.setCaption("Birthdate");
-        birthDate.setCaption(null);         // Can't set this when the object is created, need to remove caption
-        h.addComponent(birthDate);
-        h.addComponent(age);
-        h.setComponentAlignment(birthDate, Alignment.MIDDLE_LEFT);
-        h.setComponentAlignment(age, Alignment.MIDDLE_LEFT);
-        f.addComponent(lastName);
-        f.addComponent(badgeNumber);
-        f.addComponent(h);
-        f.addComponent(zip);
-
-        return f;
-    }
-
-    protected FormLayout buildEmergencyContactInfo() {
-        FormLayout f = new FormLayout();
-        f.setMargin(false);
-        f.setCaption("Emergency Contact");
-
-        f.addComponent(emergencyContactFullName);
-        f.addComponent(emergencyContactPhone);
-        return f;
-    }
-
-    protected FormLayout buildParentInfo() {
-        FormLayout f = new FormLayout();
-        f.setCaption("Parent Information");
-        f.setMargin(false);
-
-        HorizontalLayout checkBoxes = new HorizontalLayout();
-        checkBoxes.setMargin(false);
-        checkBoxes.setSpacing(true);
-        checkBoxes.addComponent(parentIsEmergencyContact);
-
-        parentIsEmergencyContact.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
-            if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
-                parentFullName.setValue(emergencyContactFullName.getValue());
-                parentPhone.setValue(emergencyContactPhone.getValue());
-            } else {
-                parentFullName.setValue(null);
-                parentPhone.setValue(null);
-                parentFullName.focus();
-            }
-        });
-
-        f.addComponent(parentFullName);
-        f.addComponent(parentPhone);
-        f.addComponent(checkBoxes);
-
-        return f;
-    }
-
-    protected FormLayout buildPassInfo() {
-        FormLayout f = new FormLayout();
-        f.setCaption("Badge Information");
-        f.setMargin(false);
-        f.addComponent(badge);
-        badge.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        badge.setItemCaptionPropertyId("name");
-        badge.setNullSelectionAllowed(false);
-        f.addComponent(paidAmount);
-        return f;
-    }
-
-    protected FormLayout buildNotes() {
-        FormLayout f = new FormLayout();
-        f.setCaption("History");
-        f.setMargin(false);
-        f.setSizeFull();
-        f.addComponent(history);
-        history.setSizeFull();
-        history.setWidth("550px");
-        history.setHeight("200px");
-        history.setEditable(false);
-        history.setNullSelectionAllowed(true);
-        history.setPageLength(5);
-        history.setColumnExpandRatio("message", 1.0f);
-        history.addStyleName("kumoHandPointer");
-        history.addItemClickListener((ItemClickEvent.ItemClickListener) event -> {
-            handler.showAttendeeHistory((AttendeeHistory) event.getItemId());
-        });
-        return f;
-    }
-
-    protected FormLayout buildCheckedIn() {
-        FormLayout f = new FormLayout();
-        f.setMargin(false);
-        f.addComponent(parentFormReceived);
-        f.addComponent(checkedIn);
-        return f;
     }
 
     protected static Integer getAgeFromDate(Date birthDate) {
@@ -324,24 +267,13 @@ public class AttendeeDetailForm extends GridLayout {
                     af.setEnabled(true);
                     af.setValidationVisible(true);
                 }
-                history.setEnabled(true);
-                break;
-            case NOTES:
-                for (Field field : fieldGroup.getFields()) {
-                    AbstractField af = (AbstractField)field;
-                    af.setEnabled(false);
-                    af.setValidationVisible(false);
-                }
-                history.setEnabled(true);
-                notes.setEnabled(true);
-                notes.setValidationVisible(true);
+                badgeNumber.setEnabled(false);
                 break;
             case NONE:
                 for (Field field : fieldGroup.getFields()) {
                     AbstractField af = (AbstractField)field;
                     af.setEnabled(false);
                     af.setValidationVisible(false);
-                    history.setEnabled(true);
                 }
         }
     }

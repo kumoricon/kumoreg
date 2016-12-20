@@ -27,3 +27,11 @@
 .kumoTrainingMode {
   background: url("img/trainingbackground.png");
 }
+
+// Modal window positioned in the bottom left corner of the screen
+.kumoConfirmationWindow {
+  left: 20px;
+  top: auto !important;
+  right: auto !important;
+  bottom: 20px;
+}

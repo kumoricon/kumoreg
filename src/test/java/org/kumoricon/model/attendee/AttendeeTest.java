@@ -7,6 +7,7 @@ import org.kumoricon.model.user.UserFactory;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
 
 import static junit.framework.TestCase.*;
 
@@ -63,9 +64,12 @@ public class AttendeeTest {
     public void addHistoryEntry() throws Exception {
         User user = UserFactory.newUser("Test", "User");
         attendee.addHistoryEntry(user, "This is a test");
-        assertEquals("History entry added", 1, attendee.getHistory().size());
-        assertEquals("History user set", user, attendee.getHistory().get(0).getUser());
-        assertEquals("History message set", "This is a test", attendee.getHistory().get(0).getMessage());
+        Set<AttendeeHistory> results = attendee.getHistory();
+        assertEquals("History entry added", 1, results.size());
+        for (AttendeeHistory ah : results) {
+            assertEquals("History user set", user, ah.getUser());
+            assertEquals("History message set", "This is a test", ah.getMessage());
+        }
     }
 
     @Test

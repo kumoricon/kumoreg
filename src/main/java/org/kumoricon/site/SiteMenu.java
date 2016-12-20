@@ -6,7 +6,6 @@ import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
-import org.kumoricon.site.attendee.prereg.PreRegView;
 import org.kumoricon.site.attendee.reg.OrderView;
 import org.kumoricon.site.attendee.search.AttendeeSearchByBadgeView;
 import org.kumoricon.site.attendee.search.AttendeeSearchView;
@@ -52,10 +51,8 @@ public class SiteMenu extends VerticalLayout {
         reg.setIcon(FontAwesome.USERS);
         addButtonTo(reg, "at_con_registration",
                 buttonFactory("At-Con Registration", FontAwesome.USER, OrderView.VIEW_NAME));
-        addButtonTo(reg, "pre_reg_check_in",
-                buttonFactory("Pre-Reg Check In", FontAwesome.USER, PreRegView.VIEW_NAME));
         addButtonTo(reg, "attendee_search",
-                buttonFactory("Attendee Search", FontAwesome.SEARCH, AttendeeSearchView.VIEW_NAME));
+                buttonFactory("Search/Check In", FontAwesome.SEARCH, AttendeeSearchView.VIEW_NAME));
         addButtonTo(reg, "attendee_search",
                 buttonFactory("Search by Badge", FontAwesome.BARCODE, AttendeeSearchByBadgeView.VIEW_NAME));
         if (reg.getComponentCount() > 0) { menu.addComponent(reg); }

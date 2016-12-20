@@ -151,6 +151,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         form.setAvailableBadges(availableBadgeTypes);
         form.show(attendee);
         form.setManualPriceEnabled(currentUserHasRight("attendee_override_price"));
+        form.setParentFormReceivedVisible(true);
         showWindow(attendeeWindow);
     }
 

@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "attendees")
@@ -46,7 +46,7 @@ public class Attendee extends Record {
     private Date checkInTime;                    // Timestamp when checked in
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attendee")
     @OrderBy("timestamp desc")
-    private List<AttendeeHistory> history;
+    private Set<AttendeeHistory> history;
     private boolean preRegistered;              // Did attendee register before con?
 
 
@@ -56,7 +56,7 @@ public class Attendee extends Record {
         this.paid = false;
         this.preRegistered = false;
         this.parentIsEmergencyContact = false;
-        this.history = new ArrayList<>();
+        this.history = new HashSet<>();
     }
 
 
@@ -139,13 +139,13 @@ public class Attendee extends Record {
     public Order getOrder() { return order; }
     public void setOrder(Order order) { this.order = order; }
 
-    public List<AttendeeHistory> getHistory() { return history; }
+    public Set<AttendeeHistory> getHistory() { return history; }
 
-    public void setHistory(List<AttendeeHistory> history) { this.history = history; }
+    public void setHistory(Set<AttendeeHistory> history) { this.history = history; }
 
     public void addHistoryEntry(User user, String message) {
         if (user != null && message != null && !message.trim().equals("")) {
-            if (history == null) { history = new ArrayList<>(); }
+            if (history == null) { history = new HashSet<>(); }
             history.add(new AttendeeHistory(user, this, message.trim()));
         }
     }

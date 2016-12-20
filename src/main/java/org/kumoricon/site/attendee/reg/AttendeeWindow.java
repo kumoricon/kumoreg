@@ -9,16 +9,15 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.site.attendee.DetailFormHandler;
-import org.kumoricon.site.attendee.form.AttendeeCheckinDetailForm;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
-import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.attendee.window.ViewNoteWindow;
 
 public class AttendeeWindow extends Window implements DetailFormHandler{
 
-    AttendeeDetailForm attendeeDetailForm = new AttendeeCheckinDetailForm(this);
+    AttendeeDetailForm attendeeDetailForm = new AttendeeDetailForm(this);
     Button save = new Button("Save");
     Button cancel = new Button("Cancel");
     Button delete = new Button("Delete");
@@ -34,7 +33,7 @@ public class AttendeeWindow extends Window implements DetailFormHandler{
         center();
         setModal(true);
         setWidth(1100, Unit.PIXELS);
-        setHeight(700, Unit.PIXELS);
+        setHeight(800, Unit.PIXELS);
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);

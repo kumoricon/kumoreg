@@ -11,8 +11,6 @@ import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.AttendeeSearchService;
-import org.kumoricon.service.print.BadgePrintService;
-import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.*;
@@ -69,7 +67,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     }
 
     public void saveAttendee(AttendeeDetailWindow window, Attendee attendee) {
-        BaseView view = window.getParentView();
+        AttendeePrintView view = window.getParentView();
         try {
             attendeeValidator.validate(attendee);
             attendee = attendeeRepository.save(attendee);
@@ -164,7 +162,15 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
 
     @Override
     public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
+        log.info("{} reported badge(s) printed successfully for {}",
+                printBadgeWindow.getParentView().getCurrentUser(), attendees);
         if (printBadgeWindow != null) {
+            if (attendees.size() > 0) {
+                Attendee attendee = attendees.get(0);
+                searchChanged(attendee.getOrder().getOrderId());
+            } else {
+                printBadgeWindow.getParentView().refresh();
+            }
             printBadgeWindow.close();
         }
     }
@@ -182,6 +188,42 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     public void searchChanged(String searchString) {
         if (searchString != null) {
             view.navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString.trim());
+        }
+    }
+
+    public Boolean validateBeforeCheckIn(AttendeeDetailWindow window, Attendee attendee) {
+        try {
+            attendeeValidator.validate(attendee);
+        } catch (ValueException e) {
+            view.notifyError(e.getMessage());
+            return false;
+        }
+        if (attendee.isMinor()) {
+            if (!window.parentalConsentFormReceived()) {
+                window.getParentView().notify("Error: Parental consent form has not been received");
+                return false;
+            }
+        }
+        if (!window.informationVerified()) {
+            window.getParentView().notify("Error: Information not verified");
+            return false;
+        }
+        return true;
+    }
+
+    public void checkInAttendee(AttendeeDetailWindow window, Attendee attendee) {
+        log.info("{} checked in preregistered attendee {}", window.getParentView().getCurrentUser(), attendee);
+        if (attendee != null) {
+            if (validateBeforeCheckIn(window, attendee)) {
+                attendee.setParentFormReceived(window.parentalConsentFormReceived());
+                attendee.addHistoryEntry(window.getParentView().getCurrentUser(), "Attendee Checked In");
+                attendee.setCheckedIn(true);
+                attendeeRepository.save(attendee);
+                List<Attendee> attendeeList = new ArrayList<>();
+                attendeeList.add(attendee);
+                window.close();
+                showAttendeeBadgeWindow(window.getParentView(), attendeeList);
+            }
         }
     }
 

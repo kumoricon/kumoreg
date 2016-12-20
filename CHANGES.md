@@ -9,6 +9,8 @@ Change Log
     - Added till export to tab-separated file
     - Fixed Reprint Badge button on Test Badge window
     - Added friendly error message when trying to print and no printer can be found
+    - Don't change paid amount automatically when editing an attendee that has already checked in
+    - Removed Pre Reg check in screen, added check in button on Search windows
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

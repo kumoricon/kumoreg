@@ -85,7 +85,7 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
             txtSearch.clear();
-            tblResult.clear();
+            attendeeBeanList.removeAllItems();
         } else {
             String searchString = viewChangeEvent.getParameters();
             tblResult.clear();
