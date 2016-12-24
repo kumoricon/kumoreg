@@ -82,8 +82,19 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     public void addNewAttendee(OrderView view) {
         log.info("{} created new attendee", view.getCurrentUsername());
         Attendee newAttendee = new Attendee();
+        Order order = view.getOrder();
+
         newAttendee.setBadgeNumber(generateBadgeNumber(view));
-        newAttendee.setOrder(view.getOrder());
+        newAttendee.setOrder(order);
+
+        // If the order already has attendees, carry over emergency contact information from the
+        // last attendee added
+        if (order != null && order.getAttendees() != null && order.getAttendees().size() > 0) {
+            Attendee lastAttendee = order.getAttendees().get(order.getAttendees().size() -1);
+            newAttendee.setEmergencyContactFullName(lastAttendee.getEmergencyContactFullName());
+            newAttendee.setEmergencyContactPhone(lastAttendee.getEmergencyContactPhone());
+        }
+
         selectAttendee(view, newAttendee);
     }
 
