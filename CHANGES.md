@@ -12,6 +12,7 @@ Change Log
     - Don't change paid amount automatically when editing an attendee that has already checked in
     - Removed Pre Reg check in screen, added check in button on Search windows
     - When adding attendee at con, carry over emergency contact info from the previous attendee in that order
+    - Added "Add Note" button for at-con attendees
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

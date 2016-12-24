@@ -14,7 +14,6 @@ import org.kumoricon.service.AttendeeSearchService;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.*;
-import org.kumoricon.site.attendee.window.AddNoteWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
@@ -29,7 +28,7 @@ import java.util.List;
 
 @Controller
 @Scope("request")
-public class AttendeeSearchPresenter extends BadgePrintingPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler, AddNoteHandler {
+public class AttendeeSearchPresenter extends BadgePrintingPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
 
@@ -262,22 +261,18 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         view.showOverrideEditWindow(this, attendeeDetailWindow);
     }
 
-    @Override
-    public void addNote(AddNoteWindow window, String message) {
+    public void addNote(AttendeeDetailWindow attendeeDetailWindow, String message) {
+        // Handle adding a note. Make sure the note gets saveed to the database even if the AttendeeDetailWindow
+        // is closed without saving the attendee. (For example, if the user has rights to add notes but not edit
+        // attendees.
+        Attendee attendee = attendeeDetailWindow.getAttendee();
         log.info("{} added note \"{}\" to {}",
                 view.getCurrentUsername(),
                 message.replaceAll("(\\r|\\n)+", " "),
-                window.getParentWindow().getAttendee());
-        AttendeeDetailWindow parentWindow = window.getParentWindow();
-        AttendeeHistory ah = new AttendeeHistory(view.getCurrentUser(), parentWindow.getAttendee(), message);
+                attendee);
+        AttendeeHistory ah = new AttendeeHistory(view.getCurrentUser(), attendee, message);
         attendeeHistoryRepository.save(ah);
-        parentWindow.showHistory(attendeeHistoryRepository.findByAttendee(parentWindow.getAttendee()));
-        window.close();
-    }
-
-    @Override
-    public void addNoteCancel(AddNoteWindow window) {
-        window.close();
+        attendeeDetailWindow.showHistory(attendeeHistoryRepository.findByAttendee(attendee));
     }
 
     public void showAttendeeList(AttendeeSearchByBadgeView view, Integer badgeId) {

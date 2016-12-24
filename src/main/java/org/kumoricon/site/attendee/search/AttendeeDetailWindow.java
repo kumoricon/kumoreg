@@ -11,6 +11,7 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.user.User;
+import org.kumoricon.site.attendee.AddNoteHandler;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.CheckInConfirmationHandler;
 import org.kumoricon.site.attendee.DetailFormHandler;
@@ -21,7 +22,7 @@ import org.kumoricon.site.attendee.window.ViewNoteWindow;
 import java.util.List;
 import java.util.Set;
 
-public class AttendeeDetailWindow extends Window implements DetailFormHandler, CheckInConfirmationHandler {
+public class AttendeeDetailWindow extends Window implements DetailFormHandler, CheckInConfirmationHandler, AddNoteHandler {
 
     private AttendeeDetailForm form;
     private Button btnSave;
@@ -122,7 +123,7 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
     }
 
     private void showAddNoteWindow() {
-        AddNoteWindow window = new AddNoteWindow(handler, this);
+        AddNoteWindow window = new AddNoteWindow(this);
         parentView.showWindow(window);
     }
 
@@ -259,5 +260,16 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
 
     public boolean informationVerified() {
         return attendeeInformationVerified.getValue();
+    }
+
+    @Override
+    public void addNote(AddNoteWindow window, String message) {
+        handler.addNote(this, message);
+        window.close();
+    }
+
+    @Override
+    public void addNoteCancel(AddNoteWindow window) {
+        window.close();
     }
 }

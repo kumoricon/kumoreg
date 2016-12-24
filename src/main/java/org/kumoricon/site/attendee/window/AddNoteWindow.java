@@ -5,7 +5,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.AddNoteHandler;
-import org.kumoricon.site.attendee.search.AttendeeDetailWindow;
 
 
 public class AddNoteWindow extends Window {
@@ -16,13 +15,10 @@ public class AddNoteWindow extends Window {
     private Button cancel = new Button("Cancel");
 
     private AddNoteHandler handler;
-    private AttendeeDetailWindow parentWindow;
 
-    public AddNoteWindow(AddNoteHandler handler, AttendeeDetailWindow parentWindow) {
+    public AddNoteWindow(AddNoteHandler handler) {
         super("Add Note");
-
         this.handler = handler;
-        this.parentWindow = parentWindow;
         setIcon(FontAwesome.PENCIL);
         setModal(true);
         setClosable(true);
@@ -52,8 +48,6 @@ public class AddNoteWindow extends Window {
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         save.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
-
-    public AttendeeDetailWindow getParentWindow() { return parentWindow; }
 
     public AddNoteHandler getHandler() { return handler; }
     public void setHandler(AddNoteHandler handler) { this.handler = handler; }

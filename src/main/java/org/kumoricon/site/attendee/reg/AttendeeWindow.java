@@ -11,16 +11,19 @@ import com.vaadin.ui.themes.ValoTheme;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
+import org.kumoricon.site.attendee.AddNoteHandler;
 import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
+import org.kumoricon.site.attendee.window.AddNoteWindow;
 import org.kumoricon.site.attendee.window.ViewNoteWindow;
 
-public class AttendeeWindow extends Window implements DetailFormHandler{
+public class AttendeeWindow extends Window implements DetailFormHandler, AddNoteHandler {
 
     AttendeeDetailForm attendeeDetailForm = new AttendeeDetailForm(this);
     Button save = new Button("Save");
     Button cancel = new Button("Cancel");
     Button delete = new Button("Delete");
+    Button addNote = new Button("Add Note");
     OrderView parentView;
 
     private OrderPresenter handler;
@@ -45,9 +48,12 @@ public class AttendeeWindow extends Window implements DetailFormHandler{
         horizontalLayout.addComponent(save);
         horizontalLayout.addComponent(cancel);
         horizontalLayout.addComponent(delete);
+        horizontalLayout.addComponent(addNote);
 
         save.setTabIndex(20);
         cancel.setTabIndex(21);
+        delete.setTabIndex(22);
+        addNote.setTabIndex(23);
 
         save.addClickListener((Button.ClickListener) clickEvent -> {
             Attendee attendee = attendeeDetailForm.getAttendee();
@@ -68,6 +74,8 @@ public class AttendeeWindow extends Window implements DetailFormHandler{
             handler.removeAttendeeFromOrder(parentView, attendeeDetailForm.getAttendee());
             close();
         });
+
+        addNote.addClickListener((Button.ClickListener) clickEvent -> showAddNoteWindow());
 
         verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
@@ -94,5 +102,23 @@ public class AttendeeWindow extends Window implements DetailFormHandler{
     public void showAttendeeHistory(AttendeeHistory attendeeHistory) {
         ViewNoteWindow window = new ViewNoteWindow(attendeeHistory);
         parentView.showWindow(window);
+    }
+
+    private void showAddNoteWindow() {
+        AddNoteWindow window = new AddNoteWindow(this);
+        parentView.showWindow(window);
+    }
+
+    @Override
+    public void addNote(AddNoteWindow window, String message) {
+        window.close();
+        Attendee attendee = attendeeDetailForm.getAttendee();
+        attendee.addHistoryEntry(parentView.getCurrentUser(), message);
+        attendeeDetailForm.show(attendee);
+    }
+
+    @Override
+    public void addNoteCancel(AddNoteWindow window) {
+        window.close();
     }
 }
