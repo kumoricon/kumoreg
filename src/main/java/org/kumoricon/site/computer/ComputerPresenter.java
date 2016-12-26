@@ -1,15 +1,18 @@
 package org.kumoricon.site.computer;
 
+import com.vaadin.data.util.BeanItem;
+import com.vaadin.ui.*;
 import org.kumoricon.model.computer.Computer;
 import org.kumoricon.model.computer.ComputerRepository;
+import org.kumoricon.model.printer.Printer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-
+import javax.print.*;
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Controller
 public class ComputerPresenter {
@@ -34,6 +37,38 @@ public class ComputerPresenter {
         saveComputer(view, computer);
     }
 
+    public void addNewInstalledPrinter(ComputerView view) {
+
+        String newPrinterName = "test";
+        String newPrinterIpAddress = "1.1.1.1";
+
+        // Prompt the user for the printer name and IP address
+        Window subWindow = new Window("Install Printer");
+        VerticalLayout subContent = new VerticalLayout();
+        subContent.setMargin(true);
+        subWindow.setContent(subContent);
+        TextField name = new TextField("Printer Name: ");
+        TextField ipAddress = new TextField("IP Address: ");
+        TextField model = new TextField("Model: ");
+        Button closeButton = new Button("Install");
+        subContent.addComponent(name);
+        subContent.addComponent(ipAddress);
+        subContent.addComponent(model);
+        subContent.addComponent(closeButton);
+
+        closeButton.addClickListener((Button.ClickListener) clickEvent -> {
+            Printer newPrinter = new Printer();
+            newPrinter.setName(name.getValue());
+            newPrinter.setIpAddress(ipAddress.getValue());
+            newPrinter.setModel(model.getValue());
+            subWindow.setVisible(false);
+            savePrinter(view, newPrinter);
+            subWindow.close();
+        });
+
+        subWindow.center();
+        UI.getCurrent().addWindow(subWindow);
+    }
 
     public void saveComputer(ComputerView view, Computer computer) {
         log.info("{} saved computer {}", view.getCurrentUsername(), computer);
@@ -49,17 +84,64 @@ public class ComputerPresenter {
         }
     }
 
+    public void savePrinter(ComputerView view, Printer printer) {
+        log.info("{} saved printer {}", view.getCurrentUsername(), printer);
+        try {
+
+            // TODO run script to install printer here
+
+            //view.notify("Printer successfully installed");
+        } catch (Exception e) {
+            view.notifyError("Error: Could not install printer.");
+            log.error("{} got an error installing printer {}", view.getCurrentUsername(), printer, e);
+        }
+        showInstalledPrinterList(view);
+    }
+
     public void showComputerList(ComputerView view) {
         log.info("{} viewed computer list", view.getCurrentUsername());
         List<Computer> computers = computerRepository.findAll();
-        view.afterSuccessfulFetch(computers);
+        view.afterSuccessfulComputerFetch(computers);
+    }
+
+    public void showInstalledPrinterList(ComputerView view) {
+        log.info("{} viewed printer list", view.getCurrentUsername());
+
+        // Pull a list of printers on the server
+        List<Printer> printers = new ArrayList<Printer>();
+        PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
+
+        for (PrintService ps : printServices) {
+            Printer p = new Printer();
+            p.setName(ps.getName());
+            printers.add(p);
+
+            // TODO: get IP address of printer and add it here
+
+        }
+        view.afterSuccessfulPrinterFetch(printers);
     }
 
     public void deleteComputer(ComputerView view, Computer computer) {
         log.info("{} deleted computer {}", view.getCurrentUsername(), computer);
         computerRepository.delete(computer);
         view.notify("Deleted " + computer.getIpAddress());
-        view.afterSuccessfulFetch(computerRepository.findAll());
+        view.afterSuccessfulComputerFetch(computerRepository.findAll());
+    }
+
+    public void deleteInstalledPrinter(ComputerView view, Printer printer) {
+        log.info("{} deleted printer {}", view.getCurrentUsername(), printer);
+        try {
+
+            // TODO run script to uninstall printer here
+
+            view.notify("Printer successfully uninstalled");
+
+        } catch (DataIntegrityViolationException e) {
+            view.notifyError("Error: Could not uninstall printer.");
+            log.error("{} got an error uninstalling printer {}", view.getCurrentUsername(), printer, e);
+        }
+        showInstalledPrinterList(view);
     }
 
     /**
