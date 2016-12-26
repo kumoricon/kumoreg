@@ -10,11 +10,16 @@ import org.kumoricon.model.Record;
 @Table(name = "printers")
 public class Printer extends Record {
 
-    public Printer(String _ipAddress, String _name, String _model)
-    {
+    public Printer(String _ipAddress, String _name, String _model) {
         this.ipAddress = _ipAddress;
         this.name = _name;
         this.model = _model;
+    }
+
+    public Printer() {
+        this.ipAddress = "";
+        this.name = "";
+        this.model = "";
     }
 
     /**
