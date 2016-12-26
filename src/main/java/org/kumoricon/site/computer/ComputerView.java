@@ -28,6 +28,8 @@ public class ComputerView extends BaseView implements View {
 
     private Grid printerMapList = new Grid();
     private Grid installedPrinterList = new Grid();
+    private Panel leftPanel = new Panel();
+    private Panel rightPanel = new Panel(); //com.vaadin.ui.
     private Label leftLabel;
     private Label leftNoteLabel;
     private Label rightLabel;
@@ -44,14 +46,12 @@ public class ComputerView extends BaseView implements View {
 
         //Create an overall page layout with two columns
         HorizontalLayout pageLayout = new HorizontalLayout();
-        Panel leftPanel = new Panel();
-        Panel rightPanel = new Panel();
+        pageLayout.setSizeFull();
         pageLayout.setSpacing(true);
-        pageLayout.addComponent(leftPanel);
-        pageLayout.addComponent(rightPanel);
 
         // Left column (everything related to mapping computer IP addresses to installed printers)
         VerticalLayout leftLayout = new VerticalLayout();
+        leftLayout.setSizeUndefined();
         leftLayout.setMargin(true);
         leftLayout.setSpacing(true);
         leftLabel = new Label ("<span style='font-size:24px'>Computer - Printer Mappings</span>",ContentMode.HTML);
@@ -64,6 +64,7 @@ public class ComputerView extends BaseView implements View {
         printerMapList.setContainerDataSource(computerList);
         printerMapList.removeColumn("id");
         printerMapList.removeColumn("uuid");
+        printerMapList.getColumn("Printer Name").setText("Printer IP");
 
         printerMapList.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
             @Override
@@ -98,10 +99,11 @@ public class ComputerView extends BaseView implements View {
         });
         leftLayout.addComponent(mappingButtons);
 
-        pageLayout.addComponent(leftLayout);
+        leftPanel.setContent(leftLayout);
 
         // Right column (everything related to printers intalled on the server)
         VerticalLayout rightLayout = new VerticalLayout();
+        rightLayout.setSizeUndefined();
         rightLayout.setMargin(true);
         rightLayout.setSpacing(true);
         rightLabel = new Label("<span style='font-size:24px'>Installed Printers</span>",ContentMode.HTML);
@@ -133,9 +135,11 @@ public class ComputerView extends BaseView implements View {
         });
         rightLayout.addComponent(installedPrinterButtons);
 
-        pageLayout.addComponent(rightLayout);
+        rightPanel.setContent(rightLayout);
 
         // Display the page
+        pageLayout.addComponent(leftPanel);
+        pageLayout.addComponent(rightPanel);
         addComponent(pageLayout);
 
         // Populate data

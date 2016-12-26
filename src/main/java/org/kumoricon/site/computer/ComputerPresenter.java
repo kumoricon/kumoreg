@@ -2,6 +2,7 @@ package org.kumoricon.site.computer;
 
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
+import com.vaadin.data.util.*;
 import org.kumoricon.model.computer.Computer;
 import org.kumoricon.model.computer.ComputerRepository;
 import org.kumoricon.model.printer.Printer;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import javax.print.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.*;
+import java.io.*;
 
 @Controller
 public class ComputerPresenter {
@@ -38,29 +41,31 @@ public class ComputerPresenter {
     }
 
     public void addNewInstalledPrinter(ComputerView view) {
-
-        String newPrinterName = "test";
-        String newPrinterIpAddress = "1.1.1.1";
-
         // Prompt the user for the printer name and IP address
         Window subWindow = new Window("Install Printer");
         VerticalLayout subContent = new VerticalLayout();
         subContent.setMargin(true);
         subWindow.setContent(subContent);
-        TextField name = new TextField("Printer Name: ");
         TextField ipAddress = new TextField("IP Address: ");
-        TextField model = new TextField("Model: ");
+
+        List<Printer> modelList = new ArrayList<Printer>();
+        modelList.add(new Printer("", "", "8610"));
+        modelList.add(new Printer("", "", "251"));
+        modelList.add(new Printer("", "", "0000"));
+        BeanItemContainer<Printer> objects = new BeanItemContainer(Printer.class,modelList);
+        ComboBox model = new ComboBox("Model", objects);
+        model.setTextInputAllowed(false);
+        model.setItemCaptionPropertyId("model");
+
         Button closeButton = new Button("Install");
-        subContent.addComponent(name);
         subContent.addComponent(ipAddress);
         subContent.addComponent(model);
         subContent.addComponent(closeButton);
 
         closeButton.addClickListener((Button.ClickListener) clickEvent -> {
             Printer newPrinter = new Printer();
-            newPrinter.setName(name.getValue());
             newPrinter.setIpAddress(ipAddress.getValue());
-            newPrinter.setModel(model.getValue());
+            newPrinter.setModel(model.getValue().toString());
             subWindow.setVisible(false);
             savePrinter(view, newPrinter);
             subWindow.close();
@@ -86,15 +91,32 @@ public class ComputerPresenter {
 
     public void savePrinter(ComputerView view, Printer printer) {
         log.info("{} saved printer {}", view.getCurrentUsername(), printer);
+        final String command = "addprinter.sh " + printer.getIpAddress() + " " + printer.getModel();
+        String errorString = "";
+        Process p;
         try {
-
-            // TODO run script to install printer here
-
-            //view.notify("Printer successfully installed");
-        } catch (Exception e) {
-            view.notifyError("Error: Could not install printer.");
+            p = Runtime.getRuntime().exec(command, null, new File("/usr/local/bin"));
+            try {
+                final int exitValue = p.waitFor();
+                if (exitValue == 0) { view.notify("Printer successfully installed"); }
+                else {
+                    try (final BufferedReader b = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
+                        if ((errorString = b.readLine()) != null) { view.notifyError("Error: Could not install printer. Error: " + errorString); }
+                    } catch (final IOException e) {
+                        errorString = e.getMessage();
+                        view.notifyError("Error: Could not install printer. " + errorString);
+                    }
+                }
+            } catch (InterruptedException e) {
+                errorString = e.getMessage();
+                view.notifyError("Error: Could not install printer. " + errorString);
+            }
+        } catch (final IOException e) {
             log.error("{} got an error installing printer {}", view.getCurrentUsername(), printer, e);
+            errorString = e.getMessage();
+            view.notifyError("Error: Could not install printer. " + errorString);
         }
+
         showInstalledPrinterList(view);
     }
 
@@ -131,16 +153,33 @@ public class ComputerPresenter {
 
     public void deleteInstalledPrinter(ComputerView view, Printer printer) {
         log.info("{} deleted printer {}", view.getCurrentUsername(), printer);
+
+        final String command = "lpadmin -x " + printer.getIpAddress() + " 2>/dev/null";
+        String errorString = "";
+        Process p;
         try {
-
-            // TODO run script to uninstall printer here
-
-            view.notify("Printer successfully uninstalled");
-
-        } catch (DataIntegrityViolationException e) {
-            view.notifyError("Error: Could not uninstall printer.");
+            p = Runtime.getRuntime().exec(command, null, null);
+            try {
+                final int exitValue = p.waitFor();
+                if (exitValue == 0) { view.notify("Printer successfully uninstalled"); }
+                else {
+                    try (final BufferedReader b = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
+                        if ((errorString = b.readLine()) != null) { view.notifyError("Error: Could not uninstall printer. " + errorString); }
+                    } catch (final IOException e) {
+                        errorString = e.getMessage();
+                        view.notifyError("Error: Could not uninstall printer. " + errorString);
+                    }
+                }
+            } catch (InterruptedException e) {
+                errorString = e.getMessage();
+                view.notifyError("Error: Could not uninstall printer. " + errorString);
+            }
+        } catch (final IOException e) {
             log.error("{} got an error uninstalling printer {}", view.getCurrentUsername(), printer, e);
+            errorString = e.getMessage();
+            view.notifyError("Error: Could not uninstall printer. " + errorString);
         }
+
         showInstalledPrinterList(view);
     }
 
