@@ -40,6 +40,7 @@ public class ComputerView extends BaseView implements View {
     private Button btnDeleteMapping = new Button("Delete");
     private Button btnAddInstalledPrinter = new Button("Install");
     private Button btnDeleteInstalledPrinter = new Button("Uninstall");
+    private Button btnInstructions = new Button("Instructions...");
 
     @PostConstruct
     public void init() {
@@ -64,7 +65,6 @@ public class ComputerView extends BaseView implements View {
         printerMapList.setContainerDataSource(computerList);
         printerMapList.removeColumn("id");
         printerMapList.removeColumn("uuid");
-        printerMapList.getColumn("Printer Name").setText("Printer IP");
 
         printerMapList.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
             @Override
@@ -86,6 +86,11 @@ public class ComputerView extends BaseView implements View {
         mappingButtons.setSpacing(true);
         mappingButtons.addComponent(btnAddNewMapping);
         mappingButtons.addComponent(btnDeleteMapping);
+        mappingButtons.addComponent(btnInstructions);
+
+        btnInstructions.addClickListener((Button.ClickListener) clickEvent -> {
+            handler.showInstructions(this);
+        });
 
         btnAddNewMapping.addClickListener((Button.ClickListener) clickEvent -> {
             handler.addNewComputer(this);
