@@ -67,7 +67,7 @@ public class SiteMenu extends VerticalLayout {
         addButtonTo(tab1, "manage_pass_types",
                 buttonFactory("Badge Types", FontAwesome.BARCODE, BadgeView.VIEW_NAME));
         addButtonTo(tab1, "manage_devices",
-                buttonFactory("Computers", FontAwesome.DESKTOP, ComputerView.VIEW_NAME));
+                buttonFactory("Printers", FontAwesome.DESKTOP, ComputerView.VIEW_NAME));
         if (tab1.getComponentCount() > 0) { menu.addComponent(tab1); }
 
         Layout tab2 = new VerticalLayout();
