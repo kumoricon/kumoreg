@@ -43,6 +43,7 @@ Available rights are:
 | manage_pass_types             | Add/edit badge types                                            |
 | manage_roles                  | Add/edit security roles                                         |
 | manage_devices                | Add/edit devices (computer/printer mappings). Test offsets on Print Test Badge screen |                                         
+| manage_orders                 | View/edit orders                                                |
 | import_pre_reg_data           | Import pre-registered attendees and orders                      |
 | load_base_data                | Load default data (users, roles, rights)                        |
 
