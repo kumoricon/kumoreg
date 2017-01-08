@@ -8,6 +8,7 @@ Automates adding the printer at a given IP address to CUPS with the proper
 page size. The printer's name will be its IP address.
 
 Usage: addprinter.sh <ip address> <model>
+Note:  <hostname> may now be used instead of <ip address>
 
 Examples:
 addprinter.sh 192.168.1.23 8610
@@ -27,8 +28,9 @@ if [[ "${1}" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
 then
     ipAddress=${1}
 else
-    echo "Error: First argument must be a valid IPv4 address"
-    exit 1;
+    #disabled the following validation steps (kent 1/2/2017)
+    #echo "Error: First argument must be a valid IPv4 address"
+    #exit 1;
 fi
 
 # Delete printer if it exists; useful for testing
