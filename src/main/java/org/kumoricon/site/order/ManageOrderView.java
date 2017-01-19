@@ -1,21 +1,19 @@
 package org.kumoricon.site.order;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.model.order.Order;
+import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.vaadin.viritin.fields.MTable;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @ViewScope
 @SpringView(name = ManageOrderView.VIEW_NAME)
@@ -24,16 +22,26 @@ public class ManageOrderView extends BaseView implements View {
     public static final String REQUIRED_RIGHT = "manage_orders";
 
     @Autowired
+    private OrderRepository repository;
+
+    @Autowired
     private ManageOrderPresenter handler;
 
-    private ListSelect orderList = new ListSelect("Orders");
+    private static final int PAGESIZE = 50;
 
-    private OrderEditWindow orderEditWindow;
+    private MTable<Order> list = new MTable<>(Order.class)
+            .withProperties("id", "orderId", "paid", "paymentTakenByUser", "paidAt")
+            .withColumnHeaders("id", "Order ID", "Paid", "Payment Taken By", "Paid At")
+            .setSortableProperties("id", "orderIdl", "paid", "paymenttakenByUser", "paidAt")
+            .withFullWidth()
+            .withFullHeight()
+            .withRowClickListener(rowClick -> handler.orderSelected(this, (Order)rowClick.getRow()));
+
+    private OrderWindow orderEditWindow;
 
     @PostConstruct
     public void init() {
-        Layout leftPanel = buildLeftPanel();
-        addComponent(leftPanel);
+        addComponent(buildContent());
     }
 
     @Override
@@ -42,56 +50,64 @@ public class ManageOrderView extends BaseView implements View {
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
             closeOrderEditWindow();
-            handler.showOrderList(this);
         } else {
             handler.navigateToOrder(this, viewChangeEvent.getParameters());
         }
+
+        String likeFilter = "%" + "" + "%";
+        list.lazyLoadFrom(
+                         (firstRow, asc, sortProperty) -> repository.findByOrderIdLikeIgnoreCaseOrderByPaidAtDesc(
+                                 likeFilter,
+                                 new PageRequest(
+                                         firstRow / PAGESIZE,
+                                         PAGESIZE,
+                                         asc ? Sort.Direction.ASC : Sort.Direction.DESC,
+                                         sortProperty == null ? "id" : sortProperty
+                                 )
+                         ),
+                         () -> (int) repository.countByOrderIdLikeOrderByPaidAtDesc(likeFilter),
+                         PAGESIZE);
     }
 
     public void setHandler(ManageOrderPresenter presenter) {
         this.handler = presenter;
     }
 
-    public void afterSuccessfulFetch(List<Order> orders) {
-        orderList.setContainerDataSource(new BeanItemContainer<>(Order.class, orders));
-        orderList.setRows(orders.size());
-    }
-
-    private VerticalLayout buildLeftPanel() {
+    private VerticalLayout buildContent() {
         VerticalLayout leftPanel = new VerticalLayout();
         leftPanel.setMargin(true);
         leftPanel.setSpacing(true);
-        orderList.setCaption("Orders");
-        orderList.setNullSelectionAllowed(false);
-        orderList.setWidth(300, Unit.PIXELS);
-        orderList.setImmediate(true);
-        orderList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        orderList.setItemCaptionPropertyId("orderId");
-        leftPanel.addComponent(orderList);
-
-        orderList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
-                handler.orderSelected(this, (Order)valueChangeEvent.getProperty().getValue()));
+        leftPanel.addComponent(list);
 
         return leftPanel;
     }
 
 
     public void showOrder(Order order) {
-        orderEditWindow = new OrderEditWindow(this);
-        orderEditWindow.showOrder(order);
-        showWindow(orderEditWindow);
+        orderEditWindow = new OrderWindow();
+        orderEditWindow.setSavedHandler(entity -> handler.saveOrder(this, (Order)entity));
+        orderEditWindow.setDeleteHandler(entity -> handler.deleteOrder(this, (Order)entity));
+        orderEditWindow.setResetHandler(entity -> handler.cancelOrder(this));
+        orderEditWindow.setEntity(order);
+        orderEditWindow.openInModalPopup();
     }
 
     public void closeOrderEditWindow() {
         if (orderEditWindow != null) {
-            orderEditWindow.close();
+            orderEditWindow.closePopup();
         }
     }
-    public void selectOrder(Order order) { orderList.select(order); }
+
+    public void selectOrder(Order order) { list.select(order); }
     public void clearSelection() {
-        orderList.select(null);
+        list.select(null);
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
+
+    @Override
+    public void refresh() {
+        list.refreshRows();
+    }
 }
 

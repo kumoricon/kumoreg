@@ -1,5 +1,6 @@
 package org.kumoricon.model.order;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,13 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query(value = "SELECT SUM(totalAmount) as total FROM orders WHERE paymentTakenByUser_id = ?1 AND paidSession = ?2 ;", nativeQuery = true)
     Float getSessionOrderTotal(Integer userId, Integer sessionNumber);
+
+    List<Order> findAllBy(Pageable pageable);
+
+    List<Order> findByOrderIdLikeIgnoreCaseOrderByPaidAtDesc(String orderIdFilter);
+
+    List<Order> findByOrderIdLikeIgnoreCaseOrderByPaidAtDesc(String orderIdFilter, Pageable pageable);
+
+    long countByOrderIdLikeOrderByPaidAtDesc(String orderIdFilter);
 
 }

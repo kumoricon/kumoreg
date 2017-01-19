@@ -24,7 +24,6 @@ public class ManageOrderPresenter {
         if (order != null) {
             log.info("{} viewed order {}", view.getCurrentUsername(), order);
             view.navigateTo(ManageOrderView.VIEW_NAME + "/" + order.getId().toString());
-            view.showOrder(order);
         }
     }
 
@@ -38,13 +37,13 @@ public class ManageOrderPresenter {
     public void saveOrder(ManageOrderView view, Order order) {
         log.info("{} saved order {}", view.getCurrentUsername(), order);
         orderRepository.save(order);
+        view.refresh();
         view.navigateTo(ManageOrderView.VIEW_NAME);
     }
 
-    public void showOrderList(ManageOrderView view) {
-        log.info("{} viewed order list", view.getCurrentUsername());
-        List<Order> orders = orderRepository.findAll();
-        view.afterSuccessfulFetch(orders);
+    public void cancelOrder(ManageOrderView view) {
+        view.closeOrderEditWindow();
+        view.navigateTo(ManageOrderView.VIEW_NAME);
     }
 
     public void navigateToOrder(ManageOrderView view, String parameters) {
@@ -53,10 +52,21 @@ public class ManageOrderPresenter {
             Order order = orderRepository.findOne(id);
             if (order != null) {
                 view.selectOrder(order);
+                view.showOrder(order);
             } else {
                 log.error("{} tried to view order id {} but it was not found in the database",
                     view.getCurrentUsername(), id);
             }
+        } else {
+            view.closeOrderEditWindow();
         }
     }
+
+    public void deleteOrder(ManageOrderView view, Order order) {
+        log.info("{} deleted Order {}", view.getCurrentUser(), order);
+        orderRepository.delete(order);
+        view.closeOrderEditWindow();
+        view.refresh();
+    }
+
 }
