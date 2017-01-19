@@ -10,7 +10,6 @@ import org.kumoricon.model.system.Command;
 import org.kumoricon.site.computer.ComputerPresenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -58,7 +57,6 @@ public class Printer extends Record {
 
     public String getName() { return this.name; }
     public void setName(String name) {
-        log.debug("Printer.getName, name: ", name, name);
 
         // Supported case where the name is a valid IP address
         if (name.trim().matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
@@ -73,11 +71,11 @@ public class Printer extends Record {
                 this.name = name;
             }
             catch (Exception e) {
-                this.setStatus("Error. The printer name that was entered could not be found in DNS.");
+                this.setStatus("Error: The printer name that was entered could not be found in DNS.");
             }
         }
         else {
-            this.setStatus("Error. Unable to validate the printer name that was entered.");
+            this.setStatus("Error: Unable to validate the printer name that was entered.");
         }
     }
 
@@ -103,19 +101,11 @@ public class Printer extends Record {
         // Get platform-independent list of all printers on the server
         PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
         for (PrintService ps : printServices) {
-
             Printer p = new Printer();
             p.setName(ps.getName());
-            printers.add(p);
-
-            if (System.getProperty("os.name") == "Linux") {
-
-                // Get IP address for printers on a Linux system
-                List<String> command = Arrays.asList("lpstat -v " + p.getName());
-                String result = Command.run(command, "/etc/init.d/", true);
-                int ipOffset = result.indexOf("ip=");
-                String ipAddress = result.substring(ipOffset);
-                p.setIpAddress(ipAddress);
+            //p.setIpAddress(); /* Tried but not working yet */
+            if ((p.getStatus()).equals("Uninstalled") == false) {
+                printers.add(p);
             }
         }
 
@@ -124,17 +114,24 @@ public class Printer extends Record {
 
     public String getStatus() {
         // Return error information if any
+        String os = System.getProperty("os.name");
         if (this.status.startsWith("Error")) {
             return this.status;
         }
-        else if (System.getProperty("os.name") == "Linux") {
+        else if (os.equals("Linux")) {
             // Get IP address for printers on a Linux system
-            List<String> command = Arrays.asList("lpstat -s " + this.getName());
-            String result = Command.run(command, "/etc/init.d/", true);
-            this.setStatus(result);
+            List<String> command = Arrays.asList("lpstat","-s",this.getName());
+            String result = Command.run(command, "/usr/bin/", true);
+            if (result.startsWith("lpstat: No destinations added.") == true) {
+                this.setStatus("Uninstalled");
+            }
+            else {
+                this.setStatus("OK");
+            }
         }
         return this.status;
     }
+
     public void setStatus(String status) {
         this.status = status;
     }
@@ -142,35 +139,45 @@ public class Printer extends Record {
     public String install() {
         this.setStatus("");
         String installStatus = "";
-
-        if (System.getProperty("os.name") == "Linux") {
+        String os = System.getProperty("os.name");
+        if (os.equals("Linux")) {
             /* TODO pull command information from a database table */
-            List<String> command = Arrays.asList("addprinter.sh", this.getName(), this.getModel());
-            String result = Command.run(command, "/usr/local/bin/addprinter", true);
+            List<String> command = Arrays.asList("/usr/local/bin/addprinter/addprinter.sh", this.getName(), this.getModel());
+            String result = Command.run(command, "", true);
+            log.info(result);
             if (result.startsWith("Command completed successfully")) {
                 installStatus = "Printer '" + this.getName() + "' installed successfully.";
+                log.info(installStatus);
+                this.setStatus("OK");
             } else {
-                installStatus = "Error. Unable to uninstall printer '" + this.getName() + "'" + result;
+                installStatus = "Error: Unable to install printer '" + this.getName() + "'" + result;
+                this.setStatus(installStatus);
             }
         }
-        this.setStatus(installStatus);
-        return installStatus;
+
+        return this.getStatus();
     }
 
     public String uninstall() {
         this.setStatus("");
         String uninstallStatus = "";
 
-        if (System.getProperty("os.name") == "Linux") {
-            List<String> command = Arrays.asList("lpadmin", "-x", this.getName(), "2>/dev/null");
-            String result = Command.run(command, "/usr/local/bin/addprinter", true);
+        String os = System.getProperty("os.name");
+        if (os.equals("Linux")) {
+            List<String> command = Arrays.asList("lpadmin","-x",this.getName(),"2>/dev/null");
+            String result = Command.run(command, "/usr/sbin/", true);
             if (result.startsWith("Command completed successfully")) {
                 uninstallStatus = "Printer '" + this.getName() + "' uninstalled successfully.";
+                log.info(uninstallStatus);
+                this.setStatus("Uninstalled");
             } else {
-                uninstallStatus = "Error. Unable to uninstall printer '" + this.getName() + "'" + result;
+                uninstallStatus = "Error: Unable to remove printer '" + this.getName() + "'" + result;
+                log.info(uninstallStatus);
+                this.setStatus(uninstallStatus);
             }
         }
-        this.status = uninstallStatus;
+
+        this.setStatus(uninstallStatus);
         return uninstallStatus;
     }
 }

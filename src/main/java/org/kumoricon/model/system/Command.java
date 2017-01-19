@@ -16,7 +16,11 @@ public class Command {
         try {
             ProcessBuilder pb = new ProcessBuilder(command);
             pb.redirectErrorStream(true);
-            pb.directory(new File(directory));
+            if (directory != "") {
+                /* TODO validate directory */
+                pb.directory(new File(directory));
+            }
+
             Process p = pb.start();
             try {
                 final BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));

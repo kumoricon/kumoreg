@@ -16,6 +16,9 @@ import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @ViewScope
 @SpringView(name = ComputerView.VIEW_NAME)
@@ -25,6 +28,7 @@ public class ComputerView extends BaseView implements View {
 
     @Autowired
     private ComputerPresenter handler;
+    private static final Logger log = LoggerFactory.getLogger(ComputerView.class);
 
     private Grid gridComputers = new Grid();
     private Grid gridPrinters = new Grid();
@@ -54,9 +58,10 @@ public class ComputerView extends BaseView implements View {
 
         // Left column (computers)
         VerticalLayout layoutLeft = new VerticalLayout();
+        layoutLeft.setSizeUndefined();
         layoutLeft.setMargin(true);
         layoutLeft.setSpacing(true);
-        lblLeftTitle = new Label ("<span style='font-size:24px'>Computer - Printer Mappings</span>",ContentMode.HTML);
+        lblLeftTitle = new Label ("<span style='font-size:24px'>Computers</span>",ContentMode.HTML);
         lblLeftSubtitle = new Label(String.format("<span style='font-size:12px'>This computer's IP address is: </span>" + getCurrentClientIPAddress()),ContentMode.HTML);
         layoutLeft.addComponent(lblLeftTitle);
         layoutLeft.addComponent(lblLeftSubtitle);
@@ -109,10 +114,11 @@ public class ComputerView extends BaseView implements View {
 
         // Right column (printers)
         VerticalLayout layoutRight = new VerticalLayout();
+        layoutRight.setSizeUndefined();
         layoutRight.setMargin(true);
         layoutRight.setSpacing(true);
-        lblRightTitle = new Label("<span style='font-size:24px'>Installed Printers</span>",ContentMode.HTML);
-        lblRightSubtitle = new Label("<span style='font-size:12px'>Printers must be installed on the server before they can be mapped</span>",ContentMode.HTML);
+        lblRightTitle = new Label("<span style='font-size:24px'>Printers</span>",ContentMode.HTML);
+        lblRightSubtitle = new Label("<span style='font-size:12px'>Only printers listed below can be used to print badges</span>",ContentMode.HTML);
         layoutRight.addComponent(lblRightTitle);
         layoutRight.addComponent(lblRightSubtitle);
         layoutRight.addComponent(gridPrinters);
@@ -122,6 +128,7 @@ public class ComputerView extends BaseView implements View {
         gridPrinters.setContainerDataSource(printerList);
         gridPrinters.removeColumn("id");
         gridPrinters.removeColumn("uuid");
+        gridPrinters.setColumnOrder("name", "model");
 
         HorizontalLayout printerButtons = new HorizontalLayout();
         printerButtons.setSpacing(true);

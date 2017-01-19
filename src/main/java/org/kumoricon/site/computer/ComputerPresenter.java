@@ -18,7 +18,7 @@ import java.lang.*;
 public class ComputerPresenter {
     @Autowired
     private ComputerRepository computerRepository;
-
+    private AddPrinterWindow printerInstallWindow = new AddPrinterWindow();
     private static final Logger log = LoggerFactory.getLogger(ComputerPresenter.class);
 
     public ComputerPresenter() {
@@ -38,26 +38,27 @@ public class ComputerPresenter {
     }
 
     public void addPrinter(ComputerView view) {
-         // Prompt the user for the printer hostname and model
-        AddPrinterWindow printerInstallWindow = new AddPrinterWindow();
 
         // Add a handler to run when a printer is installed successfully
-        printerInstallWindow.installSuccessHandler = new PrinterWindowCallback() {
+        this.printerInstallWindow.installSuccessHandler = new PrinterWindowCallback() {
             @Override
             public void run() {
                 showPrinterList(view);
+                view.notify((printerInstallWindow.getInstalledPrinter()).getStatus());
                 log.info("{} added printer", view.getCurrentUsername(), printerInstallWindow.getInstalledPrinter());
             }
         };
 
         // Add a handler to run when a printer fails to install
-        printerInstallWindow.installFailureHandler = new PrinterWindowCallback() {
+        this.printerInstallWindow.installFailureHandler = new PrinterWindowCallback() {
             @Override
             public void run() {
                 view.notifyError((printerInstallWindow.getInstalledPrinter()).getStatus());
                 log.error("{} failed to add printer", view.getCurrentUsername(), printerInstallWindow.getInstalledPrinter(), (printerInstallWindow.getInstalledPrinter()).getStatus());
             }
         };
+
+        printerInstallWindow.clearInputFields();
         view.showWindow(printerInstallWindow);
     }
 
@@ -84,7 +85,7 @@ public class ComputerPresenter {
     public void showPrinterList(ComputerView view) {
         log.info("{} viewed printer list", view.getCurrentUsername());
         List<Printer> printers = Printer.getPrinterList();
-        if (printers != null) { view.afterSuccessfulPrinterFetch(printers); }
+        view.afterSuccessfulPrinterFetch(printers);
     }
 
     public void deleteComputer(ComputerView view, Computer computer) {
@@ -101,9 +102,11 @@ public class ComputerPresenter {
             log.error("{} failed to delete printer", view.getCurrentUsername(), printer, printer.getStatus());
         }
         else {
+            view.notify(printer.getStatus());
             log.info("{} deleted printer '" + printer.getName() + "'", view.getCurrentUsername(), printer);
-            showPrinterList(view);
         }
+
+        showPrinterList(view);
     }
 
     public void refreshPrinterList(ComputerView view) {
@@ -121,7 +124,7 @@ public class ComputerPresenter {
                 "Step 2: Verify that this Computer is Listed<br>"+
                 "Listed computers show up on the left-hand column under 'Computers'. If this computer is not there, "+
                 "then click Add. An entry for this computer will be added.<br><br>"+
-                "Step 3: Map the DNS Hostname of the Printer to this Computer Mapping<br>"+
+                "Step 3: Map the DNS Hostname of the Printer to this Computer<br>"+
                 "Select this computer from the list on the left-hand side, click the row to enter edit-mode, "+
                 "then enter the printer's hostname in the 'Printer Name' column.<br><br>"+
                 "Step 4: Print a Test Badge<br>"+

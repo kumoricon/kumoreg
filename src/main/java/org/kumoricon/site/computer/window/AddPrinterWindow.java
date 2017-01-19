@@ -79,14 +79,9 @@ public class AddPrinterWindow extends Window {
             String model = ((Printer) comboboxModel.getValue()).getModel();
             this.printer.setName(this.txtHostname.getValue());
             this.printer.setModel(model);
-            this.setVisible(false);
 
             // Validate input
-            if (this.printer.getStatus().startsWith("Error") == true) {
-                /* TODO disaply error message */
-                return;
-            }
-            else if (this.printer.getModel() == "") {
+            if (this.printer.getModel() == "") {
                 /* TODO Improvwe validation */
                 /* TODO disaply error message */
                 return;
@@ -99,7 +94,7 @@ public class AddPrinterWindow extends Window {
 
             // Proceeed with installation
             String status = printer.install();
-            if (status == "Success") {
+            if (status.startsWith("Error") == false) {
                 if (installSuccessHandler != null) {
                     installSuccessHandler.run();
                 }
@@ -113,6 +108,12 @@ public class AddPrinterWindow extends Window {
             this.close();
         });
         btnInstall.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        txtHostname.focus();
+    }
+
+    public void clearInputFields() {
+        this.txtHostname.setValue("");
+        this.comboboxModel.setValue(null);
     }
 
 }
