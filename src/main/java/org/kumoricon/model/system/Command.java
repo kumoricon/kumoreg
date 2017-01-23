@@ -14,13 +14,18 @@ public class Command {
     public static String run(List<String> command, String directory, boolean reportSuccess) {
         String status = "";
         try {
+            /* TODO validate command */
+
             ProcessBuilder pb = new ProcessBuilder(command);
-            pb.redirectErrorStream(true);
+            pb.redirectErrorStream(true); /* Have errors and output in the same stream for simplicity */
+
+            // Validate the given directory
             if (directory != "") {
                 /* TODO validate directory */
                 pb.directory(new File(directory));
             }
 
+            // Run the command
             Process p = pb.start();
             try {
                 final BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -28,7 +33,13 @@ public class Command {
                 r.lines().iterator().forEachRemaining(sj::add);
                 status = sj.toString();
                 final int exitValue = p.waitFor();
-                if (exitValue == 0) { if (reportSuccess) { status = "Command completed successfully. Output: " + status; } }
+
+                // The command was successful
+                if (exitValue == 0) {
+                    if (reportSuccess) { status = "Command completed successfully. Output: " + status; }
+                }
+
+                // The command was not successful
                 else {
                     try (final BufferedReader b = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
                         String errorString = "";
@@ -39,13 +50,21 @@ public class Command {
                         status = e.getMessage();
                     }
                 }
-            } catch (InterruptedException e) {
+            }
+
+            // The command was interrupted
+            catch (InterruptedException e) {
                 status = e.getMessage();
             }
+
             p.destroy();
-        } catch (final IOException e) {
+        }
+
+        // There was an I/O error
+        catch (final IOException e) {
             status = e.getMessage();
         }
+
         return status;
     }
 

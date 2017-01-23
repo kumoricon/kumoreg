@@ -10,14 +10,12 @@ import org.kumoricon.model.system.Command;
 import org.kumoricon.site.computer.ComputerPresenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /*
-    Printer class encapsulates non-persistent printer data and printer operations
+ *   Encapsulates non-persistent printer data and printer-related operations
  */
 @Entity
 @Table(name = "printers")
@@ -58,37 +56,63 @@ public class Printer extends Record {
     public String getName() { return this.name; }
     public void setName(String name) {
 
-        // Supported case where the name is a valid IP address
+        // The name being assigned to the printer is an IP address
         if (name.trim().matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-            /* TODO validate that the IP address is reachable */
-            this.name = name;
+            try {
+                /* TODO validate that the IP address is reachable */
+                this.name = name;
+            }
+            catch (Exception e) {
+            }
         }
 
-        // Supported case where the name is a valid DNS hostname
+        // The name being assigned to the printer is a DNS hostname
         else if (name.trim().matches("([a-zA-Z0-9\\.\\-_ ])*")) {
             try {
                 /* TODO validate that the printer exists in DNS */
                 this.name = name;
             }
             catch (Exception e) {
-                this.setStatus("Error: The printer name that was entered could not be found in DNS.");
             }
         }
+
+        // The name being assigned to the printer is not valid
         else {
-            this.setStatus("Error: Unable to validate the printer name that was entered.");
+            String errorString = "Error: Unable to validate the name that was assigned to a printer";
+            this.setStatus(errorString);
+            log.error(errorString);
         }
     }
 
     public String getModel() { return this.model; }
     public void setModel(String model) {
-        //TODO add validation
-        this.model = model;
+        try {
+            /* TODO validate that the given model is in the list of models */
+            this.model = model;
+        }
+        catch (Exception e) {
+        }
     }
 
     public String getIpAddress() { return this.ipAddress; }
     private void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-        //TODO add validation
+
+        // The IP address is a permissible value
+        if (ipAddress.trim().matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+            try {
+                /* TODO validate that the IP address is reachable */
+                this.ipAddress = ipAddress;
+            }
+            catch (Exception e) {
+            }
+        }
+
+        // The IP address is not a permissible value
+        else {
+            String errorString = "Error: Unable to validate the IP address that was assigned to printer '" + this.getName() + "'";
+            this.setStatus(errorString);
+            log.error(errorString);
+        }
     }
 
     public String toString() {
@@ -100,10 +124,15 @@ public class Printer extends Record {
 
         // Get platform-independent list of all printers on the server
         PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
+
+        // For each printer found add it to the list of printers
         for (PrintService ps : printServices) {
             Printer p = new Printer();
             p.setName(ps.getName());
-            //p.setIpAddress(); /* Tried but not working yet */
+            //p.setIpAddress();
+
+            // NOTE: printer objects linger on the server for a time after being uninstalled
+            // Add the printer to the list only if its status is not Uninstalled
             if ((p.getStatus()).equals("Uninstalled") == false) {
                 printers.add(p);
             }
@@ -113,22 +142,28 @@ public class Printer extends Record {
     }
 
     public String getStatus() {
-        // Return error information if any
+        // The printer is in an error state
         String os = System.getProperty("os.name");
         if (this.status.startsWith("Error")) {
             return this.status;
         }
+
+        // The printer is most likely OK and the platform is Linux
         else if (os.equals("Linux")) {
-            // Get IP address for printers on a Linux system
             List<String> command = Arrays.asList("lpstat","-s",this.getName());
             String result = Command.run(command, "/usr/bin/", true);
+
+            // The printer has been uninstalled but the object is lingering on the server
             if (result.startsWith("lpstat: No destinations added.") == true) {
                 this.setStatus("Uninstalled");
             }
+
+            // The printer is most likely in good standing
             else {
                 this.setStatus("OK");
             }
         }
+
         return this.status;
     }
 
@@ -140,16 +175,24 @@ public class Printer extends Record {
         this.setStatus("");
         String installStatus = "";
         String os = System.getProperty("os.name");
+
         if (os.equals("Linux")) {
+
             /* TODO pull command information from a database table */
+
             List<String> command = Arrays.asList("/usr/local/bin/addprinter/addprinter.sh", this.getName(), this.getModel());
             String result = Command.run(command, "", true);
             log.info(result);
+
+            // The script to install the printer ran without problems
             if (result.startsWith("Command completed successfully")) {
                 installStatus = "Printer '" + this.getName() + "' installed successfully.";
                 log.info(installStatus);
                 this.setStatus("OK");
-            } else {
+            }
+
+            // The script to install the printer encountered a problem
+            else {
                 installStatus = "Error: Unable to install printer '" + this.getName() + "'" + result;
                 this.setStatus(installStatus);
             }
@@ -163,14 +206,20 @@ public class Printer extends Record {
         String uninstallStatus = "";
 
         String os = System.getProperty("os.name");
+
         if (os.equals("Linux")) {
             List<String> command = Arrays.asList("lpadmin","-x",this.getName(),"2>/dev/null");
             String result = Command.run(command, "/usr/sbin/", true);
+
+            // The command to uninstall the printer succeeded
             if (result.startsWith("Command completed successfully")) {
                 uninstallStatus = "Printer '" + this.getName() + "' uninstalled successfully.";
                 log.info(uninstallStatus);
                 this.setStatus("Uninstalled");
-            } else {
+            }
+
+            // The command to uninstall the printer failed
+            else {
                 uninstallStatus = "Error: Unable to remove printer '" + this.getName() + "'" + result;
                 log.info(uninstallStatus);
                 this.setStatus(uninstallStatus);

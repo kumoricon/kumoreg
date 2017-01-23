@@ -82,23 +82,29 @@ public class AddPrinterWindow extends Window {
 
             // Validate input
             if (this.printer.getModel() == "") {
-                /* TODO Improvwe validation */
+                /* TODO Improve validation */
                 /* TODO disaply error message */
                 return;
             }
             else if (this.printer.getName() == "") {
-                /* TODO Improvwe validation */
+                /* TODO Improve validation */
                 /* TODO disaply error message */
                 return;
             }
 
-            // Proceeed with installation
+            // Proceed with installation
             String status = printer.install();
+
+            // NOTE: the callback functions below are needed since the install takes some time
+
+            // Install succeeded so run the success handler if one has been set
             if (status.startsWith("Error") == false) {
                 if (installSuccessHandler != null) {
                     installSuccessHandler.run();
                 }
             }
+
+            // Install failed so run the failure handler if one has been set
             else {
                 if (installFailureHandler != null) {
                     installFailureHandler.run();
