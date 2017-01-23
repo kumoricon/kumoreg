@@ -122,6 +122,16 @@ public class Printer extends Record {
     public static List<Printer> getPrinterList() {
         List<Printer> printers = new ArrayList<Printer>();
 
+        // Remove the PrintServiceLookup class from AppContext
+        // This forces Java to rebuild its printer list during the next call to lookupPrinterServices
+         Class<?>[] classes = PrintServiceLookup.class.getDeclaredClasses();
+        for (int i = 0; i < classes.length; i++) {
+            if ("javax.print.PrintServiceLookup$Services".equals(classes[i].getName())) {
+                sun.awt.AppContext.getAppContext().remove(classes[i]);
+                break;
+            }
+        }
+
         // Get platform-independent list of all printers on the server
         PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
 
@@ -131,7 +141,7 @@ public class Printer extends Record {
             p.setName(ps.getName());
             //p.setIpAddress();
 
-            // NOTE: printer objects linger on the server for a time after being uninstalled
+            // NOTE: printer objects seem to linger on the server for a time after being uninstalled
             // Add the printer to the list only if its status is not Uninstalled
             if ((p.getStatus()).equals("Uninstalled") == false) {
                 printers.add(p);
@@ -211,8 +221,15 @@ public class Printer extends Record {
             List<String> command = Arrays.asList("lpadmin","-x",this.getName(),"2>/dev/null");
             String result = Command.run(command, "/usr/sbin/", true);
 
-            // The command to uninstall the printer succeeded
-            if (result.startsWith("Command completed successfully")) {
+            // The printer was unexpectedly removed from the server
+            if (result.contains("lpadmin: The printer or class does not exist")) {
+                uninstallStatus = "Error: Printer '" + this.getName() + "' not found on the server. " + result;
+                log.error(uninstallStatus);
+                this.setStatus("Uninstalled");
+            }
+
+            // The command to uninstall the printer most likely succeeded
+            else if (result.startsWith("Command completed successfully")) {
                 uninstallStatus = "Printer '" + this.getName() + "' uninstalled successfully.";
                 log.info(uninstallStatus);
                 this.setStatus("Uninstalled");
@@ -220,13 +237,12 @@ public class Printer extends Record {
 
             // The command to uninstall the printer failed
             else {
-                uninstallStatus = "Error: Unable to remove printer '" + this.getName() + "'" + result;
-                log.info(uninstallStatus);
+                uninstallStatus = "Error: Unable to remove printer '" + this.getName() + "' " + result;
+                log.error(uninstallStatus);
                 this.setStatus(uninstallStatus);
             }
         }
 
-        this.setStatus(uninstallStatus);
         return uninstallStatus;
     }
 }

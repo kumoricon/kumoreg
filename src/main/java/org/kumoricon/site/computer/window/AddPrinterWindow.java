@@ -83,19 +83,17 @@ public class AddPrinterWindow extends Window {
             // Validate input
             if (this.printer.getModel() == "") {
                 /* TODO Improve validation */
-                /* TODO disaply error message */
+                /* TODO display error message */
                 return;
             }
             else if (this.printer.getName() == "") {
                 /* TODO Improve validation */
-                /* TODO disaply error message */
+                /* TODO display error message */
                 return;
             }
 
             // Proceed with installation
             String status = printer.install();
-
-            // NOTE: the callback functions below are needed since the install takes some time
 
             // Install succeeded so run the success handler if one has been set
             if (status.startsWith("Error") == false) {
@@ -120,6 +118,8 @@ public class AddPrinterWindow extends Window {
     public void clearInputFields() {
         this.txtHostname.setValue("");
         this.comboboxModel.setValue(null);
+        this.printer = new Printer();
+        txtHostname.focus();
     }
 
 }
