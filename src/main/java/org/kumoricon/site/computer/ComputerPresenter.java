@@ -1,27 +1,24 @@
 package org.kumoricon.site.computer;
 
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.*;
-import com.vaadin.data.util.*;
 import org.kumoricon.model.computer.Computer;
 import org.kumoricon.model.computer.ComputerRepository;
 import org.kumoricon.model.printer.Printer;
+import org.kumoricon.site.computer.window.AddPrinterWindow;
+import org.kumoricon.site.computer.window.PrinterWindowCallback;
+import org.kumoricon.site.computer.window.ViewInstructionsWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import javax.print.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.lang.*;
-import java.io.*;
 
 @Controller
 public class ComputerPresenter {
     @Autowired
     private ComputerRepository computerRepository;
-
+    private AddPrinterWindow printerInstallWindow = new AddPrinterWindow();
     private static final Logger log = LoggerFactory.getLogger(ComputerPresenter.class);
 
     public ComputerPresenter() {
@@ -40,47 +37,33 @@ public class ComputerPresenter {
         saveComputer(view, computer);
     }
 
-    public void addNewInstalledPrinter(ComputerView view) {
-        log.info("{} added new printer", view.getCurrentUsername());
+    public void addPrinter(ComputerView view) {
 
-        // Create a sub-window to prompt the user for the printer IP address and model
-        Window subWindow = new Window("Install Printer");
-        VerticalLayout subContent = new VerticalLayout();
-        subContent.setMargin(true);
-        subWindow.setContent(subContent);
-        TextField ipAddress = new TextField("IP Address: ");
+        // Add a handler to run when a printer is installed successfully
+        this.printerInstallWindow.installSuccessHandler = new PrinterWindowCallback() {
+            @Override
+            public void run() {
+                showPrinterList(view);
+                view.notify((printerInstallWindow.getInstalledPrinter()).getStatus());
+                log.info("{} added printer", view.getCurrentUsername(), printerInstallWindow.getInstalledPrinter());
+            }
+        };
 
-        //Create a combo box with an item for each printer model
-        List<Printer> modelList = new ArrayList<Printer>();
-            modelList.add(new Printer("", "", "8610"));
-            modelList.add(new Printer("", "", "251"));
-            modelList.add(new Printer("", "", "0000"));
-            BeanItemContainer<Printer> objects = new BeanItemContainer(Printer.class, modelList);
-            ComboBox modelComboBox = new ComboBox("Model", objects);
-            modelComboBox.setTextInputAllowed(false);
-            modelComboBox.setItemCaptionPropertyId("model");
+        // Add a handler to run when a printer fails to install
+        this.printerInstallWindow.installFailureHandler = new PrinterWindowCallback() {
+            @Override
+            public void run() {
+                view.notifyError((printerInstallWindow.getInstalledPrinter()).getStatus());
+                log.error("{} failed to add printer", view.getCurrentUsername(), printerInstallWindow.getInstalledPrinter(), (printerInstallWindow.getInstalledPrinter()).getStatus());
+            }
+        };
 
-        Button installButton = new Button("Install");
-        subContent.addComponent(ipAddress);
-        subContent.addComponent(modelComboBox);
-        subContent.addComponent(installButton);
-
-        installButton.addClickListener((Button.ClickListener) clickEvent -> {
-            Printer newPrinter = new Printer();
-            newPrinter.setIpAddress(ipAddress.getValue());
-            String model = ((Printer)modelComboBox.getValue()).getModel();
-            newPrinter.setModel(model);
-            subWindow.setVisible(false);
-            savePrinter(view, newPrinter);
-            subWindow.close();
-        });
-
-        subWindow.center();
-        UI.getCurrent().addWindow(subWindow);
+        printerInstallWindow.clearInputFields();
+        view.showWindow(printerInstallWindow);
     }
 
     public void saveComputer(ComputerView view, Computer computer) {
-        log.info("{} saved computer {}", view.getCurrentUsername(), computer);
+        log.info("{} saved computer", view.getCurrentUsername(), computer);
         try {
             computerRepository.save(computer);
             view.notify("Saved");
@@ -88,43 +71,9 @@ public class ComputerPresenter {
             showComputerList(view);
         } catch (DataIntegrityViolationException e) {
             view.notifyError("Error: Could not save Computer. Duplicate IP Address?");
-            log.error("{} got an error saving computer {}", view.getCurrentUsername(), computer, e);
+            log.error("{} got an error saving computer", view.getCurrentUsername(), computer, e);
             showComputerList(view);
         }
-    }
-
-    public void savePrinter(ComputerView view, Printer printer) {
-        log.info("{} saved printer {}", view.getCurrentUsername(), printer);
-
-        final String command = "addprinter.sh " + printer.getIpAddress() + " " + printer.getModel();
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec(command, null, new File("/usr/local/bin"));
-            try {
-                final int exitValue = p.waitFor();
-                if (exitValue == 0) { view.notify("Printer successfully installed"); }
-                else {
-                    try (final BufferedReader b = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
-                        String errorString = "";
-                        if ((errorString = b.readLine()) != null) {
-                            log.error("{} got an error installing printer {}", view.getCurrentUsername(), printer, errorString);
-                            view.notifyError("Error: Could not install printer. Error: " + errorString);
-                        }
-                    } catch (final IOException e) {
-                        log.error("{} got an error installing printer {}", view.getCurrentUsername(), printer, e);
-                        view.notifyError("Error: Could not install printer. " + e.getMessage());
-                    }
-                }
-            } catch (InterruptedException e) {
-                log.error("{} got an error installing printer {}", view.getCurrentUsername(), printer, e);
-                view.notifyError("Error: Could not install printer. " + e.getMessage());
-            }
-        } catch (final IOException e) {
-            log.error("{} got an error installing printer {}", view.getCurrentUsername(), printer, e);
-            view.notifyError("Error: Could not install printer. " + e.getMessage());
-        }
-
-        showInstalledPrinterList(view);
     }
 
     public void showComputerList(ComputerView view) {
@@ -133,95 +82,57 @@ public class ComputerPresenter {
         view.afterSuccessfulComputerFetch(computers);
     }
 
-    public void showInstalledPrinterList(ComputerView view) {
+    public void showPrinterList(ComputerView view) {
         log.info("{} viewed printer list", view.getCurrentUsername());
-
-        // Pull a list of printers on the server
-        List<Printer> printers = new ArrayList<Printer>();
-        PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
-        for (PrintService ps : printServices) {
-            Printer p = new Printer();
-            p.setName(ps.getName());
-            printers.add(p);
-
-            // TODO: use a different method to get the IP address of printer, because this one can't
-
-        }
+        List<Printer> printers = Printer.getPrinterList();
         view.afterSuccessfulPrinterFetch(printers);
     }
 
     public void deleteComputer(ComputerView view, Computer computer) {
-        log.info("{} deleted computer {}", view.getCurrentUsername(), computer);
+        log.info("{} deleted computer", view.getCurrentUsername(), computer);
         computerRepository.delete(computer);
         view.notify("Deleted " + computer.getIpAddress());
         view.afterSuccessfulComputerFetch(computerRepository.findAll());
     }
 
-    public void deleteInstalledPrinter(ComputerView view, Printer printer) {
-        log.info("{} deleted printer {}", view.getCurrentUsername(), printer);
-
-        final String command = "lpadmin -x " + printer.getIpAddress() + " 2>/dev/null";
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec(command, null, null);
-            try {
-                final int exitValue = p.waitFor();
-                if (exitValue == 0) { view.notify("Printer successfully uninstalled"); }
-                else {
-                    try (final BufferedReader b = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
-                        String errorString = "";
-                        if ((errorString = b.readLine()) != null) {
-                            log.error("{} got an error uninstalling printer {}", view.getCurrentUsername(), printer, errorString);
-                            view.notifyError("Error: Could not uninstall printer. " + errorString);
-                        }
-                    } catch (final IOException e) {
-                        log.error("{} got an error uninstalling printer {}", view.getCurrentUsername(), printer, e);
-                        view.notifyError("Error: Could not uninstall printer. " + e.getMessage());
-                    }
-                }
-            } catch (InterruptedException e) {
-                log.error("{} got an error uninstalling printer {}", view.getCurrentUsername(), printer, e);
-                view.notifyError("Error: Could not uninstall printer. " + e.getMessage());
-            }
-        } catch (final IOException e) {
-            log.error("{} got an error uninstalling printer {}", view.getCurrentUsername(), printer, e);
-            view.notifyError("Error: Could not uninstall printer. " + e.getMessage());
+    public void deletePrinter(ComputerView view, Printer printer) {
+        String result = printer.uninstall();
+        if (result.startsWith("Error")) {
+            view.notifyError(printer.getStatus());
+            log.error("{} failed to delete printer", view.getCurrentUsername(), printer, printer.getStatus());
+        }
+        else {
+            view.notify(printer.getStatus());
+            log.info("{} deleted printer '" + printer.getName() + "'", view.getCurrentUsername(), printer);
         }
 
-        showInstalledPrinterList(view);
+        showPrinterList(view);
+    }
+
+    public void refreshPrinterList(ComputerView view) {
+        showPrinterList(view);
     }
 
     public void showInstructions(ComputerView view) {
-        log.info("{} viewed instructions {}", view.getCurrentUsername());
+        log.info("{} viewed instructions", view.getCurrentUsername());
 
-        // Prompt the user for the printer name and IP address
-        Window subWindow = new Window("Instructions");
-        VerticalLayout subContent = new VerticalLayout();
-        subContent.setMargin(true);
-        subWindow.setContent(subContent);
-        String content = "These instructions explain how to associate this computer with a given printer, presumably the printer that is next to or near this computer\n\n" +
-                "Step 1: Verify that the Printer is Installed on the Server\n" +
-                "Printers installed on the server show up on the right-hand column under 'Installed Printers'. If the printer to be installed is not there,\n"+
-                "then click Install, enter the IP address and choose the model of the printer, and proceed with the installation.\n\n"+
-                "Step 2: Verify that this Computer is Mapped\n"+
-                "Mapped computers show up on the left-hand column under 'Computer-Printer Mappings'. If this computer is not there,\n"+
-                "then click Add. An entry for the computer will be added.\n\n"+
-                "Step 3: Enter the IP Address of the Printer to the Computer Mapping\n"+
-                "On the row representing the mapping for this computer, enter the printer's IP address in the 'Printer Name' column.\n\n"+
-                "Step 4: Print a Test Badge\n"+
-                "From the Utilities menu, print a test badge. Adjust the X Offset and Y Offset in the Computer-Printer mapping\n"+
-                "if the image on the badge needs to be moved up or down (Y Offset) or left or right (X Offset). Values can be positive or negative.";
-        Label text = new Label(content, ContentMode.PREFORMATTED);
-        Button closeButton = new Button("Close");
-        subContent.addComponent(text);
-        subContent.addComponent(closeButton);
-
-        closeButton.addClickListener((Button.ClickListener) clickEvent -> {
-            subWindow.close();
-        });
-
-        subWindow.center();
-        UI.getCurrent().addWindow(subWindow);
+        String content = "These instructions explain how to associate this computer with a printer, " +
+                "such as a printer that is next to or near this computer<br><br>" +
+                "Step 1: Verify that the Printer is Installed on the Server<br>" +
+                "Printers installed on the server show up on the right-hand column under 'Printers'. If the printer is not there, "+
+                "then click Install, enter the DNS hostname, choose the model of the printer, and then click Install.<br><br>"+
+                "Step 2: Verify that this Computer is Listed<br>"+
+                "Listed computers show up on the left-hand column under 'Computers'. If this computer is not there, "+
+                "then click Add. An entry for this computer will be added.<br><br>"+
+                "Step 3: Map the DNS Hostname of the Printer to this Computer<br>"+
+                "Select this computer from the list on the left-hand side, click the row to enter edit-mode, "+
+                "then enter the printer's hostname in the 'Printer Name' column.<br><br>"+
+                "Step 4: Print a Test Badge<br>"+
+                "From the Utilities menu, print a test badge. If the image on the badge needs to be moved up/down (Y Offset) or left/right (X Offset), "+
+                "adjust the appropriate values in the Computer list on the left-hand column "+
+                "by clicking on the row to enter edit-mode. Values can be positive or negative.";
+        ViewInstructionsWindow instructionsWindow = new ViewInstructionsWindow(content);
+        view.showWindow(instructionsWindow);
     }
 
     /**

@@ -8,6 +8,7 @@ Automates adding the printer at a given IP address to CUPS with the proper
 page size. The printer's name will be its IP address.
 
 Usage: addprinter.sh <ip address> <model>
+Note:  <hostname> may now be used instead of <ip address>
 
 Examples:
 addprinter.sh 192.168.1.23 8610
@@ -23,14 +24,6 @@ if [[ ($# -ne 2) ]] ; then
     exit 1;
 fi
 
-if [[ "${1}" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
-then
-    ipAddress=${1}
-else
-    echo "Error: First argument must be a valid IPv4 address"
-    exit 1;
-fi
-
 # Delete printer if it exists; useful for testing
 #lpadmin -x ${1} 2>/dev/null
 
@@ -43,6 +36,11 @@ if [ ${2} = "8610" ]; then
 elif [ ${2} = "251" ]; then
     echo "Adding HP Laserjet Pro 200 M251NW on ${1}"
     lpadmin -p ${1} -v socket://${1} -m postscript-hp:/ppd/hplip/HP/hp-laserjet_200_color_m251-ps.ppd -o PageSize=Custom.8.5x5.5i -o media=Custom.8.5x5.5in -o printer-error-policy=abort-job -E
+    lpoptions -p ${1} -o PageSize=Custom.8.5x5.5in -o media=Custom.8.5x5.5in
+
+elif [ ${2} = "0000" ]; then
+    echo "Adding Brother HL-2540 on ${1}"
+    lpadmin -p ${1} -v socket://${1} -m drv:///usr/share/ppd/hl2280dw.ppd -P /usr/share/ppd/hl2280dw.ppd -o PageSize=Custom.8.5x5.5i -o media=Custom.8.5x5.5in -o printer-error-policy=abort-job -E
     lpoptions -p ${1} -o PageSize=Custom.8.5x5.5in -o media=Custom.8.5x5.5in
 
 else
