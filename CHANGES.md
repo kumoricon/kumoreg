@@ -13,6 +13,7 @@ Change Log
     - Removed Pre Reg check in screen, added check in button on Search windows
     - When adding attendee at con, carry over emergency contact info from the previous attendee in that order
     - Added "Add Note" button for at-con attendees
+    - Added Order List view
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

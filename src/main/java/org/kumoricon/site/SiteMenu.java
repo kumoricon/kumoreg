@@ -11,7 +11,7 @@ import org.kumoricon.site.attendee.search.AttendeeSearchByBadgeView;
 import org.kumoricon.site.attendee.search.AttendeeSearchView;
 import org.kumoricon.site.badge.BadgeView;
 import org.kumoricon.site.computer.ComputerView;
-import org.kumoricon.site.order.ManageOrderView;
+import org.kumoricon.site.attendee.reg.OrderListView;
 import org.kumoricon.site.report.attendees.AttendeeReportView;
 import org.kumoricon.site.report.checkinbyhour.CheckInByHourReportView;
 import org.kumoricon.site.report.export.ExportView;
@@ -70,7 +70,7 @@ public class SiteMenu extends VerticalLayout {
         addButtonTo(tab1, "manage_devices",
                 buttonFactory("Printers", FontAwesome.DESKTOP, ComputerView.VIEW_NAME));
         addButtonTo(tab1, "manage_orders",
-                buttonFactory("Orders", FontAwesome.FILE, ManageOrderView.VIEW_NAME));
+                buttonFactory("Orders", FontAwesome.FILE, OrderListView.VIEW_NAME));
         if (tab1.getComponentCount() > 0) { menu.addComponent(tab1); }
 
         Layout tab2 = new VerticalLayout();

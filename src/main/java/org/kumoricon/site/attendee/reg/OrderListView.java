@@ -1,4 +1,4 @@
-package org.kumoricon.site.order;
+package org.kumoricon.site.attendee.reg;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -8,6 +8,8 @@ import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.site.BaseView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,16 +18,16 @@ import org.vaadin.viritin.fields.MTable;
 import javax.annotation.PostConstruct;
 
 @ViewScope
-@SpringView(name = ManageOrderView.VIEW_NAME)
-public class ManageOrderView extends BaseView implements View {
+@SpringView(name = OrderListView.VIEW_NAME)
+public class OrderListView extends BaseView implements View {
     public static final String VIEW_NAME = "manageOrders";
     public static final String REQUIRED_RIGHT = "manage_orders";
 
+    private static final Logger log = LoggerFactory.getLogger(OrderListView.class);
+
+    // This is a simple view, combining the view and presenter as an experiment
     @Autowired
     private OrderRepository repository;
-
-    @Autowired
-    private ManageOrderPresenter handler;
 
     private static final int PAGESIZE = 50;
 
@@ -35,9 +37,7 @@ public class ManageOrderView extends BaseView implements View {
             .setSortableProperties("id", "orderIdl", "paid", "paymenttakenByUser", "paidAt")
             .withFullWidth()
             .withFullHeight()
-            .withRowClickListener(rowClick -> handler.orderSelected(this, (Order)rowClick.getRow()));
-
-    private OrderWindow orderEditWindow;
+            .withRowClickListener(rowClick -> showOrder((Order)rowClick.getRow()));
 
     @PostConstruct
     public void init() {
@@ -47,12 +47,7 @@ public class ManageOrderView extends BaseView implements View {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         super.enter(viewChangeEvent);
-        String parameters = viewChangeEvent.getParameters();
-        if (parameters == null || parameters.equals("")) {
-            closeOrderEditWindow();
-        } else {
-            handler.navigateToOrder(this, viewChangeEvent.getParameters());
-        }
+        log.info("{} viewed order list", getCurrentUser());
 
         String likeFilter = "%" + "" + "%";
         list.lazyLoadFrom(
@@ -69,10 +64,6 @@ public class ManageOrderView extends BaseView implements View {
                          PAGESIZE);
     }
 
-    public void setHandler(ManageOrderPresenter presenter) {
-        this.handler = presenter;
-    }
-
     private VerticalLayout buildContent() {
         VerticalLayout leftPanel = new VerticalLayout();
         leftPanel.setMargin(true);
@@ -84,19 +75,9 @@ public class ManageOrderView extends BaseView implements View {
 
 
     public void showOrder(Order order) {
-        orderEditWindow = new OrderWindow();
-        orderEditWindow.setSavedHandler(entity -> handler.saveOrder(this, (Order)entity));
-        orderEditWindow.setDeleteHandler(entity -> handler.deleteOrder(this, (Order)entity));
-        orderEditWindow.setResetHandler(entity -> handler.cancelOrder(this));
-        orderEditWindow.setEntity(order);
-        orderEditWindow.openInModalPopup();
+        navigateTo(OrderView.VIEW_NAME + "/" + order.getId());
     }
 
-    public void closeOrderEditWindow() {
-        if (orderEditWindow != null) {
-            orderEditWindow.closePopup();
-        }
-    }
 
     public void selectOrder(Order order) { list.select(order); }
     public void clearSelection() {
