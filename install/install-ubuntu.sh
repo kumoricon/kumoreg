@@ -36,7 +36,7 @@ mysql < script/database.sql
 
 # Install kumoreg
 useradd kumoreg -s /sbin/nologin
-sudo usermod -a -G lpadmin kumoreg
+usermod -a -G lpadmin kumoreg
 mkdir /usr/local/kumoreg/
 mv KumoReg-*.jar /usr/local/kumoreg/
 
