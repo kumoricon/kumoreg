@@ -31,6 +31,7 @@ public class BadgePrintingPresenter {
             String result = badgePrintService.printBadgesForAttendees(
                     attendeeList, view.getCurrentClientIPAddress());
             view.notify(result);
+            log.info(result + " during badge print for {}", view.getCurrentUsername());
         } catch (PrintException e) {
             log.error("Error printing badges for {}", view.getCurrentUsername(), e);
             view.notifyError(e.getMessage());

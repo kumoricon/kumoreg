@@ -27,15 +27,17 @@ public class BadgePrintService extends PrintService {
      * @throws PrintException Printer error
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset) throws PrintException {
+        String printerName = "";
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
                     getCurrentBadgeFormatter(attendees, xOffset, yOffset);
-            printDocument(badgePrintFormatter.getStream(), client.getPrinterName());
+            printerName = client.getPrinterName();
+            printDocument(badgePrintFormatter.getStream(), printerName);
         } else {
             return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
-        return "Printed";
+        return "Printed to '" + printerName + "'";
     }
 
 
@@ -48,15 +50,17 @@ public class BadgePrintService extends PrintService {
      * @throws PrintException Printer Error
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) throws PrintException {
+        String printerName = "";
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
                     getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset());
-            printDocument(badgePrintFormatter.getStream(), client.getPrinterName());
+            printerName = client.getPrinterName();
+            printDocument(badgePrintFormatter.getStream(), printerName);
         } else {
             return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
-        return "Printed";
+        return "Printed to '" + printerName + "'";
     }
 
     /**
