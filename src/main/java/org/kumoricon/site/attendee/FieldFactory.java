@@ -124,12 +124,24 @@ public class FieldFactory {
      * Returns TextField that only allows digits and optionally a single period in the
      * middle of the number. Shows empty for null values.
      * @param name Field Name
+     * @return TextField
+     */
+    public static TextField createDecimalField(String name) {
+        TextField textField = createTextField(name);
+        textField.addValidator(new RegexpValidator("[0-9]*\\.?[0-9]+", "This is not a number"));
+        return textField;
+    }
+
+
+    /**
+     * Returns TextField that only allows digits and optionally a single period in the
+     * middle of the number. Shows empty for null values.
+     * @param name Field Name
      * @param tabIndex Tab Index
      * @return TextField
      */
     public static TextField createDecimalField(String name, int tabIndex) {
-        TextField textField = createTextField(name);
-        textField.addValidator(new RegexpValidator("[0-9]*\\.?[0-9]+", "This is not a number"));
+        TextField textField = createDecimalField(name);
         textField.setTabIndex(tabIndex);
         return textField;
     }

@@ -130,7 +130,7 @@ public class AttendeeImporterService {
                 o.setOrderId(dataArray[17]);
                 o.addAttendee(attendee);
                 o.setTotalAmount(attendee.getPaidAmount());
-                o.setPaymentType(Order.PaymentType.CREDIT);
+//                o.setPaymentType(Order.PaymentType.CREDIT);
                 orders.put(o.getOrderId(), o);
                 ordersToAdd.add(o);
                 attendee.setOrder(o);
@@ -147,6 +147,7 @@ public class AttendeeImporterService {
         log.info("Setting paid/unpaid status in {} orders", ordersToAdd.size());
         for (Order o : ordersToAdd) {
             validatePaidStatus(o);
+            // TODO: Add payment info to each order - prereg
         }
 
 

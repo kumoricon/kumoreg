@@ -12,13 +12,9 @@ import java.time.LocalDate;
  * Validates an attendee object. Can be configured with options set in the configuration file.
  */
 @Service
-public class AttendeeValidator {
+public class AttendeeValidator extends Validator {
     @Value("${kumoreg.validation.attendee.requirePhoneOrEmail:true}")
     protected Boolean requirePhoneAndEmail;
-
-    private static Boolean isNullOrEmpty(String str) {
-        return str == null || str.trim().isEmpty();
-    }
 
     public Boolean validate(Attendee a) throws ValueException {
         if (isNullOrEmpty(a.getFirstName())) { throw new ValueException("First name is required"); }

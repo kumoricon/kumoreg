@@ -2,6 +2,7 @@ package org.kumoricon.site.report.till;
 
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class TillReportPresenter {
         output.append(String.format("%-40s\t%s\t%s\n", "Payment Type", "Count", "Total"));
         for (Object[] line : results) {
             output.append(String.format("%-40s\t%5d\t$%8.2f\n",
-                    Order.PaymentType.fromInteger((Integer)line[0]).toString(), line[1], line[2]));
+                    Payment.PaymentType.fromInteger((Integer)line[0]).toString(), line[1], line[2]));
         }
         output.append("--------------------------------------------------------------------------------\n");
 
@@ -72,7 +73,7 @@ public class TillReportPresenter {
             output.append(String.format("<td align=\"right\">%s</td>", line[4]));
             output.append(String.format("<td align=\"right\">%s</td>", line[5]));
             output.append(String.format("<td align=\"right\">%s</td>", line[6]));
-            output.append(String.format("<td align=\"right\">%s</td>", Order.PaymentType.fromInteger((Integer)line[7]).toString()));
+            output.append(String.format("<td align=\"right\">%s</td>", Payment.PaymentType.fromInteger((Integer)line[7]).toString()));
             output.append(String.format("<td align=\"right\">%s</td>", line[8]));
             output.append(String.format("<td align=\"right\">$%s</td>", line[9]));
             output.append("</tr>");

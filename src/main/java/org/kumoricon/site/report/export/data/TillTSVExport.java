@@ -3,6 +3,7 @@ package org.kumoricon.site.report.export.data;
 import com.vaadin.server.StreamResource;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class TillTSVExport extends BaseTSVExport implements Export {
             sb.append(String.format("%s\t", line[4]));
             sb.append(String.format("%s\t", line[5]));
             sb.append(String.format("%s\t", line[6]));
-            sb.append(String.format("%s\t", Order.PaymentType.fromInteger((Integer)line[7]).toString()));
+            sb.append(String.format("%s\t", Payment.PaymentType.fromInteger((Integer)line[7]).toString()));
             sb.append(String.format("%s\t", line[8]));
             sb.append(String.format("$%s\t", line[9]));
             sb.append("\n");
