@@ -2,6 +2,7 @@ package org.kumoricon.site.utility.closeouttill;
 
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.print.ReportPrintService;
@@ -49,7 +50,7 @@ public class CloseOutTillPresenter {
     }
 
     private static String getPaymentType(Integer typeId) {
-        Order.PaymentType[] orderTypes = Order.PaymentType.values();
+        Payment.PaymentType[] orderTypes = Payment.PaymentType.values();
         return orderTypes[typeId].toString();
     }
 }

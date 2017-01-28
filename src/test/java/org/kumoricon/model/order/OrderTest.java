@@ -76,6 +76,20 @@ public class OrderTest {
         assertEquals(user.getSessionNumber(), order.getPaidSession());
     }
 
+    @Test
+    public void getTotalPaid() {
+        Order o = createTestOrder();
+        o.addPayment(createPayment(10));
+        o.addPayment(createPayment(10));
+        assertEquals(BigDecimal.valueOf(20L), o.getTotalPaid());
+    }
+
+    private static Payment createPayment(int amount) {
+        Payment p = new Payment();
+        p.setAmount(new BigDecimal(amount));
+        p.setPaymentType(Payment.PaymentType.CASH);
+        return p;
+    }
 
     private static Order createTestOrder() {
         Order order = new Order();

@@ -29,10 +29,13 @@ public class Order extends Record {
     private BigDecimal totalAmount;
     @NotNull
     private Boolean paid;
-    private PaymentType paymentType;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order")
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Attendee> attendeeList;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order")
+    private Set<Payment> payments;
+
     private String notes;
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     @NotFound(action = NotFoundAction.IGNORE)
@@ -40,25 +43,11 @@ public class Order extends Record {
     private LocalDateTime paidAt;
     private Integer paidSession;
 
-    public enum PaymentType {
-        CASH {
-            public String toString() { return "Cash"; }
-        }, CHECK {
-            public String toString() { return "Check/Money Order"; }
-        }, CREDIT {
-            public String toString() { return "Credit Card"; }
-        };
-
-        public static PaymentType fromInteger(Integer typeId) {
-            PaymentType[] orderTypes = PaymentType.values();
-            return orderTypes[typeId];
-        }
-    }
-
     public Order() {
         this.totalAmount = BigDecimal.ZERO;
         this.paid = false;
         this.attendeeList = new HashSet<>();
+        this.payments = new HashSet<>();
     }
 
     public String getOrderId() { return orderId; }
@@ -70,8 +59,13 @@ public class Order extends Record {
     public Boolean getPaid() { return paid; }
     public void setPaid(Boolean paid) { this.paid = paid; }
 
-    public PaymentType getPaymentType() { return paymentType; }
-    public void setPaymentType(PaymentType paymentType) { this.paymentType = paymentType; }
+    public BigDecimal getTotalPaid() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Payment p : payments) {
+            total = total.add(p.getAmount());
+        }
+        return total;
+    }
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
@@ -91,6 +85,28 @@ public class Order extends Record {
     public void setPaymentTakenByUser(User paymentTakenByUser) { this.paymentTakenByUser = paymentTakenByUser; }
     public LocalDateTime getPaidAt() { return paidAt; }
     public void setPaidAt(LocalDateTime paidAt) { this.paidAt = paidAt; }
+
+    public Set<Payment> getPayments() {
+        return payments;
+    }
+
+    public void addPayment(Payment payment) {
+        payment.setOrder(this);
+        payments.add(payment);
+    }
+
+    public void removePayment(Payment payment) {
+        payments.remove(payment);
+        if (getTotalPaid().compareTo(getTotalAmount()) >= 0) {
+            paid = true;
+            for (Attendee attendee : attendeeList) {
+                attendee.setCheckedIn(true);
+                attendee.setPaid(true);
+            }
+        } else {
+            paid = false;
+        }
+    }
 
     public List<Attendee> getAttendees() {
         List<Attendee> attendees = new ArrayList<>();

@@ -1,5 +1,6 @@
 package org.kumoricon.site.attendee.reg;
 
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.navigator.View;
@@ -7,17 +8,22 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
+import org.kumoricon.model.order.Payment;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.FieldFactory;
+import org.kumoricon.site.attendee.PaymentHandler;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.window.ConfirmationWindow;
+import org.kumoricon.site.attendee.window.PaymentWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.site.attendee.window.WarningWindow;
 import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
+import org.kumoricon.site.fieldconverter.UserToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +32,7 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = OrderView.VIEW_NAME)
-public class OrderView extends BaseView implements View, AttendeePrintView {
+public class OrderView extends BaseView implements View, AttendeePrintView, PaymentHandler {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "at_con_registration";
 
@@ -34,14 +40,17 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
     private OrderPresenter handler;
 
     private TextField orderId = FieldFactory.createDisabledTextField("Order ID");
-    private TextField total = FieldFactory.createDisabledTextField("Total");
+    private TextField orderTotal = FieldFactory.createDisabledTextField("Order Total");
+    private TextField paymentTotal = FieldFactory.createDisabledTextField("Payment Total");
     private TextArea notes = FieldFactory.createTextArea("Notes");
     private Table attendeeList = new Table();
+    private Table paymentList = new Table();
     private Button addAttendee = new Button("Add Attendee");
-    private NativeSelect paymentType = new NativeSelect("Payment Type");
-    private Button takeMoney = new Button("Take Money");
+    private Button orderComplete = new Button("Order Complete");
     private Button cancel = new Button("Cancel");
     private BeanItemContainer<Attendee> attendeeBeanList;
+    private BeanItemContainer<Payment> paymentBeanList;
+    private Button addPayment = new Button("Take Payment");
     private Order currentOrder;
 
     @PostConstruct
@@ -57,31 +66,44 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         attendeeList.setWidth(600, Unit.PIXELS);
         attendeeList.addStyleName("kumoHandPointer");
 
+        paymentBeanList = new BeanItemContainer<>(Payment.class, new ArrayList<>());
+        paymentList.setContainerDataSource(paymentBeanList);
+        paymentList.setWidth(500, Unit.PIXELS);
+        paymentList.addStyleName("kumoHandPointer");
+        paymentList.setPageLength(3);
+        paymentList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
+                    BeanItem b = (BeanItem)itemClickEvent.getItem();
+                    showPaymentWindow((Payment)b.getBean());
+                });
 
         orderInfo.addComponent(attendeeList);
         attendeeList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
                 handler.selectAttendee(this, (Attendee)itemClickEvent.getItemId()));
 
         orderInfo.addComponent(addAttendee);
-        orderInfo.addComponent(total);
-        paymentType.setNullSelectionAllowed(false);
-        orderInfo.addComponent(paymentType);
+        orderInfo.addComponent(orderTotal);
+        orderInfo.addComponent(paymentTotal);
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.setSpacing(true);
-        buttonLayout.addComponent(takeMoney);
+        buttonLayout.addComponent(addPayment);
+        buttonLayout.addComponent(orderComplete);
         buttonLayout.addComponent(cancel);
         orderInfo.addComponent(buttonLayout);
+
+        orderInfo.addComponent(paymentList);
 
         orderInfo.addComponent(notes);
         notes.setSizeFull();
 
         addAttendee.addClickListener((Button.ClickListener) clickEvent -> handler.addNewAttendee(this));
-        takeMoney.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney(this));
+        addPayment.addClickListener((Button.ClickListener) clickEvent -> showPaymentWindow());
+        orderComplete.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney(this));
         cancel.addClickListener((Button.ClickListener) clickEvent -> showConfirmCancelWindow());
 
         addAttendee.focus();
     }
+
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
@@ -96,17 +118,25 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         }
     }
 
+    private void showPaymentWindow(Payment payment) {
+        PaymentWindow window = new PaymentWindow(this, payment);
+        showWindow(window);
+    }
+
+    private void showPaymentWindow() {
+        PaymentWindow window = new PaymentWindow(this);
+        showWindow(window);
+    }
+
     private void enableFields(boolean enable) {
         addAttendee.setEnabled(enable);
         addAttendee.setVisible(enable);
-        paymentType.setEnabled(enable);
         notes.setEnabled(enable);
-        takeMoney.setEnabled(enable);
-        takeMoney.setVisible(enable);
+        orderComplete.setEnabled(enable);
+        orderComplete.setVisible(enable);
     }
 
     public Order getOrder() {
-        currentOrder.setPaymentType((Order.PaymentType)paymentType.getValue());
         currentOrder.setNotes(notes.getValue());
         return currentOrder;
     }
@@ -117,12 +147,8 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
 
         this.currentOrder = order;
         orderId.setValue(order.getOrderId());
-        total.setValue(order.getTotalAmount().toString());
+        orderTotal.setValue(order.getTotalAmount().toString());
         notes.setValue(order.getNotes());
-
-        paymentType.removeAllItems();
-        paymentType.addItems(Order.PaymentType.values());
-        paymentType.select(order.getPaymentType());
 
         attendeeList.setContainerDataSource(new BeanItemContainer<>(Attendee.class, order.getAttendeeList()));
         attendeeList.setVisibleColumns("firstName", "lastName", "badge", "paid", "paidAmount");
@@ -130,6 +156,19 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         attendeeList.setConverter("badge", new BadgeToStringConverter());
 
         attendeeList.sort(sortBy, sortOrder);
+
+        paymentList.setContainerDataSource(new BeanItemContainer<>(Payment.class, order.getPayments()));
+        paymentList.setVisibleColumns("paymentType", "amount", "paymentTakenBy");
+        paymentList.setColumnHeaders("Payment Type", "Amount", "Taken By");
+        paymentList.setConverter("paymentTakenBy", new UserToStringConverter());
+
+        paymentTotal.setValue(order.getTotalPaid().toString());
+
+        if (order.getTotalAmount().equals(order.getTotalPaid())) {
+            orderComplete.setEnabled(true);
+        } else {
+            orderComplete.setEnabled(false);
+        }
 
         setEnabled(!order.getPaid());   // Disable editing if the order has been paid
     }
@@ -185,4 +224,23 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         WarningWindow window = new WarningWindow("This person matches a name on the attendee blacklist");
         showWindow(window);
     }
+
+    public void addPayment(PaymentWindow window, Payment payment) {
+        try {
+            handler.savePayment(this, payment);
+            window.close();
+        } catch (ValueException ex) {
+            notifyError(ex.getMessage());
+        }
+    }
+
+    public void deletePayment(PaymentWindow window, Payment payment) {
+        try {
+            handler.deletePayment(this, payment);
+            window.close();
+        } catch (Exception ex) {
+            notifyError(ex.getMessage());
+        }
+    }
+
 }

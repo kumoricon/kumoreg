@@ -8,9 +8,12 @@ import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.blacklist.BlacklistService;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.order.Payment;
+import org.kumoricon.model.order.PaymentRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.validate.AttendeeValidator;
+import org.kumoricon.service.validate.PaymentValidator;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.BadgePrintingPresenter;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +50,9 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     @Autowired
     private BlacklistService blacklistService;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
     private static final Logger log = LoggerFactory.getLogger(OrderPresenter.class);
 
     public OrderPresenter() {
@@ -68,6 +75,35 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             log.error("{} tried to view order {} and it was not found.", view.getCurrentUsername(), id);
             view.notifyError("Error: order " + id + " not found.");
         }
+    }
+
+    public void savePayment(OrderView view, Payment payment) {
+        Order order = view.getOrder();
+        PaymentValidator.validate(payment);
+        // Only update user, time and location if they're null - otherwise someone could be saving
+        // changes to an existing payment
+        if (payment.getPaymentTakenBy() == null) {
+            payment.setPaymentTakenBy(view.getCurrentUser());
+        }
+        if (payment.getPaymentTakenAt() == null) {
+            payment.setPaymentTakenAt(LocalDateTime.now());
+        }
+        if (payment.getPaymentLocation() == null) {
+            payment.setPaymentLocation(view.getCurrentClientIPAddress());
+        }
+        log.info("{} saved payment {} to {}", view.getCurrentUsername(), payment, order);
+        order.addPayment(payment);
+        Order saved = orderRepository.save(order);
+        view.afterSuccessfulFetch(saved);
+    }
+
+    public void deletePayment(OrderView view, Payment payment) {
+        Order order = view.getOrder();
+        log.info("{} removed payment {} from {}", view.getCurrentUsername(), payment, order);
+        order.removePayment(payment);
+        paymentRepository.delete(payment);
+        Order saved = orderRepository.save(order);
+        view.afterSuccessfulFetch(saved);
     }
 
     public void cancelOrder(OrderView view) {
@@ -156,27 +192,17 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             return;
         }
 
-        if (currentOrder.getPaymentType() == null && currentOrder.getTotalAmount().compareTo(BigDecimal.ZERO) > 0) {
-            view.notify("Error: Payment type not selected");
-            return;
-        }
-
         // If the order total is $0 (all badges are free), just set payment type to cash automatically
-        if (currentOrder.getTotalAmount().compareTo(BigDecimal.ZERO) == 0) {
-            currentOrder.setPaymentType(Order.PaymentType.CASH);
-        }
-
-        if (currentOrder.getPaymentType().equals(Order.PaymentType.CREDIT)) {
-            view.showCreditCardAuthWindow();
+        if (currentOrder.getTotalAmount().compareTo(currentOrder.getTotalPaid()) < 0) {
+            view.notify("Error: money received less than order total");
         } else {
             orderComplete(view, currentOrder);
         }
-
     }
 
     public void orderComplete(OrderView view, Order currentOrder) {
         log.info("{} completed order {} and took payment ${}",
-                view.getCurrentUsername(), currentOrder, currentOrder.getTotalAmount());
+                view.getCurrentUsername(), currentOrder, currentOrder.getTotalPaid());
         currentOrder.paymentComplete(view.getCurrentUser());
 
         orderRepository.save(currentOrder);
