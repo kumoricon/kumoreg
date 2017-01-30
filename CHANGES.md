@@ -14,6 +14,7 @@ Change Log
     - When adding attendee at con, carry over emergency contact info from the previous attendee in that order
     - Added "Add Note" button for at-con attendees
     - Added Order List view
+    - Added multiple payments per order
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"
