@@ -153,6 +153,7 @@ public class AttendeeImporterService {
                 p.setAmount(o.getTotalAmount());
                 p.setPaymentType(Payment.PaymentType.PREREG);
                 p.setPaymentLocation("kumoricon.org");
+                p.setPaymentTakenBy(currentUser);
                 p.setOrder(o);
                 o.addPayment(p);
             }
