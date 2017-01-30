@@ -6,6 +6,7 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.FieldCleaner;
@@ -16,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,7 +132,6 @@ public class AttendeeImporterService {
                 o.setOrderId(dataArray[17]);
                 o.addAttendee(attendee);
                 o.setTotalAmount(attendee.getPaidAmount());
-//                o.setPaymentType(Order.PaymentType.CREDIT);
                 orders.put(o.getOrderId(), o);
                 ordersToAdd.add(o);
                 attendee.setOrder(o);
@@ -147,7 +148,14 @@ public class AttendeeImporterService {
         log.info("Setting paid/unpaid status in {} orders", ordersToAdd.size());
         for (Order o : ordersToAdd) {
             validatePaidStatus(o);
-            // TODO: Add payment info to each order - prereg
+            if (o.getPaid()) {
+                Payment p = new Payment();
+                p.setAmount(o.getTotalAmount());
+                p.setPaymentType(Payment.PaymentType.PREREG);
+                p.setPaymentLocation("kumoricon.org");
+                p.setOrder(o);
+                o.addPayment(p);
+            }
         }
 
 
