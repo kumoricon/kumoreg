@@ -170,7 +170,9 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
             orderComplete.setEnabled(false);
         }
 
-        setEnabled(!order.getPaid());   // Disable editing if the order has been paid
+        if (!currentUserHasRight("manage_orders")) {
+            setEnabled(!order.getPaid());   // Disable editing if the order has been paid
+        }
     }
 
     public void setHandler(OrderPresenter presenter) {
