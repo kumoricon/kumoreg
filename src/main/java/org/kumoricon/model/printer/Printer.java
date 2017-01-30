@@ -190,7 +190,7 @@ public class Printer extends Record {
 
             /* TODO pull command information from a database table */
 
-            List<String> command = Arrays.asList("/usr/local/bin/addprinter/addprinter.sh", this.getName(), this.getModel());
+            List<String> command = Arrays.asList("/usr/local/kumoreg/addprinter.sh", this.getName(), this.getModel());
             String result = Command.run(command, "", true);
             log.info(result);
 
