@@ -32,7 +32,8 @@ public class BlacklistService {
 
     public boolean isOnBlacklist(Attendee attendee) {
         if (attendee != null) {
-            return isOnBlacklist(attendee.getFirstName(), attendee.getLastName());
+            return isOnBlacklist(attendee.getFirstName(), attendee.getLastName()) ||
+                    isOnBlacklist(attendee.getLegalFirstName(), attendee.getLegalLastName());
         } else {
             throw new RuntimeException("Blacklist was checked for a null Attendee");
         }
