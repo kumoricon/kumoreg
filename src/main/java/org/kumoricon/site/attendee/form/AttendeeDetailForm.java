@@ -26,22 +26,24 @@ import static org.kumoricon.site.attendee.FieldFactory.*;
 public class AttendeeDetailForm extends GridLayout {
     protected TextField firstName = createNameField("First Name", 1);
     protected TextField lastName = createNameField("Last Name", 2);
-    protected TextField badgeName = createTextField("Badge Name", 3);
-    protected TextField badgeNumber = createTextField("Badge Number", 4);
-    protected TextField phoneNumber = createPhoneNumberField("Phone", 5);
-    protected DateField birthDate = createDateField("", 6);
-    protected TextField email = createTextField("Email", 7);
-    protected TextField zip = createTextField("Zip", 8);
+    protected TextField legalFirstName = createNameField("Legal First Name", 3);
+    protected TextField legalLastName = createNameField("Legal Last Name", 4);
+    protected TextField badgeName = createTextField("Badge Name", 5);
+    protected TextField badgeNumber = createTextField("Badge Number", 6);
+    protected TextField phoneNumber = createPhoneNumberField("Phone", 7);
+    protected DateField birthDate = createDateField("", 8);
+    protected TextField email = createTextField("Email", 9);
+    protected TextField zip = createTextField("Zip", 10);
     protected Label age = new Label("");
-    protected TextField emergencyContactFullName = createNameField("Emergency Contact Name", 9);
-    protected TextField emergencyContactPhone = createPhoneNumberField("Emergency Contact Phone", 10);
-    protected TextField parentFullName = createNameField("Parent Name", 11);
-    protected TextField parentPhone = createPhoneNumberField("Parent Phone", 12);
-    protected CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 13);
-    protected CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 14);
-    protected NativeSelect badge = createNativeSelect("Pass Type", 15);
-    protected TextField paidAmount = createTextField("Manual Price", 16);
-    protected CheckBox checkedIn = createCheckBox("Attendee Checked In", 18);
+    protected TextField emergencyContactFullName = createNameField("Emergency Contact Name", 11);
+    protected TextField emergencyContactPhone = createPhoneNumberField("Emergency Contact Phone", 12);
+    protected TextField parentFullName = createNameField("Parent Name", 13);
+    protected TextField parentPhone = createPhoneNumberField("Parent Phone", 14);
+    protected CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 15);
+    protected CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
+    protected NativeSelect badge = createNativeSelect("Pass Type", 17);
+    protected TextField paidAmount = createTextField("Manual Price", 18);
+    protected CheckBox checkedIn = createCheckBox("Attendee Checked In", 19);
     protected BeanItem<Attendee> attendeeBean;
 
     protected VerticalLayout historyLayout = new VerticalLayout();
@@ -58,7 +60,7 @@ public class AttendeeDetailForm extends GridLayout {
         this.handler = handler;
         birthDate.setConverter(new DateToLocalDateConverter());
         setColumns(3);
-        setRows(9);
+        setRows(10);
         setMargin(true);
         setSpacing(true);
         setWidth("100%");
@@ -108,10 +110,12 @@ public class AttendeeDetailForm extends GridLayout {
 
         addComponent(firstName, 0, 0);
         addComponent(lastName, 1, 0);
-        addComponent(badgeName, 0, 1);
-        addComponent(badgeNumber, 1, 1);
+        addComponent(legalFirstName, 0, 1);
+        addComponent(legalLastName, 1, 1);
+        addComponent(badgeName, 0, 2);
+        addComponent(badgeNumber, 1, 2);
         badgeNumber.setEnabled(false);
-        addComponent(phoneNumber, 0, 2);
+        addComponent(phoneNumber, 0, 3);
         HorizontalLayout h = new HorizontalLayout();
         h.setSpacing(true);
         h.setMargin(false);
@@ -122,14 +126,13 @@ public class AttendeeDetailForm extends GridLayout {
         h.setComponentAlignment(birthDate, Alignment.MIDDLE_LEFT);
         h.setComponentAlignment(age, Alignment.MIDDLE_LEFT);
 
-        addComponent(h, 1, 2);
+        addComponent(h, 1, 3);
 
-        addComponent(email, 0, 3);
-        addComponent(zip, 1, 3);
+        addComponent(email, 0, 4);
+        addComponent(zip, 1, 4);
 
-        addComponent(emergencyContactFullName, 0, 4);
-        addComponent(emergencyContactPhone, 0, 5);
-
+        addComponent(emergencyContactFullName, 0, 5);
+        addComponent(emergencyContactPhone, 0, 6);
 
         parentIsEmergencyContact.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
@@ -142,18 +145,18 @@ public class AttendeeDetailForm extends GridLayout {
             }
         });
 
-        addComponent(parentFullName, 1, 4);
-        addComponent(parentPhone, 1, 5);
-        addComponent(parentIsEmergencyContact, 1, 6);
+        addComponent(parentFullName, 1, 5);
+        addComponent(parentPhone, 1, 6);
+        addComponent(parentIsEmergencyContact, 1, 7);
 
-        addComponent(badge, 0, 7);
+        addComponent(badge, 0, 8);
         badge.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         badge.setItemCaptionPropertyId("name");
         badge.setNullSelectionAllowed(false);
-        addComponent(paidAmount, 1, 7);
+        addComponent(paidAmount, 1, 8);
 
-        addComponent(parentFormReceived, 0, 8);
-        addComponent(checkedIn, 1, 8);
+        addComponent(parentFormReceived, 0, 9);
+        addComponent(checkedIn, 1, 9);
 
 
         Panel hist = new Panel("Notes/History");

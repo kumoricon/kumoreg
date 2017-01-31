@@ -20,6 +20,8 @@ import java.util.Set;
 public class Attendee extends Record {
     private String firstName;
     private String lastName;
+    private String legalFirstName;
+    private String legalLastName;
     private String badgeName;                   // Badge name (optional)
     @Column(unique=true)
     private String badgeNumber;
@@ -138,6 +140,12 @@ public class Attendee extends Record {
 
     public Order getOrder() { return order; }
     public void setOrder(Order order) { this.order = order; }
+
+    public String getLegalFirstName() { return legalFirstName; }
+    public void setLegalFirstName(String legalFirstName) { this.legalFirstName = legalFirstName; }
+
+    public String getLegalLastName() { return legalLastName; }
+    public void setLegalLastName(String legalLastName) { this.legalLastName = legalLastName; }
 
     public Set<AttendeeHistory> getHistory() { return history; }
 
