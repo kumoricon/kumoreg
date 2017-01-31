@@ -19,7 +19,7 @@ public class AttendeeSearchRepository {
 
     /**
      * Searches for Attendees that contain all the given words in the firstName,
-     * lastName, or BadgeName fields, case insensitive
+     * lastName, legalFirstName, legalLastName or BadgeName fields, case insensitive
      * @param searchWords Words to search for
      * @return Matching Attendees
      */
@@ -51,7 +51,8 @@ public class AttendeeSearchRepository {
         Predicate hasFirstName = builder.like(root.get("firstName"), "%" + word + "%");
         Predicate hasLastName = builder.like(root.get("lastName"), "%" + word + "%");
         Predicate hasBadgeName = builder.like(root.get("badgeName"), "%" + word + "%");
-        Predicate row = builder.or(hasFirstName, hasLastName, hasBadgeName);
-        return row;
+        Predicate hasLegalFirstName = builder.like(root.get("legalFirstName"), "%" + word + "%");
+        Predicate hasLegalLastName = builder.like(root.get("legalLastName"), "%" + word + "%");
+        return builder.or(hasFirstName, hasLastName, hasBadgeName, hasLegalFirstName, hasLegalLastName);
     }
 }
