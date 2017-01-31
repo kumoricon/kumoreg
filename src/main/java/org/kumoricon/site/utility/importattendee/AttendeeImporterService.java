@@ -77,51 +77,53 @@ public class AttendeeImporterService {
             dataRow = TSVFile.readLine();
             if (dataRow == null || dataRow.trim().length() == 0) { continue; }  // Skip blank lines
             String[] dataArray = dataRow.split("\t");
-            if (dataArray.length < 18 || dataArray.length > 19) {
-                throw new Exception(String.format("Error: Line %s doesn't have 18 or 19 fields. Missing data?", lineNumber));
+            if (dataArray.length < 20 || dataArray.length > 21) {
+                throw new Exception(String.format("Error: Line %s doesn't have 20 or 21 fields. Missing data?", lineNumber));
             }
             Attendee attendee = new Attendee();
             attendee.setFirstName(dataArray[0]);
             attendee.setLastName(dataArray[1]);
-            attendee.setBadgeName(dataArray[2]);
-            if (dataArray[3].trim().equals("")) {
+            attendee.setLegalFirstName(dataArray[2]);
+            attendee.setLegalLastName(dataArray[3]);
+            attendee.setBadgeName(dataArray[4]);
+            if (dataArray[5].trim().equals("")) {
                 attendee.setBadgeNumber(generateBadgeNumber(currentUser.getNextBadgeNumber()));
             } else {
-                attendee.setBadgeNumber(dataArray[3]);
+                attendee.setBadgeNumber(dataArray[5]);
             }
-            attendee.setZip(dataArray[4]);
-            attendee.setCountry(dataArray[5]);
-            attendee.setPhoneNumber(FieldCleaner.cleanPhoneNumber(dataArray[6]));
-            attendee.setEmail(dataArray[7]);
-            attendee.setBirthDate(LocalDate.parse(dataArray[8], formatter));
-            attendee.setEmergencyContactFullName(dataArray[9]);
-            attendee.setEmergencyContactPhone(FieldCleaner.cleanPhoneNumber(dataArray[10]));
-            if (dataArray[11].toUpperCase().equals("Y")) {
+            attendee.setZip(dataArray[6]);
+            attendee.setCountry(dataArray[7]);
+            attendee.setPhoneNumber(FieldCleaner.cleanPhoneNumber(dataArray[8]));
+            attendee.setEmail(dataArray[9]);
+            attendee.setBirthDate(LocalDate.parse(dataArray[10], formatter));
+            attendee.setEmergencyContactFullName(dataArray[11]);
+            attendee.setEmergencyContactPhone(FieldCleaner.cleanPhoneNumber(dataArray[12]));
+            if (dataArray[13].toUpperCase().equals("Y")) {
                 attendee.setParentIsEmergencyContact(true);
             } else {
                 attendee.setParentIsEmergencyContact(false);
             }
-            attendee.setParentFullName(dataArray[12]);
-            attendee.setParentPhone(FieldCleaner.cleanPhoneNumber(dataArray[13]));
-            if (dataArray[14].toUpperCase().equals("Y")) {
+            attendee.setParentFullName(dataArray[14]);
+            attendee.setParentPhone(FieldCleaner.cleanPhoneNumber(dataArray[15]));
+            if (dataArray[16].toUpperCase().equals("Y")) {
                 attendee.setPaid(true);
             } else {
                 attendee.setPaid(false);
             }
             try {
-                attendee.setPaidAmount(new BigDecimal(dataArray[15]));
+                attendee.setPaidAmount(new BigDecimal(dataArray[17]));
             } catch (NumberFormatException e) {
                 attendee.setPaidAmount(BigDecimal.ZERO);
             }
-            if (badges.containsKey(dataArray[16])) {
-                attendee.setBadge(badges.get(dataArray[16]));
+            if (badges.containsKey(dataArray[18])) {
+                attendee.setBadge(badges.get(dataArray[18]));
             } else {
-                log.error("Badge type " + dataArray[16] + " not found on line " + lineNumber);
-                throw new Exception("Badge type " + dataArray[16] + " not found on line " + lineNumber);
+                log.error("Badge type " + dataArray[18] + " not found on line " + lineNumber);
+                throw new Exception("Badge type " + dataArray[18] + " not found on line " + lineNumber);
             }
 
-            if (orders.containsKey(dataArray[17])) {
-                Order currentOrder = orders.get(dataArray[17]);
+            if (orders.containsKey(dataArray[19])) {
+                Order currentOrder = orders.get(dataArray[19]);
                 attendee.setOrder(currentOrder);
                 currentOrder.addAttendee(attendee);
                 if (attendee.getPaid()) {
@@ -129,15 +131,15 @@ public class AttendeeImporterService {
                 }
             } else {
                 Order o = new Order();
-                o.setOrderId(dataArray[17]);
+                o.setOrderId(dataArray[19]);
                 o.addAttendee(attendee);
                 o.setTotalAmount(attendee.getPaidAmount());
                 orders.put(o.getOrderId(), o);
                 ordersToAdd.add(o);
                 attendee.setOrder(o);
             }
-            if (dataArray.length == 19 && !dataArray[18].isEmpty() && !dataArray[18].trim().isEmpty()) {
-                attendee.addHistoryEntry(currentUser, dataArray[18]);
+            if (dataArray.length == 21 && !dataArray[20].isEmpty() && !dataArray[20].trim().isEmpty()) {
+                attendee.addHistoryEntry(currentUser, dataArray[20]);
             }
             attendee.setPreRegistered(true);
             attendeesToAdd.add(attendee);

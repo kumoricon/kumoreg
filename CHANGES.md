@@ -15,6 +15,7 @@ Change Log
     - Added "Add Note" button for at-con attendees
     - Added Order List view
     - Added multiple payments per order
+    - Added legal name fields
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

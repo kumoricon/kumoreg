@@ -13,23 +13,25 @@ Data Import Format for Attendees Who Preregister on Website
 | ----: | ----------------- | :------------: | ----------------------------------------------------------------------- |
 |   1   | First Name        | No             | 60 characters max                                                       |
 |   2   | Last Name         | No             | 60 characters max                                                       |
-|   3   | Badge Name        | Yes            | 60 characters max [[1]](#1)                                             |
-|   4   | Badge Number      | Yes            | 10 characters max [[2]](#2)                                             |
-|   5   | Zip Code          | Yes            | 10 characters max                                                       |
-|   6   | Country           | Yes            | 250 characters max                                                      |
-|   7   | Phone             | Yes            | 60 characters max                                                       |
-|   8   | Email Address     | Yes            | 250 characters max                                                      |
-|   9   | Birthdate         | No             | YYYY-MM-DD format (ex: 1990-12-30)                                      |
-|  10   | Emergency Contact | No             | Emergency Contact Name, 250 characters max                              |
-|  11   | Emergency Phone   | No             | Emergency Contact Phone, 250 characters max                             |
-|  12   | EC Same as Parent | Yes            | "Y" if emergency contact is parent, "N" otherwise (Defaults N if empty) |
-|  13   | Parent Name       | Yes            | 250 characters max (required for minors)                                |
-|  14   | Parent Phone      | Yes            | 60 characters max (required for minors)                                 |
-|  15   | Paid              | No             | "Y" if paid, "N" otherwise. [[3]](#3)                                   |
-|  16   | Amount            | No             | Amount Paid, numbers/decimal only. (ex: 50.00 )                         |
-|  17   | Pass Type         | No             | 50 characters max, "Weekend", "VIP", etc [[4]](#4)                      |
-|  18   | Order ID          | No             | 32 alphanumeric characters (lowercase a-z 0-9) [[5]](#5)                |
-|  19   | Notes             | Yes            | Notes/comments (coupon codes, etc)                                      | 
+|   3   | Legal First Name  | No             | 60 characters max                                                       |
+|   4   | Legal Last Name   | No             | 60 characters max                                                       |
+|   5   | Badge Name        | Yes            | 60 characters max [[1]](#1)                                             |
+|   6   | Badge Number      | Yes            | 10 characters max [[2]](#2)                                             |
+|   7   | Zip Code          | Yes            | 10 characters max                                                       |
+|   8   | Country           | Yes            | 250 characters max                                                      |
+|   9   | Phone             | Yes            | 60 characters max                                                       |
+|  10   | Email Address     | Yes            | 250 characters max                                                      |
+|  11   | Birthdate         | No             | YYYY-MM-DD format (ex: 1990-12-30)                                      |
+|  12   | Emergency Contact | No             | Emergency Contact Name, 250 characters max                              |
+|  13   | Emergency Phone   | No             | Emergency Contact Phone, 250 characters max                             |
+|  14   | EC Same as Parent | Yes            | "Y" if emergency contact is parent, "N" otherwise (Defaults N if empty) |
+|  15   | Parent Name       | Yes            | 250 characters max (required for minors)                                |
+|  16   | Parent Phone      | Yes            | 60 characters max (required for minors)                                 |
+|  17   | Paid              | No             | "Y" if paid, "N" otherwise. [[3]](#3)                                   |
+|  18   | Amount            | No             | Amount Paid, numbers/decimal only. (ex: 50.00 )                         |
+|  19   | Pass Type         | No             | 50 characters max, "Weekend", "VIP", etc [[4]](#4)                      |
+|  20   | Order ID          | No             | 32 alphanumeric characters (lowercase a-z 0-9) [[5]](#5)                |
+|  21   | Notes             | Yes            | Notes/comments (coupon codes, etc)                                      | 
  
  
 Notes:
