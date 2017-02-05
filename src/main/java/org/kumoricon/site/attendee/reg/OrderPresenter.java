@@ -201,13 +201,25 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     }
 
     public void orderComplete(OrderView view, Order currentOrder) {
-        log.info("{} completed order {} and took payment ${}",
-                view.getCurrentUsername(), currentOrder, currentOrder.getTotalPaid());
+
+        List<Attendee> badgesToPrint = new ArrayList<>();
+        for (Attendee a : currentOrder.getAttendees()) {
+            if (!a.getCheckedIn()) {
+                badgesToPrint.add(a);
+            }
+        }
+        log.info("{} saved order {} with {} badges to print",
+                view.getCurrentUsername(), currentOrder);
+
         currentOrder.paymentComplete(view.getCurrentUser());
 
         orderRepository.save(currentOrder);
 
-        showAttendeeBadgeWindow(view, currentOrder.getAttendees());
+        if (badgesToPrint.size() > 0) {
+            showAttendeeBadgeWindow(view, badgesToPrint);
+        } else {
+            view.navigateTo("/");
+        }
     }
 
     public void selectAttendee(OrderView view, Attendee attendee) {

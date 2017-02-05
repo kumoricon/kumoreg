@@ -39,6 +39,7 @@ public class Attendee extends Record {
     private Boolean paid;                       // has attendee paid? True for $0 attendees (press/comped/etc)
     private BigDecimal paidAmount;              // Amount paid - not necessarily the same as the badge cost, but
                                                 // usually should be
+    private Boolean compedBadge;                // True if the badge has been comped -- IE, is free
     @ManyToOne
     private Badge badge;                        // Badge type
     @ManyToOne
@@ -57,6 +58,7 @@ public class Attendee extends Record {
         this.checkedIn = false;
         this.paid = false;
         this.preRegistered = false;
+        this.compedBadge = false;
         this.parentIsEmergencyContact = false;
         this.history = new HashSet<>();
     }
@@ -134,6 +136,9 @@ public class Attendee extends Record {
 
     public BigDecimal getPaidAmount() { return paidAmount; }
     public void setPaidAmount(BigDecimal paidAmount) { this.paidAmount = paidAmount; }
+
+    public Boolean getCompedBadge() { return compedBadge; }
+    public void setCompedBadge(Boolean compedBadge) { this.compedBadge = compedBadge; }
 
     public Badge getBadge() { return badge; }
     public void setBadge(Badge badge) { this.badge = badge; }

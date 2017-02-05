@@ -53,7 +53,13 @@ public class Order extends Record {
     public String getOrderId() { return orderId; }
     public void setOrderId(String orderId) { this.orderId = orderId; }
 
-    public BigDecimal getTotalAmount() { return totalAmount; }
+    public BigDecimal getTotalAmount() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Attendee a : getAttendees()) {
+            total = total.add(a.getPaidAmount());
+        }
+        return total; }
+
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
 
     public Boolean getPaid() { return paid; }
@@ -131,9 +137,11 @@ public class Order extends Record {
             paidSession = currentUser.getSessionNumber();
             paymentTakenByUser = currentUser;
             for (Attendee attendee : attendeeList) {
-                attendee.setCheckedIn(true);
-                attendee.setPaid(true);
-                attendee.addHistoryEntry(currentUser, "Attendee checked in");
+                if (!attendee.getCheckedIn()) {
+                    attendee.setCheckedIn(true);
+                    attendee.setPaid(true);
+                    attendee.addHistoryEntry(currentUser, "Attendee checked in");
+                }
             }
         }
     }

@@ -43,7 +43,8 @@ public class AttendeeDetailForm extends GridLayout {
     protected CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
     protected NativeSelect badge = createNativeSelect("Pass Type", 17);
     protected TextField paidAmount = createTextField("Manual Price", 18);
-    protected CheckBox checkedIn = createCheckBox("Attendee Checked In", 19);
+    protected CheckBox compedBadge = createCheckBox("Comped Badge", 19);
+    protected CheckBox checkedIn = createCheckBox("Attendee Checked In", 20);
     protected BeanItem<Attendee> attendeeBean;
 
     protected VerticalLayout historyLayout = new VerticalLayout();
@@ -61,7 +62,7 @@ public class AttendeeDetailForm extends GridLayout {
         birthDate.setConverter(new DateToLocalDateConverter());
         setColumns(3);
         setRows(10);
-        setMargin(true);
+        setMargin(new MarginInfo(false, true, true, true));
         setSpacing(true);
         setWidth("100%");
         setColumnExpandRatio(0, 0);
@@ -153,7 +154,25 @@ public class AttendeeDetailForm extends GridLayout {
         badge.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         badge.setItemCaptionPropertyId("name");
         badge.setNullSelectionAllowed(false);
-        addComponent(paidAmount, 1, 8);
+        HorizontalLayout manualPrice = new HorizontalLayout();
+        manualPrice.addComponent(paidAmount);
+        manualPrice.addComponent(compedBadge);
+        addComponent(manualPrice, 1, 8);
+
+        compedBadge.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+            if (Boolean.TRUE.equals(valueChangeEvent.getProperty().getValue())) {
+                paidAmount.setValue("0");
+            } else {
+                try {
+                    if (!badge.isEmpty()) {
+                        Badge thisBadge = (Badge) badge.getConvertedValue();
+                        paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                    }
+                } catch (ServiceException e) {
+                    Notification.show(e.getMessage());
+                }
+            }
+        });
 
         addComponent(parentFormReceived, 0, 9);
         addComponent(checkedIn, 1, 9);
@@ -217,6 +236,8 @@ public class AttendeeDetailForm extends GridLayout {
     public void setManualPriceEnabled(boolean enabled) {
         paidAmount.setEnabled(enabled);
         paidAmount.setValidationVisible(enabled);
+        compedBadge.setEnabled(enabled);
+        compedBadge.setValidationVisible(enabled);
     }
 
     public Attendee getAttendee() {

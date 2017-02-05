@@ -51,6 +51,8 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
         setHeight(800, Unit.PIXELS);
 
         VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.setMargin(false);
+        verticalLayout.setSpacing(true);
         form = new AttendeeDetailForm(this);
         form.setAllFieldsButCheckInDisabled();
         verticalLayout.addComponent(form);

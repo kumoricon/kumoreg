@@ -39,7 +39,8 @@ public class AttendeeWindow extends Window implements DetailFormHandler, AddNote
         setHeight(800, Unit.PIXELS);
 
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setMargin(true);
+        verticalLayout.setMargin(false);
+        verticalLayout.setSpacing(true);
         verticalLayout.addComponent(attendeeDetailForm);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
