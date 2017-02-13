@@ -22,6 +22,8 @@ public class Badge extends Record {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AgeRange> ageRanges;
     private String requiredRight;       // Only show to users who have this right, or all if null
+    @NotNull
+    private BadgeType badgeType;
 
     public Badge() {
         visible = true;
@@ -31,6 +33,11 @@ public class Badge extends Record {
     public Badge(String name) {
         this();
         setName(name);
+    }
+
+    public Badge(String name, BadgeType badgeType) {
+        this(name);
+        setBadgeType(badgeType);
     }
 
     public String getName() { return name; }
@@ -47,6 +54,10 @@ public class Badge extends Record {
 
     public String getWarningMessage() { return warningMessage; }
     public void setWarningMessage(String warningMessage) { this.warningMessage = warningMessage; }
+
+    public BadgeType getBadgeType() { return badgeType; }
+
+    public void setBadgeType(BadgeType badgeType) { this.badgeType = badgeType; }
 
     public List<AgeRange> getAgeRanges() { return ageRanges; }
     public void addAgeRange(AgeRange ageRange) { ageRanges.add(ageRange); }

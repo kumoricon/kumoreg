@@ -1,9 +1,6 @@
 package org.kumoricon.site.utility.loadbasedata;
 
-import org.kumoricon.model.badge.AgeRange;
-import org.kumoricon.model.badge.Badge;
-import org.kumoricon.model.badge.BadgeFactory;
-import org.kumoricon.model.badge.BadgeRepository;
+import org.kumoricon.model.badge.*;
 import org.kumoricon.model.blacklist.BlacklistName;
 import org.kumoricon.model.blacklist.BlacklistRepository;
 import org.kumoricon.model.role.Right;
@@ -22,48 +19,51 @@ import java.util.HashMap;
 
 @Controller
 public class LoadBaseDataPresenter {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private BadgeRepository badgeRepository;
+    private final BadgeRepository badgeRepository;
 
-    @Autowired
-    private RightRepository rightRepository;
+    private final RightRepository rightRepository;
 
-    @Autowired
-    private BlacklistRepository blacklistRepository;
+    private final BlacklistRepository blacklistRepository;
 
     private static final Logger log = LoggerFactory.getLogger(LoadBaseDataPresenter.class);
 
-    public LoadBaseDataPresenter() {
+    @Autowired
+    public LoadBaseDataPresenter(UserRepository userRepository, RoleRepository roleRepository, BadgeRepository badgeRepository, RightRepository rightRepository, BlacklistRepository blacklistRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.badgeRepository = badgeRepository;
+        this.rightRepository = rightRepository;
+        this.blacklistRepository = blacklistRepository;
     }
 
-    public void loadDataButtonClicked(LoadBaseDataView view) {
+    void loadDataButtonClicked(LoadBaseDataView view) {
         log.info("{} loaded full base data", view.getCurrentUsername());
         StringBuilder results = new StringBuilder();
         if (targetTablesAreEmpty(results)) {
             addRights(results);
             addRoles(results);
             addUsers(results);
-            addBadges(results);
+            addAttendeeBadges(results);
+            addStaffBadges(results);
             addSpecialtyBadges(results);
             addBlacklistedNames(results);
         }
         view.addResult(results.toString());
     }
 
-    public void loadLiteDataButtonClicked(LoadBaseDataView view) {
+    void loadLiteDataButtonClicked(LoadBaseDataView view) {
         log.info("{} loaded lite base data", view.getCurrentUsername());
         StringBuilder results = new StringBuilder();
         if (targetTablesAreEmpty(results)) {
             addRights(results);
             addRoles(results);
             addUsers(results);
-            addLiteBadges(results);
+            addLiteAttendeeBadges(results);
+            addStaffBadges(results);
             addSpecialtyBadges(results);
             addBlacklistedNames(results);
         }
@@ -209,10 +209,16 @@ public class LoadBaseDataPresenter {
                 if (rightMap.containsKey(rightName)) {
                     role.addRight(rightMap.get(rightName));
                 } else {
-                    results.append("Error creating role " + roleName + ". Right " + rightName + " not found\n");
+                    results.append("Error creating role ")
+                            .append(roleName)
+                            .append(". Right ")
+                            .append(rightName)
+                            .append(" not found\n");
                 }
             }
-            results.append("    Creating " + role.toString() + "\n");
+            results.append("    Creating ")
+                    .append(role.toString())
+                    .append("\n");
             roleRepository.save(role);
         }
     }
@@ -232,16 +238,22 @@ public class LoadBaseDataPresenter {
             user.setUsername(currentUser[0]);
             Role role = roleRepository.findByNameIgnoreCase(currentUser[2]);
             if (role == null) {
-                results.append("    Error creating user " + currentUser[0] + ". Role " + currentUser[2] + " not found\n");
+                results.append("    Error creating user ")
+                        .append(currentUser[0])
+                        .append(". Role ")
+                        .append(currentUser[2])
+                        .append(" not found\n");
             } else {
                 user.setRole(role);
-                results.append("    Creating " + user.toString() + "\n");
+                results.append("    Creating ")
+                        .append(user.toString())
+                        .append("\n");
                 userRepository.save(user);
             }
         }
     }
 
-    private void addBadges(StringBuilder results) {
+    private void addAttendeeBadges(StringBuilder results) {
         results.append("Creating badges\n");
         String[][] badgeList = {
                 {"Weekend", "60", "60", "45"},
@@ -250,17 +262,18 @@ public class LoadBaseDataPresenter {
                 {"Sunday", "30", "30", "20"}};
         for (String[] currentBadge : badgeList) {
             log.info("Creating badge {}", currentBadge[0]);
-            Badge badge = BadgeFactory.createBadge(currentBadge[0], currentBadge[0],
+            Badge badge = BadgeFactory.createBadge(currentBadge[0], BadgeType.ATTENDEE,
+                    currentBadge[0],
                     Float.parseFloat(currentBadge[1]),
                     Float.parseFloat(currentBadge[2]),
                     Float.parseFloat(currentBadge[3]));
-            results.append("    Creating " + badge.toString() + "\n");
+            results.append("    Creating ").append(badge.toString()).append("\n");
             badgeRepository.save(badge);
         }
 
         // Create badge types with security restrictions below
         log.info("Creating badge VIP");
-        Badge vip = BadgeFactory.createBadge("VIP", "VIP", 300, 300, 300);
+        Badge vip = BadgeFactory.createBadge("VIP", BadgeType.ATTENDEE, "VIP", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
         // VIP badges have pre-printed color bars, and should just have the names
@@ -271,8 +284,22 @@ public class LoadBaseDataPresenter {
             a.setStripeColor("#FFFFFF");
             a.setStripeText("");
         }
-        results.append("    Creating " + vip.toString() + "\n");
+        results.append("    Creating ").append(vip.toString()).append("\n");
         badgeRepository.save(vip);
+    }
+
+    private void addStaffBadges(StringBuilder results) {
+        log.info("Creating badge Staff");
+        Badge staff = BadgeFactory.createBadge("Staff", BadgeType.STAFF, "Staff", 0f, 0f, 0f);
+        staff.setRequiredRight("badge_type_staff");
+        staff.setWarningMessage("Staff check in. See your coordinator!");
+        // Clear stripe color and text - it's already printed
+        for (AgeRange a : staff.getAgeRanges()) {
+            a.setStripeColor("#FFFFFF");
+            a.setStripeText("");
+        }
+        results.append("    Creating ").append(staff.toString()).append("\n");
+        badgeRepository.save(staff);
     }
 
     /**
@@ -281,55 +308,55 @@ public class LoadBaseDataPresenter {
      */
     private void addSpecialtyBadges(StringBuilder results) {
         log.info("Creating badge Artist");
-        Badge artist = BadgeFactory.createBadge("Artist", "Artist", 0f, 0f, 0f, "#800080");
+        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.OTHER, "Artist", 0f, 0f, 0f, "#800080");
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
-        results.append("    Creating " + artist.toString() + "\n");
+        results.append("    Creating ").append(artist.toString()).append("\n");
         badgeRepository.save(artist);
 
         log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", "Exhibitor", 0f, 0f, 0f, "#00FFFF");
+        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", 0f, 0f, 0f, "#00FFFF");
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
         for (AgeRange a : exhibitor.getAgeRanges()) {
             a.setStripeColor("#1DE5D1");
         }
-        results.append("    Creating " + exhibitor.toString() + "\n");
+        results.append("    Creating ").append(exhibitor.toString()).append("\n");
         badgeRepository.save(exhibitor);
 
         log.info("Creating badge Guest");
-        Badge guest = BadgeFactory.createBadge("Guest", "Guest", 0f, 0f, 0f, "#62F442");
+        Badge guest = BadgeFactory.createBadge("Guest", BadgeType.OTHER,"Guest", 0f, 0f, 0f, "#62F442");
         guest.setRequiredRight("badge_type_guest");
         guest.setWarningMessage("Guest check in. See your coordinator!");
-        results.append("    Creating " + guest.toString() + "\n");
+        results.append("    Creating ").append(guest.toString()).append("\n");
         badgeRepository.save(guest);
 
         log.info("Creating badge Emerging Press");
-        Badge ePress = BadgeFactory.createBadge("Emerging Press", "E Press", 0f, 0f, 0f, "#1DE5D1");
+        Badge ePress = BadgeFactory.createBadge("Emerging Press", BadgeType.OTHER,"E Press", 0f, 0f, 0f, "#1DE5D1");
         ePress.setRequiredRight("badge_type_emerging_press");
         ePress.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + ePress.toString() + "\n");
+        results.append("    Creating ").append(ePress.toString()).append("\n");
         badgeRepository.save(ePress);
 
         log.info("Creating badge Standard Press");
-        Badge sPress = BadgeFactory.createBadge("Standard Press", "S Press", 0f, 0f, 0f, "#1DE5D1");
+        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.OTHER,"S Press", 0f, 0f, 0f, "#1DE5D1");
         sPress.setRequiredRight("badge_type_standard_press");
         sPress.setWarningMessage("Press check in. See your coordinator!");
-        results.append("    Creating " + sPress.toString() + "\n");
+        results.append("    Creating ").append(sPress.toString()).append("\n");
         badgeRepository.save(sPress);
 
         log.info("Creating badge Industry");
-        Badge industry = BadgeFactory.createBadge("Industry", "Industry", 0f, 0f, 0f, "#FF00FC");
+        Badge industry = BadgeFactory.createBadge("Industry", BadgeType.OTHER,"Industry", 0f, 0f, 0f, "#FF00FC");
         industry.setRequiredRight("badge_type_industry");
         industry.setWarningMessage("Industry check in. See your coordinator!");
-        results.append("    Creating " + industry.toString() + "\n");
+        results.append("    Creating ").append(industry.toString()).append("\n");
         badgeRepository.save(industry);
 
         log.info("Creating badge Panelist");
-        Badge panelist = BadgeFactory.createBadge("Panelist", "Panelist", 0f, 0f, 0f, "#FFA500");
+        Badge panelist = BadgeFactory.createBadge("Panelist", BadgeType.OTHER,"Panelist", 0f, 0f, 0f, "#FFA500");
         panelist.setRequiredRight("badge_type_panelist");
         panelist.setWarningMessage("Panelist check in. See your coordinator!");
-        results.append("    Creating " + panelist.toString() + "\n");
+        results.append("    Creating ").append(panelist.toString()).append("\n");
         badgeRepository.save(panelist);
     }
 
@@ -338,30 +365,18 @@ public class LoadBaseDataPresenter {
         blacklistRepository.save(new BlacklistName("Blacklist", "Test"));
     }
 
-    private void addLiteBadges(StringBuilder results) {
+    private void addLiteAttendeeBadges(StringBuilder results) {
         results.append("Creating badges\n");
 
         log.info("Creating badge Kumoricon Lite");
-        Badge lite = BadgeFactory.createBadge("Kumoricon Lite", "Sunday", 10, 10, 10);
-        results.append("    Creating " + lite.toString() + "\n");
+        Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Sunday", 10, 10, 10);
+        results.append("    Creating ").append(lite.toString()).append("\n");
         badgeRepository.save(lite);
 
         log.info("Creating badge Kumoricon Lite - Manga Donation");
-        Badge liteDonation = BadgeFactory.createBadge("Kumoricon Lite - Manga Donation", "Sunday", 0, 0, 0);
-        results.append("    Creating " + liteDonation.toString() + "\n");
+        Badge liteDonation = BadgeFactory.createBadge("Kumoricon Lite - Manga Donation", BadgeType.ATTENDEE, "Sunday", 0, 0, 0);
+        results.append("    Creating ").append(liteDonation.toString()).append("\n");
         badgeRepository.save(liteDonation);
-
-        log.info("Creating badge Staff");
-        Badge staff = BadgeFactory.createBadge("Staff", "Staff", 0f, 0f, 0f);
-        staff.setRequiredRight("badge_type_staff");
-        staff.setWarningMessage("Staff check in. See your coordinator!");
-        // Clear stripe color and text - it's already printed
-        for (AgeRange a : staff.getAgeRanges()) {
-            a.setStripeColor("#FFFFFF");
-            a.setStripeText("");
-        }
-        results.append("    Creating " + staff.toString() + "\n");
-        badgeRepository.save(staff);
     }
 
 

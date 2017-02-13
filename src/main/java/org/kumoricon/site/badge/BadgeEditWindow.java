@@ -9,6 +9,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.badge.AgeRange;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.model.badge.BadgeType;
 import org.kumoricon.site.attendee.FieldFactory;
 
 
@@ -20,6 +21,7 @@ public class BadgeEditWindow extends Window {
     private TextField waringMessage = FieldFactory.createTextField("Warning message");
     private TextField requiredRight = FieldFactory.createDisabledTextField("Required Right");
     private CheckBox visible = new CheckBox("Visible");
+    private NativeSelect badgeType = new NativeSelect("Badge Type");
     private Table tblAgeRanges;
 
     private Button btnSave = new Button("Save");
@@ -49,6 +51,8 @@ public class BadgeEditWindow extends Window {
         form.setSizeFull();
 
         form.addComponent(name);
+        form.addComponent(badgeType);
+        badgeType.addItems(BadgeType.ATTENDEE, BadgeType.STAFF, BadgeType.OTHER);
         form.addComponent(dayText);
         form.addComponent(waringMessage);
         waringMessage.setWidth(70, Unit.EM);
@@ -59,6 +63,7 @@ public class BadgeEditWindow extends Window {
         visible.setDescription("This badge type may be selected when checking in/editing attendees");
 
         badgeBeanFieldGroup.bind(name, "name");
+        badgeBeanFieldGroup.bind(badgeType, "badgeType");
         badgeBeanFieldGroup.bind(dayText, "dayText");
         badgeBeanFieldGroup.bind(waringMessage, "warningMessage");
         badgeBeanFieldGroup.bind(requiredRight, "requiredRight");

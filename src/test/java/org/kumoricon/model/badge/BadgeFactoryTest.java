@@ -9,9 +9,10 @@ import static org.junit.Assert.*;
 public class BadgeFactoryTest {
     @Test
     public void createBadge() throws Exception {
-        Badge b = BadgeFactory.createBadge("Weekend Test", "Weekend", 0f, 0f, 0f);
+        Badge b = BadgeFactory.createBadge("Weekend Test", BadgeType.ATTENDEE, "Weekend", 0f, 0f, 0f);
         assertEquals("Weekend Test", b.getName());
         assertEquals("Weekend", b.getDayText());
+        assertEquals(BadgeType.ATTENDEE, b.getBadgeType());
         for (AgeRange a : b.getAgeRanges()) {
             assertEquals(BigDecimal.ZERO, a.getCost());
         }
@@ -31,7 +32,8 @@ public class BadgeFactoryTest {
 
     @Test
     public void createBadgeOverrideStripeColor() throws Exception {
-        Badge b = BadgeFactory.createBadge("Weekend Test", "Weekend", 0f, 0f, 0f, "#EFEFEF");
+        Badge b = BadgeFactory.createBadge("Weekend Test", BadgeType.ATTENDEE, "Weekend", 0f, 0f, 0f, "#EFEFEF");
+        assertEquals(BadgeType.ATTENDEE, b.getBadgeType());
         assertEquals("Weekend Test", b.getName());
         assertEquals("Weekend", b.getDayText());
         for (AgeRange a : b.getAgeRanges()) {

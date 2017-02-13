@@ -17,6 +17,7 @@ Change Log
     - Added multiple payments per order
     - Added legal name fields
     - Added "Comped Badge" checkbox to attendee detail form, field to Attendee record
+    - Added Badge Type field (attendee, staff, other)
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

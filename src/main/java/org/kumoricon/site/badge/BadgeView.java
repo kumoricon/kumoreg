@@ -23,7 +23,7 @@ public class BadgeView extends BaseView implements View {
     @Autowired
     private BadgePresenter handler;
 
-    private ListSelect badgeList = new ListSelect("Badges");
+    private Table badgeList = new Table("Badges");
     private Button btnAddNew = new Button("Add");
 
     private BadgeEditWindow badgeEditWindow;
@@ -40,7 +40,9 @@ public class BadgeView extends BaseView implements View {
         super.enter(viewChangeEvent);
         String parameters = viewChangeEvent.getParameters();
         if (parameters == null || parameters.equals("")) {
-            closeBadgeEditWindow();
+            if (badgeEditWindow != null) {
+                badgeEditWindow.close();
+            }
         } else {
             handler.navigateToBadge(this, viewChangeEvent.getParameters());
         }
@@ -51,8 +53,12 @@ public class BadgeView extends BaseView implements View {
     }
 
     public void afterSuccessfulFetch(List<Badge> badges) {
+        Object[] sortBy = {badgeList.getSortContainerPropertyId()};
+        boolean[] sortOrder = {badgeList.isSortAscending()};
         badgeList.setContainerDataSource(new BeanItemContainer<>(Badge.class, badges));
-        badgeList.setRows(badges.size());
+        badgeList.setVisibleColumns("name", "badgeType", "requiredRight", "visible");
+        badgeList.setColumnHeaders("Name", "Badge Type", "Required Security Right", "Visible");
+        badgeList.sort(sortBy, sortOrder);
     }
 
     private VerticalLayout buildLeftPanel() {
@@ -61,12 +67,12 @@ public class BadgeView extends BaseView implements View {
         leftPanel.setSpacing(true);
         badgeList.setCaption("Badge Types");
         badgeList.setNullSelectionAllowed(false);
-        badgeList.setWidth(300, Unit.PIXELS);
+        badgeList.setMultiSelect(false);
         badgeList.setImmediate(true);
         badgeList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         badgeList.setItemCaptionPropertyId("name");
-        leftPanel.addComponent(badgeList);
         leftPanel.addComponent(btnAddNew);
+        leftPanel.addComponent(badgeList);
 
         badgeList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
                 handler.badgeSelected(this, (Badge)valueChangeEvent.getProperty().getValue()));
@@ -88,6 +94,7 @@ public class BadgeView extends BaseView implements View {
     public void closeBadgeEditWindow() {
         if (badgeEditWindow != null) {
             badgeEditWindow.close();
+            navigateTo(BadgeView.VIEW_NAME);
         }
     }
     public void selectBadge(Badge role) { badgeList.select(role); }

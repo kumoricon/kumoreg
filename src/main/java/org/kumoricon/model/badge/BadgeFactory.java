@@ -10,10 +10,11 @@ public class BadgeFactory {
      * @param childCost Cost of child badge
      * @return Badge
      */
-    public static Badge createBadge(String name, String dayText,
+    public static Badge createBadge(String name, BadgeType badgeType, String dayText,
                                     double adultCost, double youthCost, double childCost) {
         Badge b = new Badge();
         b.setName(name);
+        b.setBadgeType(badgeType);
         b.setDayText(dayText);
         b.addAgeRange("Adult", 18, 255, adultCost, "#323E99", "Adult");
         b.addAgeRange("Youth", 13, 17, youthCost, "#FFFF00", "Youth");
@@ -33,10 +34,11 @@ public class BadgeFactory {
      * @param adultStripeColor Hex color code for adult age ranges, with leading # (ex: #F03EA3)
      * @return Badge
      */
-    public static Badge createBadge(String name, String dayText,
+    public static Badge createBadge(String name, BadgeType badgeType, String dayText,
                                     double adultCost, double youthCost, double childCost, String adultStripeColor) {
         Badge b = new Badge();
         b.setName(name);
+        b.setBadgeType(badgeType);
         b.setDayText(dayText);
         b.addAgeRange("Adult", 18, 255, adultCost, adultStripeColor, "Adult");
         b.addAgeRange("Youth", 13, 17, youthCost, "#FFFF00", "Youth");
@@ -53,6 +55,7 @@ public class BadgeFactory {
     public static Badge createEmptyBadge() {
         Badge b = new Badge();
         b.setName("");
+        b.setBadgeType(BadgeType.ATTENDEE);
         b.setDayText("");
         b.addAgeRange("Adult", 18, 255, 0.00, "#323E99", "Adult");
         b.addAgeRange("Youth", 13, 17, 0.00, "#FFFF00", "Youth");
