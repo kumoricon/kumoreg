@@ -18,6 +18,8 @@ Change Log
     - Added legal name fields
     - Added "Comped Badge" checkbox to attendee detail form, field to Attendee record
     - Added Badge Type field (attendee, staff, other)
+    - Changed Badge Admin screen to use table
+    - Changed User Admin screen to use table
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

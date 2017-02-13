@@ -6,13 +6,11 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
+import org.kumoricon.site.fieldconverter.RoleToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +24,7 @@ public class UserView extends BaseView implements View {
 
     @Autowired
     private UserPresenter handler;
-    private ListSelect userList = new ListSelect("Users");
+    private Table userList = new Table("Users");
     private Button btnAddNew = new Button("Add New");
 
     @PostConstruct
@@ -36,10 +34,10 @@ public class UserView extends BaseView implements View {
         layout.setSpacing(true);
         userList.setCaption("Users");
         userList.setNullSelectionAllowed(false);
-        userList.setWidth(500, Unit.PIXELS);
         userList.setImmediate(true);
         userList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         userList.setItemCaptionPropertyId("username");
+
         layout.addComponent(btnAddNew);
         layout.addComponent(userList);
 
@@ -69,8 +67,13 @@ public class UserView extends BaseView implements View {
     }
 
     public void afterSuccessfulFetch(List<User> users) {
+        Object[] sortBy = {userList.getSortContainerPropertyId()};
+        boolean[] sortOrder = {userList.isSortAscending()};
         userList.setContainerDataSource(new BeanItemContainer<>(User.class, users));
-        userList.setRows(users.size());
+        userList.setVisibleColumns("username", "firstName", "lastName", "role", "badgePrefix", "lastBadgeNumberCreated", "enabled");
+        userList.setColumnHeaders("Username", "First Name", "Last Name", "Role", "Badge Prefix", "Last Badge Number", "Enabled");
+        userList.setConverter("role", new RoleToStringConverter());
+        userList.sort(sortBy, sortOrder);
     }
 
     public void showUser(User user, List<Role> roles) {
