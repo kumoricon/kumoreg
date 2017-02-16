@@ -24,31 +24,31 @@ import static org.kumoricon.site.attendee.FieldFactory.*;
 
 
 public class AttendeeDetailForm extends GridLayout {
-    protected TextField firstName = createNameField("First Name", 1);
-    protected TextField lastName = createNameField("Last Name", 2);
-    protected TextField legalFirstName = createNameField("Legal First Name", 3);
-    protected TextField legalLastName = createNameField("Legal Last Name", 4);
-    protected TextField badgeName = createTextField("Badge Name", 5);
-    protected TextField badgeNumber = createTextField("Badge Number", 6);
-    protected TextField phoneNumber = createPhoneNumberField("Phone", 7);
-    protected DateField birthDate = createDateField("", 8);
-    protected TextField email = createTextField("Email", 9);
-    protected TextField zip = createTextField("Zip", 10);
-    protected Label age = new Label("");
-    protected TextField emergencyContactFullName = createNameField("Emergency Contact Name", 11);
-    protected TextField emergencyContactPhone = createPhoneNumberField("Emergency Contact Phone", 12);
-    protected TextField parentFullName = createNameField("Parent Name", 13);
-    protected TextField parentPhone = createPhoneNumberField("Parent Phone", 14);
-    protected CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 15);
-    protected CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
-    protected NativeSelect badge = createNativeSelect("Pass Type", 17);
-    protected TextField paidAmount = createTextField("Manual Price", 18);
-    protected CheckBox compedBadge = createCheckBox("Comped Badge", 19);
-    protected CheckBox checkedIn = createCheckBox("Attendee Checked In", 20);
-    protected BeanItem<Attendee> attendeeBean;
+    private TextField firstName = createNameField("First Name", 1);
+    private TextField lastName = createNameField("Last Name", 2);
+    private TextField legalFirstName = createNameField("Legal First Name", 3);
+    private TextField legalLastName = createNameField("Legal Last Name", 4);
+    private TextField badgeName = createTextField("Badge Name", 5);
+    private TextField badgeNumber = createTextField("Badge Number", 6);
+    private TextField phoneNumber = createPhoneNumberField("Phone", 7);
+    private DateField birthDate = createDateField("", 8);
+    private TextField email = createTextField("Email", 9);
+    private TextField zip = createTextField("Zip", 10);
+    private Label age = new Label("");
+    private TextField emergencyContactFullName = createNameField("Emergency Contact Name", 11);
+    private TextField emergencyContactPhone = createPhoneNumberField("Emergency Contact Phone", 12);
+    private TextField parentFullName = createNameField("Parent Name", 13);
+    private TextField parentPhone = createPhoneNumberField("Parent Phone", 14);
+    private CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 15);
+    private CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
+    private NativeSelect badge = createNativeSelect("Pass Type", 17);
+    private TextField paidAmount = createTextField("Manual Price", 18);
+    private CheckBox compedBadge = createCheckBox("Comped Badge", 19);
+    private CheckBox checkedIn = createCheckBox("Attendee Checked In", 20);
+    private BeanItem<Attendee> attendeeBean;
 
-    protected VerticalLayout historyLayout = new VerticalLayout();
-    protected FieldGroup fieldGroup;
+    private VerticalLayout historyLayout = new VerticalLayout();
+    private FieldGroup fieldGroup;
     private DetailFormHandler handler;
 
     public void setParentFormReceivedVisible(boolean visible) {
@@ -255,7 +255,7 @@ public class AttendeeDetailForm extends GridLayout {
         parentFormReceived.setValidationVisible(true);
     }
 
-    protected static Integer getAgeFromDate(Date birthDate) {
+    private static Integer getAgeFromDate(Date birthDate) {
         if (birthDate != null) {
             LocalDate bd = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Integer age = Period.between(bd, LocalDate.now()).getYears();

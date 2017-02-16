@@ -6,7 +6,6 @@ import org.hibernate.annotations.NotFoundAction;
 import org.kumoricon.model.Record;
 import org.kumoricon.model.user.User;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;

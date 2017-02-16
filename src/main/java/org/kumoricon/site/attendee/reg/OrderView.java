@@ -203,7 +203,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
     }
 
     public void showConfirmCancelWindow() {
-        ConfirmationWindow window = new ConfirmationWindow(this, "Are you sure you want to cancel this order?");
+        ConfirmationWindow window = new ConfirmationWindow(this, "Are you sure you want to cancel?");
         showWindow(window);
     }
 

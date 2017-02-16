@@ -19,12 +19,12 @@ import org.kumoricon.site.attendee.window.ViewNoteWindow;
 
 public class AttendeeWindow extends Window implements DetailFormHandler, AddNoteHandler {
 
-    AttendeeDetailForm attendeeDetailForm = new AttendeeDetailForm(this);
-    Button save = new Button("Save");
-    Button cancel = new Button("Cancel");
-    Button delete = new Button("Delete");
-    Button addNote = new Button("Add Note");
-    OrderView parentView;
+    private AttendeeDetailForm attendeeDetailForm = new AttendeeDetailForm(this);
+    private Button save = new Button("Save");
+    private Button cancel = new Button("Cancel");
+    private Button delete = new Button("Delete");
+    private Button addNote = new Button("Add Note");
+    private OrderView parentView;
 
     private OrderPresenter handler;
 

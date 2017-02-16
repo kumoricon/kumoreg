@@ -44,12 +44,12 @@ public class AttendeeReportPresenter implements ReportPresenter {
 
     private static String buildTable(String title, List<Object[]> data) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<h2>" + title + "</h2>");
+        sb.append("<h2>").append(title).append("</h2>");
         sb.append("<table border=\"1\"><tr><td>Date</td><td> Checked In</td></tr>");
         for (Object[] line : data) {
             sb.append("<tr>");
-            sb.append("<td>" + line[0].toString() + "</td>");
-            sb.append("<td align=\"right\">" + line[1].toString() + "</td>");
+            sb.append("<td>").append(line[0].toString()).append("</td>");
+            sb.append("<td align=\"right\">").append(line[1].toString()).append("</td>");
             sb.append("</tr>");
         }
         sb.append("</table>");
@@ -58,13 +58,13 @@ public class AttendeeReportPresenter implements ReportPresenter {
 
     private static String buildTableWithRevenue(String title, List<Object[]> data) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<h2>" + title + "</h2>");
+        sb.append("<h2>").append(title).append("</h2>");
         sb.append("<table border=\"1\"><tr><td>Date</td><td> Checked In</td><td>Dollar Amount</td></tr>");
         for (Object[] line : data) {
             sb.append("<tr>");
-            sb.append("<td>" + line[0].toString() + "</td>");
-            sb.append("<td align=\"right\">" + line[1].toString() + "</td>");
-            sb.append("<td align=\"right\">$" + line[2].toString() + "</td>");
+            sb.append("<td>").append(line[0].toString()).append("</td>");
+            sb.append("<td align=\"right\">").append(line[1].toString()).append("</td>");
+            sb.append("<td align=\"right\">$").append(line[2].toString()).append("</td>");
             sb.append("</tr>");
         }
         sb.append("</table>");

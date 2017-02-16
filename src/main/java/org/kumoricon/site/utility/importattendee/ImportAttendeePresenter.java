@@ -64,7 +64,7 @@ public class ImportAttendeePresenter {
         public void uploadSucceeded(Upload.SucceededEvent event) {
             AttendeeImporterService importer = new AttendeeImporterService(attendeeRepository, orderRepository, badgeRepository, userRepository);
             view.clearStatus();
-            String result = "";
+            String result;
 
             try {
                 InputStreamReader reader = new InputStreamReader(new FileInputStream(file), UTF_8);

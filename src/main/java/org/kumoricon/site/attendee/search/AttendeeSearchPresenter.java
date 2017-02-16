@@ -190,7 +190,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         }
     }
 
-    public Boolean validateBeforeCheckIn(AttendeeDetailWindow window, Attendee attendee) {
+    private Boolean validateBeforeCheckIn(AttendeeDetailWindow window, Attendee attendee) {
         try {
             attendeeValidator.validate(attendee);
         } catch (ValueException e) {

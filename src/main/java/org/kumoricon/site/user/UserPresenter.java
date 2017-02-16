@@ -29,7 +29,7 @@ public class UserPresenter {
     public void userSelected(UserView view, User user) {
         if (user != null) {
             log.info("{} viewed user {}", view.getCurrentUsername(), user);
-            view.navigateTo(view.VIEW_NAME + "/" + user.getId().toString());
+            view.navigateTo(UserView.VIEW_NAME + "/" + user.getId().toString());
             view.showUser(user, getAvailableRoles());
         }
     }
@@ -43,7 +43,7 @@ public class UserPresenter {
 
     public void addNewUser(UserView view) {
         log.info("{} created new user", view.getCurrentUsername());
-        view.navigateTo(view.VIEW_NAME);
+        view.navigateTo(UserView.VIEW_NAME);
         User user = UserFactory.newUser();
         view.showUser(user, getAvailableRoles());
     }

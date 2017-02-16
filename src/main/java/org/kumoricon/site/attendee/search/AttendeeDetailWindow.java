@@ -35,7 +35,7 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
     private CheckBox attendeeInformationVerified;
     private CheckBox parentalConsentFormReceived;
     private Button btnInfoReceived;
-    HorizontalLayout buttonBar = new HorizontalLayout();
+    private HorizontalLayout buttonBar = new HorizontalLayout();
 
     private AttendeeSearchPresenter handler;
     private AttendeePrintView parentView;

@@ -1,6 +1,5 @@
 package org.kumoricon.site.utility.closeouttill;
 
-import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.user.User;

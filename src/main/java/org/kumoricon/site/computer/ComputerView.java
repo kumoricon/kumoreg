@@ -62,7 +62,7 @@ public class ComputerView extends BaseView implements View {
         layoutLeft.setMargin(true);
         layoutLeft.setSpacing(true);
         lblLeftTitle = new Label ("<span style='font-size:24px'>Computers</span>",ContentMode.HTML);
-        lblLeftSubtitle = new Label(String.format("<span style='font-size:12px'>This computer's IP address is: </span>" + getCurrentClientIPAddress()),ContentMode.HTML);
+        lblLeftSubtitle = new Label("<span style='font-size:12px'>This computer's IP address is: </span>" + getCurrentClientIPAddress(), ContentMode.HTML);
         layoutLeft.addComponent(lblLeftTitle);
         layoutLeft.addComponent(lblLeftSubtitle);
         gridComputers.setEditorEnabled(true);

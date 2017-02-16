@@ -37,7 +37,7 @@ public class OrderListView extends BaseView implements View {
             .setSortableProperties("id", "orderIdl", "paid", "paymenttakenByUser", "paidAt")
             .withFullWidth()
             .withFullHeight()
-            .withRowClickListener(rowClick -> showOrder((Order)rowClick.getRow()));
+            .withRowClickListener(rowClick -> showOrder(rowClick.getRow()));
 
     @PostConstruct
     public void init() {
