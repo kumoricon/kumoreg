@@ -79,7 +79,7 @@ public class SessionService {
                 buildReportFooter();
     }
 
-    private String buildTotalsForSession(Session session) {
+    public String buildTotalsForSession(Session session) {
         StringBuilder output = new StringBuilder();
         // Total per payment type
         for (Payment.PaymentType pt : Payment.PaymentType.values()) {
