@@ -53,7 +53,6 @@ public class UserFactoryTest {
         assertTrue("Password flagged to be reset", user.getResetPassword());
         assertNotNull("Password not null", user.getPassword());
         assertNotNull("Salt set", user.getSalt());
-        assertEquals("Session number set", 1, (int)user.getSessionNumber());
         assertNotNull("Last badge number set", user.getLastBadgeNumberCreated());
     }
 

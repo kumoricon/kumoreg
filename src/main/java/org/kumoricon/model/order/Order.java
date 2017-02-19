@@ -25,8 +25,6 @@ public class Order extends Record {
     @Length(min = 32, max = 32)
     @NotNull
     private String orderId;
-    @Min(0)
-    private BigDecimal totalAmount;
     @NotNull
     private Boolean paid;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order")
@@ -37,14 +35,8 @@ public class Order extends Record {
     private Set<Payment> payments;
 
     private String notes;
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
-    @NotFound(action = NotFoundAction.IGNORE)
-    private User paymentTakenByUser;
-    private LocalDateTime paidAt;
-    private Integer paidSession;
 
     public Order() {
-        this.totalAmount = BigDecimal.ZERO;
         this.paid = false;
         this.attendeeList = new HashSet<>();
         this.payments = new HashSet<>();
@@ -59,8 +51,6 @@ public class Order extends Record {
             total = total.add(a.getPaidAmount());
         }
         return total; }
-
-    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
 
     public Boolean getPaid() { return paid; }
     public void setPaid(Boolean paid) { this.paid = paid; }
@@ -85,12 +75,6 @@ public class Order extends Record {
     public void removeAttendee(Attendee attendee) {
         this.attendeeList.remove(attendee);
     }
-    public Integer getPaidSession() { return paidSession; }
-    public void setPaidSession(Integer paidSession) { this.paidSession = paidSession; }
-    public User getPaymentTakenByUser() { return paymentTakenByUser; }
-    public void setPaymentTakenByUser(User paymentTakenByUser) { this.paymentTakenByUser = paymentTakenByUser; }
-    public LocalDateTime getPaidAt() { return paidAt; }
-    public void setPaidAt(LocalDateTime paidAt) { this.paidAt = paidAt; }
 
     public Set<Payment> getPayments() {
         return payments;
@@ -133,9 +117,6 @@ public class Order extends Record {
     public void paymentComplete(User currentUser) {
         if (currentUser != null) {
             paid = true;
-            paidAt = LocalDateTime.now();
-            paidSession = currentUser.getSessionNumber();
-            paymentTakenByUser = currentUser;
             for (Attendee attendee : attendeeList) {
                 if (!attendee.getCheckedIn()) {
                     attendee.setCheckedIn(true);

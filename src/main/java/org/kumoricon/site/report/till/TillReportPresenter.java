@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -45,7 +46,7 @@ public class TillReportPresenter {
     public void showAllTills(TillReportView view) {
         log.info("{} viewed Till Report", view.getCurrentUsername());
         StringBuilder output = new StringBuilder();
-        List<Object[]> results = orderRepository.getAllOrderCountsAndTotals();
+        List<Object[]> results = new ArrayList<>(); //orderRepository.getAllOrderCountsAndTotals();
 
         output.append(String.format("%s\n", LocalDateTime.now()));
 

@@ -1,10 +1,13 @@
 package org.kumoricon.site.attendee.window;
 
+import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.order.Payment;
+import org.kumoricon.service.validate.PaymentValidator;
 import org.kumoricon.site.attendee.FieldFactory;
 import org.kumoricon.site.attendee.PaymentHandler;
 
@@ -14,7 +17,7 @@ public class PaymentWindow extends Window {
 
     private NativeSelect paymentType = new NativeSelect("Payment Type");
     private TextField amount = FieldFactory.createTextField("Amount");
-    private TextField authNumber = FieldFactory.createTextField("Auth Number");
+    private TextField authNumber = FieldFactory.createTextField("Note");
     private TextField paymentTakenBy = FieldFactory.createDisabledTextField("Payment Taken By");
     private TextField paymentTakenAt = FieldFactory.createDisabledTextField("Payment Taken At");
     private TextField paymentLocation = FieldFactory.createDisabledTextField("Payment Location");

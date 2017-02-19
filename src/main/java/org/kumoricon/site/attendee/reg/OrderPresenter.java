@@ -10,6 +10,7 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.order.PaymentRepository;
+import org.kumoricon.model.session.SessionService;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.validate.AttendeeValidator;
@@ -53,6 +54,9 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     @Autowired
     private PaymentRepository paymentRepository;
 
+    @Autowired
+    private SessionService sessionService;
+
     private static final Logger log = LoggerFactory.getLogger(OrderPresenter.class);
 
     public OrderPresenter() {
@@ -90,6 +94,9 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         }
         if (payment.getPaymentLocation() == null) {
             payment.setPaymentLocation(view.getCurrentClientIPAddress());
+        }
+        if (payment.getSession() == null) {
+            payment.setSession(sessionService.getCurrentSessionForUser(view.getCurrentUser()));
         }
         log.info("{} saved payment {} to {}", view.getCurrentUsername(), payment, order);
         order.addPayment(payment);
@@ -151,7 +158,6 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
                         view.getCurrentUser(), attendee, order);
             }
         }
-        order.setTotalAmount(getOrderTotal(order));
         order = orderRepository.save(order);
         view.afterSuccessfulFetch(order);
 
@@ -176,7 +182,6 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             order.removeAttendee(attendee);
             attendee.setOrder(null);
 
-            order.setTotalAmount(getOrderTotal(order));
             Order result = orderRepository.save(order);
             view.afterSuccessfulFetch(result);
             attendeeRepository.delete(attendee);
@@ -209,7 +214,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             }
         }
         log.info("{} saved order {} with {} badges to print",
-                view.getCurrentUsername(), currentOrder);
+                view.getCurrentUsername(), currentOrder, badgesToPrint.size());
 
         currentOrder.paymentComplete(view.getCurrentUser());
 

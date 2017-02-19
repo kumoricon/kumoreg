@@ -51,7 +51,7 @@ public class OrderListView extends BaseView implements View {
 
         String likeFilter = "%" + "" + "%";
         list.lazyLoadFrom(
-                         (firstRow, asc, sortProperty) -> repository.findByOrderIdLikeIgnoreCaseOrderByPaidAtDesc(
+                         (firstRow, asc, sortProperty) -> repository.findByOrderIdLikeIgnoreCaseOrderByIdDesc(
                                  likeFilter,
                                  new PageRequest(
                                          firstRow / PAGESIZE,
@@ -60,7 +60,7 @@ public class OrderListView extends BaseView implements View {
                                          sortProperty == null ? "id" : sortProperty
                                  )
                          ),
-                         () -> (int) repository.countByOrderIdLikeOrderByPaidAtDesc(likeFilter),
+                         () -> (int) repository.countByOrderIdLikeOrderByIdDesc(likeFilter),
                          PAGESIZE);
     }
 

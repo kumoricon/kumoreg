@@ -37,8 +37,6 @@ public class User extends Record {
     private String badgePrefix;                 // User will generate badges with this prefix
     @NotNull
     private Integer lastBadgeNumberCreated;
-    @NotNull
-    private Integer sessionNumber;              // Used for printing report when cashing out
 
     /**
      * Creating a new user? Use UserFactory instead of creating the user object directly
@@ -115,8 +113,6 @@ public class User extends Record {
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
-    public Integer getSessionNumber() { return sessionNumber; }
-    public void setSessionNumber(Integer sessionNumber) { this.sessionNumber = sessionNumber; }
 
     public String toString() {
         if (id != null) {

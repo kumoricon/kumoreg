@@ -53,7 +53,7 @@ public class LogoutView extends BaseView implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        if (handler.tillReortNotPrinted(getCurrentUser())) {
+        if (handler.tillReportNotPrinted(getCurrentUser())) {
             warning.setVisible(true);
         } else {
             handler.logout(this);

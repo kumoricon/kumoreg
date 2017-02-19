@@ -125,14 +125,10 @@ public class AttendeeImporterService {
                 Order currentOrder = orders.get(dataArray[19]);
                 attendee.setOrder(currentOrder);
                 currentOrder.addAttendee(attendee);
-                if (attendee.getPaid()) {
-                    currentOrder.setTotalAmount(currentOrder.getTotalAmount().add(attendee.getPaidAmount()));
-                }
             } else {
                 Order o = new Order();
                 o.setOrderId(dataArray[19]);
                 o.addAttendee(attendee);
-                o.setTotalAmount(attendee.getPaidAmount());
                 orders.put(o.getOrderId(), o);
                 ordersToAdd.add(o);
                 attendee.setOrder(o);

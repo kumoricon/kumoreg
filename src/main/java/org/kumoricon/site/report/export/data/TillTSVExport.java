@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class TillTSVExport extends BaseTSVExport implements Export {
         StringBuilder sb = new StringBuilder();
         sb.append(buildHeader());
 
-        List<Object[]> results = orderRepository.getAllOrderCountsAndTotals();
+        List<Object[]> results = new ArrayList<>(); //orderRepository.getAllOrderCountsAndTotals();
         for (Object[] line : results) {
             sb.append(String.format("%s %s (%s: %s)\t", line[2], line[3], line[0], line[1]));
             sb.append(String.format("%s\t", line[4]));

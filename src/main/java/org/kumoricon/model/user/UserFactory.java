@@ -20,7 +20,6 @@ public class UserFactory {
         u.setEnabled(true);
         u.resetPassword();                  // Set to default password and force it to be changed on login
         u.setLastBadgeNumberCreated(1213);  // Start at an arbitrary number instead of 0
-        u.setSessionNumber(1);
         return u;
     }
 

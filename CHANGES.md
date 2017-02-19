@@ -20,6 +20,7 @@ Change Log
     - Added Badge Type field (attendee, staff, other)
     - Changed Badge Admin screen to use table
     - Changed User Admin screen to use table
+    - Moved till sessions to their own table, rebuilt till report
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

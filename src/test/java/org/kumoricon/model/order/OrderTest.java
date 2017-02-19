@@ -32,14 +32,6 @@ public class OrderTest {
     }
 
     @Test
-    public void paymentCompleteSetsUser() throws Exception {
-        User user = UserFactory.newUser("Draco", "Ula");
-        order.paymentComplete(user);
-
-        assertEquals(user, order.getPaymentTakenByUser());
-    }
-
-    @Test
     public void paymentCompleteSetsPaid() throws Exception {
         User user = UserFactory.newUser("Draco", "Ula");
         order.paymentComplete(user);
@@ -55,25 +47,6 @@ public class OrderTest {
         for (Attendee a : order.getAttendeeList()) {
             assertTrue(a.getPaid());
         }
-    }
-
-    @Test
-    public void paymentCompleteSetsSession() throws Exception {
-        User user = UserFactory.newUser("Draco", "Ula");
-        order.paymentComplete(user);
-
-        assertEquals(user.getSessionNumber(), order.getPaidSession());
-    }
-
-    @Test
-    public void paymentCompleteSetsPaidAt() throws Exception {
-        // Since time could be close but not exact as the test runs, make sure it's within one second
-        User user = UserFactory.newUser("Draco", "Ula");
-        order.paymentComplete(user);
-
-        assertTrue(order.getPaidAt().isBefore(LocalDateTime.now().plusSeconds(1)));
-        assertTrue(order.getPaidAt().isAfter(LocalDateTime.now().minusSeconds(1)));
-        assertEquals(user.getSessionNumber(), order.getPaidSession());
     }
 
     @Test
