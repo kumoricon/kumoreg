@@ -27,7 +27,7 @@ public class ReportWindow extends Window {
 
         verticalLayout.addComponent(btnClose);
 
-        lblReport.setContentMode(ContentMode.PREFORMATTED);
+        lblReport.setContentMode(ContentMode.HTML);
         lblReport.setValue(report);
         reportPanel.setContent(lblReport);
         reportPanel.setWidth("100%");

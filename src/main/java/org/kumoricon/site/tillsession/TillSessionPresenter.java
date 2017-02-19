@@ -1,17 +1,10 @@
 package org.kumoricon.site.tillsession;
 
-import org.kumoricon.model.computer.Computer;
-import org.kumoricon.model.computer.ComputerRepository;
-import org.kumoricon.model.printer.Printer;
 import org.kumoricon.model.session.Session;
 import org.kumoricon.model.session.SessionService;
-import org.kumoricon.site.computer.window.AddPrinterWindow;
-import org.kumoricon.site.computer.window.PrinterWindowCallback;
-import org.kumoricon.site.computer.window.ViewInstructionsWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -39,7 +32,7 @@ public class TillSessionPresenter {
 
     public void showReportFor(TillSessionView view, Session session) {
         log.info("{} viewed till session report for {}", view.getCurrentUsername(), session);
-        String report = sessionService.generateReportForSession(session);
+        String report = sessionService.generateHTMLReportForSession(session);
         view.showReport(report);
     }
 }
