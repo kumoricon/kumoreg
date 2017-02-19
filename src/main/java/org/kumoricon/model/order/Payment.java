@@ -128,9 +128,9 @@ public class Payment extends Record {
 
     public String toString() {
         if (id != null) {
-            return String.format("[Payment %s: %s]", id, getAmount());
+            return String.format("[Payment %s: $%s]", id, getAmount());
         } else {
-            return String.format("[Payment: %s]", getAmount());
+            return String.format("[Payment: $%s]", getAmount());
         }
     }
 }
