@@ -16,4 +16,7 @@ interface SessionRepository extends JpaRepository<Session, Integer> {
 
     @Query(value = "select s from Session s where s.open = true")
     List<Session> findAllOpenSessions();
+
+    @Query(value = "select s from Session s ORDER BY s.end desc")
+    List<Session> findAllOrderByEnd();
 }

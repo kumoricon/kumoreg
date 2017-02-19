@@ -142,6 +142,7 @@ public class LoadBaseDataPresenter {
             {"manage_roles", "Add/edit security roles"},
             {"manage_orders", "List/edit orders after they have been placed"},
             {"manage_devices", "Add/edit devices (computer/printer mappings)"},
+            {"manage_till_sessions", "View/Close Till Sessions for other users"},
             {"import_pre_reg_data", "Import pre-registered attendees and orders"},
             {"load_base_data", "Load default data (users, roles, rights)"}
         };
@@ -189,7 +190,7 @@ public class LoadBaseDataPresenter {
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
                 "view_attendance_report", "view_check_in_by_hour_report", "view_till_report", "view_export",
-                "pre_reg_check_in_edit", "manage_orders"});
+                "pre_reg_check_in_edit", "manage_orders", "manage_till_sessions"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
@@ -197,7 +198,7 @@ public class LoadBaseDataPresenter {
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "view_role_report", "view_attendance_report", "view_attendance_report_revenue",
                 "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
-                "view_export", "manage_orders"});
+                "view_export", "manage_orders", "manage_till_sessions"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();

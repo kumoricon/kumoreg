@@ -54,6 +54,7 @@ public class SessionService {
     public List<Session> getAllOpenSessions() {
         return repository.findAllOpenSessions();
     }
+    public List<Session> getAllSessions() { return repository.findAllOrderByEnd(); }
 
     public BigDecimal getTotalForSession(Session s) {
         BigDecimal total = BigDecimal.ZERO;

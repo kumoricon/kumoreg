@@ -19,6 +19,7 @@ import org.kumoricon.site.report.role.RoleReportView;
 import org.kumoricon.site.report.staff.StaffReportView;
 import org.kumoricon.site.report.till.TillReportView;
 import org.kumoricon.site.role.RoleView;
+import org.kumoricon.site.tillsession.TillSessionView;
 import org.kumoricon.site.user.UserView;
 import org.kumoricon.site.utility.closeouttill.CloseOutTillView;
 import org.kumoricon.site.utility.importattendee.ImportAttendeeView;
@@ -71,6 +72,8 @@ public class SiteMenu extends VerticalLayout {
                 buttonFactory("Printers", FontAwesome.DESKTOP, ComputerView.VIEW_NAME));
         addButtonTo(tab1, "manage_orders",
                 buttonFactory("Orders", FontAwesome.FILE, OrderListView.VIEW_NAME));
+        addButtonTo(tab1, "manage_till_sessions",
+                buttonFactory("Till Sessions", FontAwesome.DOLLAR, TillSessionView.VIEW_NAME));
         if (tab1.getComponentCount() > 0) { menu.addComponent(tab1); }
 
         Layout tab2 = new VerticalLayout();
