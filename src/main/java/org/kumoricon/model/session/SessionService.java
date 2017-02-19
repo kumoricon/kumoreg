@@ -16,6 +16,7 @@ import java.util.Set;
 public class SessionService {
     private SessionRepository repository;
     private PaymentRepository paymentRepository;
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
 
     @Autowired
     public SessionService(SessionRepository repository, PaymentRepository paymentRepository) {
@@ -69,9 +70,48 @@ public class SessionService {
         final User user = session.getUser();
         if (user == null) { return "User not found for session " + session; }
 
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
-        final StringBuilder output = new StringBuilder();
+        return buildReportHeader(user) +
+                buildReportDateRange(session) +
+                buildTotalsForSession(session) +
+                buildDetailsForSession(session, Payment.PaymentType.CREDIT) +
+                buildDetailsForSession(session, Payment.PaymentType.CHECK) +
+                buildReportFooter();
+    }
 
+    private String buildTotalsForSession(Session session) {
+        StringBuilder output = new StringBuilder();
+        // Total per payment type
+        for (Payment.PaymentType pt : Payment.PaymentType.values()) {
+            BigDecimal amount = paymentRepository.getTotalByPaymentTypeForSessionId(session.getId(), pt.getValue());
+            if (amount != null) {
+                output.append(String.format("%1$-20s    $%2$10s\n", pt.toString(), amount));
+            }
+        }
+        return output.toString();
+    }
+
+    private String buildDetailsForSession(Session session, Payment.PaymentType paymentType) {
+        StringBuilder output = new StringBuilder();
+
+        List<Payment> payments = paymentRepository.findBySessionAndPaymentType(session, paymentType);
+
+        if (payments.size() > 0) {
+            output.append(String.format("\n%s Details:\n", paymentType));
+            for (Payment payment : payments) {
+                output.append(payment.getPaymentTakenAt().format(DATE_TIME_FORMATTER));
+                output.append("\t");
+                output.append(String.format("%s\t%s\t%s\t$%10s\n",
+                        payment.getPaymentLocation(),
+                        payment.getOrder(),
+                        payment.getAuthNumber(),
+                        payment.getAmount()));
+            }
+        }
+        return output.toString();
+    }
+
+    private static String buildReportHeader(User user) {
+        StringBuilder output = new StringBuilder();
         // Title
         output.append("Till Report\n\n");
 
@@ -83,31 +123,25 @@ public class SessionService {
               .append(" (id: ")
               .append(user.getId())
               .append(")\n");
+        return output.toString();
+    }
 
+    private static String buildReportDateRange(Session session) {
+        StringBuilder output = new StringBuilder();
         // Date range
-        output.append(session.getStart().format(formatter));
+        output.append(session.getStart().format(DATE_TIME_FORMATTER));
         output.append(" - ");
         if (session.getEnd() != null) {
-            output.append(session.getEnd().format(formatter));
+            output.append(session.getEnd().format(DATE_TIME_FORMATTER));
         } else {
             output.append("now");
         }
         output.append("\n");
-
-        // Total per payment type
-        for (Payment.PaymentType pt : Payment.PaymentType.values()) {
-            BigDecimal amount = paymentRepository.getTotalByPaymentTypeForSessionId(session.getId(), pt.getValue());
-            if (amount != null) {
-                output.append(String.format("%1$-20s:    $%2$10s\n", pt.toString(), amount));
-            }
-        }
-
-        output.append("\n\n");
-        output.append("Report generated at ");
-        output.append(LocalDateTime.now().format(formatter));
-
         return output.toString();
     }
 
+    private String buildReportFooter() {
+        return "\n\nReport generated at " + LocalDateTime.now().format(DATE_TIME_FORMATTER);
+    }
 
 }
