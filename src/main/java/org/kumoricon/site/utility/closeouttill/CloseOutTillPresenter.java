@@ -1,6 +1,5 @@
 package org.kumoricon.site.utility.closeouttill;
 
-import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.session.Session;
 import org.kumoricon.model.session.SessionService;
 import org.kumoricon.model.user.User;
@@ -14,16 +13,17 @@ import org.springframework.stereotype.Controller;
 @Controller
 @Scope("request")
 public class CloseOutTillPresenter {
-
-    @Autowired
-    private ReportPrintService reportPrintService;
-
-    @Autowired
-    private SessionService sessionService;
-
+    private final ReportPrintService reportPrintService;
+    private final SessionService sessionService;
     private static final Logger log = LoggerFactory.getLogger(CloseOutTillPresenter.class);
 
-    public void closeTill(CloseOutTillView view, User currentUser) {
+    @Autowired
+    public CloseOutTillPresenter(ReportPrintService reportPrintService, SessionService sessionService) {
+        this.reportPrintService = reportPrintService;
+        this.sessionService = sessionService;
+    }
+
+    void closeTill(CloseOutTillView view, User currentUser) {
         if (currentUser != null) {
             if (sessionService.userHasOpenSession(currentUser)) {
                 Session currentSession = sessionService.getCurrentSessionForUser(currentUser);
