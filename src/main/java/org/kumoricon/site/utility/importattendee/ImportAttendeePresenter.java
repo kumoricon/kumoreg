@@ -5,6 +5,7 @@ import com.vaadin.ui.Upload;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.OrderRepository;
+import org.kumoricon.model.session.SessionService;
 import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class ImportAttendeePresenter {
     private static final Logger log = LoggerFactory.getLogger(ImportAttendeePresenter.class);
 
     @Autowired
-    private AttendeeRepository attendeeRepository;
+    private SessionService sessionService;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -62,7 +63,7 @@ public class ImportAttendeePresenter {
         }
 
         public void uploadSucceeded(Upload.SucceededEvent event) {
-            AttendeeImporterService importer = new AttendeeImporterService(attendeeRepository, orderRepository, badgeRepository, userRepository);
+            AttendeeImporterService importer = new AttendeeImporterService(sessionService, orderRepository, badgeRepository, userRepository);
             view.clearStatus();
             String result;
 

@@ -29,8 +29,6 @@ public class SessionService {
         Session session = repository.getOpenSessionForUserId(user);
         if (session == null) {
             session = repository.save(new Session(user));
-            System.out.println("created new session " + session);
-            System.out.println(session.getUuid());
         }
         return session;
     }

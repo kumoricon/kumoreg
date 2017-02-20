@@ -33,7 +33,7 @@ public class CloseOutTillPresenter {
                 // Note: Currently this displays the report in HTML format, then generates it
                 // again for printing. Could be a performance problem down the road, not clear
                 // yet.
-                view.showData(sessionService.generateTextReportForSession(currentSession));
+                view.showData(sessionService.generateHTMLReportForSession(currentSession));
                 view.notify(reportPrintService.printReport(
                         sessionService.generateTextReportForSession(currentSession),
                         view.getCurrentClientIPAddress()));

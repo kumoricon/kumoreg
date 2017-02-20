@@ -7,6 +7,8 @@ import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.order.Payment;
+import org.kumoricon.model.session.Session;
+import org.kumoricon.model.session.SessionService;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.FieldCleaner;
@@ -17,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 public class AttendeeImporterService {
-    private AttendeeRepository attendeeRepository;
+    private SessionService sessionService;
 
     private OrderRepository orderRepository;
 
@@ -35,8 +38,8 @@ public class AttendeeImporterService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(AttendeeImporterService.class);
 
-    public AttendeeImporterService(AttendeeRepository attendeeRepository, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
-        this.attendeeRepository = attendeeRepository;
+    public AttendeeImporterService(SessionService sessionService, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
+        this.sessionService = sessionService;
         this.orderRepository = orderRepository;
         this.badgeRepository = badgeRepository;
         this.userRepository = userRepository;
@@ -143,14 +146,22 @@ public class AttendeeImporterService {
 
         log.info("Read " + lineNumber + " lines");
         log.info("Setting paid/unpaid status in {} orders", ordersToAdd.size());
+
+        if (sessionService.userHasOpenSession(currentUser)) {
+            log.info("{} closed open session {} before import",
+                    currentUser, sessionService.getCurrentSessionForUser(currentUser));
+        }
+        Session session = sessionService.getCurrentSessionForUser(currentUser);
         for (Order o : ordersToAdd) {
             validatePaidStatus(o);
             if (o.getPaid()) {
                 Payment p = new Payment();
                 p.setAmount(o.getTotalAmount());
                 p.setPaymentType(Payment.PaymentType.PREREG);
+                p.setPaymentTakenAt(LocalDateTime.now());
                 p.setPaymentLocation("kumoricon.org");
                 p.setPaymentTakenBy(currentUser);
+                p.setSession(session);
                 p.setOrder(o);
                 o.addPayment(p);
             }
@@ -161,6 +172,9 @@ public class AttendeeImporterService {
         orderRepository.save(ordersToAdd);
 
         userRepository.save(currentUser);
+
+        log.info("{} closing session used during import");
+        sessionService.closeSessionForUser(currentUser);
 
         log.info("{} done importing data", user);
         return String.format("Imported %s attendees and %s orders", attendeesToAdd.size(), ordersToAdd.size());
