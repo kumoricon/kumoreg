@@ -51,7 +51,7 @@ public class TillReportPresenter {
             output.append(String.format("<td align=\"right\">%s</td>", session.getEnd()));
             output.append(String.format("<td align=\"right\">$%s</td>", sessionService.getTotalForSession(session)));
             output.append(String.format("<td align=\"right\"><pre>%s</pre></td>",
-                    sessionService.buildTotalsForSession(session)));
+                    sessionService.buildTextTotalsForSession(session)));
             output.append("</tr>");
         }
 

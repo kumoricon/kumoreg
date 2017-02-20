@@ -1,19 +1,14 @@
 package org.kumoricon.site.report.export.data;
 
 import com.vaadin.server.StreamResource;
-import org.kumoricon.model.order.OrderRepository;
-import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.session.Session;
 import org.kumoricon.model.session.SessionService;
 import org.kumoricon.model.user.User;
-import org.kumoricon.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,7 +36,7 @@ public class TillTSVExport extends BaseTSVExport implements Export {
         List<Session> sessions = sessionService.getAllSessions();
 
         for (Session session : sessions) {
-            String[] totals = sessionService.buildTotalsForSession(session).split("\n");
+            String[] totals = sessionService.buildTextTotalsForSession(session).split("\n");
             User user = session.getUser();
             for (String total : totals) {
                 sb.append(String.format("%s %s (%s: %s)\t",

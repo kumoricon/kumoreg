@@ -30,19 +30,18 @@ public class CloseOutTillPresenter {
                 log.info("{} closing out till for session {}", currentUser, currentSession);
                 currentSession = sessionService.closeSessionForUser(currentUser);
 
-                String output = sessionService.generateHTMLReportForSession(currentSession);
-                view.showData(output);
-                view.notify(reportPrintService.printHTMLReport(output, view.getCurrentClientIPAddress()));
+                // Note: Currently this displays the report in HTML format, then generates it
+                // again for printing. Could be a performance problem down the road, not clear
+                // yet.
+                view.showData(sessionService.generateTextReportForSession(currentSession));
+                view.notify(reportPrintService.printReport(
+                        sessionService.generateTextReportForSession(currentSession),
+                        view.getCurrentClientIPAddress()));
             } else {
                 log.warn("{} tried to close till but didn't have an open session", view.getCurrentUsername());
                 view.notify("No till session open");
             }
 
         }
-    }
-
-    private static String getPaymentType(Integer typeId) {
-        Payment.PaymentType[] orderTypes = Payment.PaymentType.values();
-        return orderTypes[typeId].toString();
     }
 }

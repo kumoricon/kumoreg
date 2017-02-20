@@ -66,6 +66,23 @@ public class SessionService {
         return total;
     }
 
+    public String generateTextReportForSession(Session session) {
+        if (session == null) { return ""; }
+        final User user = session.getUser();
+        if (user == null) { return "User not found for session " + session; }
+
+        return "<h1>Till Report</h1>" +
+                buildTextReportUserLine(user) +
+                buildTextReportSessionLine(session) +
+                "\n\n" +
+                buildTextTotalsForSession(session) +
+                "Credit Card and Check Transactions\n" +
+                buildTextDetailsForSession(session, Payment.PaymentType.CREDIT) +
+                buildTextDetailsForSession(session, Payment.PaymentType.CHECK) +
+                buildTextReportFooter();
+    }
+
+
     public String generateHTMLReportForSession(Session session) {
         if (session == null) { return ""; }
         final User user = session.getUser();
@@ -99,7 +116,7 @@ public class SessionService {
         return output.toString();
     }
 
-    public String buildTotalsForSession(Session session) {
+    public String buildTextTotalsForSession(Session session) {
         StringBuilder output = new StringBuilder();
         // Total per payment type
         for (Payment.PaymentType pt : Payment.PaymentType.values()) {
@@ -141,6 +158,32 @@ public class SessionService {
         return output.toString();
     }
 
+    private String buildTextDetailsForSession(Session session, Payment.PaymentType paymentType) {
+        StringBuilder output = new StringBuilder();
+
+        List<Payment> payments = paymentRepository.findBySessionAndPaymentType(session, paymentType);
+
+        if (payments.size() > 0) {
+            output.append(String.format("%s Transactions:\n", paymentType));
+            output.append("Payment Taken At\t")
+                    .append("From Computer\t")
+                    .append("Order\t")
+                    .append("Notes/Auth Number\t")
+                    .append("Amount")
+                    .append("\n");
+            for (Payment payment : payments) {
+                output.append(payment.getPaymentTakenAt().format(DATE_TIME_FORMATTER))
+                        .append("\t");
+                output.append(String.format("%s\t%s\t%s\t$%s\n",
+                        payment.getPaymentLocation(),
+                        payment.getOrder(),
+                        payment.getAuthNumber(),
+                        payment.getAmount()));
+            }
+        }
+        return output.toString();
+    }
+
     private static String buildHTMLReportUserLine(User user) {
         return "User: <b>" +
                 user.getFirstName() +
@@ -151,7 +194,17 @@ public class SessionService {
                 ")<br>";
     }
 
-    private static String buildHTMLReportSessionLine(Session session) {
+    private static String buildTextReportUserLine(User user) {
+        return "User: " +
+                user.getFirstName() +
+                " " +
+                user.getLastName() +
+                "(id: " +
+                user.getId() +
+                ")\n";
+    }
+
+    private static String buildTextReportSessionLine(Session session) {
         StringBuilder output = new StringBuilder();
         output.append("Session id ")
                 .append(session.getId())
@@ -164,12 +217,21 @@ public class SessionService {
         } else {
             output.append("now");
         }
-        output.append("<br>");
+        output.append("\n");
         return output.toString();
+    }
+
+
+    private static String buildHTMLReportSessionLine(Session session) {
+        return buildTextReportSessionLine(session) + "<br>";
     }
 
     private String buildHTMLReportFooter() {
         return "<br><p>Report generated at " + LocalDateTime.now().format(DATE_TIME_FORMATTER) + "</p>";
+    }
+
+    private String buildTextReportFooter() {
+        return "Report generated at " + LocalDateTime.now().format(DATE_TIME_FORMATTER) + "\n";
     }
 
 }

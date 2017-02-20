@@ -32,32 +32,4 @@ public class ReportPrintService extends PrintService {
             return("Printing from server not enabled.");
         }
     }
-
-    /**
-     * Prints the given string either as HTML to either appropriate printer name (from
-     * the computers table), or the default printer on the server.
-     * @param reportText HTML of report
-     * @param clientIPAddress Client computer's IP address
-     * @return String Result message
-     */
-    public String printHTMLReport(String reportText, String clientIPAddress) {
-        if (enablePrintingFromServer != null && enablePrintingFromServer) {
-            Computer client = computerService.findComputerByIP(clientIPAddress);
-            // Todo: Handle converting HTML to something that can be printed.
-            ReportPrintFormatter formatter =
-                    new ReportPrintFormatter(reportText, client.getxOffset(), client.getyOffset());
-            try {
-                printDocument(formatter.getStream(), client.getPrinterName());
-                return "Printed to " + client.getPrinterName();
-            } catch (PrintException e) {
-                log.error(String.format("Error printing report for %s: %s",
-                        clientIPAddress, e.getMessage()), e);
-                return("Error printing. No printers found? More information in server logs");
-            }
-        } else {
-            return("Printing from server not enabled.");
-        }
-    }
-
-
 }
