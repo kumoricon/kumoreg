@@ -76,11 +76,13 @@ public class ReportWindow extends Window {
     private StreamResource getDownloadStream() {
         return new StreamResource((StreamResource.StreamSource) () -> {
             String output = lblReport.getValue();
+            if (output == null) { output = "Empty report"; }
             return new ByteArrayInputStream(output.getBytes(Charset.forName("UTF-8")));
         }, generateFilename(title));
     }
 
     private static String generateFilename(String name) {
+        if (name == null) { name = "file"; }
         return name.replace(' ', '_') +
                 "_-_" +
                 LocalDateTime.now().format(DATE_TIME_FORMATTER) +
