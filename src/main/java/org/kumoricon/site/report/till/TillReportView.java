@@ -31,7 +31,10 @@ public class TillReportView extends BaseView implements View {
         setExpandRatio(data, 1f);
         data.setHeightUndefined();
 
-        refresh.addClickListener((Button.ClickListener) clickEvent -> { refresh.setCaption("Refresh"); handler.showAllTills(this); });
+        refresh.addClickListener((Button.ClickListener) clickEvent -> {
+            refresh.setCaption("Refresh");
+            handler.showAllTills(this);
+        });
 
         handler.showAllTills(this);
     }

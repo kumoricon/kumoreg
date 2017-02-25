@@ -48,7 +48,11 @@ public class TillReportPresenter {
                     user.getFirstName(), user.getLastName(), user.getId(), user.getUsername()));
             output.append(String.format("<td align=\"right\">%s</td>", session.getId()));
             output.append(String.format("<td align=\"right\">%s</td>", session.getStart()));
-            output.append(String.format("<td align=\"right\">%s</td>", session.getEnd()));
+            if (session.getEnd() != null) {
+                output.append(String.format("<td align=\"right\">%s</td>", session.getEnd()));
+            } else {
+                output.append("<td align=\"right\">open</td>");
+            }
             output.append(String.format("<td align=\"right\">$%s</td>", sessionService.getTotalForSession(session)));
             output.append(String.format("<td align=\"right\"><pre>%s</pre></td>",
                     sessionService.buildTextTotalsForSession(session)));

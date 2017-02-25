@@ -55,13 +55,7 @@ public class SessionService {
     public List<Session> getAllSessions() { return repository.findAllOrderByEnd(); }
 
     public BigDecimal getTotalForSession(Session s) {
-        BigDecimal total = BigDecimal.ZERO;
-        Set<Payment> payments = paymentRepository.findAllInSession(s);
-
-        for (Payment p : payments) {
-            total = total.add(p.getAmount());
-        }
-        return total;
+        return paymentRepository.getTotalForSessionId(s.getId());
     }
 
     public String generateTextReportForSession(Session session) {

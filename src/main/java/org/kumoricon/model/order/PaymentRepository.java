@@ -16,6 +16,9 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
     @Query(value = "select p from Payment p where p.session = ?1")
     Set<Payment> findAllInSession(Session session);
 
+    @Query(value = "select sum(amount) from payments where session_id = ?1", nativeQuery = true)
+    BigDecimal getTotalForSessionId(Integer id);
+
     @Query(value = "select sum(amount) from payments WHERE session_id = ?1 AND paymentType = ?2", nativeQuery=true)
     BigDecimal getTotalByPaymentTypeForSessionId(Integer id, Integer paymentType);
 
