@@ -1,7 +1,6 @@
 package org.kumoricon.site.utility.importattendee;
 
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.Order;
@@ -26,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class AttendeeImporterService {
+class AttendeeImporterService {
     private SessionService sessionService;
 
     private OrderRepository orderRepository;
@@ -38,7 +37,7 @@ public class AttendeeImporterService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(AttendeeImporterService.class);
 
-    public AttendeeImporterService(SessionService sessionService, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
+    AttendeeImporterService(SessionService sessionService, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
         this.sessionService = sessionService;
         this.orderRepository = orderRepository;
         this.badgeRepository = badgeRepository;
@@ -61,7 +60,7 @@ public class AttendeeImporterService {
         return orders;
     }
 
-    public String importFromTSV(Reader inputReader, User user) throws Exception {
+    String importFromTSV(Reader inputReader, User user) throws Exception {
         log.info("{} starting data import", user);
         BufferedReader TSVFile = new BufferedReader(inputReader);
         String dataRow = TSVFile.readLine(); // Skip the header row
