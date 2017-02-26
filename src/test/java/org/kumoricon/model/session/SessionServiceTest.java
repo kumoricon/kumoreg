@@ -31,16 +31,16 @@ import static org.junit.Assert.*;
 public class SessionServiceTest {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PaymentRepository paymentRepository;
+    private PaymentRepository paymentRepository;
 
     @Autowired
-    SessionService sessionService;
+    private SessionService sessionService;
 
     @Autowired
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     private static boolean setUpIsDone = false;
 
@@ -94,7 +94,6 @@ public class SessionServiceTest {
 
     @Test
     public void getAllOpenSessions() throws Exception {
-        User user = userRepository.findOne(2);
         List<Session> sessions = sessionService.getAllOpenSessions();
         assertEquals(3, sessions.size());
     }
@@ -120,10 +119,12 @@ public class SessionServiceTest {
         List<Payment> payments = new ArrayList<>();
         for (User user : users) {
             Session s = sessionService.getCurrentSessionForUser(user);
-            Payment p = new Payment();
+
             Order o = new Order();
             o.setOrderId(Order.generateOrderId());
+            o.setOrderTakenByUser(user);
             o = orderRepository.save(o);
+            Payment p = new Payment();
             p.setAmount(BigDecimal.TEN);
             p.setSession(s);
             p.setPaymentTakenBy(user);
@@ -136,13 +137,16 @@ public class SessionServiceTest {
             p.setSession(s);
             p.setPaymentTakenBy(user);
             p.setPaymentTakenAt(LocalDateTime.now());
+
             o = new Order();
             o.setOrderId(Order.generateOrderId());
+            o.setOrderTakenByUser(user);
             o = orderRepository.save(o);
             p.setOrder(o);
             p.setAuthNumber("1234");
             p.setPaymentType(Payment.PaymentType.CHECK);
             payments.add(p);
+
             p = new Payment();
             p.setAmount(BigDecimal.valueOf(5L));
             p.setSession(s);
@@ -151,6 +155,7 @@ public class SessionServiceTest {
             p.setAuthNumber("1234");
             o = new Order();
             o.setOrderId(Order.generateOrderId());
+            o.setOrderTakenByUser(user);
             o = orderRepository.save(o);
             p.setOrder(o);
             p.setPaymentType(Payment.PaymentType.CREDIT);
