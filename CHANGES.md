@@ -22,6 +22,7 @@ Change Log
     - Changed User Admin screen to use table
     - Moved till sessions to their own table, rebuilt till report
     - Added till session management/reporting screen (can close tills for other users with proper right)
+    - Only create example users when trainingMode is enabled in configuration file
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

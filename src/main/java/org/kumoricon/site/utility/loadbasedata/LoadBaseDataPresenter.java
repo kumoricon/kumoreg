@@ -13,6 +13,7 @@ import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
 import java.util.HashMap;
@@ -28,6 +29,10 @@ public class LoadBaseDataPresenter {
     private final RightRepository rightRepository;
 
     private final BlacklistRepository blacklistRepository;
+
+    @Value("${kumoreg.trainingMode}")
+    private boolean trainingMode;
+
 
     private static final Logger log = LoggerFactory.getLogger(LoadBaseDataPresenter.class);
 
@@ -225,6 +230,10 @@ public class LoadBaseDataPresenter {
     }
 
     private void addUsers(StringBuilder results) {
+        if (!trainingMode) {
+            results.append("trainingMode not set in application configuration, skipping example user creation\n");
+            return;
+        }
         results.append("Creating users\n");
         String[][] userList = {
                               {"Staff", "User", "Staff"},
