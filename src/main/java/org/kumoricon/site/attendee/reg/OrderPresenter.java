@@ -83,6 +83,10 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
 
     public void savePayment(OrderView view, Payment payment) {
         Order order = view.getOrder();
+
+        if (Payment.PaymentType.PREREG.equals(payment.getPaymentType()) && !view.currentUserHasRight("import_pre_reg_data")) {
+            throw new ValueException("Only users with import_pre_reg_data right can select the PreReg payment type");
+        }
         PaymentValidator.validate(payment);
         // Only update user, time and location if they're null - otherwise someone could be saving
         // changes to an existing payment
