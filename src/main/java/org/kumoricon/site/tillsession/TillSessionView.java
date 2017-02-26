@@ -60,6 +60,7 @@ public class TillSessionView extends BaseView implements View {
         sessionTable.setNullSelectionAllowed(false);
         sessionTable.setImmediate(true);
         sessionTable.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        sessionTable.addGeneratedColumn("manage", new CloseButtonColumnGenerator());
 
         addComponent(pageLayout);
 
@@ -87,12 +88,37 @@ public class TillSessionView extends BaseView implements View {
         Object[] sortBy = {sessionTable.getSortContainerPropertyId()};
         boolean[] sortOrder = {sessionTable.isSortAscending()};
         sessionTable.setContainerDataSource(new BeanItemContainer<>(Session.class, sessions));
-        sessionTable.setVisibleColumns("id", "user", "start", "end", "open");
-        sessionTable.setColumnHeaders("Id", "User", "Start Time", "End Time", "Open");
+        sessionTable.setVisibleColumns("id", "user", "start", "end", "open", "manage");
+        sessionTable.setColumnHeaders("Id", "User", "Start Time", "End Time", "Open", "");
         sessionTable.setConverter("user", new UserToStringConverter());
         sessionTable.setConverter("start", new StringToLocalDateTimeConverter());
         sessionTable.setConverter("end", new StringToLocalDateTimeConverter());
         sessionTable.sort(sortBy, sortOrder);
+    }
+
+    class CloseButtonColumnGenerator implements Table.ColumnGenerator {
+        public Component generateCell(Table source, Object item, Object columnId) {
+            Session session = (Session)item;
+
+            if (session.isOpen()) {
+                Button button = new Button("Close Session");
+                button.setData(session.getId());
+                button.addClickListener(new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent clickEvent) {
+                        Integer sessionId = (Integer)clickEvent.getButton().getData();
+                        closeSessionClicked(sessionId);
+                    }
+                });
+                return button;
+            }
+            return null;
+        }
+    }
+
+    private void closeSessionClicked(Integer sessionId) {
+        handler.closeSession(this, sessionId);
+        handler.showOpenTillSessionList(this);
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }

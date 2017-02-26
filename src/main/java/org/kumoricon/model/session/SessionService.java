@@ -41,12 +41,25 @@ public class SessionService {
 
     public Session closeSessionForUser(User user) {
         Session session = repository.getOpenSessionForUserId(user);
+        return closeSession(session.getId());
+    }
+
+    public Session closeSession(Session session) {
         if (session != null) {
-            session.setEnd(LocalDateTime.now());
-            session.setOpen(false);
-            repository.save(session);
+            if (session.isOpen()) {
+                session.setEnd(LocalDateTime.now());
+                session.setOpen(false);
+                repository.save(session);
+            } else {
+                throw new RuntimeException(String.format("Session %s is already closed", session));
+            }
         }
         return session;
+    }
+
+    public Session closeSession(Integer id) {
+        Session session = repository.findOne(id);
+        return closeSession(session);
     }
 
     public List<Session> getAllOpenSessions() {
