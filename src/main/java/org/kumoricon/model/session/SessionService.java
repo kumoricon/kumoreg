@@ -1,5 +1,6 @@
 package org.kumoricon.model.session;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.order.PaymentRepository;
 import org.kumoricon.model.user.User;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 public class SessionService {
@@ -25,22 +26,33 @@ public class SessionService {
     }
 
     public Session getCurrentSessionForUser(User user) {
-        if (user == null) { return null; }
-        Session session = repository.getOpenSessionForUserId(user);
+        if (user == null) { throw new ValueException("getCurrentSessionForUser called with null user"); }
+        Session session = repository.getOpenSessionForUser(user);
         if (session == null) {
             session = repository.save(new Session(user));
         }
         return session;
     }
 
+    public Session getNewSessionForUser(User user) {
+        if (user == null) { throw new ValueException("getNewSessionForUser called with null user"); }
+        Session session = repository.getOpenSessionForUser(user);
+        if (session != null) {
+            closeSession(session);
+        }
+        session = repository.save(new Session(user));
+        return session;
+    }
+
     public boolean userHasOpenSession(User user) {
-        if (user == null) { return false; }
-        Session session = repository.getOpenSessionForUserId(user);
+        if (user == null) { throw new ValueException("userHasOpenSession called with null user"); }
+        Session session = repository.getOpenSessionForUser(user);
         return session != null;
     }
 
     public Session closeSessionForUser(User user) {
-        Session session = repository.getOpenSessionForUserId(user);
+        if (user == null) { throw new ValueException("closeSessionForUser called with null user"); }
+        Session session = repository.getOpenSessionForUser(user);
         return closeSession(session.getId());
     }
 
@@ -49,7 +61,7 @@ public class SessionService {
             if (session.isOpen()) {
                 session.setEnd(LocalDateTime.now());
                 session.setOpen(false);
-                repository.save(session);
+                session = repository.save(session);
             } else {
                 throw new RuntimeException(String.format("Session %s is already closed", session));
             }

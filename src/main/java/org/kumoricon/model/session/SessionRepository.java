@@ -12,7 +12,7 @@ import java.util.List;
 interface SessionRepository extends JpaRepository<Session, Integer> {
 
     @Query(value = "select s from Session s where s.user = ?1 AND s.open = true")
-    Session getOpenSessionForUserId(User user);
+    Session getOpenSessionForUser(User user);
 
     @Query(value = "select s from Session s where s.open = true")
     List<Session> findAllOpenSessions();

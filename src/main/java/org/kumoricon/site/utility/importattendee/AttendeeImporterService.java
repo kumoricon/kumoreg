@@ -151,7 +151,7 @@ class AttendeeImporterService {
             log.info("{} closed open session {} before import",
                     currentUser, sessionService.getCurrentSessionForUser(currentUser));
         }
-        Session session = sessionService.getCurrentSessionForUser(currentUser);
+        Session session = sessionService.getNewSessionForUser(currentUser);
         for (Order o : ordersToAdd) {
             validatePaidStatus(o);
             if (o.getPaid()) {
