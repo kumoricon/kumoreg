@@ -71,6 +71,11 @@ public class PaymentWindow extends Window {
         }
     }
 
+    public PaymentWindow(PaymentHandler handler, String amount) {
+        this(handler);
+        this.amount.setValue(amount);
+    }
+
     public PaymentWindow(PaymentHandler handler) {
         super("Payment");
         this.handler = handler;

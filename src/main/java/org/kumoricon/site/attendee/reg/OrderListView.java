@@ -32,9 +32,9 @@ public class OrderListView extends BaseView implements View {
     private static final int PAGESIZE = 50;
 
     private MTable<Order> list = new MTable<>(Order.class)
-            .withProperties("id", "orderId", "paid", "paymentTakenByUser", "paidAt")
-            .withColumnHeaders("id", "Order ID", "Paid", "Payment Taken By", "Paid At")
-            .setSortableProperties("id", "orderIdl", "paid", "paymenttakenByUser", "paidAt")
+            .withProperties("id", "orderId", "paid", "orderTakenByUser")
+            .withColumnHeaders("id", "Order ID", "Paid", "Order Taken By")
+            .setSortableProperties("id", "orderIdl", "paid", "orderTakenByUser")
             .withFullWidth()
             .withFullHeight()
             .withRowClickListener(rowClick -> showOrder(rowClick.getRow()));

@@ -65,6 +65,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     public void createNewOrder(OrderView view) {
         Order order = new Order();
         order.setOrderId(Order.generateOrderId());
+        order.setOrderTakenByUser(view.getCurrentUser());
         log.info("{} created new order {}", view.getCurrentUser(), order);
         order = orderRepository.save(order);
         view.navigateTo(OrderView.VIEW_NAME + "/" + order.getId());

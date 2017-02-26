@@ -34,6 +34,10 @@ public class Order extends Record {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order")
     private Set<Payment> payments;
 
+    @NotNull
+    @ManyToOne
+    private User orderTakenByUser;
+
     private String notes;
 
     public Order() {
@@ -75,6 +79,9 @@ public class Order extends Record {
     public void removeAttendee(Attendee attendee) {
         this.attendeeList.remove(attendee);
     }
+
+    public User getOrderTakenByUser() { return orderTakenByUser; }
+    public void setOrderTakenByUser(User orderTakenByUser) { this.orderTakenByUser = orderTakenByUser; }
 
     public Set<Payment> getPayments() {
         return payments;

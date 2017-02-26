@@ -129,6 +129,7 @@ class AttendeeImporterService {
                 currentOrder.addAttendee(attendee);
             } else {
                 Order o = new Order();
+                o.setOrderTakenByUser(currentUser);
                 o.setOrderId(dataArray[19]);
                 o.addAttendee(attendee);
                 orders.put(o.getOrderId(), o);

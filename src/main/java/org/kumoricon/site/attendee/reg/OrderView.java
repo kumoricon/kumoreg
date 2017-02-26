@@ -124,7 +124,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
     }
 
     private void showPaymentWindow() {
-        PaymentWindow window = new PaymentWindow(this);
+        PaymentWindow window = new PaymentWindow(this, orderTotal.getValue());
         showWindow(window);
     }
 
