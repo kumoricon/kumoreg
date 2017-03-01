@@ -1,6 +1,5 @@
 package org.kumoricon.service.validate;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.junit.Test;
 import org.kumoricon.model.order.Payment;
 
@@ -10,7 +9,7 @@ import static org.junit.Assert.*;
 
 
 public class PaymentValidatorTest {
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void validateCreditFails() throws Exception {
         Payment p = testPayment();
         p.setPaymentType(Payment.PaymentType.CREDIT);
@@ -22,10 +21,10 @@ public class PaymentValidatorTest {
         Payment p = testPayment();
         p.setPaymentType(Payment.PaymentType.CREDIT);
         p.setAuthNumber("12345");
-        assertTrue(PaymentValidator.validate(p));
+        PaymentValidator.validate(p);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void validateCheckFails() throws Exception {
         Payment p = testPayment();
         p.setPaymentType(Payment.PaymentType.CHECK);
@@ -37,10 +36,10 @@ public class PaymentValidatorTest {
         Payment p = testPayment();
         p.setPaymentType(Payment.PaymentType.CHECK);
         p.setAuthNumber("12345");
-        assertTrue(PaymentValidator.validate(p));
+        PaymentValidator.validate(p);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void validateAmountFailsNull() throws Exception {
         Payment p = testPayment();
         p.setPaymentType(Payment.PaymentType.CHECK);
@@ -48,7 +47,7 @@ public class PaymentValidatorTest {
         PaymentValidator.validate(p);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void validateAmountFailsNegative() throws Exception {
         Payment p = testPayment();
         p.setPaymentType(Payment.PaymentType.CHECK);
@@ -61,7 +60,7 @@ public class PaymentValidatorTest {
         Payment p = testPayment();
         p.setPaymentType(Payment.PaymentType.CHECK);
         p.setAuthNumber("12345");
-        assertTrue(PaymentValidator.validate(p));
+        PaymentValidator.validate(p);
     }
 
 
@@ -71,5 +70,4 @@ public class PaymentValidatorTest {
         p.setAmount(BigDecimal.TEN);
         return p;
     }
-
 }

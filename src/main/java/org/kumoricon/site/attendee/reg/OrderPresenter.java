@@ -15,6 +15,7 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.service.validate.PaymentValidator;
+import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.BadgePrintingPresenter;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import sun.security.validator.ValidatorException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -88,7 +90,12 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         if (Payment.PaymentType.PREREG.equals(payment.getPaymentType()) && !view.currentUserHasRight("import_pre_reg_data")) {
             throw new ValueException("Only users with import_pre_reg_data right can select the PreReg payment type");
         }
-        PaymentValidator.validate(payment);
+        try {
+            PaymentValidator.validate(payment);
+        } catch (ValidationException e) {
+            view.notify(e.getMessage());
+            return;
+        }
         // Only update user, time and location if they're null - otherwise someone could be saving
         // changes to an existing payment
         if (payment.getPaymentTakenBy() == null) {
@@ -263,13 +270,13 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         orderComplete(view, order);
     }
 
-    public Boolean validate(Attendee attendee) throws ValueException {
+    public void validate(Attendee attendee) throws ValidationException {
         if (attendee.isMinor()) {   // Move parent form received in to attendeeValidator???
             if (attendee.getParentFormReceived() == null || !attendee.getParentFormReceived()) {
                 throw new ValueException("Error: Parental consent form has not been received");
             }
         }
-        return attendeeValidator.validate(attendee);
+        attendeeValidator.validate(attendee);
     }
 
     @Override

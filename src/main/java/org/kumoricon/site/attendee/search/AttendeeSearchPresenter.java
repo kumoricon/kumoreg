@@ -12,6 +12,7 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.AttendeeSearchService;
 import org.kumoricon.service.validate.AttendeeValidator;
+import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.*;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
@@ -74,7 +75,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
             window.close();
             view.refresh();
-        } catch (ValueException e) {
+        } catch (ValidationException e) {
             log.error("{} tried to save {} and got error {}",
                     window.getCurrentUser(), attendee, e.getMessage());
             view.notifyError(e.getMessage());
@@ -96,7 +97,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             attendee = attendeeRepository.save(attendee);
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
             view.refresh();
-        } catch (ValueException e) {
+        } catch (ValidationException e) {
             view.notifyError(e.getMessage());
             log.error("{} tried to save {} and got error {}", view.getCurrentUsername(), attendee, e.getMessage());
             return;
@@ -193,7 +194,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     private Boolean validateBeforeCheckIn(AttendeeDetailWindow window, Attendee attendee) {
         try {
             attendeeValidator.validate(attendee);
-        } catch (ValueException e) {
+        } catch (ValidationException e) {
             view.notifyError(e.getMessage());
             return false;
         }

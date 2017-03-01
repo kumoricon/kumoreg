@@ -11,6 +11,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
+import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.attendee.AddNoteHandler;
 import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
@@ -62,7 +63,7 @@ public class AttendeeWindow extends Window implements DetailFormHandler, AddNote
                 handler.validate(attendee);
                 handler.addAttendeeToOrder(parentView, attendee);
                 close();
-            } catch (ValueException e) {
+            } catch (ValidationException e) {
                 parentView.notifyError(e.getMessage());
             }
         });

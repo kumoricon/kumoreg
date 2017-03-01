@@ -23,31 +23,31 @@ public class AttendeeValidatorTest {
     }
 
     @Test
-    public void validateAllFieldsPresent() {
-        assertTrue(validator.validate(attendee));
+    public void validateAllFieldsPresent() throws Exception {
+        validator.validate(attendee);
     }
 
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void firstNameMissing() throws Exception {
         attendee.setFirstName(null);
         validator.validate(attendee);
     }
 
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void lastNameMissing() throws Exception {
         attendee.setLastName(null);
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void badgeMissing() throws Exception {
         attendee.setBadge(null);
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void phoneAndEmailMissing() throws Exception {
         // By default, either phone OR email is required
         attendee.setPhoneNumber(null);
@@ -60,10 +60,10 @@ public class AttendeeValidatorTest {
         validator.requirePhoneAndEmail = false;
         attendee.setPhoneNumber(null);
         attendee.setEmail(null);
-        assertTrue(validator.validate(attendee));
+        validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void phoneMissing() throws Exception {
         attendee.setPhoneNumber(null);
         validator.validate(attendee);
@@ -72,40 +72,40 @@ public class AttendeeValidatorTest {
     @Test
     public void emailMissing() throws Exception {
         attendee.setEmail(null);
-        assertTrue(validator.validate(attendee));
+        validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void emergencyContactMissing() throws Exception {
         attendee.setEmergencyContactFullName(null);
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void emergencyPhoneMissing() throws Exception {
         attendee.setEmergencyContactPhone(null);
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void birthdateMissing() throws Exception {
         attendee.setBirthDate(null);
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void birthdateBefore1900() throws Exception {
         attendee.setBirthDate(LocalDate.of(1899, 12, 31));
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void birthdateAfterToday() throws Exception {
         attendee.setBirthDate(LocalDate.now().plusDays(1L));
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void minorMissingParentContact() throws Exception {
         attendee.setParentFullName(null);
         attendee.setParentPhone("123-123-1234");
@@ -113,7 +113,7 @@ public class AttendeeValidatorTest {
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void minorMissingParentPhone() throws Exception {
         attendee.setParentFullName("Mom");
         attendee.setParentPhone(null);
@@ -142,7 +142,7 @@ public class AttendeeValidatorTest {
         validator.validate(attendee);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = ValidationException.class)
     public void paidNegativeAmount() throws Exception {
         attendee.setPaidAmount(new BigDecimal(-1));
         validator.validate(attendee);
