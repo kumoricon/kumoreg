@@ -18,7 +18,7 @@ import java.io.InputStream;
 public class ReportPrintFormatter implements StreamResource.StreamSource {
     private final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-    private PDFont font = PDType1Font.COURIER;
+    private final PDFont font = PDType1Font.COURIER;
     private final Integer fontSize = 11;
     private Integer linesPerPage = 1;   // Will be recalculated below
 

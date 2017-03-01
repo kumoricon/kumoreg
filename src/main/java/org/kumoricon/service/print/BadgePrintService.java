@@ -27,7 +27,7 @@ public class BadgePrintService extends PrintService {
      * @throws PrintException Printer error
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset) throws PrintException {
-        String printerName = "";
+        String printerName;
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
@@ -50,7 +50,7 @@ public class BadgePrintService extends PrintService {
      * @throws PrintException Printer Error
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) throws PrintException {
-        String printerName = "";
+        String printerName;
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =

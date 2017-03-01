@@ -85,18 +85,15 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
      * @param y Bottom of text, in points (1/72 inch)
      * @param text Text to draw
      * @param optOrig Resize Options
-     * @throws IOException
+     * @throws IOException Error generating PDF
      */
     private void drawStringWithResizing(PDPageContentStream contentStream, float x, float y, String text, ResizeOptions optOrig) throws IOException {
         ResizeOptions opt = new ResizeOptions(optOrig);
         float textSize = opt.font.getStringWidth(text); // in thousandths of font pt size.
         float size = opt.size;
 
-        // Calculate the correct font size, based on our restrictions
-        if (textSize * (size/1000.0f) <= opt.maxTextWidth) {
-            // Great! Fits already
-        }
-        else{
+        // If text size is greater than maximum width, recalculate the correct font size, based on our restrictions
+        if (textSize * (size/1000.0f) > opt.maxTextWidth) {
             size = opt.maxTextWidth * 1000.0f / textSize;
             if (size < opt.minFontSize) {
                 // We have utterly failed to fit the text with the minimum font size,

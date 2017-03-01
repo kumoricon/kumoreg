@@ -17,11 +17,11 @@ import java.util.List;
  * Base class for implementing services that will send data to a printer installed on the server
  */
 public abstract class PrintService {
-    protected static final Logger log = LoggerFactory.getLogger(PrintService.class);
+    static final Logger log = LoggerFactory.getLogger(PrintService.class);
     @Value("${kumoreg.printing.enablePrintingFromServer}")
     protected Boolean enablePrintingFromServer;
     @Autowired
-    protected ComputerService computerService;
+    ComputerService computerService;
 
     /**
      * Prints the given inputStream to the printer with the given name, or the default printer
@@ -30,7 +30,7 @@ public abstract class PrintService {
      * @param inputStream Data stream (Usually PDF formatted)
      * @param printerName Destination printer name (case insensitive)
      */
-    public void printDocument(InputStream inputStream, String printerName) throws PrintException {
+    void printDocument(InputStream inputStream, String printerName) throws PrintException {
         javax.print.PrintService printService = findPrinter(printerName);
 
         DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
@@ -48,7 +48,7 @@ public abstract class PrintService {
      * @return PrintService
      * @throws PrintException Exception if printer not found and default printer isn't set
      */
-    public javax.print.PrintService findPrinter(String name) throws PrintException {
+    private javax.print.PrintService findPrinter(String name) throws PrintException {
         name = name.toLowerCase().trim();
         javax.print.PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
 
