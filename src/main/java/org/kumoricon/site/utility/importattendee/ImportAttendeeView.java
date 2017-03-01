@@ -18,11 +18,15 @@ public class ImportAttendeeView extends BaseView implements View {
     public static final String VIEW_NAME = "importAttendees";
     public static final String REQUIRED_RIGHT = "import_pre_reg_data";
 
-    @Autowired
-    private ImportAttendeePresenter handler;
+    private final ImportAttendeePresenter handler;
 
-    private Label instructions = new Label("Upload a Tab-separated file containing preregistered attendees:");
-    private TextArea status = new TextArea("");
+    private final Label instructions = new Label("Upload a Tab-separated file containing preregistered attendees:");
+    private final TextArea status = new TextArea("");
+
+    @Autowired
+    public ImportAttendeeView(ImportAttendeePresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {
@@ -40,10 +44,6 @@ public class ImportAttendeeView extends BaseView implements View {
         status.setEnabled(false);
         addComponent(status);
         setExpandRatio(status, 1.0f);
-    }
-
-    public void setHandler(ImportAttendeePresenter presenter) {
-        this.handler = presenter;
     }
 
     public void appendStatus(String s) {

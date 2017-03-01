@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
 
 @SpringView(name = CloseOutTillView.VIEW_NAME)
 public class CloseOutTillView extends BaseView implements View {
-    public static final String VIEW_NAME = "closeouttill";
+    public static final String VIEW_NAME = "closeOutTill";
     public static final String REQUIRED_RIGHT = "at_con_registration";
 
     private final Label description = new Label("Print cash report when you are ready to turn in your till");

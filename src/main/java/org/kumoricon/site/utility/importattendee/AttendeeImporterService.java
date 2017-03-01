@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.Set;
 
 class AttendeeImporterService {
-    private SessionService sessionService;
+    private final SessionService sessionService;
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    private BadgeRepository badgeRepository;
+    private final BadgeRepository badgeRepository;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(AttendeeImporterService.class);

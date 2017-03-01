@@ -76,7 +76,7 @@ public class TestBadgePresenter implements PrintBadgeHandler {
         view.showPrintBadgeWindow(attendeeList);
     }
 
-    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
+    private void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
         if (attendeeList == null) { return; }
         printBadges((BaseView) view, attendeeList, xOffset, yOffset);
         view.showPrintBadgeWindow(attendeeList);

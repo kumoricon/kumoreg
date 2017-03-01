@@ -18,7 +18,7 @@ import java.util.List;
 
 @SpringView(name = TestBadgeView.VIEW_NAME)
 public class TestBadgeView extends BaseView implements View, AttendeePrintView {
-    public static final String VIEW_NAME = "testbadge";
+    public static final String VIEW_NAME = "testBadge";
     public static final String REQUIRED_RIGHT = null;
 
     private final TestBadgePresenter handler;
@@ -55,9 +55,8 @@ public class TestBadgeView extends BaseView implements View, AttendeePrintView {
         display.setTabIndex(4);
         addComponent(display);
         display.focus();
-        display.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.showAttendeeBadgeWindow(this, (Integer) numberOfBadges.getValue(), getXOffset(), getYOffset());
-        });
+        display.addClickListener((Button.ClickListener) clickEvent ->
+                handler.showAttendeeBadgeWindow(this, (Integer) numberOfBadges.getValue(), getXOffset(), getYOffset()));
 
         Label notes = new Label("Note: Changed offsets will not be saved. Set them in Administration > Computers.");
         addComponent(notes);

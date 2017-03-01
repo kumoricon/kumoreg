@@ -2,7 +2,6 @@ package org.kumoricon.site.utility.importattendee;
 
 
 import com.vaadin.ui.Upload;
-import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.session.SessionService;
@@ -23,21 +22,19 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class ImportAttendeePresenter {
     private static final Logger log = LoggerFactory.getLogger(ImportAttendeePresenter.class);
 
-    @Autowired
-    private SessionService sessionService;
-
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private BadgeRepository badgeRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    private final SessionService sessionService;
+    private final OrderRepository orderRepository;
+    private final BadgeRepository badgeRepository;
+    private final UserRepository userRepository;
     private ImportAttendeeView view;
 
-    public ImportAttendeePresenter() {}
+    @Autowired
+    public ImportAttendeePresenter(SessionService sessionService, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
+        this.sessionService = sessionService;
+        this.orderRepository = orderRepository;
+        this.badgeRepository = badgeRepository;
+        this.userRepository = userRepository;
+    }
 
     public UploadReceiver getUploadReceiver() {
         return new UploadReceiver();
@@ -91,7 +88,6 @@ public class ImportAttendeePresenter {
         }
     }
 
-    public ImportAttendeeView getView() { return view; }
     public void setView(ImportAttendeeView view) { this.view = view; }
 }
 

@@ -20,10 +20,10 @@ public class LoadBaseDataView extends BaseView implements View {
     @Autowired
     private LoadBaseDataPresenter handler;
 
-    private Label description = new Label("Load base rights, roles, and example users");
-    private Button loadData = new Button("Load Full Data (Weekend)");
-    private Button loadLiteData = new Button("Load Lite Data (Single Day)");
-    private TextArea results = new TextArea();
+    private final Label description = new Label("Load base rights, roles, and example users");
+    private final Button loadData = new Button("Load Full Data (Weekend)");
+    private final Button loadLiteData = new Button("Load Lite Data (Single Day)");
+    private final TextArea results = new TextArea();
 
     @PostConstruct
     void init() {
