@@ -4,7 +4,6 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
@@ -25,9 +24,9 @@ public class TillSessionView extends BaseView implements View {
 
     private final TillSessionPresenter handler;
 
-    private Table sessionTable = new Table();
-    private Button btnShowOpen = new Button("Show Open Sessions");
-    private Button btnShowAll = new Button("Show All");
+    private final Table sessionTable = new Table();
+    private final Button btnShowOpen = new Button("Show Open Sessions");
+    private final Button btnShowAll = new Button("Show All");
 
     @Autowired
     public TillSessionView(TillSessionPresenter handler) {
@@ -79,11 +78,6 @@ public class TillSessionView extends BaseView implements View {
         handler.showOpenTillSessionList(this);
     }
 
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        super.enter(viewChangeEvent);
-    }
-
     public void afterSuccessfulFetch(List<Session> sessions) {
         Object[] sortBy = {sessionTable.getSortContainerPropertyId()};
         boolean[] sortOrder = {sessionTable.isSortAscending()};
@@ -103,12 +97,9 @@ public class TillSessionView extends BaseView implements View {
             if (session.isOpen()) {
                 Button button = new Button("Close Session");
                 button.setData(session.getId());
-                button.addClickListener(new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent clickEvent) {
-                        Integer sessionId = (Integer)clickEvent.getButton().getData();
-                        closeSessionClicked(sessionId);
-                    }
+                button.addClickListener((Button.ClickListener) clickEvent -> {
+                    Integer sessionId = (Integer)clickEvent.getButton().getData();
+                    closeSessionClicked(sessionId);
                 });
                 return button;
             }
