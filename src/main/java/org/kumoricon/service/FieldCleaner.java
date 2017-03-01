@@ -16,11 +16,11 @@ public class FieldCleaner {
     public static String cleanPhoneNumber(String phoneNumber) {
         if (phoneNumber == null) { return null; }
         String output;
-        String p = phoneNumber.replaceAll("[^\\+0-9]", "");
+        String p = phoneNumber.replaceAll("[^+0-9]", "");
         if (p.matches("\\d{10}")) {
             output = "(" + p.substring(0, 3) + ") " + p.substring(3, 6) + "-" + p.substring(6, 10);
         } else {
-            output = phoneNumber.replaceAll("[^\\+0-9x -]", "").trim();
+            output = phoneNumber.replaceAll("[^+0-9x -]", "").trim();
             output = output.replaceAll("\\s\\s+", " ");                 // Multiple spaces to single space
         }
         if (!phoneNumber.equals(output)) {

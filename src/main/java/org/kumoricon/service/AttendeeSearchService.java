@@ -13,10 +13,8 @@ import java.util.List;
 
 @Service
 public class AttendeeSearchService {
-    private AttendeeRepository attendeeRepository;
-    private AttendeeSearchRepository searchRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(AttendeeSearchService.class);
+    private final AttendeeRepository attendeeRepository;
+    private final AttendeeSearchRepository searchRepository;
 
     @Autowired
     public AttendeeSearchService(AttendeeRepository attendeeRepository, AttendeeSearchRepository searchRepository) {
