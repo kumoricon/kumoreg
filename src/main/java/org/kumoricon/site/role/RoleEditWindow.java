@@ -14,20 +14,20 @@ import org.kumoricon.model.role.Role;
 import java.util.List;
 import java.util.Set;
 
-public class RoleEditWindow extends Window {
+class RoleEditWindow extends Window {
 
-    private TextField name = FieldFactory.createTextField("Name");
-    private TwinColSelect rightsList = new TwinColSelect("Rights");
+    private final TextField name = FieldFactory.createTextField("Name");
+    private final TwinColSelect rightsList = new TwinColSelect("Rights");
 
-    private Button btnSave = new Button("Save");
-    private Button btnCancel = new Button("Cancel");
-    private BeanFieldGroup<Role> roleBeanFieldGroup = new BeanFieldGroup<>(Role.class);
+    private final Button btnSave = new Button("Save");
+    private final Button btnCancel = new Button("Cancel");
+    private final BeanFieldGroup<Role> roleBeanFieldGroup = new BeanFieldGroup<>(Role.class);
 
 
-    private RolePresenter handler;
-    private RoleView parentView;
+    private final RolePresenter handler;
+    private final RoleView parentView;
 
-    public RoleEditWindow(RoleView parentView, RolePresenter rolePresenter, List<Right> rights) {
+    RoleEditWindow(RoleView parentView, RolePresenter rolePresenter, List<Right> rights) {
         super("Edit Role");
         this.handler = rolePresenter;
         this.parentView = parentView;
@@ -75,7 +75,7 @@ public class RoleEditWindow extends Window {
     }
 
 
-    public Role getRole() {
+    private Role getRole() {
         BeanItem<Role> roleBean = roleBeanFieldGroup.getItemDataSource();
         Role role = roleBean.getBean();
         role.clearRights();
@@ -83,16 +83,13 @@ public class RoleEditWindow extends Window {
         return role;
     }
 
-    public void showRole(Role role) {
+    void showRole(Role role) {
         roleBeanFieldGroup.setItemDataSource(role);
         for (Right r : role.getRights()) {
             rightsList.select(r);
         }
         name.selectAll();
     }
-
-    public RolePresenter getHandler() { return handler; }
-    public void setHandler(RolePresenter handler) { this.handler = handler; }
 
     public RoleView getParentView() { return parentView; }
 }

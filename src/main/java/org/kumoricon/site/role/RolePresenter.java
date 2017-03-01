@@ -13,33 +13,25 @@ import java.util.List;
 
 @Controller
 public class RolePresenter {
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private RightRepository rightRepository;
-
+    private final RoleRepository roleRepository;
+    private final RightRepository rightRepository;
     private static final Logger log = LoggerFactory.getLogger(RolePresenter.class);
 
 
-    public RolePresenter() {
+    @Autowired
+    public RolePresenter(RoleRepository roleRepository, RightRepository rightRepository) {
+        this.roleRepository = roleRepository;
+        this.rightRepository = rightRepository;
     }
 
-    public void roleSelected(RoleView view, Role role) {
+    void roleSelected(RoleView view, Role role) {
         if (role != null) {
             view.navigateTo(RoleView.VIEW_NAME + "/" + role.getId().toString());
             view.showRole(role, rightRepository.findAll());
         }
     }
 
-    public void roleSelected(RoleView view, Integer id) {
-        if (id != null) {
-            Role role = roleRepository.findOne(id);
-            roleSelected(view, role);
-        }
-    }
-
-    public void addNewRole(RoleView view) {
+    void addNewRole(RoleView view) {
         view.navigateTo(RoleView.VIEW_NAME);
         Role role = new Role();
         view.showRole(role, rightRepository.findAll());
@@ -53,7 +45,7 @@ public class RolePresenter {
         view.clearSelection();
     }
 
-    public void saveRole(RoleEditWindow window, Role role) {
+    void saveRole(RoleEditWindow window, Role role) {
         RoleView view = window.getParentView();
         roleRepository.save(role);
         window.close();
@@ -62,13 +54,13 @@ public class RolePresenter {
         log.info("{} saved role {}", view.getCurrentUsername(), role);
     }
 
-    public void showRoleList(RoleView view) {
+    void showRoleList(RoleView view) {
         List<Role> roles = roleRepository.findAll();
         view.afterSuccessfulFetch(roles);
         log.info("{} viewed role list", view.getCurrentUsername());
     }
 
-    public void navigateToRole(RoleView view, String parameters) {
+    void navigateToRole(RoleView view, String parameters) {
         if (parameters != null) {
             Integer id = Integer.parseInt(parameters);
             Role role = roleRepository.findOne(id);

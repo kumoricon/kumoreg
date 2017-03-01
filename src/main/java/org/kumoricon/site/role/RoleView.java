@@ -24,11 +24,15 @@ public class RoleView extends BaseView implements View {
     public static final String VIEW_NAME = "roles";
     public static final String REQUIRED_RIGHT = "manage_roles";
 
-    @Autowired
-    private RolePresenter handler;
+    private final RolePresenter handler;
 
-    private Button btnAddNew = new Button("Add");
-    private ListSelect roleList = new ListSelect("Roles");
+    private final Button btnAddNew = new Button("Add");
+    private final ListSelect roleList = new ListSelect("Roles");
+
+    @Autowired
+    public RoleView(RolePresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {
@@ -66,25 +70,21 @@ public class RoleView extends BaseView implements View {
         }
     }
 
-    public void setHandler(RolePresenter presenter) {
-        this.handler = presenter;
-    }
-
     public void afterSuccessfulFetch(List<Role> roles) {
         roleList.setContainerDataSource(new BeanItemContainer<>(Role.class, roles));
     }
 
-    public void showRole(Role role, List<Right> rights) {
+    void showRole(Role role, List<Right> rights) {
         RoleEditWindow window = new RoleEditWindow(this, handler, rights);
         window.showRole(role);
         showWindow(window);
     }
 
-    public void selectRole(Role role) {
+    void selectRole(Role role) {
         roleList.select(role);
     }
 
-    public void clearSelection() {
+    void clearSelection() {
         roleList.select(null);
     }
 
