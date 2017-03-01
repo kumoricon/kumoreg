@@ -94,7 +94,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             PaymentValidator.validate(payment);
         } catch (ValidationException e) {
             view.notify(e.getMessage());
-            return;
+            throw new ValueException(e.getMessage());
         }
         // Only update user, time and location if they're null - otherwise someone could be saving
         // changes to an existing payment

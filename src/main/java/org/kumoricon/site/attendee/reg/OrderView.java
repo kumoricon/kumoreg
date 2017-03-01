@@ -27,6 +27,7 @@ import org.kumoricon.site.fieldconverter.UserToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +125,9 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
     }
 
     private void showPaymentWindow() {
-        PaymentWindow window = new PaymentWindow(this, orderTotal.getValue());
+        BigDecimal total = BigDecimal.valueOf(Double.parseDouble(orderTotal.getValue()));
+        BigDecimal paid = BigDecimal.valueOf(Double.parseDouble(paymentTotal.getValue()));
+        PaymentWindow window = new PaymentWindow(this, total.subtract(paid).toString());
         showWindow(window);
     }
 
@@ -164,7 +167,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
 
         paymentTotal.setValue(order.getTotalPaid().toString());
 
-        if (order.getTotalAmount().equals(order.getTotalPaid())) {
+        if (order.getTotalAmount().compareTo(order.getTotalPaid()) == 0) {
             orderComplete.setEnabled(true);
         } else {
             orderComplete.setEnabled(false);
