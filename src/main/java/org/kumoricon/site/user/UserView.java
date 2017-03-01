@@ -22,10 +22,14 @@ public class UserView extends BaseView implements View {
     public static final String VIEW_NAME = "users";
     public static final String REQUIRED_RIGHT = "manage_staff";
 
+    private final UserPresenter handler;
+    private final Table userList = new Table("Users");
+    private final Button btnAddNew = new Button("Add New");
+
     @Autowired
-    private UserPresenter handler;
-    private Table userList = new Table("Users");
-    private Button btnAddNew = new Button("Add New");
+    public UserView(UserPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {
@@ -62,10 +66,6 @@ public class UserView extends BaseView implements View {
         }
     }
 
-    public void setHandler(UserPresenter presenter) {
-        this.handler = presenter;
-    }
-
     public void afterSuccessfulFetch(List<User> users) {
         Object[] sortBy = {userList.getSortContainerPropertyId()};
         boolean[] sortOrder = {userList.isSortAscending()};
@@ -76,17 +76,17 @@ public class UserView extends BaseView implements View {
         userList.sort(sortBy, sortOrder);
     }
 
-    public void showUser(User user, List<Role> roles) {
+    void showUser(User user, List<Role> roles) {
         UserEditWindow window = new UserEditWindow(this, handler, roles);
         window.showUser(user);
         showWindow(window);
     }
 
-    public void selectUser(User user) {
+    void selectUser(User user) {
         userList.select(user);
     }
 
-    public void clearSelection() {
+    void clearSelection() {
         userList.select(null);
     }
 

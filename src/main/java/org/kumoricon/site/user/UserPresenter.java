@@ -15,18 +15,17 @@ import java.util.List;
 
 @Controller
 public class UserPresenter {
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private static final Logger log = LoggerFactory.getLogger(UserPresenter.class);
 
-    public UserPresenter() {
+    @Autowired
+    public UserPresenter(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
-    public void userSelected(UserView view, User user) {
+    void userSelected(UserView view, User user) {
         if (user != null) {
             log.info("{} viewed user {}", view.getCurrentUsername(), user);
             view.navigateTo(UserView.VIEW_NAME + "/" + user.getId().toString());
@@ -34,28 +33,21 @@ public class UserPresenter {
         }
     }
 
-    public void userSelected(UserView view, Integer id) {
-        if (id != null) {
-            User user = userRepository.findOne(id);
-            userSelected(view, user);
-        }
-    }
-
-    public void addNewUser(UserView view) {
+    void addNewUser(UserView view) {
         log.info("{} created new user", view.getCurrentUsername());
         view.navigateTo(UserView.VIEW_NAME);
         User user = UserFactory.newUser();
         view.showUser(user, getAvailableRoles());
     }
 
-    public void cancelUser(UserEditWindow window) {
+    void cancelUser(UserEditWindow window) {
         UserView view = window.getParentView();
         view.navigateTo(UserView.VIEW_NAME);
         window.close();
         view.clearSelection();
     }
 
-    public void saveUser(UserEditWindow window, User user) {
+    void saveUser(UserEditWindow window, User user) {
         UserView view = window.getParentView();
         log.info("{} saved user {}", view.getCurrentUsername(), user);
         userRepository.save(user);
@@ -64,13 +56,13 @@ public class UserPresenter {
         showUserList(view);
     }
 
-    public void showUserList(UserView view) {
+    void showUserList(UserView view) {
         log.info("{} viewed user list", view.getCurrentUsername());
         List<User> users = userRepository.findAll(new Sort(Sort.Direction.ASC, "username"));
         view.afterSuccessfulFetch(users);
     }
 
-    public void navigateToUser(UserView view, String parameters) {
+    void navigateToUser(UserView view, String parameters) {
         if (parameters != null) {
             Integer id = Integer.parseInt(parameters);
             User user = userRepository.findOne(id);
@@ -83,7 +75,7 @@ public class UserPresenter {
         }
     }
 
-    public void resetPassword(UserEditWindow window, User user) {
+    void resetPassword(UserEditWindow window, User user) {
         UserView view = window.getParentView();
         user.resetPassword();
         try {
@@ -97,11 +89,5 @@ public class UserPresenter {
         }
     }
 
-    public List<Role> getAvailableRoles() { return roleRepository.findAll(); }
-
-    public UserRepository getUserRepository() { return userRepository; }
-    public void setUserRepository(UserRepository userRepository) { this.userRepository = userRepository; }
-
-    public RoleRepository getRoleRepository() { return roleRepository; }
-    public void setRoleRepository(RoleRepository roleRepository) { this.roleRepository = roleRepository; }
+    private List<Role> getAvailableRoles() { return roleRepository.findAll(); }
 }

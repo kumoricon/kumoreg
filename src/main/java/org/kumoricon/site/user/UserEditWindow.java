@@ -15,23 +15,23 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 
-public class UserEditWindow extends Window {
+class UserEditWindow extends Window {
 
-    private TextField username = FieldFactory.createTextField("Username");
-    private TextField firstName = FieldFactory.createNameField("First Name");
-    private TextField lastName = FieldFactory.createNameField("Last Name");
-    private TextField badgePrefix = FieldFactory.createTextField("Badge Prefix");
-    private NativeSelect role = new NativeSelect("Role");
-    private TextField phone = FieldFactory.createTextField("Phone");
+    private final TextField username = FieldFactory.createTextField("Username");
+    private final TextField firstName = FieldFactory.createNameField("First Name");
+    private final TextField lastName = FieldFactory.createNameField("Last Name");
+    private final TextField badgePrefix = FieldFactory.createTextField("Badge Prefix");
+    private final NativeSelect role = new NativeSelect("Role");
+    private final TextField phone = FieldFactory.createTextField("Phone");
 
     private final BeanFieldGroup<User> userBeanFieldGroup = new BeanFieldGroup<>(User.class);
 
-    private Button btnSave = new Button("Save");
-    private Button btnCancel = new Button("Cancel");
-    private Button btnResetPassword = new Button("Reset Password");
+    private final Button btnSave = new Button("Save");
+    private final Button btnCancel = new Button("Cancel");
+    private final Button btnResetPassword = new Button("Reset Password");
 
-    private UserPresenter handler;
-    private UserView parentView;
+    private final UserPresenter handler;
+    private final UserView parentView;
 
     public UserEditWindow(UserView parentView, UserPresenter userPresenter, List<Role> roleList) {
         super("Edit User");
@@ -118,17 +118,14 @@ public class UserEditWindow extends Window {
         }
     }
 
-    public User getUser() {
+    private User getUser() {
         BeanItem<User> userBean = userBeanFieldGroup.getItemDataSource();
         return userBean.getBean();
     }
 
-    public void showUser(User user) {
+    void showUser(User user) {
         userBeanFieldGroup.setItemDataSource(user);
     }
-
-    public UserPresenter getHandler() { return handler; }
-    public void setHandler(UserPresenter handler) { this.handler = handler; }
 
     public UserView getParentView() { return parentView; }
 }
