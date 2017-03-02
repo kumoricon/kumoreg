@@ -4,7 +4,6 @@ import com.vaadin.data.util.converter.Converter;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
 
 public class StringToLocalDateTimeConverter implements Converter<String, LocalDateTime> {
