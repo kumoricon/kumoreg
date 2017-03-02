@@ -20,13 +20,17 @@ public class BadgeView extends BaseView implements View {
     public static final String VIEW_NAME = "badges";
     public static final String REQUIRED_RIGHT = "manage_pass_types";
 
-    @Autowired
-    private BadgePresenter handler;
+    private final BadgePresenter handler;
 
-    private Table badgeList = new Table("Badges");
-    private Button btnAddNew = new Button("Add");
+    private final Table badgeList = new Table("Badges");
+    private final Button btnAddNew = new Button("Add");
 
     private BadgeEditWindow badgeEditWindow;
+
+    @Autowired
+    public BadgeView(BadgePresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {
@@ -46,10 +50,6 @@ public class BadgeView extends BaseView implements View {
         } else {
             handler.navigateToBadge(this, viewChangeEvent.getParameters());
         }
-    }
-
-    public void setHandler(BadgePresenter presenter) {
-        this.handler = presenter;
     }
 
     public void afterSuccessfulFetch(List<Badge> badges) {

@@ -13,28 +13,28 @@ import org.kumoricon.model.badge.BadgeType;
 import org.kumoricon.site.attendee.FieldFactory;
 
 
-public class BadgeEditWindow extends Window {
+class BadgeEditWindow extends Window {
 
-    private TextField name = FieldFactory.createTextField("Name");
+    private final TextField name = FieldFactory.createTextField("Name");
 
-    private TextField dayText = FieldFactory.createTextField("Day Text");
-    private TextField waringMessage = FieldFactory.createTextField("Warning message");
-    private TextField requiredRight = FieldFactory.createDisabledTextField("Required Right");
-    private CheckBox visible = new CheckBox("Visible");
-    private NativeSelect badgeType = new NativeSelect("Badge Type");
-    private Table tblAgeRanges;
+    private final TextField dayText = FieldFactory.createTextField("Day Text");
+    private final TextField waringMessage = FieldFactory.createTextField("Warning message");
+    private final TextField requiredRight = FieldFactory.createDisabledTextField("Required Right");
+    private final CheckBox visible = new CheckBox("Visible");
+    private final NativeSelect badgeType = new NativeSelect("Badge Type");
+    private final Table tblAgeRanges;
 
-    private Button btnSave = new Button("Save");
-    private Button btnCancel = new Button("Cancel");
+    private final Button btnSave = new Button("Save");
+    private final Button btnCancel = new Button("Cancel");
 
-    private BeanFieldGroup<Badge> badgeBeanFieldGroup = new BeanFieldGroup<>(Badge.class);
+    private final BeanFieldGroup<Badge> badgeBeanFieldGroup = new BeanFieldGroup<>(Badge.class);
 
-    private Label deleteNote = new Label("Note: badges can not be deleted once created. Un-check Visible instead.");
+    private final Label deleteNote = new Label("Note: badges can not be deleted once created. Un-check Visible instead.");
 
-    private BadgePresenter handler;
-    private BadgeView parentView;
+    private final BadgePresenter handler;
+    private final BadgeView parentView;
 
-    public BadgeEditWindow(BadgeView parentView, BadgePresenter badgePresenter) {
+    BadgeEditWindow(BadgeView parentView, BadgePresenter badgePresenter) {
         super("Badge");
         this.handler = badgePresenter;
         this.parentView = parentView;
@@ -101,12 +101,12 @@ public class BadgeEditWindow extends Window {
         btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
-    public Badge getBadge() {
+    private Badge getBadge() {
         BeanItem<Badge> badgeBean = badgeBeanFieldGroup.getItemDataSource();
         return badgeBean.getBean();
     }
 
-    public void showBadge(Badge badge) {
+    void showBadge(Badge badge) {
         badgeBeanFieldGroup.setItemDataSource(badge);
         BeanItemContainer<AgeRange> ageRanges = new BeanItemContainer<>(AgeRange.class);
         ageRanges.addAll(badge.getAgeRanges());
@@ -114,7 +114,4 @@ public class BadgeEditWindow extends Window {
         tblAgeRanges.setVisibleColumns("name", "minAge", "maxAge", "cost", "stripeColor", "stripeText");
         tblAgeRanges.setColumnHeaders("Name", "Minimum Age", "Maximum Age", "Cost", "Stripe Color", "Stripe Text");
     }
-
-    public BadgePresenter getHandler() { return handler; }
-    public void setHandler(BadgePresenter handler) { this.handler = handler; }
 }

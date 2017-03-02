@@ -13,12 +13,13 @@ import java.util.List;
 
 @Controller
 public class BadgePresenter {
-    @Autowired
-    private BadgeRepository badgeRepository;
+    private final BadgeRepository badgeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(BadgePresenter.class);
 
-    public BadgePresenter() {
+    @Autowired
+    public BadgePresenter(BadgeRepository badgeRepository) {
+        this.badgeRepository = badgeRepository;
     }
 
     public void badgeSelected(BadgeView view, Badge badge) {
@@ -26,13 +27,6 @@ public class BadgePresenter {
             log.info("{} viewed badge {}", view.getCurrentUsername(), badge);
             view.navigateTo(BadgeView.VIEW_NAME + "/" + badge.getId().toString());
             view.showBadge(badge);
-        }
-    }
-
-    public void badgeSelected(BadgeView view, Integer id) {
-        if (id != null) {
-            org.kumoricon.model.badge.Badge badge = badgeRepository.findOne(id);
-            badgeSelected(view, badge);
         }
     }
 
