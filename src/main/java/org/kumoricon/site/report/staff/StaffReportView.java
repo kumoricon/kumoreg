@@ -21,11 +21,15 @@ public class StaffReportView extends BaseView implements View {
     public static final String VIEW_NAME = "staffReport";
     public static final String REQUIRED_RIGHT = "view_staff_report";
 
-    @Autowired
-    private StaffReportPresenter handler;
+    private final StaffReportPresenter handler;
 
-    private Button refresh = new Button("Refresh");
-    private Grid dataGrid = new Grid("User List");
+    private final Button refresh = new Button("Refresh");
+    private final Grid dataGrid = new Grid("User List");
+
+    @Autowired
+    public StaffReportView(StaffReportPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {

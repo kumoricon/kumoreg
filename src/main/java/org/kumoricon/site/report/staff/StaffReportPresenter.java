@@ -12,12 +12,13 @@ import java.util.List;
 
 @Controller
 public class StaffReportPresenter {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private static final Logger log = LoggerFactory.getLogger(StaffReportPresenter.class);
 
-    public StaffReportPresenter() {
+    @Autowired
+    public StaffReportPresenter(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public void showUserList(StaffReportView view) {
@@ -26,7 +27,4 @@ public class StaffReportPresenter {
         log.info("{} viewed Staff Report", view.getCurrentUsername());
 
     }
-
-    public UserRepository getUserRepository() { return userRepository; }
-    public void setUserRepository(UserRepository userRepository) { this.userRepository = userRepository; }
 }

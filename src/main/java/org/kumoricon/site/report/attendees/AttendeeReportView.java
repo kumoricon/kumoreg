@@ -17,11 +17,15 @@ import javax.annotation.PostConstruct;
 public class AttendeeReportView extends BaseView implements View, ReportView {
     public static final String VIEW_NAME = "attendeeReport";
     public static final String REQUIRED_RIGHT = "view_attendance_report";
-    @Autowired
-    private AttendeeReportPresenter handler;
+    private final AttendeeReportPresenter handler;
 
-    private Button refresh = new Button("Refresh");
-    private Label data = new Label();
+    private final Button refresh = new Button("Refresh");
+    private final Label data = new Label();
+
+    @Autowired
+    public AttendeeReportView(AttendeeReportPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {

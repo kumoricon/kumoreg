@@ -16,11 +16,15 @@ public class ExportView extends BaseView implements View {
     public static final String VIEW_NAME = "exportData";
     public static final String REQUIRED_RIGHT = "view_export";
 
-    @Autowired
-    private ExportPresenter handler;
+    private final ExportPresenter handler;
 
-    private Button attendeeExportBtn = new Button("Download Attendee list as TSV");
-    private Button tillExportBtn = new Button("Download Till report as TSV");
+    private final Button attendeeExportBtn = new Button("Download Attendee list as TSV");
+    private final Button tillExportBtn = new Button("Download Till report as TSV");
+
+    @Autowired
+    public ExportView(ExportPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {

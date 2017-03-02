@@ -7,15 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 
 @Service
 public class AttendeeTSVExport extends BaseTSVExport implements Export {
-    private static String FILENAME="attendees.csv";
+    private static final String FILENAME="attendees.csv";
 
-    private AttendeeRepository attendeeRepository;
+    private final AttendeeRepository attendeeRepository;
 
     @Autowired
     public AttendeeTSVExport(AttendeeRepository repository) {
@@ -23,29 +22,28 @@ public class AttendeeTSVExport extends BaseTSVExport implements Export {
     }
 
     private String buildHeader() {
-        String header = "ID\t" +
-                "First Name\t" +
-                "Last Name\t" +
-                "Badge Name\t" +
-                "Badge Number\t" +
-                "ZIP\t" +
-                "Country\t" +
-                "Phone Number\t" +
-                "Email\t" +
-                "Birthdate\t" +
-                "Emergency Contact\t" +
-                "Emergency Phone\t" +
-                "Parent Name\t" +
-                "Parent Phone\t" +
-                "Parent Form Rec'd?\t" +
-                "Preregistered\t" +
-                "Badge Type\t" +
-                "Checked In?\t" +
-                "Check In Time\t" +
-                "Paid?\t" +
-                "Paid Amount\t" +
-                "\n";
-        return header;
+        return "ID\t" +
+               "First Name\t" +
+               "Last Name\t" +
+               "Badge Name\t" +
+               "Badge Number\t" +
+               "ZIP\t" +
+               "Country\t" +
+               "Phone Number\t" +
+               "Email\t" +
+               "Birth Date\t" +
+               "Emergency Contact\t" +
+               "Emergency Phone\t" +
+               "Parent Name\t" +
+               "Parent Phone\t" +
+               "Parent Form Rec'd?\t" +
+               "Preregistered\t" +
+               "Badge Type\t" +
+               "Checked In?\t" +
+               "Check In Time\t" +
+               "Paid?\t" +
+               "Paid Amount\t" +
+               "\n";
     }
 
     private String buildTable(List<Attendee> data) {
@@ -81,12 +79,9 @@ public class AttendeeTSVExport extends BaseTSVExport implements Export {
     }
 
     public StreamResource getStream() {
-        return new StreamResource(new StreamResource.StreamSource() {
-            @Override
-            public InputStream getStream () {
-                String output = buildTable(attendeeRepository.findAll());
-                return new ByteArrayInputStream(output.getBytes(Charset.forName("UTF-8")));
-            }
+        return new StreamResource((StreamResource.StreamSource) () -> {
+            String output = buildTable(attendeeRepository.findAll());
+            return new ByteArrayInputStream(output.getBytes(Charset.forName("UTF-8")));
         }, getFilename());
     }
 

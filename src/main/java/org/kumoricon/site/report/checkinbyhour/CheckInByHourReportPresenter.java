@@ -13,13 +13,14 @@ import java.util.List;
 
 @Controller
 public class CheckInByHourReportPresenter implements ReportPresenter {
-    @Autowired
-    private AttendeeRepository attendeeRepository;
+    private final AttendeeRepository attendeeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(CheckInByHourReportPresenter.class);
 
 
-    public CheckInByHourReportPresenter() {
+    @Autowired
+    public CheckInByHourReportPresenter(AttendeeRepository attendeeRepository) {
+        this.attendeeRepository = attendeeRepository;
     }
 
     private static String buildTable(String title, List<Object[]> data) {

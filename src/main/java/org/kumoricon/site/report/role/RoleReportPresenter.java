@@ -15,16 +15,14 @@ import java.util.List;
 
 @Controller
 public class RoleReportPresenter implements ReportPresenter {
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     private static final Logger log = LoggerFactory.getLogger(RoleReportPresenter.class);
 
-    public RoleReportPresenter() {
+    @Autowired
+    public RoleReportPresenter(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
-
-    public RoleRepository getRoleRepository() { return roleRepository; }
-    public void setRoleRepository(RoleRepository roleRepository) { this.roleRepository = roleRepository; }
 
     private static String buildTable(String title, List<Role> roles) {
         StringBuilder sb = new StringBuilder();

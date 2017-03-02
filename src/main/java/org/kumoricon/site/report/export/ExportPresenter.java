@@ -11,16 +11,17 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class ExportPresenter {
-    @Autowired
-    private AttendeeTSVExport attendeeTSVExport;
+    private final AttendeeTSVExport attendeeTSVExport;
 
-    @Autowired
-    private TillTSVExport tillTSVExport;
+    private final TillTSVExport tillTSVExport;
 
     private static final Logger log = LoggerFactory.getLogger(ExportPresenter.class);
 
 
-    public ExportPresenter() {
+    @Autowired
+    public ExportPresenter(TillTSVExport tillTSVExport, AttendeeTSVExport attendeeTSVExport) {
+        this.tillTSVExport = tillTSVExport;
+        this.attendeeTSVExport = attendeeTSVExport;
     }
 
 

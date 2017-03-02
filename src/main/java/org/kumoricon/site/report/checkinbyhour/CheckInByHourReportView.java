@@ -18,11 +18,15 @@ public class CheckInByHourReportView extends BaseView implements View, ReportVie
     public static final String VIEW_NAME = "checkInByHourReport";
     public static final String REQUIRED_RIGHT = "view_check_in_by_hour_report";
 
-    @Autowired
-    private CheckInByHourReportPresenter handler;
+    private final CheckInByHourReportPresenter handler;
 
-    private Button refresh = new Button("Refresh");
-    private Label data = new Label();
+    private final Button refresh = new Button("Refresh");
+    private final Label data = new Label();
+
+    @Autowired
+    public CheckInByHourReportView(CheckInByHourReportPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {

@@ -18,11 +18,15 @@ public class RoleReportView extends BaseView implements View, ReportView {
     public static final String VIEW_NAME = "roleReport";
     public static final String REQUIRED_RIGHT = "view_role_report";
 
-    @Autowired
-    private RoleReportPresenter handler;
+    private final RoleReportPresenter handler;
 
-    private Button refresh = new Button("Refresh");
-    private Label data = new Label();
+    private final Button refresh = new Button("Refresh");
+    private final Label data = new Label();
+
+    @Autowired
+    public RoleReportView(RoleReportPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {

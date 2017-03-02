@@ -13,13 +13,14 @@ import java.util.List;
 
 @Controller
 public class AttendeeReportPresenter implements ReportPresenter {
-    @Autowired
-    private AttendeeRepository attendeeRepository;
+    private final AttendeeRepository attendeeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AttendeeReportPresenter.class);
 
 
-    public AttendeeReportPresenter() {
+    @Autowired
+    public AttendeeReportPresenter(AttendeeRepository attendeeRepository) {
+        this.attendeeRepository = attendeeRepository;
     }
 
     private String getTotalsByBadgeType() {
@@ -88,7 +89,7 @@ public class AttendeeReportPresenter implements ReportPresenter {
                 "counted).<br>" +
                 "<b>Warm Body Count:</b> All attendees (paid and gratis) who checked in<br>" +
                 "Attendees with multiple single day badges are counted as a single attendee based on " +
-                "first name, last name, birthdate, and zip code<br>";
+                "first name, last name, birth date, and zip code<br>";
     }
 
     @Override
@@ -106,10 +107,5 @@ public class AttendeeReportPresenter implements ReportPresenter {
                 attendeeRepository.findTotalAttendeeCount(), attendeeRepository.findWarmBodyCount()));
         log.info("{} viewed Attendee Report", view.getCurrentUser());
         view.afterSuccessfulFetch(sb.toString());
-    }
-
-    public AttendeeRepository getAttendeeRepository() { return attendeeRepository; }
-    public void setAttendeeRepository(AttendeeRepository attendeeRepository) {
-        this.attendeeRepository = attendeeRepository;
     }
 }

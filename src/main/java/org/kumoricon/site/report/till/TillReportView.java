@@ -15,11 +15,15 @@ public class TillReportView extends BaseView implements View {
     public static final String VIEW_NAME = "tillReport";
     public static final String REQUIRED_RIGHT = "view_till_report";
 
-    private Button refresh = new Button("Show Report");
-    private Label data = new Label();
+    private final Button refresh = new Button("Show Report");
+    private final Label data = new Label();
+
+    private final TillReportPresenter handler;
 
     @Autowired
-    private TillReportPresenter handler;
+    public TillReportView(TillReportPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {
