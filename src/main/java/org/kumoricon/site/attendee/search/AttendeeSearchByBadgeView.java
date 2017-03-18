@@ -71,8 +71,8 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
         setExpandRatio(attendeeTable, 1.0f);
         handler.showBadgeTypes(this);
         attendeeTable.setContainerDataSource(attendeeContainer);
-        attendeeTable.setVisibleColumns("lastName", "firstName", "badgeName", "badgeNumber", "checkedIn", "checkInTime");
-        attendeeTable.setColumnHeaders("Last Name", "First Name", "Badge Name", "Badge Number", "Checked In", "Check In Time");
+        attendeeTable.setVisibleColumns("lastName", "firstName", "fanName", "badgeNumber", "checkedIn", "checkInTime");
+        attendeeTable.setColumnHeaders("Last Name", "First Name", "Fan Name", "Badge Number", "Checked In", "Check In Time");
         attendeeTable.setConverter("checkInTime", new StringToDateConverter(){
             @Override
             public DateFormat getFormat(Locale locale){

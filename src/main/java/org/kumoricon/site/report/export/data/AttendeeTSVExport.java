@@ -25,7 +25,7 @@ public class AttendeeTSVExport extends BaseTSVExport implements Export {
         return "ID\t" +
                "First Name\t" +
                "Last Name\t" +
-               "Badge Name\t" +
+               "Fan Name\t" +
                "Badge Number\t" +
                "ZIP\t" +
                "Country\t" +
@@ -54,7 +54,7 @@ public class AttendeeTSVExport extends BaseTSVExport implements Export {
             sb.append(format(attendee.getId().toString()));
             sb.append(format(attendee.getFirstName()));
             sb.append(format(attendee.getLastName()));
-            sb.append(format(attendee.getBadgeName()));
+            sb.append(format(attendee.getFanName()));
             sb.append(format(attendee.getBadgeNumber()));
             sb.append(format(attendee.getZip()));
             sb.append(format(attendee.getCountry()));

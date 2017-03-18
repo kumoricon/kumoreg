@@ -33,7 +33,7 @@ public class HomeView extends BaseView implements View {
 
         passTypesTable.setWidth(750, Unit.PIXELS);
         passTypesTable.setHeightMode(HeightMode.ROW);
-        passTypesTable.addColumn("badgeName", String.class);
+        passTypesTable.addColumn("fanName", String.class);
         passTypesTable.addColumn("adult", BigDecimal.class);
         passTypesTable.addColumn("youth", BigDecimal.class);
         passTypesTable.addColumn("child", BigDecimal.class);

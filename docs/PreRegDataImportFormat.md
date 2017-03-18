@@ -15,7 +15,7 @@ Data Import Format for Attendees Who Preregister on Website
 |   2   | Last Name         | No             | 60 characters max                                                       |
 |   3   | Legal First Name  | No             | 60 characters max                                                       |
 |   4   | Legal Last Name   | No             | 60 characters max                                                       |
-|   5   | Badge Name        | Yes            | 60 characters max [[1]](#1)                                             |
+|   5   | Fan Name          | Yes            | 60 characters max [[1]](#1)                                             |
 |   6   | Badge Number      | Yes            | 10 characters max [[2]](#2)                                             |
 |   7   | Zip Code          | Yes            | 10 characters max                                                       |
 |   8   | Country           | Yes            | 250 characters max                                                      |
@@ -39,7 +39,7 @@ Notes:
 Zip Code, Country, Phone, and E-mail address should be passed if possible, but some attendees (children under 6,
 for example) are likely to not have one or more so empty/null values are okay.
 
-<a name="1"></a>1: Currently we're storing 60 characters for the badge name. I believe the actual limit
+<a name="1"></a>1: Currently we're storing 60 characters for the Fan Name. I believe the actual limit
 is 15 characters.
 
 <a name="2"></a>2: If empty/null, a badge number will be generated during import.

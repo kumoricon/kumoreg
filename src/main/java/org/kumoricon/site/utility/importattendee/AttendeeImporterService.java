@@ -86,7 +86,7 @@ class AttendeeImporterService {
             attendee.setLastName(dataArray[1]);
             attendee.setLegalFirstName(dataArray[2]);
             attendee.setLegalLastName(dataArray[3]);
-            attendee.setBadgeName(dataArray[4]);
+            attendee.setFanName(dataArray[4]);
             if (dataArray[5].trim().equals("")) {
                 attendee.setBadgeNumber(generateBadgeNumber(currentUser.getNextBadgeNumber()));
             } else {

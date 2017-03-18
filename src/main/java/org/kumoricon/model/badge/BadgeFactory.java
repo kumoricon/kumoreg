@@ -3,7 +3,7 @@ package org.kumoricon.model.badge;
 public class BadgeFactory {
     /**
      * Create a Badge object with age ranges for adult/youth/child/5 and under.
-     * @param name Badge Name
+     * @param name Fan Name
      * @param dayText Text to print in color stripe (Weekend/Friday/Exhibitor/etc)
      * @param adultCost Cost of adult badge
      * @param youthCost Cost of youth badge
@@ -26,7 +26,7 @@ public class BadgeFactory {
     /**
      * Create a Badge object with age ranges for adult/youth/child/5 and under. Overrides the color of the
      * color stripe on ALL the age ranges and sets them to the given color
-     * @param name Badge Name
+     * @param name Fan Name
      * @param dayText Text to print in color stripe (Weekend/Friday/Exhibitor/etc)
      * @param adultCost Cost of adult badge
      * @param youthCost Cost of youth badge

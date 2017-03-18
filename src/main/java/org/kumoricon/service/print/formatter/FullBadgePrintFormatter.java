@@ -119,13 +119,13 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         PDFont font = PDType1Font.HELVETICA_BOLD;
         PDPageContentStream contentStream = new PDPageContentStream(document, page);
         ResizeOptions resizeOpt = new ResizeOptions();
-        String badgeName = attendee.getBadgeName();
+        String fanName = attendee.getFanName();
         String realName = attendee.getFirstName() + " " + attendee.getLastName();
 
-        if (badgeName != null && badgeName.matches("^\\s*$")) {
-            badgeName = null;
+        if (fanName != null && fanName.matches("^\\s*$")) {
+            fanName = null;
         }
-        String name = badgeName;
+        String name = fanName;
 
         // Positions are measured from the bottom left corner of the page at 72 DPI
 
@@ -134,7 +134,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         // below, with xScale and yScale.
         contentStream.concatenate2CTM(1, 0, 0, 1, xOffset, yOffset);
 
-        // Draw main name (badge name if set, otherwise real name)
+        // Draw main name (Fan Name if set, otherwise real name)
         resizeOpt.size = 24;
         resizeOpt.lines = 1;
         resizeOpt.maxTextWidth = 160;
@@ -143,8 +143,8 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         }
         drawStringWithResizing(contentStream, 360, 165, name, resizeOpt);
 
-        // Draw real name if badge name set
-        if (badgeName != null) {
+        // Draw real name if Fan Name set
+        if (fanName != null) {
             resizeOpt.size = 18;
             resizeOpt.minFontSize = 6;
             resizeOpt.lines = 1;

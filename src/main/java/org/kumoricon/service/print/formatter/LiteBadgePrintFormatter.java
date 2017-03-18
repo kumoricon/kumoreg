@@ -23,7 +23,7 @@ public class LiteBadgePrintFormatter implements BadgePrintFormatter {
     private Integer yOffset = 0;
 
     /**
-     * Generates a PDF containing badges ready to be printed. Lite badges have no badge name or number.
+     * Generates a PDF containing badges ready to be printed. Lite badges have no Fan Name or number.
      * @param attendees Attendees to print badges for
      */
     public LiteBadgePrintFormatter(List<Attendee> attendees) {
@@ -31,7 +31,7 @@ public class LiteBadgePrintFormatter implements BadgePrintFormatter {
     }
 
     /**
-     * Generates a PDF containing badges ready to be printed. Lite badges have no badge name or number.
+     * Generates a PDF containing badges ready to be printed. Lite badges have no Fan Name or number.
      * @param attendees Attendees to generate badges for
      * @param xOffset Horizontal offset in points (1/72 inch)
      * @param yOffset Vertical offset in points (1/72 inch)

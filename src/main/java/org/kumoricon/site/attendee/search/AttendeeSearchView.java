@@ -55,9 +55,9 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         tblResult = new Table();
         tblResult.setSizeFull();
         tblResult.setContainerDataSource(attendeeBeanList);
-        tblResult.setVisibleColumns("firstName", "lastName", "legalFirstName", "legalLastName", "badgeName",
+        tblResult.setVisibleColumns("firstName", "lastName", "legalFirstName", "legalLastName", "fanName",
                 "badgeNumber", "age", "zip", "checkedIn");
-        tblResult.setColumnHeaders("First Name", "Last Name", "Legal First Name", "Legal Last Name", "Badge Name",
+        tblResult.setColumnHeaders("First Name", "Last Name", "Legal First Name", "Legal Last Name", "Fan Name",
                 "Badge Number", "Age", "Zip", "Checked In");
         tblResult.addStyleName("kumoHandPointer");
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {

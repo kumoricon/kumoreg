@@ -22,7 +22,7 @@ public class Attendee extends Record {
     private String lastName;
     private String legalFirstName;
     private String legalLastName;
-    private String badgeName;                   // Badge name (optional)
+    private String fanName;                   // Fan Name (optional)
     @Column(unique=true)
     private String badgeNumber;
     private String zip;
@@ -83,8 +83,8 @@ public class Attendee extends Record {
     public void setLastName(String lastName) { this.lastName = lastName; }
     public String getName() { return firstName + " " + lastName; }
 
-    public String getBadgeName() { return badgeName; }
-    public void setBadgeName(String badgeName) { this.badgeName = badgeName; }
+    public String getFanName() { return fanName; }
+    public void setFanName(String fanName) { this.fanName = fanName; }
 
     public String getBadgeNumber() { return badgeNumber; }
     public void setBadgeNumber(String badgeNumber) { this.badgeNumber = badgeNumber; }

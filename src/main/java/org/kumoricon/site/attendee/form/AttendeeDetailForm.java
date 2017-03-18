@@ -28,7 +28,7 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField lastName = createNameField("Last Name", 2);
     private TextField legalFirstName = createNameField("Legal First Name", 3);
     private TextField legalLastName = createNameField("Legal Last Name", 4);
-    private TextField badgeName = createTextField("Badge Name", 5);
+    private TextField fanName = createTextField("Fan Name", 5);
     private TextField badgeNumber = createTextField("Badge Number", 6);
     private TextField phoneNumber = createPhoneNumberField("Phone", 7);
     private DateField birthDate = createDateField("", 8);
@@ -113,7 +113,7 @@ public class AttendeeDetailForm extends GridLayout {
         addComponent(lastName, 1, 0);
         addComponent(legalFirstName, 0, 1);
         addComponent(legalLastName, 1, 1);
-        addComponent(badgeName, 0, 2);
+        addComponent(fanName, 0, 2);
         addComponent(badgeNumber, 1, 2);
         badgeNumber.setEnabled(false);
         addComponent(phoneNumber, 0, 3);

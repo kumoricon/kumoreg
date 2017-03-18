@@ -1,6 +1,5 @@
 package org.kumoricon.service.validate;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.junit.Before;
 import org.junit.Test;
 import org.kumoricon.model.attendee.Attendee;
@@ -154,7 +153,7 @@ public class AttendeeValidatorTest {
         Attendee attendee = new Attendee();
         attendee.setFirstName("Test");
         attendee.setLastName("Guy");
-        attendee.setBadgeName("SuperFlyGuy");
+        attendee.setFanName("SuperFlyGuy");
         attendee.setBadgeNumber("TST12340");
         attendee.setCountry("United States of America");
         attendee.setZip("97201");

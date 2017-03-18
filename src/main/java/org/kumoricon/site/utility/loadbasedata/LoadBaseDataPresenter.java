@@ -287,7 +287,7 @@ public class LoadBaseDataPresenter {
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
         // VIP badges have pre-printed color bars, and should just have the names
-        // and badge names printed. Clear the day text and stripe text, set the
+        // and Fan Names printed. Clear the day text and stripe text, set the
         // color bar to white so it isn't printed
         vip.setDayText("");
         for (AgeRange a : vip.getAgeRanges()) {

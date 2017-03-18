@@ -23,6 +23,7 @@ Change Log
     - Moved till sessions to their own table, rebuilt till report
     - Added till session management/reporting screen (can close tills for other users with proper right)
     - Only create example users when trainingMode is enabled in configuration file
+    - Changed "badge name" to "fan name"
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"

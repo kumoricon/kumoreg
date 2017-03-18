@@ -21,7 +21,7 @@ public class AttendeeFactory {
         Attendee attendee = new Attendee();
         attendee.setFirstName("Test");
         attendee.setLastName("Guy");
-        attendee.setBadgeName("SuperFlyGuy");
+        attendee.setFanName("SuperFlyGuy");
         attendee.setBadgeNumber("TST12340");
         attendee.setBadge(badgeRepository.findFirstBy());
         attendee.setCountry("United States of America");
@@ -43,7 +43,7 @@ public class AttendeeFactory {
     public Attendee generateYouthAttendee() {
         Attendee attendee = generateDemoAttendee();
         attendee.setFirstName("Timmy");
-        attendee.setBadgeName("Teen-o-rama");
+        attendee.setFanName("Teen-o-rama");
         attendee.setBadgeNumber("TST12341");
         attendee.setBirthDate(LocalDate.now().minusYears(13L));
         attendee.setParentFullName(attendee.getEmergencyContactFullName());
@@ -61,7 +61,7 @@ public class AttendeeFactory {
     public Attendee generateChildAttendee() {
         Attendee attendee = generateDemoAttendee();
         attendee.setFirstName("Billy");
-        attendee.setBadgeName("Whippersnapper");
+        attendee.setFanName("Whippersnapper");
         attendee.setBirthDate(LocalDate.now().minusYears(7L));
         attendee.setBadgeNumber("TST12342");
         try {
