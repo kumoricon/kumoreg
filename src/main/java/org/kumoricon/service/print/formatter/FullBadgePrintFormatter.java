@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.badge.BadgeType;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;
@@ -118,14 +119,6 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         PDPage page = new PDPage(new PDRectangle(612f, 396f));
         PDFont font = PDType1Font.HELVETICA_BOLD;
         PDPageContentStream contentStream = new PDPageContentStream(document, page);
-        ResizeOptions resizeOpt = new ResizeOptions();
-        String fanName = attendee.getFanName();
-        String realName = attendee.getFirstName() + " " + attendee.getLastName();
-
-        if (fanName != null && fanName.matches("^\\s*$")) {
-            fanName = null;
-        }
-        String name = fanName;
 
         // Positions are measured from the bottom left corner of the page at 72 DPI
 
@@ -134,30 +127,34 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         // below, with xScale and yScale.
         contentStream.concatenate2CTM(1, 0, 0, 1, xOffset, yOffset);
 
-        // Draw main name (Fan Name if set, otherwise real name)
-        resizeOpt.size = 24;
-        resizeOpt.lines = 1;
-        resizeOpt.maxTextWidth = 160;
-        if (name == null) {
-            name = realName;
-        }
-        drawStringWithResizing(contentStream, 360, 165, name, resizeOpt);
-
-        // Draw real name if Fan Name set
-        if (fanName != null) {
-            resizeOpt.size = 18;
-            resizeOpt.minFontSize = 6;
-            resizeOpt.lines = 1;
-            resizeOpt.maxTextWidth = 140;
-            drawStringWithResizing(contentStream, 310, 143, realName, resizeOpt);
+        // Draw fields on badge depending on badge type
+        if (attendee.getBadge().getBadgeType().equals(BadgeType.STAFF)) {
+            drawStaffNames(contentStream, attendee);
+            drawBadgeNumber(contentStream, attendee);
+            drawAgeColorStripe(contentStream, font, attendee);
+            drawBadgeType(contentStream, attendee);
+        } else {
+            drawMainNames(contentStream, attendee);
+            drawBadgeNumber(contentStream, attendee);
+            drawAgeColorStripe(contentStream, font, attendee);
+            drawBadgeType(contentStream, attendee);
         }
 
-        // Draw badge number, centered
-        resizeOpt.size = 14;
-        resizeOpt.maxTextWidth = 38;
-        drawStringWithResizing(contentStream, 407, 145, attendee.getBadgeNumber(), resizeOpt);
 
+        contentStream.close();
 
+        return page;
+    }
+
+    private void drawBadgeType(PDPageContentStream contentStream, Attendee attendee) throws IOException {
+        // Draw badge type in color stripe
+        contentStream.beginText();
+        contentStream.moveTextPositionByAmount(167, 105);
+        contentStream.drawString(attendee.getBadge().getDayText());
+        contentStream.endText();
+    }
+
+    private void drawAgeColorStripe(PDPageContentStream contentStream, PDFont font, Attendee attendee) throws IOException {
         // Draw age color stripe
         String stripeText = "VOID";
         if (attendee.getCurrentAgeRange() != null) {
@@ -181,16 +178,72 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         contentStream.moveTextPositionByAmount(-ageRangeWidth, 0);
         contentStream.drawString(stripeText);
         contentStream.endText();
+    }
 
-        // Draw badge type in color stripe
-        contentStream.beginText();
-        contentStream.moveTextPositionByAmount(167, 105);
-        contentStream.drawString(attendee.getBadge().getDayText());
-        contentStream.endText();
+    private void drawBadgeNumber(PDPageContentStream contentStream, Attendee attendee) throws IOException {
+        // Draw badge number, centered
+        ResizeOptions resizeOpt = new ResizeOptions();
+        resizeOpt.size = 14;
+        resizeOpt.maxTextWidth = 38;
+        drawStringWithResizing(contentStream, 407, 145, attendee.getBadgeNumber(), resizeOpt);
+    }
 
-        contentStream.close();
+    private void drawMainNames(PDPageContentStream contentStream, Attendee attendee) throws IOException {
+        ResizeOptions resizeOpt = new ResizeOptions();
+        resizeOpt.size = 24;
+        resizeOpt.lines = 1;
+        resizeOpt.maxTextWidth = 160;
 
-        return page;
+        String fanName = attendee.getFanName();
+        String realName = attendee.getFirstName() + " " + attendee.getLastName();
+        if (fanName != null && fanName.matches("^\\s*$")) {
+            fanName = null;
+        }
+        String name = fanName;
+
+        // Draw main name (Fan Name if set, otherwise real name)
+        if (name == null) {
+            name = realName;
+        }
+        drawStringWithResizing(contentStream, 360, 165, name, resizeOpt);
+
+        // Draw real name if Fan Name set
+        if (fanName != null) {
+            resizeOpt.size = 18;
+            resizeOpt.minFontSize = 6;
+            resizeOpt.lines = 1;
+            resizeOpt.maxTextWidth = 140;
+            drawStringWithResizing(contentStream, 310, 143, realName, resizeOpt);
+        }
+    }
+
+    private void drawStaffNames(PDPageContentStream contentStream, Attendee attendee) throws IOException {
+        ResizeOptions resizeOpt = new ResizeOptions();
+        resizeOpt.size = 24;
+        resizeOpt.lines = 1;
+        resizeOpt.maxTextWidth = 160;
+
+        String fanName = attendee.getFanName();
+        String realName = attendee.getFirstName() + " " + attendee.getLastName();
+        if (fanName != null && fanName.matches("^\\s*$")) {
+            fanName = null;
+        }
+        String name = fanName;
+
+        // Draw main name (Fan Name if set, otherwise real name)
+        if (name == null) {
+            name = realName;
+        }
+        drawStringWithResizing(contentStream, 360, 165, "Staff " + name, resizeOpt);
+
+        // Draw real name if Fan Name set
+        if (fanName != null) {
+            resizeOpt.size = 18;
+            resizeOpt.minFontSize = 6;
+            resizeOpt.lines = 1;
+            resizeOpt.maxTextWidth = 140;
+            drawStringWithResizing(contentStream, 310, 143, "Staff " + realName, resizeOpt);
+        }
     }
 
 

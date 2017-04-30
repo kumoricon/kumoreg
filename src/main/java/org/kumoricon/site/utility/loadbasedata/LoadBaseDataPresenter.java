@@ -306,7 +306,7 @@ public class LoadBaseDataPresenter {
         // Clear stripe color and text - it's already printed
         for (AgeRange a : staff.getAgeRanges()) {
             a.setStripeColor("#FFFFFF");
-            a.setStripeText("");
+            a.setStripeText("Staff");
         }
         results.append("    Creating ").append(staff.toString()).append("\n");
         badgeRepository.save(staff);
