@@ -138,6 +138,7 @@ public class LoadBaseDataPresenter {
             {"view_attendance_report", "View attendance report (counts only)"},
             {"view_attendance_report_revenue", "View attendance report (with revenue totals)"},
             {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
+            {"view_check_in_by_user_report", "View attendee check ins per user report"},
             {"view_staff_report", "View staff report (lists name/phone numbers)"},
             {"view_role_report", "View registration system role report"},
             {"view_till_report", "View till report"},
@@ -195,7 +196,7 @@ public class LoadBaseDataPresenter {
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
                 "view_attendance_report", "view_check_in_by_hour_report", "view_till_report", "view_export",
-                "pre_reg_check_in_edit", "manage_orders", "manage_till_sessions"});
+                "view_check_in_by_user_report", "pre_reg_check_in_edit", "manage_orders", "manage_till_sessions"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
@@ -203,7 +204,7 @@ public class LoadBaseDataPresenter {
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "view_role_report", "view_attendance_report", "view_attendance_report_revenue",
                 "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
-                "view_export", "manage_orders", "manage_till_sessions"});
+                "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();

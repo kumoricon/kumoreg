@@ -33,6 +33,7 @@ Available rights are:
 | view_attendance_report        | View attendance report (counts only)                            |
 | view_attendance_report_revenue| View attendance report (with revenue totals, requires view_attendance_report)  |
 | view_check_in_by_hour_report  | View attendee check ins per hour report                         |
+| view_check_in_by_user_report  | View attendee check ins per uesr report                         |
 | view_staff_report             | View staff report (lists name/phone numbers)                    |
 | view_role_report              | View registration system role report                            |
 | view_check_in_by_badge_report | View check ins by badge type report                             |
