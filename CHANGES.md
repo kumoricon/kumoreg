@@ -24,6 +24,8 @@ Change Log
     - Added till session management/reporting screen (can close tills for other users with proper right)
     - Only create example users when trainingMode is enabled in configuration file
     - Changed "badge name" to "fan name"
+    - Added check ins by user in last 15 minutes report
+    - Support printing different layouts for different badge types
 
 - Version 1.0.2 (10/27/2016)
     - Bugfix: refresh search view after "save and reprint badge"
