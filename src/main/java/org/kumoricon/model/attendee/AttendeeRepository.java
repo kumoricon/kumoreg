@@ -4,8 +4,10 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -56,4 +58,9 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, Jp
 
     @Query(value = "select a from Attendee a where a.badge = ?1")
     List<Attendee> findByBadgeType(Badge badge);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from Attendee a where a.id = ?1")
+    void deleteById(Integer id);
 }

@@ -195,10 +195,9 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             attendee.setOrder(null);
 
             Order result = orderRepository.save(order);
-            view.afterSuccessfulFetch(result);
-            attendeeRepository.delete(attendee);
+            attendeeRepository.deleteById(attendee.getId());
             view.notify(name + " deleted");
-            view.afterSuccessfulFetch(order);
+            view.afterSuccessfulFetch(result);
         }
     }
 
