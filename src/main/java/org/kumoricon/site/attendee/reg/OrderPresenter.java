@@ -273,7 +273,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     public void validate(Attendee attendee) throws ValidationException {
         if (attendee.isMinor()) {   // Move parent form received in to attendeeValidator???
             if (attendee.getParentFormReceived() == null || !attendee.getParentFormReceived()) {
-                throw new ValueException("Error: Parental consent form has not been received");
+                throw new ValidationException("Error: Parental consent form has not been received");
             }
         }
         attendeeValidator.validate(attendee);

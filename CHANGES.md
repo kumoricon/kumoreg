@@ -1,6 +1,9 @@
 Change Log
 ----------------
-- Version 2.0.0 (pending)
+- Version 2.0.1 (Pending)
+    - Fixed bug where adding a minor without a parental consent form would display red "!" instead
+      of a useful error message
+- Version 2.0.0 (5/31/2017)
     - Bugfix: Till report won't scroll when longer than one screen high
     - Database schema/model changes. Not compatible with previous databases
     - Maintain sort order in search results after editing an attendee
