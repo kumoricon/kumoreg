@@ -57,6 +57,7 @@ public class AttendeeWindow extends Window implements DetailFormHandler, AddNote
         delete.setTabIndex(22);
         addNote.setTabIndex(23);
 
+        delete.addStyleName(ValoTheme.BUTTON_DANGER);
         save.addClickListener((Button.ClickListener) clickEvent -> {
             Attendee attendee = attendeeDetailForm.getAttendee();
             try {
