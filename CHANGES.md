@@ -4,6 +4,9 @@ Change Log
     - Fixed bug where adding a minor without a parental consent form would display red "!" instead
       of a useful error message
     - Fixed bug where deleting an attendee from an unpaid order would not completely delete them
+    - Disable Take Payment button when order total is $0
+    - Disable Order complete button when there are no attendees in the order
+    
 - Version 2.0.0 (5/31/2017)
     - Bugfix: Till report won't scroll when longer than one screen high
     - Database schema/model changes. Not compatible with previous databases

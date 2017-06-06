@@ -167,10 +167,16 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
 
         paymentTotal.setValue(order.getTotalPaid().toString());
 
-        if (order.getTotalAmount().compareTo(order.getTotalPaid()) == 0) {
+        if (order.getTotalAmount().compareTo(order.getTotalPaid()) == 0 && order.getAttendees().size() > 0) {
             orderComplete.setEnabled(true);
         } else {
             orderComplete.setEnabled(false);
+        }
+
+        if (order.getTotalAmount().compareTo(BigDecimal.ZERO) == 0) {
+            addPayment.setEnabled(false);
+        } else {
+            addPayment.setEnabled(true);
         }
 
         if (!currentUserHasRight("manage_orders")) {
