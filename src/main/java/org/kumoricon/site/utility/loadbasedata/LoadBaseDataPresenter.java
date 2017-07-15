@@ -267,30 +267,31 @@ public class LoadBaseDataPresenter {
     private void addAttendeeBadges(StringBuilder results) {
         results.append("Creating badges\n");
         String[][] badgeList = {
-                {"Weekend", "60", "60", "45"},
-                {"Friday", "40", "40", "30"},
-                {"Saturday", "40", "40", "30"},
-                {"Sunday", "30", "30", "20"}};
+                {"Weekend", "#323E99", "60", "60", "45"},
+                {"Friday", "#323E99", "40", "40", "30"},
+                {"Saturday", "#323E99", "40", "40", "30"},
+                {"Sunday", "#323E99", "30", "30", "20"}};
         for (String[] currentBadge : badgeList) {
             log.info("Creating badge {}", currentBadge[0]);
             Badge badge = BadgeFactory.createBadge(currentBadge[0], BadgeType.ATTENDEE,
                     currentBadge[0],
-                    Float.parseFloat(currentBadge[1]),
+                    currentBadge[1],
                     Float.parseFloat(currentBadge[2]),
-                    Float.parseFloat(currentBadge[3]));
+                    Float.parseFloat(currentBadge[3]),
+                    Float.parseFloat(currentBadge[4]));
             results.append("    Creating ").append(badge.toString()).append("\n");
             badgeRepository.save(badge);
         }
 
         // Create badge types with security restrictions below
         log.info("Creating badge VIP");
-        Badge vip = BadgeFactory.createBadge("VIP", BadgeType.ATTENDEE, "VIP", 300, 300, 300);
+        Badge vip = BadgeFactory.createBadge("VIP", BadgeType.ATTENDEE, "VIP", "#000000", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
         // VIP badges have pre-printed color bars, and should just have the names
         // and Fan Names printed. Clear the day text and stripe text, set the
         // color bar to white so it isn't printed
-        vip.setDayText("");
+        vip.setBadgeTypeText("");
         for (AgeRange a : vip.getAgeRanges()) {
             a.setStripeColor("#FFFFFF");
             a.setStripeText("");
@@ -301,7 +302,7 @@ public class LoadBaseDataPresenter {
 
     private void addStaffBadges(StringBuilder results) {
         log.info("Creating badge Staff");
-        Badge staff = BadgeFactory.createBadge("Staff", BadgeType.STAFF, "Staff", 0f, 0f, 0f);
+        Badge staff = BadgeFactory.createBadge("Staff", BadgeType.STAFF, "Staff", "#FFFFFF", 0f, 0f, 0f);
         staff.setRequiredRight("badge_type_staff");
         staff.setWarningMessage("Staff check in. See your coordinator!");
         // Clear stripe color and text - it's already printed
@@ -319,14 +320,14 @@ public class LoadBaseDataPresenter {
      */
     private void addSpecialtyBadges(StringBuilder results) {
         log.info("Creating badge Artist");
-        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.OTHER, "Artist", 0f, 0f, 0f, "#800080");
+        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.OTHER, "Artist", "#800080", 0f, 0f, 0f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
         results.append("    Creating ").append(artist.toString()).append("\n");
         badgeRepository.save(artist);
 
         log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", 0f, 0f, 0f, "#00FFFF");
+        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", "#00FFFF", 0f, 0f, 0f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
         for (AgeRange a : exhibitor.getAgeRanges()) {
@@ -336,35 +337,35 @@ public class LoadBaseDataPresenter {
         badgeRepository.save(exhibitor);
 
         log.info("Creating badge Guest");
-        Badge guest = BadgeFactory.createBadge("Guest", BadgeType.OTHER,"Guest", 0f, 0f, 0f, "#62F442");
+        Badge guest = BadgeFactory.createBadge("Guest", BadgeType.OTHER,"Guest", "#62F442", 0f, 0f, 0f);
         guest.setRequiredRight("badge_type_guest");
         guest.setWarningMessage("Guest check in. See your coordinator!");
         results.append("    Creating ").append(guest.toString()).append("\n");
         badgeRepository.save(guest);
 
         log.info("Creating badge Emerging Press");
-        Badge ePress = BadgeFactory.createBadge("Emerging Press", BadgeType.OTHER,"E Press", 0f, 0f, 0f, "#1DE5D1");
+        Badge ePress = BadgeFactory.createBadge("Emerging Press", BadgeType.OTHER,"E Press", "#1DE5D1", 0f, 0f, 0f);
         ePress.setRequiredRight("badge_type_emerging_press");
         ePress.setWarningMessage("Press check in. See your coordinator!");
         results.append("    Creating ").append(ePress.toString()).append("\n");
         badgeRepository.save(ePress);
 
         log.info("Creating badge Standard Press");
-        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.OTHER,"S Press", 0f, 0f, 0f, "#1DE5D1");
+        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.OTHER,"S Press", "#1DE5D1", 0f, 0f, 0f);
         sPress.setRequiredRight("badge_type_standard_press");
         sPress.setWarningMessage("Press check in. See your coordinator!");
         results.append("    Creating ").append(sPress.toString()).append("\n");
         badgeRepository.save(sPress);
 
         log.info("Creating badge Industry");
-        Badge industry = BadgeFactory.createBadge("Industry", BadgeType.OTHER,"Industry", 0f, 0f, 0f, "#FF00FC");
+        Badge industry = BadgeFactory.createBadge("Industry", BadgeType.OTHER,"Industry", "#FF00FC", 0f, 0f, 0f);
         industry.setRequiredRight("badge_type_industry");
         industry.setWarningMessage("Industry check in. See your coordinator!");
         results.append("    Creating ").append(industry.toString()).append("\n");
         badgeRepository.save(industry);
 
         log.info("Creating badge Panelist");
-        Badge panelist = BadgeFactory.createBadge("Panelist", BadgeType.OTHER,"Panelist", 0f, 0f, 0f, "#FFA500");
+        Badge panelist = BadgeFactory.createBadge("Panelist", BadgeType.OTHER,"Panelist", "#FFA500", 0f, 0f, 0f);
         panelist.setRequiredRight("badge_type_panelist");
         panelist.setWarningMessage("Panelist check in. See your coordinator!");
         results.append("    Creating ").append(panelist.toString()).append("\n");
@@ -380,12 +381,12 @@ public class LoadBaseDataPresenter {
         results.append("Creating badges\n");
 
         log.info("Creating badge Kumoricon Lite");
-        Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Sunday", 10, 10, 10);
+        Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Sunday", "#323E99", 10, 10, 10);
         results.append("    Creating ").append(lite.toString()).append("\n");
         badgeRepository.save(lite);
 
         log.info("Creating badge Kumoricon Lite - Manga Donation");
-        Badge liteDonation = BadgeFactory.createBadge("Kumoricon Lite - Manga Donation", BadgeType.ATTENDEE, "Sunday", 0, 0, 0);
+        Badge liteDonation = BadgeFactory.createBadge("Kumoricon Lite - Manga Donation", BadgeType.ATTENDEE, "Sunday", "#323E99", 0, 0, 0);
         results.append("    Creating ").append(liteDonation.toString()).append("\n");
         badgeRepository.save(liteDonation);
     }

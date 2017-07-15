@@ -56,8 +56,8 @@ public class BadgeView extends BaseView implements View {
         Object[] sortBy = {badgeList.getSortContainerPropertyId()};
         boolean[] sortOrder = {badgeList.isSortAscending()};
         badgeList.setContainerDataSource(new BeanItemContainer<>(Badge.class, badges));
-        badgeList.setVisibleColumns("name", "badgeType", "requiredRight", "visible");
-        badgeList.setColumnHeaders("Name", "Badge Type", "Required Security Right", "Visible");
+        badgeList.setVisibleColumns("name", "badgeTypeBackgroundColor", "badgeType", "requiredRight", "visible");
+        badgeList.setColumnHeaders("Name", "Stripe Color", "Badge Type", "Required Security Right", "Visible");
         badgeList.sort(sortBy, sortOrder);
     }
 

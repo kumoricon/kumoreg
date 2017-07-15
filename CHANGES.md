@@ -1,6 +1,9 @@
 Change Log
 ----------------
-- Version 2.0.1 (Pending)
+- Version 2.0.2 (Pending)
+    - Split out badge type color bar and age range color bar
+
+- Version 2.0.1 (7/4/2017)
     - Fixed bug where adding a minor without a parental consent form would display red "!" instead
       of a useful error message
     - Fixed bug where deleting an attendee from an unpaid order would not completely delete them

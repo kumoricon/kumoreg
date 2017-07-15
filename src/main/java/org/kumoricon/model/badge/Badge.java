@@ -15,7 +15,8 @@ public class Badge extends Record {
     @NotNull
     @Column(unique=true)
     private String name;
-    private String dayText;     // Friday/Saturday/Sunday/Weekend/VIP
+    private String badgeTypeText;     // Friday/Saturday/Sunday/Weekend/VIP
+    private String badgeTypeBackgroundColor;   // Background color for the day text
     private String warningMessage;
     @NotNull
     private boolean visible;
@@ -43,8 +44,8 @@ public class Badge extends Record {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getDayText() { return dayText; }
-    public void setDayText(String day) { this.dayText = day; }
+    public String getBadgeTypeText() { return badgeTypeText; }
+    public void setBadgeTypeText(String day) { this.badgeTypeText = day; }
 
     public boolean isVisible() { return visible; }
     public void setVisible(boolean visible) { this.visible = visible; }
@@ -68,6 +69,14 @@ public class Badge extends Record {
     public void addAgeRange(String name, int minAge, int maxAge, double cost, String stripeColor, String stripeText) {
         AgeRange a = new AgeRange(name, minAge, maxAge, cost, stripeColor, stripeText);
         ageRanges.add(a);
+    }
+
+    public String getBadgeTypeBackgroundColor() {
+        return badgeTypeBackgroundColor;
+    }
+
+    public void setBadgeTypeBackgroundColor(String badgeTypeBackgroundColor) {
+        this.badgeTypeBackgroundColor = badgeTypeBackgroundColor;
     }
 
     public BigDecimal getCostForAge(Long age) throws ServiceException {

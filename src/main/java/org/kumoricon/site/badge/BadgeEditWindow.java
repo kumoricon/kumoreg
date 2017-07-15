@@ -17,7 +17,8 @@ class BadgeEditWindow extends Window {
 
     private final TextField name = FieldFactory.createTextField("Name");
 
-    private final TextField dayText = FieldFactory.createTextField("Day Text");
+    private final TextField badgeTypeText = FieldFactory.createTextField("Badge Type Text");
+    private final TextField badgeTypeBackgroundColor = FieldFactory.createTextField("Badge Type Background Color");
     private final TextField waringMessage = FieldFactory.createTextField("Warning message");
     private final TextField requiredRight = FieldFactory.createDisabledTextField("Required Right");
     private final CheckBox visible = new CheckBox("Visible");
@@ -53,7 +54,8 @@ class BadgeEditWindow extends Window {
         form.addComponent(name);
         form.addComponent(badgeType);
         badgeType.addItems(BadgeType.ATTENDEE, BadgeType.STAFF, BadgeType.OTHER);
-        form.addComponent(dayText);
+        form.addComponent(badgeTypeText);
+        form.addComponent(badgeTypeBackgroundColor);
         form.addComponent(waringMessage);
         waringMessage.setWidth(70, Unit.EM);
         waringMessage.setDescription("Displayed when attendee with this badge type checks in");
@@ -64,7 +66,8 @@ class BadgeEditWindow extends Window {
 
         badgeBeanFieldGroup.bind(name, "name");
         badgeBeanFieldGroup.bind(badgeType, "badgeType");
-        badgeBeanFieldGroup.bind(dayText, "dayText");
+        badgeBeanFieldGroup.bind(badgeTypeText, "badgeTypeText");
+        badgeBeanFieldGroup.bind(badgeTypeBackgroundColor, "badgeTypeBackgroundColor");
         badgeBeanFieldGroup.bind(waringMessage, "warningMessage");
         badgeBeanFieldGroup.bind(requiredRight, "requiredRight");
         badgeBeanFieldGroup.bind(visible, "visible");

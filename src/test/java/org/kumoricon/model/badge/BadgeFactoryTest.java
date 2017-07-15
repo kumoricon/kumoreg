@@ -9,9 +9,10 @@ import static org.junit.Assert.*;
 public class BadgeFactoryTest {
     @Test
     public void createBadge() throws Exception {
-        Badge b = BadgeFactory.createBadge("Weekend Test", BadgeType.ATTENDEE, "Weekend", 0f, 0f, 0f);
+        Badge b = BadgeFactory.createBadge("Weekend Test", BadgeType.ATTENDEE, "Weekend", "#00FF00", 0f, 0f, 0f);
         assertEquals("Weekend Test", b.getName());
-        assertEquals("Weekend", b.getDayText());
+        assertEquals("Weekend", b.getBadgeTypeText());
+        assertEquals("#00FF00", b.getBadgeTypeBackgroundColor());
         assertEquals(BadgeType.ATTENDEE, b.getBadgeType());
         for (AgeRange a : b.getAgeRanges()) {
             assertEquals(BigDecimal.ZERO, a.getCost());
@@ -25,28 +26,8 @@ public class BadgeFactoryTest {
         Badge b = BadgeFactory.createEmptyBadge();
         assertEquals(4, b.getAgeRanges().size());
         assertEquals("", b.getName());
-        assertEquals("", b.getDayText());
+        assertEquals("", b.getBadgeTypeText());
         assertNull(b.getRequiredRight());
         assertNull(b.getWarningMessage());
     }
-
-    @Test
-    public void createBadgeOverrideStripeColor() throws Exception {
-        Badge b = BadgeFactory.createBadge("Weekend Test", BadgeType.ATTENDEE, "Weekend", 0f, 0f, 0f, "#EFEFEF");
-        assertEquals(BadgeType.ATTENDEE, b.getBadgeType());
-        assertEquals("Weekend Test", b.getName());
-        assertEquals("Weekend", b.getDayText());
-        for (AgeRange a : b.getAgeRanges()) {
-            assertEquals(BigDecimal.ZERO, a.getCost());
-            // Make sure stripe color is only overridden for adults
-            if (a.getName().equals("Adult")) {
-                assertEquals("#EFEFEF", a.getStripeColor());
-            } else {
-                assertNotEquals("#EFEFEF", a.getStripeColor());
-            }
-        }
-        assertNull(b.getWarningMessage());
-        assertNull(b.getRequiredRight());
-    }
-
 }
