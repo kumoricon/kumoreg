@@ -7,6 +7,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.FieldFactory;
@@ -23,6 +24,7 @@ public class TestBadgeView extends BaseView implements View, AttendeePrintView {
 
     private final TestBadgePresenter handler;
 
+    private NativeSelect badgeType;
     private TextField xOffset;
     private TextField yOffset;
 
@@ -37,8 +39,16 @@ public class TestBadgeView extends BaseView implements View, AttendeePrintView {
         numberOfBadges.setNullSelectionAllowed(false);
         addComponent(numberOfBadges);
 
-        xOffset = FieldFactory.createNegativeNumberField("Horizontal Offset (points)", 2);
-        yOffset = FieldFactory.createNegativeNumberField("Vertical Offset (points)", 3);
+        badgeType = FieldFactory.createNativeSelect("Badge Type", 2);
+        badgeType.setMultiSelect(false);
+        badgeType.setNullSelectionAllowed(false);
+        List<Badge> availableBadges = handler.getBadges();
+        badgeType.addItems(availableBadges);
+        badgeType.setValue(availableBadges.get(0));
+        addComponent(badgeType);
+
+        xOffset = FieldFactory.createNegativeNumberField("Horizontal Offset (points)", 3);
+        yOffset = FieldFactory.createNegativeNumberField("Vertical Offset (points)", 4);
         xOffset.setNullSettingAllowed(false);
         yOffset.setNullSettingAllowed(false);
         xOffset.setDescription("Points (1/72 inch). Negative values move left, positive values move right");
@@ -56,7 +66,7 @@ public class TestBadgeView extends BaseView implements View, AttendeePrintView {
         addComponent(display);
         display.focus();
         display.addClickListener((Button.ClickListener) clickEvent ->
-                handler.showAttendeeBadgeWindow(this, (Integer) numberOfBadges.getValue(), getXOffset(), getYOffset()));
+                handler.showAttendeeBadgeWindow(this, (Integer) numberOfBadges.getValue(), (Badge) badgeType.getValue(), getXOffset(), getYOffset()));
 
         Label notes = new Label("Note: Changed offsets will not be saved. Set them in Administration > Computers.");
         addComponent(notes);

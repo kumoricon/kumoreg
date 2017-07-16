@@ -2,6 +2,8 @@ package org.kumoricon.site.utility.testbadge;
 
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeFactory;
+import org.kumoricon.model.badge.Badge;
+import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.computer.Computer;
 import org.kumoricon.model.computer.ComputerService;
 import org.kumoricon.service.print.BadgePrintService;
@@ -28,12 +30,14 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     private final AttendeeFactory attendeeFactory;
     private final BadgePrintService badgePrintService;
     private final ComputerService computerService;
+    private final BadgeRepository badgeRepository;
 
     @Autowired
-    public TestBadgePresenter(BadgePrintService badgePrintService, AttendeeFactory attendeeFactory, ComputerService computerService) {
+    public TestBadgePresenter(BadgePrintService badgePrintService, AttendeeFactory attendeeFactory, ComputerService computerService, BadgeRepository badgeRepository) {
         this.badgePrintService = badgePrintService;
         this.attendeeFactory = attendeeFactory;
         this.computerService = computerService;
+        this.badgeRepository = badgeRepository;
     }
 
     /**
@@ -44,7 +48,7 @@ public class TestBadgePresenter implements PrintBadgeHandler {
      * @param xOffset Horizontal offset in points
      * @param yOffset Vertical offset in points
      */
-    public void showAttendeeBadgeWindow(AttendeePrintView view, Integer numberOfBadges, Integer xOffset, Integer yOffset) {
+    public void showAttendeeBadgeWindow(AttendeePrintView view, Integer numberOfBadges, Badge badge, Integer xOffset, Integer yOffset) {
         if (numberOfBadges == null) { numberOfBadges = 1; }
         if (xOffset == null) { xOffset = 0; }
         if (yOffset == null) { yOffset = 0; }
@@ -53,9 +57,9 @@ public class TestBadgePresenter implements PrintBadgeHandler {
                 view.getCurrentUsername(), numberOfBadges, xOffset, yOffset);
         List<Attendee> attendees = new ArrayList<>();
 
-        if (numberOfBadges >= 1) { attendees.add(attendeeFactory.generateDemoAttendee()); }
-        if (numberOfBadges >= 2) { attendees.add(attendeeFactory.generateChildAttendee()); }
-        if (numberOfBadges >= 3) { attendees.add(attendeeFactory.generateYouthAttendee()); }
+        if (numberOfBadges >= 1) { attendees.add(attendeeFactory.generateDemoAttendee(badge)); }
+        if (numberOfBadges >= 2) { attendees.add(attendeeFactory.generateYouthAttendee(badge)); }
+        if (numberOfBadges >= 3) { attendees.add(attendeeFactory.generateChildAttendee(badge)); }
 
         log.info("{} printing test badges for {}", view.getCurrentUsername(), attendees);
         showAttendeeBadgeWindow(view, attendees, xOffset, yOffset);
@@ -131,5 +135,9 @@ public class TestBadgePresenter implements PrintBadgeHandler {
             log.error("Error printing badges for {}", view.getCurrentUsername(), e);
             view.notifyError(e.getMessage());
         }
+    }
+
+    public List<Badge> getBadges() {
+        return badgeRepository.findAll();
     }
 }

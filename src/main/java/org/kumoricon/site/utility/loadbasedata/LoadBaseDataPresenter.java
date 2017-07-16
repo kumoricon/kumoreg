@@ -288,14 +288,7 @@ public class LoadBaseDataPresenter {
         Badge vip = BadgeFactory.createBadge("VIP", BadgeType.ATTENDEE, "VIP", "#000000", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
-        // VIP badges have pre-printed color bars, and should just have the names
-        // and Fan Names printed. Clear the day text and stripe text, set the
-        // color bar to white so it isn't printed
-        vip.setBadgeTypeText("");
-        for (AgeRange a : vip.getAgeRanges()) {
-            a.setStripeColor("#FFFFFF");
-            a.setStripeText("");
-        }
+        vip.setBadgeTypeText("VIP");
         results.append("    Creating ").append(vip.toString()).append("\n");
         badgeRepository.save(vip);
     }
@@ -330,9 +323,6 @@ public class LoadBaseDataPresenter {
         Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", "#00FFFF", 0f, 0f, 0f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
-        for (AgeRange a : exhibitor.getAgeRanges()) {
-            a.setStripeColor("#1DE5D1");
-        }
         results.append("    Creating ").append(exhibitor.toString()).append("\n");
         badgeRepository.save(exhibitor);
 
