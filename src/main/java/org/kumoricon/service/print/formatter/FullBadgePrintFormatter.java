@@ -139,8 +139,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
             drawAgeColorStripe(contentStream, font, attendee);
             drawBadgeType(contentStream, attendee);
         }
-
-
+        
         contentStream.close();
 
         return page;
@@ -150,7 +149,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         // Draw badge type in color stripe
         contentStream.beginText();
         contentStream.moveTextPositionByAmount(167, 105);
-        contentStream.drawString(attendee.getBadge().getDayText());
+        contentStream.drawString(attendee.getBadge().getBadgeTypeText());
         contentStream.endText();
     }
 
