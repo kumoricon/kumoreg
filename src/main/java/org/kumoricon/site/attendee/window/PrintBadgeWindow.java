@@ -53,6 +53,8 @@ public class PrintBadgeWindow extends Window {
         attendeeGrid.addStyleName("kumoHeaderOnlyHandPointer");
         attendeeGrid.setColumnOrder("firstName", "lastName", "age");
         attendeeGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        Grid.MultiSelectionModel m  = (Grid.MultiSelectionModel) attendeeGrid.getSelectionModel();
+        m.selectAll();
         verticalLayout.addComponent(attendeeGrid);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
