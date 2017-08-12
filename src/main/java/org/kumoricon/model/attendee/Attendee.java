@@ -246,4 +246,36 @@ public class Attendee extends Record {
     public void setStaffImageFilename(String staffImageFilename) {
         this.staffImageFilename = staffImageFilename;
     }
+
+    public ArrayList<String> getStaffPositions() {
+        return staffPositions;
+    }
+
+    public void setStaffPositions(ArrayList<String> staffPositions) {
+        this.staffPositions = staffPositions;
+    }
+
+    public String getStaffDepartmentColor() {
+        return staffDepartmentColor;
+    }
+
+    public void setStaffDepartmentColor(String staffDepartmentColor) {
+        this.staffDepartmentColor = staffDepartmentColor;
+    }
+
+    public String getStaffDepartment() {
+        return staffDepartment;
+    }
+
+    public void setStaffDepartment(String staffDepartment) {
+        this.staffDepartment = staffDepartment;
+    }
+
+    public String getStaffImageFilename() {
+        return staffImageFilename;
+    }
+
+    public void setStaffImageFilename(String staffImageFilename) {
+        this.staffImageFilename = staffImageFilename;
+    }
 }
