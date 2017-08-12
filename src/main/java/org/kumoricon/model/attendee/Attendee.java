@@ -11,9 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "attendees")
@@ -51,6 +49,12 @@ public class Attendee extends Record {
     @OrderBy("timestamp desc")
     private Set<AttendeeHistory> history;
     private boolean preRegistered;              // Did attendee register before con?
+    private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
+    @Basic
+    private ArrayList<String> staffPositions;
+    private String staffDepartment;
+    private String staffDepartmentColor;
+    private String staffImageFilename;
 
 
     public Attendee() {
@@ -61,6 +65,7 @@ public class Attendee extends Record {
         this.compedBadge = false;
         this.parentIsEmergencyContact = false;
         this.history = new HashSet<>();
+        this.badgePrePrinted = false;
     }
 
 
@@ -152,6 +157,14 @@ public class Attendee extends Record {
     public String getLegalLastName() { return legalLastName; }
     public void setLegalLastName(String legalLastName) { this.legalLastName = legalLastName; }
 
+    public boolean isBadgePrePrinted() {
+        return badgePrePrinted;
+    }
+
+    public void setBadgePrePrinted(boolean badgePrePrinted) {
+        this.badgePrePrinted = badgePrePrinted;
+    }
+
     public Set<AttendeeHistory> getHistory() { return history; }
 
     public void setHistory(Set<AttendeeHistory> history) { this.history = history; }
@@ -199,5 +212,37 @@ public class Attendee extends Record {
             }
         }
         return null;
+    }
+
+    public ArrayList<String> getStaffPositions() {
+        return staffPositions;
+    }
+
+    public void setStaffPositions(ArrayList<String> staffPositions) {
+        this.staffPositions = staffPositions;
+    }
+
+    public String getStaffDepartmentColor() {
+        return staffDepartmentColor;
+    }
+
+    public void setStaffDepartmentColor(String staffDepartmentColor) {
+        this.staffDepartmentColor = staffDepartmentColor;
+    }
+
+    public String getStaffDepartment() {
+        return staffDepartment;
+    }
+
+    public void setStaffDepartment(String staffDepartment) {
+        this.staffDepartment = staffDepartment;
+    }
+
+    public String getStaffImageFilename() {
+        return staffImageFilename;
+    }
+
+    public void setStaffImageFilename(String staffImageFilename) {
+        this.staffImageFilename = staffImageFilename;
     }
 }

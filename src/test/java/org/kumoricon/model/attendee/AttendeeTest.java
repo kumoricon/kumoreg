@@ -6,13 +6,15 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserFactory;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static junit.framework.TestCase.*;
 
 public class AttendeeTest {
-    Attendee attendee;
+    private Attendee attendee;
     @Before
     public void setUp() throws Exception {
         attendee = new Attendee();
