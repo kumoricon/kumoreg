@@ -291,6 +291,9 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         log.info("{} reported badge(s) printed successfully for {}",
                 printBadgeWindow.getParentView().getCurrentUser(), attendees);
         printBadgeWindow.close();
+
+        // Attendees registering at-con should not have pre-printed badges, so don't bother
+        // resetting attendee.badgePrePrinted here.
         view.notify("Order Complete");
         view.navigateTo("/");
     }

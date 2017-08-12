@@ -4,6 +4,7 @@ Change Log
     - Split out badge type color bar and age range color bar
     - Added badge type to Print Test Badge screen
     - Added .json file import for staff information
+    - Skip printing badges for attendees that are flagged as having pre-printed badges (staff)
 
 - Version 2.0.1 (7/4/2017)
     - Fixed bug where adding a minor without a parental consent form would display red "!" instead

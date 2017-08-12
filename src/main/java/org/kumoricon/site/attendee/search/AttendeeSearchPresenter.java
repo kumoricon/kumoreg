@@ -171,6 +171,11 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             } else {
                 printBadgeWindow.getParentView().refresh();
             }
+            // Set all attendees as not having a pre-printed badge ready for pickup
+            for (Attendee attendee :attendees) {
+                attendee.setBadgePrePrinted(false);
+            }
+            attendeeRepository.save(attendees);
             printBadgeWindow.close();
         }
     }

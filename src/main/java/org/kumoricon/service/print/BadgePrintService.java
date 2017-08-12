@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.print.PrintException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,7 +29,17 @@ public class BadgePrintService extends PrintService {
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset) throws PrintException {
         String printerName;
+        List<Attendee> attendeesNotPrinted = new ArrayList<>();
+        for (Attendee attendee : attendees) {
+            if (!attendee.isBadgePrePrinted()) {
+                attendeesNotPrinted.add(attendee);
+            }
+        }
+
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
+            if (attendeesNotPrinted.size() < 1) {
+                return("Pre-printed badges ready for pickup");
+            }
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
                     getCurrentBadgeFormatter(attendees, xOffset, yOffset);
@@ -37,7 +48,10 @@ public class BadgePrintService extends PrintService {
         } else {
             return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
-        return "Printed to '" + printerName + "'";
+        return String.format("Printed {} badges to {}. {} pre-printed badges.",
+                attendeesNotPrinted.size(),
+                printerName,
+                attendees.size() - attendeesNotPrinted.size());
     }
 
 
