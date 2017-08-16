@@ -5,7 +5,7 @@ import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 @Component
 public class BadgeLib {
 
-    private static String badgeResourcePath = "/home/jason/kumoreg_resources";
+    private static String badgeResourcePath = "/tmp/training/badge";
     private static final Logger log = LoggerFactory.getLogger(BadgeLib.class);
 
     /**
@@ -40,26 +40,13 @@ public class BadgeLib {
         }
     }
 
-    static PDDocument loadBackground(String filename) {
-        Path filePath = Paths.get(badgeResourcePath, filename);
-        PDDocument background = null;
-        try {
-            background = PDDocument.load(filePath.toFile());
-        } catch (IOException ex) {
-            log.warn("Couldn't load PDF {}, falling back to blank page", filename);
-            background = new PDDocument();
-            background.addPage(new PDPage());
-        }
-        return background;
-    }
-
     static PDPage importPageBackground(PDDocument document, String filename) {
         Path filePath = Paths.get(badgeResourcePath, filename);
         PDDocument background = null;
         try {
             background = PDDocument.load(filePath.toFile());
-            PDPage templatePage = (PDPage)background.getDocumentCatalog().getPages().get(0);
-            COSDictionary pageDict = templatePage.getCOSObject();
+            PDPage templatePage = (PDPage)background.getDocumentCatalog().getAllPages().get(0);
+            COSDictionary pageDict = templatePage.getCOSDictionary();
             COSDictionary newPageDict = new COSDictionary(pageDict);
             newPageDict.removeItem(COSName.ANNOTS);
             newPageDict.removeItem(COSName.ACTUAL_TEXT);
@@ -72,6 +59,14 @@ public class BadgeLib {
                 return document.importPage(new PDPage());
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        } finally {
+            if (background != null) {
+                try {
+                    background.close();
+                } catch (IOException e) {
+                    log.error("Error closing PDF", e);
+                }
             }
         }
     }
