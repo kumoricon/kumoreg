@@ -8,6 +8,8 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.BadgeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;
@@ -16,9 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-
 public class FullBadgePrintFormatter implements BadgePrintFormatter {
     private final ByteArrayOutputStream os = new ByteArrayOutputStream();
+    private static final Logger log = LoggerFactory.getLogger(FullBadgePrintFormatter.class);
 
     private Integer xOffset = 0;
     private Integer yOffset = 0;
@@ -38,22 +40,34 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
      * @param yOffset Vertical offset in points (1/72 inch)
      */
     public FullBadgePrintFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
-        PDDocument document;
+        PDDocument document = null;
         this.xOffset = (xOffset == null) ? 0 : xOffset;
         this.yOffset = (yOffset == null) ? 0 : yOffset;
-
         try {
             document = new PDDocument();
             for (Attendee attendee : attendees) {
-                PDPage currentPage = generatePage(attendee, document);
-                document.addPage( currentPage );
+                if (BadgeType.STAFF.equals(attendee.getBadge().getBadgeType())) {
+                    generateStaffBadgeFront(attendee, document);
+                    generateStaffBadgeBack(attendee, document);
+                } else {
+                    PDPage currentPage = generateAttendeePage(attendee, document);
+                    document.addPage(currentPage);
+                }
             }
 
             document.save(os);
             document.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error creating staff badge", e);
+        } finally {
+            if (document != null) {
+                try {
+                    document.close();
+                } catch (IOException ex) {
+                    log.error("Error closing PDF", ex);
+                }
+            }
         }
 
     }
@@ -115,7 +129,45 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         contentStream.endText();
     }
 
-    private PDPage generatePage(Attendee attendee, PDDocument document) throws IOException {
+    private void generateStaffBadgeFront(Attendee attendee, PDDocument document) throws IOException {
+        PDPage page = BadgeLib.importPageBackground(document, "2017_staff_badge_front.pdf");
+        PDFont font = BadgeLib.loadFont(document);
+
+        PDPageContentStream contentStream = new PDPageContentStream(document, page, true, true);
+
+        // Positions are measured from the bottom left corner of the page at 72 DPI
+
+        // Set up global transformation matrix according to xOffset, yOffset.
+        // NOTE: if we want to support per-printer/per-client scaling, we would replace the 1's
+        // below, with xScale and yScale.
+        contentStream.concatenate2CTM(1, 0, 0, 1, xOffset, yOffset);
+
+        Staff2017.drawStaffName(contentStream, font, attendee);
+
+        contentStream.close();
+
+    }
+
+    private void generateStaffBadgeBack(Attendee attendee, PDDocument document) throws IOException {
+        PDPage page = BadgeLib.importPageBackground(document, "2017_staff_badge_back.pdf");
+        PDFont font = BadgeLib.loadFont(document);
+
+        PDPageContentStream contentStream = new PDPageContentStream(document, page, true, true);
+
+        // Positions are measured from the bottom left corner of the page at 72 DPI
+
+        // Set up global transformation matrix according to xOffset, yOffset.
+        // NOTE: if we want to support per-printer/per-client scaling, we would replace the 1's
+        // below, with xScale and yScale.
+        contentStream.concatenate2CTM(1, 0, 0, 1, xOffset, yOffset);
+
+        Staff2017.drawStaffName(contentStream, font, attendee);
+
+        contentStream.close();
+    }
+
+
+    private PDPage generateAttendeePage(Attendee attendee, PDDocument document) throws IOException {
         PDPage page = new PDPage(new PDRectangle(612f, 396f));
         PDFont font = PDType1Font.HELVETICA_BOLD;
         PDPageContentStream contentStream = new PDPageContentStream(document, page);
@@ -128,18 +180,10 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         contentStream.concatenate2CTM(1, 0, 0, 1, xOffset, yOffset);
 
         // Draw fields on badge depending on badge type
-        if (attendee.getBadge().getBadgeType().equals(BadgeType.STAFF)) {
-            drawStaffNames(contentStream, attendee);
-            drawBadgeNumber(contentStream, attendee);
-            drawAgeColorStripe(contentStream, font, attendee);
-            drawBadgeType(contentStream, attendee);
-        } else {
-            drawMainNames(contentStream, attendee);
-            drawBadgeNumber(contentStream, attendee);
-            drawAgeColorStripe(contentStream, font, attendee);
-            drawBadgeType(contentStream, attendee);
-        }
-        
+//        drawStaffNames(contentStream, attendee);
+//        drawBadgeNumber(contentStream, attendee);
+//        drawAgeColorStripe(contentStream, font, attendee);
+//        drawBadgeType(contentStream, attendee);
         contentStream.close();
 
         return page;
@@ -244,6 +288,8 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
             drawStringWithResizing(contentStream, 310, 143, "Staff " + realName, resizeOpt);
         }
     }
+
+
 
 
     /**

@@ -218,8 +218,9 @@ public class Attendee extends Record {
         return staffPositions;
     }
 
-    public void setStaffPositions(ArrayList<String> staffPositions) {
-        this.staffPositions = staffPositions;
+    public void setStaffPositions(List<String> staffPositions) {
+        // Must be an ArrayList internally for Hibernate to be able to serialize it
+        this.staffPositions = new ArrayList<>(staffPositions);
     }
 
     public String getStaffDepartmentColor() {
