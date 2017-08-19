@@ -9,11 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.String;
 
 @Service
 public class AttendeeFactory {
@@ -42,9 +39,10 @@ public class AttendeeFactory {
         attendee.setEmergencyContactPhone("321-321-4321");
         attendee.setBirthDate(LocalDate.now().minusYears(30L));
         attendee.setPaid(true);
-        attendee.setStaffDepartment("Department Name");
+        attendee.setStaffDepartment("Membership");
         List<String> positions = Arrays.asList("Position 1", "Position 2", "Position 3");
         attendee.setStaffPositions(positions);
+        attendee.setStaffDepartmentColor("#FFDDDD");
         try {
             attendee.setPaidAmount(attendee.getBadge().getCostForAge(attendee.getAge()));
         } catch (ServiceException e) {
