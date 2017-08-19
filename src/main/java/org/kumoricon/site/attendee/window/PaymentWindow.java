@@ -40,6 +40,10 @@ public class PaymentWindow extends Window {
     }
 
     private void showItem(Payment payment) {
+        // Only make PREREG an option if the order has that payment type set already
+        if (Payment.PaymentType.PREREG.equals(payment.getPaymentType())) {
+            paymentType.addItem(Payment.PaymentType.PREREG);
+        }
         paymentType.setValue(payment.getPaymentType());
         if (payment.getAmount() != null) {
             amount.setValue(payment.getAmount().toString());
@@ -102,7 +106,11 @@ public class PaymentWindow extends Window {
 
         paymentType.setNullSelectionAllowed(false);
         for (Payment.PaymentType p : Payment.PaymentType.values()) {
-            paymentType.addItem(p);
+            // Don't show the PREREG payment type unless the record is already set to PREREG.
+            // IE - the order was imported with prereg payment type)
+            if (p != Payment.PaymentType.PREREG) {
+                paymentType.addItem(p);
+            }
         }
         paymentType.setValue(Payment.PaymentType.CASH);
         verticalLayout.addComponent(paymentType);
