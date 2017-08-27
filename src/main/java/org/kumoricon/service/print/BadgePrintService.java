@@ -29,17 +29,13 @@ public class BadgePrintService extends PrintService {
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset) throws PrintException {
         String printerName;
-        List<Attendee> attendeesNotPrinted = new ArrayList<>();
-        for (Attendee attendee : attendees) {
-            if (!attendee.isBadgePrePrinted()) {
-                attendeesNotPrinted.add(attendee);
-            }
+        List<Attendee> attendeesNotPrinted = findPrintedAttendees(attendees);
+
+        if (attendeesNotPrinted.size() == attendees.size()) {
+            return("Pre-printed badges ready for pickup: " + attendeesNotPrinted);
         }
 
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
-            if (attendeesNotPrinted.size() < 1) {
-                return("Pre-printed badges ready for pickup");
-            }
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
                     getCurrentBadgeFormatter(attendees, xOffset, yOffset);
@@ -48,10 +44,21 @@ public class BadgePrintService extends PrintService {
         } else {
             return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
-        return String.format("Printed {} badges to {}. {} pre-printed badges.",
-                attendeesNotPrinted.size(),
+        return String.format("Printed %s badges to %s. %s pre-printed badges.",
+                attendees.size() - attendeesNotPrinted.size(),
                 printerName,
-                attendees.size() - attendeesNotPrinted.size());
+                attendeesNotPrinted.size());
+    }
+
+
+    private static List<Attendee> findPrintedAttendees(List<Attendee> attendees) {
+        List<Attendee> attendeesNotPrinted = new ArrayList<>();
+        for (Attendee attendee : attendees) {
+            if (!attendee.isBadgePrePrinted()) {
+                attendeesNotPrinted.add(attendee);
+            }
+        }
+        return attendeesNotPrinted;
     }
 
 
@@ -65,6 +72,11 @@ public class BadgePrintService extends PrintService {
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) throws PrintException {
         String printerName;
+        List<Attendee> attendeesNotPrinted = findPrintedAttendees(attendees);
+        if (attendeesNotPrinted.size() == attendees.size()) {
+            return("Pre-printed badges ready for pickup: " + attendeesNotPrinted);
+        }
+
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
@@ -74,7 +86,10 @@ public class BadgePrintService extends PrintService {
         } else {
             return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
-        return "Printed to '" + printerName + "'";
+        return String.format("Printed %s badges to %s. %s pre-printed badges.",
+                attendees.size() - attendeesNotPrinted.size(),
+                printerName,
+                attendeesNotPrinted.size());
     }
 
     /**
