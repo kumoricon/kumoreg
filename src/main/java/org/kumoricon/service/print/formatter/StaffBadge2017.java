@@ -14,6 +14,7 @@ import org.kumoricon.service.print.formatter.ResizeOptions;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Path;
 
 public class StaffBadge2017 extends FormatterBase  {
 
@@ -389,7 +390,8 @@ public class StaffBadge2017 extends FormatterBase  {
     private void drawImage(PDPage page, Attendee attendee) throws IOException {
         if (attendee.getStaffImageFilename() != null) {
             PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
-            PDImageXObject xImage = PDImageXObject.createFromFile(attendee.getStaffImageFilename(), document);
+
+            PDImageXObject xImage = PDImageXObject.createFromFile(BadgeLib.getStaffImageFilename(attendee), document);
             Dimension scaledDim = getScaledDimension(
                     new Dimension(xImage.getWidth(),  xImage.getHeight()),
                     new Dimension(149, 158));

@@ -167,7 +167,9 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         if (printBadgeWindow != null) {
             if (attendees.size() > 0) {
                 Attendee attendee = attendees.get(0);
-                searchChanged(attendee.getOrder().getOrderId());
+                if (attendee.getOrder() != null) {
+                    searchChanged(attendee.getOrder().getOrderId());
+                }
             } else {
                 printBadgeWindow.getParentView().refresh();
             }

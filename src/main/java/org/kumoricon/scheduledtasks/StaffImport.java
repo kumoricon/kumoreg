@@ -1,13 +1,27 @@
 package org.kumoricon.scheduledtasks;
 
+import com.google.gson.*;
+import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.attendee.AttendeeRepository;
+import org.kumoricon.model.badge.Badge;
+import org.kumoricon.model.badge.BadgeRepository;
+import org.kumoricon.scheduledtasks.staffimport.Action;
+import org.kumoricon.scheduledtasks.staffimport.ImportFile;
+import org.kumoricon.scheduledtasks.staffimport.Person;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -15,7 +29,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
-
 
 @Component
 public class StaffImport {
@@ -31,13 +44,66 @@ public class StaffImport {
 
     private boolean importEnabled = true;
 
+    @Autowired
+    private AttendeeRepository attendeeRepository;
+
+    @Autowired
+    private BadgeRepository badgeRepository;
+
+    private Badge staffBadge;
+
     @Scheduled(fixedRate = 10000)
     public void staffImport() {
         createDirectories();
-        getInputFiles();
+        if (!importEnabled) { return; }
+
+        staffBadge = badgeRepository.findOneByNameIgnoreCase("Staff");
+        processInputFiles();
+
     }
 
-    private List<Path> getInputFiles() {
+    private ImportFile loadFile(Path filePath) throws Exception {
+        try (BufferedReader br = Files.newBufferedReader(filePath))
+        {
+            Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
+                @Override
+                public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                    return LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ISO_LOCAL_DATE);
+                }
+            }).create();
+            ImportFile importFile = gson.fromJson(br, ImportFile.class);
+            return importFile;
+        }
+    }
+
+    private void importData(ImportFile file) {
+        if (file.persons != null) {
+            for (Person person : file.persons) {log.info(person.nameOnId);
+                String staffId = String.format("%s", person.id);
+                List<Attendee> fromDatabase = attendeeRepository.findByStaffId(staffId);
+                if (fromDatabase.size() > 0) {
+                    Attendee attendee = fromDatabase.get(0);
+                    boolean updated = person.updateAttendee(attendee);
+                    if (updated) {
+                        attendeeRepository.save(attendee);
+                    }
+                } else {
+                    Attendee attendee = person.toAttendee();
+                    attendee.setBadge(staffBadge);
+                    attendeeRepository.save(attendee);
+//                    log.info(attendee.toString());
+                }
+            }
+        }
+
+        if (file.actions != null) {
+            for (Action action : file.actions) {
+                log.info(action.toString());
+            }
+        }
+    }
+
+    private void processInputFiles() {
         Path inputPath = Paths.get(inputPathString);
 
         try {
@@ -46,10 +112,16 @@ public class StaffImport {
             int errors = 0;
             for (Path path : stream) {
                 count += 1;
+                if (staffBadge == null) {
+                    log.warn("Warning, badge type Staff not found, aborting import");
+                    return;
+                }
                 try {
+                    ImportFile file = loadFile(path);
+                    importData(file);
                     Path output = Paths.get(finishedPathString, getTimestamp() + "-" + path.getFileName().toString());
                     Files.move(path, output);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     log.error("Error processing file {}, moving to {}", path, dlqPathString, ex);
                     errors += 1;
                     Path output = Paths.get(dlqPathString, getTimestamp() + "-" + path.getFileName().toString());
@@ -62,7 +134,6 @@ public class StaffImport {
         } catch (IOException ex) {
             log.error("Error processing staff import file(s):", ex);
         }
-        return null;
     }
 
     private static String getTimestamp() {

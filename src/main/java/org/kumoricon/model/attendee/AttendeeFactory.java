@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AttendeeFactory {
@@ -40,7 +39,8 @@ public class AttendeeFactory {
         attendee.setBirthDate(LocalDate.now().minusYears(30L));
         attendee.setPaid(true);
         attendee.setStaffDepartment("Membership");
-        List<String> positions = Arrays.asList("Position 1", "Position 2", "Position 3");
+        List<String> positions = new ArrayList<>();
+        positions.addAll(Arrays.asList("Position 1", "Position 2", "Position 3"));
         attendee.setStaffPositions(positions);
         attendee.setStaffDepartmentColor("#FFDDDD");
         try {

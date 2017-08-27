@@ -14,6 +14,9 @@ import java.util.List;
 @Service
 public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, JpaSpecificationExecutor {
 
+    @Query(value = "select a from Attendee a where a.staffIDNumber = ?1")
+    List<Attendee> findByStaffId(String staffId);
+
     @Query(value = "select a from Attendee a inner join a.order as o where o.orderId LIKE ?1 OR a.badgeNumber LIKE ?1")
     List<Attendee> findByBadgeNumberOrOrderId(String searchString);
 

@@ -9,6 +9,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.kumoricon.model.attendee.Attendee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,6 +77,14 @@ public class BadgeLib {
         }
     }
 
+    static String getStaffImageFilename(Attendee attendee) {
+        if (attendee.getStaffImageFilename() != null) {
+            Path filePath = Paths.get(badgeResourcePath, "/badgeimage/", attendee.getStaffImageFilename());
+            return filePath.toAbsolutePath().toString();
+        }
+        return null;
+    }
+
     /**
      * Draws the given string, optionally supports scaling to fit.
      * @param x Left side of text, or center point of text if centered (1/72 inch)
@@ -111,6 +120,48 @@ public class BadgeLib {
         stream.setFont(opt.font, size);
         stream.drawString(text);
         stream.endText();
+    }
+
+    /**
+     * For a department name, lookup and return the HTML color code for their background
+     * @param department Department name
+     * @return String color code (ex: #FF00EC)
+     */
+    public static String findDepartmentColorCode(String department) {
+        String dept;
+        if (department == null) {
+            dept= "";
+        } else {
+            dept = department.toLowerCase();
+        }
+        if ("treasury".equals(dept)) {
+            return "#0a8141";
+        } else if ("department of the treasurer".equals(dept)) {
+            return "#0a8141";
+        } else if ("secretary".equals(dept)) {
+            return "#3a53a5";
+        } else if ("department of the secretary".equals(dept)) {
+            return "#3a53a5";
+        } else if ("relations".equals(dept)) {
+            return "#f282b4";
+        } else if ("publicity".equals(dept)) {
+            return "#e0e0e0";
+        } else if ("programming".equals(dept)) {
+            return "#6b52a2";
+        } else if ("operations".equals(dept)) {
+            return "#ec2426";
+        } else if ("membership".equals(dept)) {
+            return "#f57f20";
+        } else if ("infrastructure".equals(dept)) {
+            return "#414242";
+        } else if ("chair".equals(dept)) {
+            return "#f99f1d";
+        } else if ("department of the chair".equals(dept)) {
+            return "#f99f1d";
+        } else {
+            System.out.println("Warning, couldn't find color code for " + department);
+            return "#FFFFFF";
+        }
     }
 
 }

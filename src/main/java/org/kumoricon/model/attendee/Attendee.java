@@ -50,10 +50,12 @@ public class Attendee extends Record {
     private Set<AttendeeHistory> history;
     private boolean preRegistered;              // Did attendee register before con?
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
-    @Basic
+    @Column(unique = true)
+    private String staffIDNumber;               // May be a string in future, is int in 2017
+    @Lob
     private ArrayList<String> staffPositions;
     private String staffDepartment;
-    private String staffDepartmentColor;
+    private String staffDepartmentColor;        // HTML color code for the department. Ex: "#00FF00"
     private String staffImageFilename;
 
 
@@ -213,6 +215,9 @@ public class Attendee extends Record {
         }
         return null;
     }
+
+    public String getStaffIDNumber() { return staffIDNumber; }
+    public void setStaffIDNumber(String staffIDNumber) { this.staffIDNumber = staffIDNumber; }
 
     public ArrayList<String> getStaffPositions() {
         return staffPositions;
