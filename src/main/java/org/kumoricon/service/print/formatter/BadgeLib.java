@@ -85,6 +85,11 @@ public class BadgeLib {
         return null;
     }
 
+    static String getMascotImageFilename() {
+        Path filePath = Paths.get(badgeResourcePath, "kumoricon_2017-mascot_chibi.png");
+        return filePath.toAbsolutePath().toString();
+    }
+
     /**
      * Draws the given string, optionally supports scaling to fit.
      * @param x Left side of text, or center point of text if centered (1/72 inch)

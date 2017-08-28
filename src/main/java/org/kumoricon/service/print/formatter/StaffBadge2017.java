@@ -388,20 +388,23 @@ public class StaffBadge2017 extends FormatterBase  {
 
 
     private void drawImage(PDPage page, Attendee attendee) throws IOException {
-        if (attendee.getStaffImageFilename() != null) {
-            PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
-
-            PDImageXObject xImage = PDImageXObject.createFromFile(BadgeLib.getStaffImageFilename(attendee), document);
-            Dimension scaledDim = getScaledDimension(
-                    new Dimension(xImage.getWidth(),  xImage.getHeight()),
-                    new Dimension(149, 158));
-            stream.drawXObject(xImage,
-                    150 + ((149-scaledDim.width)/2),
-                    334 + ((158-scaledDim.height)/2),
-                    scaledDim.width, scaledDim.height);
-//            stream.fillRect(150, 334, 149, 158);
-            stream.close();
+        String imageFilename = BadgeLib.getStaffImageFilename(attendee);;
+        if (imageFilename == null) {
+            imageFilename = BadgeLib.getMascotImageFilename();
         }
+
+        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+
+        PDImageXObject xImage = PDImageXObject.createFromFile(imageFilename, document);
+        Dimension scaledDim = getScaledDimension(
+                                new Dimension(xImage.getWidth(),  xImage.getHeight()),
+                                new Dimension(149, 158));
+                                stream.drawXObject(xImage,
+                                                150 + ((149-scaledDim.width)/2),
+                                                334 + ((158-scaledDim.height)/2),
+                                                   scaledDim.width, scaledDim.height);
+//            stream.fillRect(150, 334, 149, 158);
+        stream.close();
     }
 
     private static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
