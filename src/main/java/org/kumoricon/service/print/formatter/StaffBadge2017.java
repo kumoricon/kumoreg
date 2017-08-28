@@ -10,17 +10,18 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.graphics.state.RenderingMode;
 import org.apache.pdfbox.util.Matrix;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.service.print.formatter.ResizeOptions;
 
 import java.awt.*;
 import java.io.*;
-import java.nio.file.Path;
+import java.time.LocalDate;
 
 public class StaffBadge2017 extends FormatterBase  {
 
     private PDDocument frontBackground;
     private PDDocument backBackground;
     private PDFont bankGothic;
+
+    private LocalDate currentDateForAgeCalculation;
 
     public StaffBadge2017() {
         super(null);
@@ -32,8 +33,17 @@ public class StaffBadge2017 extends FormatterBase  {
         bankGothic = BadgeLib.loadFont(document);
         frontBackground = BadgeLib.loadBackground("2017_staff_badge_front.pdf");
         backBackground = BadgeLib.loadBackground("2017_staff_badge_back.pdf");
-
+        this.currentDateForAgeCalculation = LocalDate.now();
     }
+
+    public StaffBadge2017(PDDocument document, LocalDate currentDateForAgeCalculation) {
+        super(document);
+        this.currentDateForAgeCalculation = currentDateForAgeCalculation;
+        bankGothic = BadgeLib.loadFont(document);
+        frontBackground = BadgeLib.loadBackground("2017_staff_badge_front.pdf");
+        backBackground = BadgeLib.loadBackground("2017_staff_badge_back.pdf");
+    }
+
 
     public void addBadge(Attendee attendee, Integer xOffset, Integer yOffset) throws IOException {
 
@@ -51,6 +61,7 @@ public class StaffBadge2017 extends FormatterBase  {
         drawPositionsFront(page, attendee);
         drawImage(page, attendee);
         drawName(page, attendee);
+        drawAgeImageFront(page, attendee);
 
         // Badge back
         PDPage templateBack = backBackground.getDocumentCatalog().getPages().get(0);
@@ -64,7 +75,55 @@ public class StaffBadge2017 extends FormatterBase  {
         drawDepartmentNameBack(pageBack, attendee);
         drawPositionsBack(pageBack, attendee);
         drawNameBack(pageBack, attendee);
+        drawAgeImageBack(pageBack, attendee);
+    }
 
+    private void drawAgeImageFront(PDPage page, Attendee attendee) throws IOException {
+        String imageFilename = getAgeRangeAtCon(attendee);
+        if (imageFilename == null) { return; }
+
+        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+
+        PDImageXObject xImage = PDImageXObject.createFromFile(imageFilename, document);
+        Dimension scaledDim = getScaledDimension(
+                new Dimension(xImage.getWidth(),  xImage.getHeight()),
+                new Dimension(149, 130));
+        stream.drawXObject(xImage,
+                45 + ((149-scaledDim.width)/2),
+                335 + ((158-scaledDim.height)/2),
+                scaledDim.width, scaledDim.height);
+        stream.close();
+    }
+
+    private void drawAgeImageBack(PDPage page, Attendee attendee) throws IOException {
+        String imageFilename = getAgeRangeAtCon(attendee);
+        if (imageFilename == null) { return; }
+
+        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+
+        PDImageXObject xImage = PDImageXObject.createFromFile(imageFilename, document);
+        Dimension scaledDim = getScaledDimension(
+                new Dimension(xImage.getWidth(),  xImage.getHeight()),
+                new Dimension(149, 115));
+        stream.drawXObject(xImage,
+                201 + ((149-scaledDim.width)/2),
+                344 + ((158-scaledDim.height)/2),
+                scaledDim.width, scaledDim.height);
+        stream.close();
+    }
+
+    private String getAgeRangeAtCon(Attendee attendee) {
+        String ageRangeName;
+        long ageAtCon = attendee.getAge(currentDateForAgeCalculation);
+        if (ageAtCon >= 18) {
+            ageRangeName = "adult";
+        } else if (ageAtCon >= 13) {
+            ageRangeName = "youth";
+        } else {
+            ageRangeName = "child";
+        }
+
+        return BadgeLib.getStaffAgeImageFilename(ageRangeName);
     }
 
     private void drawDepartmentBackgroundColorFront(PDPage page, Attendee attendee) throws IOException {

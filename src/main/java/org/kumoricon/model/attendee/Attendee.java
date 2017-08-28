@@ -116,6 +116,11 @@ public class Attendee extends Record {
         return ChronoUnit.YEARS.between(birthDate, now);
     }
 
+    public Long getAge(LocalDate date) {
+        if (birthDate == null) { return 0L; }
+        return ChronoUnit.YEARS.between(birthDate, date);
+    }
+
     public String getEmergencyContactFullName() { return emergencyContactFullName; }
     public void setEmergencyContactFullName(String emergencyContactFullName) {
         this.emergencyContactFullName = emergencyContactFullName;

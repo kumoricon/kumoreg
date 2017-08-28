@@ -90,6 +90,23 @@ public class BadgeLib {
         return filePath.toAbsolutePath().toString();
     }
 
+    static String getStaffAgeImageFilename(String ageRange) {
+        if (ageRange == null) {
+            return null;
+        } else if ("adult".equals(ageRange.toLowerCase())) {
+            Path filePath = Paths.get(badgeResourcePath, "staffadult.png");
+            return filePath.toAbsolutePath().toString();
+        } else if ("youth".equals(ageRange.toLowerCase())) {
+            Path filePath = Paths.get(badgeResourcePath, "staffyouth.png");
+            return filePath.toAbsolutePath().toString();
+        } else if ("child".equals(ageRange.toLowerCase())) {
+            Path filePath = Paths.get(badgeResourcePath, "staffchild.png");
+            return filePath.toAbsolutePath().toString();
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Draws the given string, optionally supports scaling to fit.
      * @param x Left side of text, or center point of text if centered (1/72 inch)
