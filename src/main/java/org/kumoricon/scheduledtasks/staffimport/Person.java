@@ -59,6 +59,13 @@ public class Person {
             attendee.setLegalLastName(nameOnIdLast);
         }
 
+        // Treat all staff as prereg, even if they actually sign up at con
+        // This is sort of incorrect, but seems better than the alternative to me right now
+        if (isDifferent(attendee.isPreRegistered(), true)) {
+            updated = true;
+            attendee.setPreRegistered(true);
+        }
+
         if (isDifferent(attendee.getBirthDate(), birthdate)) {
             updated = true;
             attendee.setBirthDate(birthdate);
