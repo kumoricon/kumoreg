@@ -150,7 +150,8 @@ public class LoadBaseDataPresenter {
             {"manage_devices", "Add/edit devices (computer/printer mappings)"},
             {"manage_till_sessions", "View/Close Till Sessions for other users"},
             {"import_pre_reg_data", "Import pre-registered attendees and orders"},
-            {"load_base_data", "Load default data (users, roles, rights)"}
+            {"load_base_data", "Load default data (users, roles, rights)"},
+            {"pre_print_badges", "Pre-print badges for all attendees with a particular badge type"}
         };
 
         for (String[] rightInfo : rights) {
@@ -204,7 +205,8 @@ public class LoadBaseDataPresenter {
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_staff", "view_role_report", "view_attendance_report", "view_attendance_report_revenue",
                 "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
-                "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions"});
+                "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions",
+                "pre_print_badges"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();

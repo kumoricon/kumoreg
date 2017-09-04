@@ -25,6 +25,7 @@ import org.kumoricon.site.user.UserView;
 import org.kumoricon.site.utility.closeouttill.CloseOutTillView;
 import org.kumoricon.site.utility.importattendee.ImportAttendeeView;
 import org.kumoricon.site.utility.loadbasedata.LoadBaseDataView;
+import org.kumoricon.site.utility.preprint.PreprintBadgeView;
 import org.kumoricon.site.utility.testbadge.TestBadgeView;
 
 
@@ -105,6 +106,8 @@ public class SiteMenu extends VerticalLayout {
                 buttonFactory("Import Attendees", FontAwesome.UPLOAD, ImportAttendeeView.VIEW_NAME));
         addButtonTo(tab3, "at_con_registration",
                 buttonFactory("Close Out Till", FontAwesome.DOLLAR, CloseOutTillView.VIEW_NAME));
+        addButtonTo(tab3, "pre_print_badges",
+                buttonFactory("Pre-Print Badges", FontAwesome.PRINT, PreprintBadgeView.VIEW_NAME));
         if (tab3.getComponentCount() > 0) { menu.addComponent(tab3); }
 
         addComponent(menu);

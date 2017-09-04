@@ -5,6 +5,7 @@ import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.graphics.state.RenderingMode;
@@ -152,22 +153,23 @@ public class StaffBadge2017 extends FormatterBase  {
 //        stream.setNonStrokingColor(Color.red);
 //        stream.addRect(306, 144, 45, 170);
 //        stream.fill();
+        PDRectangle boundingBox = new PDRectangle(306, 144, 45, 170);
 
-        stream.setLineWidth(0.5f);
+        stream.setLineWidth(0.25f);
         stream.beginText();
         stream.setStrokingColor(Color.white);
         stream.setNonStrokingColor(Color.black);
         stream.setRenderingMode(RenderingMode.FILL_STROKE);
 
         if (attendee.getStaffPositions().size() == 1) {
-            int fontSize = 16;
+            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
             stream.setFont(bankGothic, fontSize);
             Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 332, 145);
             stream.setTextMatrix(offset);
             stream.showText(attendee.getStaffPositions().get(0));
 
         } else if (attendee.getStaffPositions().size() == 2) {
-            int fontSize = 16;
+            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
             String text = attendee.getStaffPositions().get(0);
             float width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
 
@@ -182,7 +184,7 @@ public class StaffBadge2017 extends FormatterBase  {
             stream.setTextMatrix(offsetLine2);
             stream.showText(text);
         } else if (attendee.getStaffPositions().size() == 3) {
-            int fontSize = 12;
+            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
             String text = attendee.getStaffPositions().get(0);
             Matrix offsetLine1 = Matrix.getRotateInstance(90 * Math.PI * 0.25, 314, 145);
             stream.setFont(bankGothic, fontSize);
@@ -212,15 +214,16 @@ public class StaffBadge2017 extends FormatterBase  {
 //        stream.setNonStrokingColor(Color.red);
 //        stream.addRect(45, 144, 45, 170);
 //        stream.fill();
+        PDRectangle boundingBox = new PDRectangle(45, 144, 45, 170);
 
-        stream.setLineWidth(0.5f);
+        stream.setLineWidth(0.25f);
         stream.beginText();
         stream.setStrokingColor(Color.white);
         stream.setNonStrokingColor(Color.black);
         stream.setRenderingMode(RenderingMode.FILL_STROKE);
 
         if (attendee.getStaffPositions().size() == 1) {
-            int fontSize = 16;
+            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
             float width = (bankGothic.getStringWidth(attendee.getStaffPositions().get(0)) / 1000) * fontSize;
 
             stream.setFont(bankGothic, fontSize);
@@ -229,7 +232,7 @@ public class StaffBadge2017 extends FormatterBase  {
             stream.showText(attendee.getStaffPositions().get(0));
 
         } else if (attendee.getStaffPositions().size() == 2) {
-            int fontSize = 16;
+            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
             String text = attendee.getStaffPositions().get(0);
             float width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
             Matrix offsetLine1 = Matrix.getRotateInstance(270 * Math.PI * 0.25, 76, 148+width);
@@ -244,7 +247,7 @@ public class StaffBadge2017 extends FormatterBase  {
             stream.setTextMatrix(offsetLine2);
             stream.showText(text);
         } else if (attendee.getStaffPositions().size() == 3) {
-            int fontSize = 12;
+            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
             String text = attendee.getStaffPositions().get(0);
             stream.setFont(bankGothic, fontSize);
             float width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
@@ -265,10 +268,7 @@ public class StaffBadge2017 extends FormatterBase  {
             Matrix offsetLine3 = Matrix.getRotateInstance(270 * Math.PI * 0.25, 63, 148+width);
             stream.setTextMatrix(offsetLine3);
             stream.showText(text);
-
-
         }
-
         stream.close();
     }
 
@@ -278,19 +278,21 @@ public class StaffBadge2017 extends FormatterBase  {
         // Bounding box:
 //        stream.setNonStrokingColor(Color.red);
 //        stream.fillRect(45, 361, 45, 170);
-        stream.setLineWidth(0.5f);
+        stream.setLineWidth(0.25f);
         stream.beginText();
         stream.setStrokingColor(Color.white);
         stream.setNonStrokingColor(Color.black);
         stream.setRenderingMode(RenderingMode.FILL_STROKE);
 
-        if ("chair".equals(attendee.getStaffDepartment().toLowerCase())) {
+        if ("chair".equals(attendee.getStaffDepartment().toLowerCase()) ||
+                "department of the chair".equals(attendee.getStaffDepartment().toLowerCase())) {
             stream.setFont(bankGothic, 46);
             Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 56, 530);
             stream.setTextMatrix(offset);
             stream.showText("CHAIR");
 
-        } else if ("treasury".equals(attendee.getStaffDepartment().toLowerCase())) {
+        } else if ("treasury".equals(attendee.getStaffDepartment().toLowerCase()) ||
+                "department of the treasurer".equals(attendee.getStaffDepartment().toLowerCase())) {
             stream.setFont(bankGothic, 26);
             Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 62, 525);
             stream.setTextMatrix(offset);
@@ -300,6 +302,12 @@ public class StaffBadge2017 extends FormatterBase  {
             Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 61, 526);
             stream.setTextMatrix(offset);
             stream.showText("SECURITY");
+        } else if ("secretary".equals(attendee.getStaffDepartment().toLowerCase()) ||
+                "department of the secretary".equals(attendee.getStaffDepartment().toLowerCase())) {
+            stream.setFont(bankGothic, 26);
+            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 61, 526);
+            stream.setTextMatrix(offset);
+            stream.showText("SECRETARY");
         } else if ("relations".equals(attendee.getStaffDepartment().toLowerCase())) {
             stream.setFont(bankGothic, 25);
             Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 61, 527);
@@ -346,20 +354,22 @@ public class StaffBadge2017 extends FormatterBase  {
 //        stream.setNonStrokingColor(Color.red);
 //        stream.fillRect(306, 361, 45, 170);
 
-        stream.setLineWidth(0.5f);
+        stream.setLineWidth(0.25f);
         stream.beginText();
         stream.setStrokingColor(Color.white);
         stream.setNonStrokingColor(Color.black);
         stream.setRenderingMode(RenderingMode.FILL_STROKE);
 
 
-        if ("chair".equals(attendee.getStaffDepartment().toLowerCase())) {
+        if ("chair".equals(attendee.getStaffDepartment().toLowerCase()) ||
+                "department of the chair".equals(attendee.getStaffDepartment().toLowerCase())) {
             stream.setFont(bankGothic, 46);
             Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 340, 362);
             stream.setTextMatrix(offset);
             stream.showText("CHAIR");
 
-        } else if ("treasury".equals(attendee.getStaffDepartment().toLowerCase())) {
+        } else if ("treasury".equals(attendee.getStaffDepartment().toLowerCase()) ||
+                "department of the treasurer".equals(attendee.getStaffDepartment().toLowerCase())) {
             stream.setFont(bankGothic, 26);
             Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 366);
             stream.setTextMatrix(offset);
@@ -369,6 +379,12 @@ public class StaffBadge2017 extends FormatterBase  {
             Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 364);
             stream.setTextMatrix(offset);
             stream.showText("SECURITY");
+        } else if ("secretary".equals(attendee.getStaffDepartment().toLowerCase()) ||
+                "department of the secretary".equals(attendee.getStaffDepartment().toLowerCase())) {
+            stream.setFont(bankGothic, 26);
+            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 350);
+            stream.setTextMatrix(offset);
+            stream.showText("SECRETARY");
         } else if ("relations".equals(attendee.getStaffDepartment().toLowerCase())) {
             stream.setFont(bankGothic, 25);
             Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 364);

@@ -1,24 +1,20 @@
 package org.kumoricon.service.print.formatter;
 
-
-import org.apache.pdfbox.cos.COSDictionary;
-import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.kumoricon.model.attendee.Attendee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Component
 public class BadgeLib {
@@ -41,9 +37,14 @@ public class BadgeLib {
         }
     }
 
+    /**
+     * Open an existing PDF from the resource path. If it can't be loaded, return a blank page
+     * @param filename File name
+     * @return PDDocument
+     */
     static PDDocument loadBackground(String filename) {
         Path filePath = Paths.get(badgeResourcePath, filename);
-        PDDocument background = null;
+        PDDocument background;
         try {
             background = PDDocument.load(filePath.toFile());
         } catch (IOException ex) {
@@ -54,29 +55,12 @@ public class BadgeLib {
         return background;
     }
 
-    static PDPage importPageBackground(PDDocument document, String filename) {
-        Path filePath = Paths.get(badgeResourcePath, filename);
-        PDDocument background = null;
-        try {
-            background = PDDocument.load(filePath.toFile());
-            PDPage templatePage = (PDPage)background.getDocumentCatalog().getPages().get(0);
-            COSDictionary pageDict = templatePage.getCOSObject();
-            COSDictionary newPageDict = new COSDictionary(pageDict);
-            newPageDict.removeItem(COSName.ANNOTS);
-            newPageDict.removeItem(COSName.ACTUAL_TEXT);
-            PDPage newPage = new PDPage(newPageDict);
-//            background.close();
-            return document.importPage(newPage);
-        } catch (IOException ex) {
-            log.warn("Error, couldn't load background PDF '{}', using default", filename);
-            try {
-                return document.importPage(new PDPage());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
+    /**
+     * Get the absolute path on disk of the staff image from an Attendee record. Returns null if
+     * the Attendee has no image
+     * @param attendee Attendee
+     * @return File path
+     */
     static String getStaffImageFilename(Attendee attendee) {
         if (attendee.getStaffImageFilename() != null) {
             Path filePath = Paths.get(badgeResourcePath, "/badgeimage/", attendee.getStaffImageFilename());
@@ -85,15 +69,23 @@ public class BadgeLib {
         return null;
     }
 
+
+    /**
+     * Get the absolute path on disk of the mascot image
+     * @return File path
+     */
     static String getMascotImageFilename() {
         Path filePath = Paths.get(badgeResourcePath, "kumoricon_2017-mascot_chibi.png");
         return filePath.toAbsolutePath().toString();
     }
 
+    /**
+     * Get the absolute path on disk of the age overlay image
+     * @param ageRange "adult", "youth", or "child"
+     * @return File path
+     */
     static String getStaffAgeImageFilename(String ageRange) {
-        if (ageRange == null) {
-            return null;
-        } else if ("adult".equals(ageRange.toLowerCase())) {
+        if ("adult".equals(ageRange.toLowerCase())) {
             Path filePath = Paths.get(badgeResourcePath, "staffadult.png");
             return filePath.toAbsolutePath().toString();
         } else if ("youth".equals(ageRange.toLowerCase())) {
@@ -108,41 +100,52 @@ public class BadgeLib {
     }
 
     /**
-     * Draws the given string, optionally supports scaling to fit.
-     * @param x Left side of text, or center point of text if centered (1/72 inch)
-     * @param y Bottom of text, in points (1/72 inch)
-     * @param text Text to draw
-     * @param optOrig Resize Options
-     * @throws IOException Error generating PDF
+     * Calculates the maximum font size that can be used to fit in to a given bounding box.
+     * Assumes that landscape (wider than taller) boxes are using horizontal text and
+     * portrait (taller than wider) boxes are using text rotated 90 degrees
+     * @param font Font text will be drawn in
+     * @param text Lines of text to be drawn. Must contain at least one line
+     * @param boundingBox Bounds to fit text in
+     * @return font size
+     * @throws IOException Error working with font bubbled up from PDFBox
      */
-    public static void drawStringWithResizing(PDPageContentStream stream, float x, float y, String text, ResizeOptions optOrig) throws IOException {
-        ResizeOptions opt = new ResizeOptions(optOrig);
-        float textSize = opt.font.getStringWidth(text); // in thousandths of font pt size.
-        float size = opt.size;
+    static int findMaxFontSize(PDFont font, List<String> text, PDRectangle boundingBox) throws IOException {
+        if (text.size() == 0) {
+            throw new RuntimeException("findMaxFontSize called with empty text argument");
+        }
+        float maxTextWidth;
+        float maxTextHeight;
+        if (boundingBox.getWidth() > boundingBox.getHeight()) {
+            maxTextWidth = boundingBox.getWidth();
+            maxTextHeight = boundingBox.getHeight();
+        } else {
+            maxTextWidth = boundingBox.getHeight();
+            maxTextHeight = boundingBox.getWidth();
+        }
 
-        // If text size is greater than maximum width, recalculate the correct font size, based on our restrictions
-        if (textSize * (size/1000.0f) > opt.maxTextWidth) {
-            size = opt.maxTextWidth * 1000.0f / textSize;
-            if (size < opt.minFontSize) {
-                // We have utterly failed to fit the text with the minimum font size,
-                // So we're forced to use that.
-                size = opt.minFontSize;
+        Float maxLineSize = Float.MAX_VALUE;
+        for (String line : text) {
+            float lineSize = findMaxLineSize(font, line, maxTextWidth, maxTextHeight);
+            if (lineSize < maxLineSize) {
+                maxLineSize = lineSize;
             }
         }
-
-        if (opt.centered) {
-            x -= textSize * (size/(2*1000.0f));
+        if (maxLineSize * text.size() > maxTextHeight ) {
+            maxLineSize = maxLineSize / text.size();
         }
-
-        // Actually draw the text
-        stream.beginText();
-        stream.setStrokingColor(Color.black);
-        stream.setNonStrokingColor(Color.black);
-        stream.moveTextPositionByAmount(x, y);
-        stream.setFont(opt.font, size);
-        stream.drawString(text);
-        stream.endText();
+        return  maxLineSize.intValue();
     }
+
+    private static int findMaxLineSize(PDFont font, String text, float maxTextWidth, float maxTextHeight) throws IOException {
+        float textSize = font.getStringWidth(text);
+        Float size = maxTextHeight;
+        if (textSize * (size/1000.0f) > maxTextWidth) {
+            size = maxTextWidth * 1000.0f / textSize;
+        }
+        return size.intValue();
+    }
+
+
 
     /**
      * For a department name, lookup and return the HTML color code for their background
@@ -163,7 +166,8 @@ public class BadgeLib {
         } else if ("secretary".equals(dept)) {
             return "#3a53a5";
         } else if ("department of the secretary".equals(dept)) {
-            return "#3a53a5";
+            return "#3953a4"; // Not sure which color code is correct, this is from 2016
+//            return "#3a53a5";
         } else if ("relations".equals(dept)) {
             return "#f282b4";
         } else if ("publicity".equals(dept)) {
@@ -185,5 +189,4 @@ public class BadgeLib {
             return "#FFFFFF";
         }
     }
-
 }

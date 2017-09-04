@@ -66,4 +66,9 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, Jp
     @Modifying
     @Query(value = "delete from Attendee a where a.id = ?1")
     void deleteById(Integer id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update Attendee a set a.badgePrePrinted = true where a.badge = ?1")
+    void setAttendeesPrePrinted(Badge badge);
 }
