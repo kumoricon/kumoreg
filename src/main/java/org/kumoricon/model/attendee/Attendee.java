@@ -187,7 +187,9 @@ public class Attendee extends Record {
     public void setCheckedIn(Boolean checkedIn) {
         this.checkedIn = checkedIn;
         if (checkedIn) {
-            checkInTime = new Date();
+            if (checkInTime == null) {
+                checkInTime = new Date();
+            }
         } else {
             checkInTime = null;
         }
