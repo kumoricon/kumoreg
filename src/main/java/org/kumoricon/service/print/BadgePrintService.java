@@ -54,7 +54,7 @@ public class BadgePrintService extends PrintService {
     private static List<Attendee> findPrintedAttendees(List<Attendee> attendees) {
         List<Attendee> attendeesNotPrinted = new ArrayList<>();
         for (Attendee attendee : attendees) {
-            if (!attendee.isBadgePrePrinted()) {
+            if (attendee.isBadgePrePrinted()) {
                 attendeesNotPrinted.add(attendee);
             }
         }
