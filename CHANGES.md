@@ -3,6 +3,15 @@ Change Log
 - Version 2.0.2 (Pending)
     - Split out badge type color bar and age range color bar
     - Added badge type to Print Test Badge screen
+    - Added .json file import for staff information
+    - Skip printing badges for attendees that are flagged as having pre-printed badges (staff)
+    - Select all attendees by default in attendee print window. (No change in behavior - but users would
+      select attendees one by one thinking that they had to before choosing "printed successfully")
+    - Added .json file import for staff information
+    - Select all attendees by default in attendee print window. (No change in behavior - but users would
+      select attendees one by one thinking that they had to before choosing "printed successfully")
+    - Staff badges added
+    - Fixed bug where attendee checkin time would be updated after they had already checked in
 
 - Version 2.0.1 (7/4/2017)
     - Fixed bug where adding a minor without a parental consent form would display red "!" instead

@@ -14,6 +14,9 @@ import java.util.List;
 @Service
 public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, JpaSpecificationExecutor {
 
+    @Query(value = "select a from Attendee a where a.staffIDNumber = ?1")
+    List<Attendee> findByStaffId(String staffId);
+
     @Query(value = "select a from Attendee a inner join a.order as o where o.orderId LIKE ?1 OR a.badgeNumber LIKE ?1")
     List<Attendee> findByBadgeNumberOrOrderId(String searchString);
 
@@ -63,4 +66,9 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, Jp
     @Modifying
     @Query(value = "delete from Attendee a where a.id = ?1")
     void deleteById(Integer id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update Attendee a set a.badgePrePrinted = true where a.badge = ?1")
+    void setAttendeesPrePrinted(Badge badge);
 }

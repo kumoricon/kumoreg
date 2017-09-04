@@ -165,9 +165,19 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         log.info("{} reported badge(s) printed successfully for {}",
                 printBadgeWindow.getParentView().getCurrentUser(), attendees);
         if (printBadgeWindow != null) {
+            // Set all attendees as not having a pre-printed badge ready for pickup
+            for (Attendee attendee :attendees) {
+                attendee.setBadgePrePrinted(false);
+            }
+            attendeeRepository.save(attendees);
+
             if (attendees.size() > 0) {
                 Attendee attendee = attendees.get(0);
-                searchChanged(attendee.getOrder().getOrderId());
+                if (attendee.getOrder() != null) {
+                    searchChanged(attendee.getOrder().getOrderId());
+                } else {
+                    printBadgeWindow.getParentView().refresh();
+                }
             } else {
                 printBadgeWindow.getParentView().refresh();
             }
