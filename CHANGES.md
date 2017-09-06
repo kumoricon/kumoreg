@@ -12,6 +12,7 @@ Change Log
       select attendees one by one thinking that they had to before choosing "printed successfully")
     - Staff badges added
     - Fixed bug where attendee checkin time would be updated after they had already checked in
+    - Added 2017 badge format
 
 - Version 2.0.1 (7/4/2017)
     - Fixed bug where adding a minor without a parental consent form would display red "!" instead

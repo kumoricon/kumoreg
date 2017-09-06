@@ -44,9 +44,12 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         this.xOffset = (xOffset == null) ? 0 : xOffset;
         this.yOffset = (yOffset == null) ? 0 : yOffset;
         StaffBadge2017 sb = null;
+        AttendeeBadge2017 ab = null;
         try {
             document = new PDDocument();
             sb = new StaffBadge2017(document);
+            ab = new AttendeeBadge2017(document);
+
             for (Attendee attendee : attendees) {
                 if (BadgeType.STAFF.equals(attendee.getBadge().getBadgeType())) {
                     sb.addBadge(attendee, xOffset, yOffset);
@@ -55,8 +58,9 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
 //                    PDPage currentPage = generateAttendeePage(attendee, document);
 //                    document.addPage(currentPage);
                 } else {
-                    PDPage currentPage = generateAttendeePage(attendee, document);
-                    document.addPage(currentPage);
+                    ab.addBadge(attendee, xOffset, yOffset);
+//                    PDPage currentPage = generateAttendeePage(attendee, document);
+//                    document.addPage(currentPage);
                 }
             }
 

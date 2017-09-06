@@ -136,11 +136,11 @@ public class BadgeLib {
         return  maxLineSize.intValue();
     }
 
-    private static int findMaxLineSize(PDFont font, String text, float maxTextWidth, float maxTextHeight) throws IOException {
-        float textSize = font.getStringWidth(text);
+    static int findMaxLineSize(PDFont font, String text, float maxTextWidth, float maxTextHeight) throws IOException {
+        float textWidth = font.getStringWidth(text);
         Float size = maxTextHeight;
-        if (textSize * (size/1000.0f) > maxTextWidth) {
-            size = maxTextWidth * 1000.0f / textSize;
+        if (textWidth * (size/1000.0f) > maxTextWidth) {
+            size = maxTextWidth * 1000.0f / textWidth;
         }
         return size.intValue();
     }
