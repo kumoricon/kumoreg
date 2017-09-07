@@ -10,9 +10,11 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.util.Matrix;
 import org.kumoricon.model.attendee.Attendee;
 
+import java.util.List;
 import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 public class AttendeeBadge2017 extends FormatterBase  {
 
@@ -58,6 +60,45 @@ public class AttendeeBadge2017 extends FormatterBase  {
         drawName(page, attendee);
         drawBadgeTypeStripe(page, bankGothic, attendee);
         drawBadgeTypeText(page, bankGothic, attendee);
+        drawBadgeNumber(page, bankGothic, attendee);
+    }
+
+
+
+    private void drawBadgeNumber(PDPage page, PDFont font, Attendee attendee) throws IOException {
+        String badgeNumber = attendee.getBadgeNumber();
+        if (badgeNumber == null) {
+            return;     // no text, don't draw anything
+        }
+
+        List<String> badgeNumberParts = BadgeLib.splitBadgeNumber(badgeNumber);
+
+        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+
+        stream.setNonStrokingColor(Color.white);
+        stream.setStrokingColor(Color.black);
+        // Bounding box:
+//         stream.fillRect(163, 95, 40, 30);
+
+        PDRectangle boundingBox = new PDRectangle(163, 95, 40, 30);
+        stream.setLineWidth(0.25f);
+        stream.beginText();
+        int fontSize = BadgeLib.findMaxFontSize(font, badgeNumberParts,boundingBox);
+        stream.setFont(font, fontSize);
+        stream.appendRawCommands("2 Tr ");       // Set text rendering mode
+
+        float textWidth = font.getStringWidth(badgeNumberParts.get(0));
+        Float offset = textWidth * (fontSize/(2*1000.0f));
+        stream.moveTextPositionByAmount(185-offset, 105+fontSize);   // First character position
+        stream.drawString(badgeNumberParts.get(0));
+
+        if (badgeNumberParts.size() > 1) {
+            textWidth = font.getStringWidth(badgeNumberParts.get(1));
+            Float newOffset = textWidth * (fontSize/(2*1000.0f));
+            stream.moveTextPositionByAmount(offset-newOffset, -1*fontSize);   // First character position
+            stream.drawString(badgeNumberParts.get(1));
+        }
+        stream.close();
     }
 
     private String getAgeRangeAtCon(Attendee attendee) {

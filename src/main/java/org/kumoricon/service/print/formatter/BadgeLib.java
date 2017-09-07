@@ -14,13 +14,17 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class BadgeLib {
 
     private static String badgeResourcePath = "/home/jason/kumoreg_resources";
     private static final Logger log = LoggerFactory.getLogger(BadgeLib.class);
+    private static final Pattern badgeNumberPattern = Pattern.compile("([A-Za-z]+)(\\d+)");
 
     /**
      * Loads BankGothic Md BT Medium.ttf in to a given document or falls back to Helvetica Bold
@@ -145,7 +149,23 @@ public class BadgeLib {
         return size.intValue();
     }
 
-
+    /**
+     * Given a badge number AB12345, splits that in to "AB" and "12345".
+     * Works with different numbers of letters and numbers
+     * @param badgeNumber Badge Number
+     * @return List of strings
+     */
+    static List<String> splitBadgeNumber(String badgeNumber) {
+        List<String> parts = new ArrayList<>();
+        Matcher m = badgeNumberPattern.matcher(badgeNumber);
+        if (m.find()) {
+            parts.add(m.group(1));
+            parts.add(m.group(2));
+        } else {
+            parts.add(badgeNumber);
+        }
+        return parts;
+    }
 
     /**
      * For a department name, lookup and return the HTML color code for their background
