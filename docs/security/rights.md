@@ -48,6 +48,7 @@ Available rights are:
 | manage_orders                 | View/edit orders after they have been placed                    |                                                |
 | import_pre_reg_data           | Import pre-registered attendees and orders                      |
 | load_base_data                | Load default data (users, roles, rights)                        |
+| pre_print_badges              | Pre-generate badges for all attendees with a given badge type   |
 
 
 <a name="footnote1">1</a>: When an override is entered, the user gets all edit rights that the overriding user has in

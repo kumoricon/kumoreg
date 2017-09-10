@@ -60,8 +60,9 @@ Services will be configured to start on boot via SystemD, which also handles log
     9. Configure database settings in application.properties
     10. If printing via printers installed on the server, set kumoreg.printing.enablePrintingFromServer=true in 
        application.properties   
-    11. Make application.properties read only: ```sudo chmod 444 /usr/local/kumoreg/application.properties```
-    12. Start service: ```sudo service kumoreg start```
+    11. Configure paths for staff data import in application.properties
+    12. Make application.properties read only: ```sudo chmod 444 /usr/local/kumoreg/application.properties```
+    13. Start service: ```sudo service kumoreg start```
 
 
 ## KumoReg configuration
@@ -75,3 +76,5 @@ Services will be configured to start on boot via SystemD, which also handles log
     - Configure Users under Administration > Users
     - Configure Badge Types under Administration > Badge Types
     - Map printers and computers under Administration > Computers
+5. Copy any badge resources (background PDFs and fonts) to /usr/local/kumoreg/badgeResource
+6. Set up staff integration script to write to inbox path specified above

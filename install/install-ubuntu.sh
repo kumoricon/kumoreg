@@ -64,6 +64,18 @@ else
     mv config/application-training.properties /usr/local/kumoreg/
 fi
 
+if [ -e /usr/local/kumoreg/badgeResources ] ; then
+    echo "/usr/local/kumoreg/badgeResources exists - leaving in place"
+else
+    mkdir "/usr/local/kumoreg/badgeResources"
+fi
+
+if [ -e /usr/local/kumoreg/badgeResources/badgeImage ] ; then
+    echo "/usr/local/kumoreg/badgeResources/badgeImage exists - leaving in place"
+else
+    mkdir "/usr/local/kumoreg/badgeResources/badgeImage"
+fi
+
 
 chown kumoreg:kumoreg /usr/local/kumoreg/KumoReg-*.jar
 chmod 755 /usr/local/kumoreg/addprinter.sh
