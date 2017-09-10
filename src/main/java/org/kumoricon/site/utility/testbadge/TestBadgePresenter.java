@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import javax.print.PrintException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +117,7 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     @Override
     public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         TestBadgeView view = (TestBadgeView) printBadgeWindow.getParentView();
-        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset());
+        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset(), LocalDate.now());
     }
 
     /**
@@ -129,7 +130,7 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     private void printBadges(BaseView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
         try {
             String result = badgePrintService.printBadgesForAttendees(
-                    attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset);
+                    attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset, LocalDate.now());
             view.notify(result);
         } catch (PrintException e) {
             log.error("Error printing badges for {}", view.getCurrentUsername(), e);

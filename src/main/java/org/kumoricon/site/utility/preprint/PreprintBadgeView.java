@@ -2,19 +2,21 @@ package org.kumoricon.site.utility.preprint;
 
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.FieldFactory;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
+import org.kumoricon.site.fieldconverter.DateToLocalDateConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @SpringView(name = PreprintBadgeView.VIEW_NAME)
@@ -27,6 +29,7 @@ public class PreprintBadgeView extends BaseView implements View, AttendeePrintVi
     private NativeSelect badgeType;
     private TextField xOffset;
     private TextField yOffset;
+    private DateField ageAsOfDate;
 
     @Autowired
     public PreprintBadgeView(PreprintBadgePresenter handler) {this.handler = handler;}
@@ -55,6 +58,12 @@ public class PreprintBadgeView extends BaseView implements View, AttendeePrintVi
         xOffset.setVisible(currentUserHasRight("manage_devices"));
         yOffset.setVisible(currentUserHasRight("manage_devices"));
 
+        ageAsOfDate = FieldFactory.createDateField("Calculate age as of", 5);
+        ageAsOfDate.setConverter(new DateToLocalDateConverter());
+        ageAsOfDate.setDateFormat("MM/dd/yyyy");
+        ageAsOfDate.setValue(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        addComponent(ageAsOfDate);
+
         Label notes = new Label("Warning: all attendees in the system with the selected badge type will " +
                 " be flagged as having a badge to pick up");
         addComponent(notes);
@@ -64,16 +73,20 @@ public class PreprintBadgeView extends BaseView implements View, AttendeePrintVi
         addComponent(display);
         display.focus();
         display.addClickListener((Button.ClickListener) clickEvent ->
-                handler.showAttendeeBadgeWindow(this, (Badge) badgeType.getValue(), getXOffset(), getYOffset()));
+            handler.showAttendeeBadgeWindow(this,
+                    (Badge) badgeType.getValue(),
+                    getXOffset(),
+                    getYOffset(),
+                    getDateForAgeCalculation()));
 
 
         handler.showCurrentOffsets(this, getCurrentClientIPAddress());
     }
 
-    public void setXOffset(Integer offset) {
+    void setXOffset(Integer offset) {
         xOffset.setValue(offset==null ? "0" : offset.toString());
     }
-    public void setYOffset(Integer offset) {
+    void setYOffset(Integer offset) {
         yOffset.setValue(offset==null ? "0" : offset.toString());
     }
 
@@ -81,7 +94,7 @@ public class PreprintBadgeView extends BaseView implements View, AttendeePrintVi
      * Returns horizontal offset value from form, or 0 if an invalid value was entered
      * @return Offset in points
      */
-    public Integer getXOffset() {
+    Integer getXOffset() {
         try {
             return Integer.valueOf(xOffset.getValue());
         } catch (NumberFormatException e) {
@@ -101,6 +114,12 @@ public class PreprintBadgeView extends BaseView implements View, AttendeePrintVi
             setYOffset(0);
             return 0;
         }
+    }
+
+    public LocalDate getDateForAgeCalculation() {
+        if (ageAsOfDate.getValue() == null) { return LocalDate.now(); }
+        Date date = ageAsOfDate.getValue();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }

@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 
 public class FullBadgePrintFormatter implements BadgePrintFormatter {
@@ -30,7 +31,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
      * @param attendees Attendees to generate badges for
      */
     public FullBadgePrintFormatter(List<Attendee> attendees) {
-        this(attendees, 0, 0);
+        this(attendees, 0, 0, LocalDate.now());
     }
 
     /**
@@ -39,7 +40,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
      * @param xOffset Horizontal offset in points (1/72 inch)
      * @param yOffset Vertical offset in points (1/72 inch)
      */
-    public FullBadgePrintFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
+    public FullBadgePrintFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset, LocalDate ageAsOfDate) {
         PDDocument document = null;
         this.xOffset = (xOffset == null) ? 0 : xOffset;
         this.yOffset = (yOffset == null) ? 0 : yOffset;
@@ -47,8 +48,8 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         AttendeeBadge2017 ab = null;
         try {
             document = new PDDocument();
-            sb = new StaffBadge2017(document);
-            ab = new AttendeeBadge2017(document);
+            sb = new StaffBadge2017(document, ageAsOfDate);
+            ab = new AttendeeBadge2017(document, ageAsOfDate);
 
             for (Attendee attendee : attendees) {
                 if (BadgeType.STAFF.equals(attendee.getBadge().getBadgeType())) {

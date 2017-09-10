@@ -70,7 +70,7 @@ public class BadgeLib {
      */
     static String getStaffImageFilename(Attendee attendee) {
         if (attendee.getStaffImageFilename() != null) {
-            Path filePath = Paths.get(badgeResourcePath, "/badgeimage/", attendee.getStaffImageFilename());
+            Path filePath = Paths.get(badgeResourcePath, "/badgeImage/", attendee.getStaffImageFilename());
             return filePath.toAbsolutePath().toString();
         }
         return null;
@@ -215,7 +215,7 @@ public class BadgeLib {
         }
     }
 
-    public static String getAgeRangeAtCon(Attendee attendee, LocalDate currentDateForAgeCalculation) {
+    static String getAgeRangeAtCon(Attendee attendee, LocalDate currentDateForAgeCalculation) {
         String ageRangeName;
         long ageAtCon = attendee.getAge(currentDateForAgeCalculation);
         if (ageAtCon >= 18) {

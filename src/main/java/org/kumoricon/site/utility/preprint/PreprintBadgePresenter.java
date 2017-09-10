@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import javax.print.PrintException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +48,9 @@ public class PreprintBadgePresenter implements PrintBadgeHandler {
      * @param view View
      * @param xOffset Horizontal offset in points
      * @param yOffset Vertical offset in points
+     * @param dateForAgeCalculation Base age calculations on this date
      */
-    public void showAttendeeBadgeWindow(AttendeePrintView view, Badge badge, Integer xOffset, Integer yOffset) {
+    public void showAttendeeBadgeWindow(AttendeePrintView view, Badge badge, Integer xOffset, Integer yOffset, LocalDate dateForAgeCalculation) {
         if (xOffset == null) { xOffset = 0; }
         if (yOffset == null) { yOffset = 0; }
 
@@ -59,7 +61,7 @@ public class PreprintBadgePresenter implements PrintBadgeHandler {
         attendeeRepository.setAttendeesPrePrinted(badge);
 
         log.info("{} pre-printing {} badges", view.getCurrentUsername(), attendees.size());
-        showAttendeeBadgeWindow(view, attendees, xOffset, yOffset);
+        showAttendeeBadgeWindow(view, attendees, xOffset, yOffset, dateForAgeCalculation);
     }
 
     public void showCurrentOffsets(PreprintBadgeView view, String ipAddress) {
@@ -73,13 +75,13 @@ public class PreprintBadgePresenter implements PrintBadgeHandler {
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
         if (attendeeList == null) { return; }
-        printBadges((BaseView) view, attendeeList, null, null);
+        printBadges((BaseView) view, attendeeList, null, null, LocalDate.now());
         view.showPrintBadgeWindow(attendeeList);
     }
 
-    private void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
+    void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset, LocalDate dateForAgeCalculation) {
         if (attendeeList == null) { return; }
-        printBadges((BaseView) view, attendeeList, xOffset, yOffset);
+        printBadges((BaseView) view, attendeeList, xOffset, yOffset, dateForAgeCalculation);
         view.showPrintBadgeWindow(attendeeList);
     }
 
@@ -104,7 +106,7 @@ public class PreprintBadgePresenter implements PrintBadgeHandler {
             log.info("{} reprinting test badges for {}",
                     view.getCurrentUsername(), attendeeList, view.getXOffset(), view.getYOffset());
             view.notify("Reprinting badges");
-            printBadges(view, attendeeList, view.getXOffset(), view.getYOffset());
+            printBadges(view, attendeeList, view.getXOffset(), view.getYOffset(), view.getDateForAgeCalculation());
         } else {
             view.notify("No attendees selected");
         }
@@ -113,7 +115,7 @@ public class PreprintBadgePresenter implements PrintBadgeHandler {
     @Override
     public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         PreprintBadgeView view = (PreprintBadgeView) printBadgeWindow.getParentView();
-        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset());
+        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset(), view.getDateForAgeCalculation());
     }
 
     /**
@@ -123,10 +125,10 @@ public class PreprintBadgePresenter implements PrintBadgeHandler {
      * @param xOffset Printing X offset in points (1/72 inch)
      * @param yOffset printing Y offset in points (1/72 inch)
      */
-    private void printBadges(BaseView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
+    private void printBadges(BaseView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset, LocalDate ageAsOfDate) {
         try {
             String result = badgePrintService.printBadgesForAttendees(
-                    attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset);
+                    attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset, ageAsOfDate);
             view.notify(result);
         } catch (PrintException e) {
             log.error("Error printing badges for {}", view.getCurrentUsername(), e);

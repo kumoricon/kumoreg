@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -33,11 +34,23 @@ public class BadgeFormatterFactory {
         if ("lite".equals(currentFormatter)) {
             return new LiteBadgePrintFormatter(attendees, xOffset, yOffset);
         } else if("full".equals(currentFormatter)) {
-            return new FullBadgePrintFormatter(attendees, xOffset, yOffset);
+            return new FullBadgePrintFormatter(attendees, xOffset, yOffset, LocalDate.now());
         } else {
             log.warn("Tried to find badge formatter {}, using FullBadgePrintFormatter instead. " +
                     "kumoreg.printing.badgeFormat not configured properly?", currentFormatter);
-            return new FullBadgePrintFormatter(attendees, xOffset, yOffset);
+            return new FullBadgePrintFormatter(attendees, xOffset, yOffset, LocalDate.now());
+        }
+    }
+
+    public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset, LocalDate ageAsOfDate) {
+        if ("lite".equals(currentFormatter)) {
+            return new LiteBadgePrintFormatter(attendees, xOffset, yOffset);
+        } else if("full".equals(currentFormatter)) {
+            return new FullBadgePrintFormatter(attendees, xOffset, yOffset, ageAsOfDate);
+        } else {
+            log.warn("Tried to find badge formatter {}, using FullBadgePrintFormatter instead. " +
+                    "kumoreg.printing.badgeFormat not configured properly?", currentFormatter);
+            return new FullBadgePrintFormatter(attendees, xOffset, yOffset, ageAsOfDate);
         }
     }
 }

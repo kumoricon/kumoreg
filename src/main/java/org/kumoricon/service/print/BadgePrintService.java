@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.print.PrintException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class BadgePrintService extends PrintService {
      * @return String Result message
      * @throws PrintException Printer error
      */
-    public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset) throws PrintException {
+    public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset, LocalDate ageAsOfDate) throws PrintException {
         String printerName;
         List<Attendee> attendeesNotPrinted = findPrintedAttendees(attendees);
 
@@ -38,7 +39,7 @@ public class BadgePrintService extends PrintService {
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
-                    getCurrentBadgeFormatter(attendees, xOffset, yOffset);
+                    getCurrentBadgeFormatter(attendees, xOffset, yOffset, ageAsOfDate);
             printerName = client.getPrinterName();
             printDocument(badgePrintFormatter.getStream(), printerName);
         } else {
@@ -80,7 +81,7 @@ public class BadgePrintService extends PrintService {
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
-                    getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset());
+                    getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset(), LocalDate.now());
             printerName = client.getPrinterName();
             printDocument(badgePrintFormatter.getStream(), printerName);
         } else {
@@ -98,7 +99,7 @@ public class BadgePrintService extends PrintService {
      * @return BadgePrintFormatter
      */
     public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees) {
-        return getCurrentBadgeFormatter(attendees, 0, 0);
+        return getCurrentBadgeFormatter(attendees, 0, 0, LocalDate.now());
     }
 
     /**
@@ -109,7 +110,7 @@ public class BadgePrintService extends PrintService {
      */
     public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, String ipAddress) {
         Computer client = computerService.findComputerByIP(ipAddress);
-        return getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset());
+        return getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset(), LocalDate.now());
     }
 
     /**
@@ -119,8 +120,8 @@ public class BadgePrintService extends PrintService {
      * @param yOffset offset vertically by x points (1/72 inch)
      * @return BadgePrintFormatter
      */
-    public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
-        return badgeFormatterFactory.getCurrentBadgeFormatter(attendees, xOffset, yOffset);
+    public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset, LocalDate ageAsOfDate) {
+        return badgeFormatterFactory.getCurrentBadgeFormatter(attendees, xOffset, yOffset, ageAsOfDate);
     }
 
 
