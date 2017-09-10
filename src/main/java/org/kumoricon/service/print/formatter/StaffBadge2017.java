@@ -80,7 +80,8 @@ public class StaffBadge2017 extends FormatterBase  {
     }
 
     private void drawAgeImageFront(PDPage page, Attendee attendee) throws IOException {
-        String imageFilename = getAgeRangeAtCon(attendee);
+
+        String imageFilename = BadgeLib.getStaffAgeImageFilename(attendee, currentDateForAgeCalculation);
         if (imageFilename == null) { return; }
 
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
@@ -97,7 +98,7 @@ public class StaffBadge2017 extends FormatterBase  {
     }
 
     private void drawAgeImageBack(PDPage page, Attendee attendee) throws IOException {
-        String imageFilename = getAgeRangeAtCon(attendee);
+        String imageFilename = BadgeLib.getStaffAgeImageFilename(attendee, currentDateForAgeCalculation);
         if (imageFilename == null) { return; }
 
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
@@ -111,20 +112,6 @@ public class StaffBadge2017 extends FormatterBase  {
                 344 + ((158-scaledDim.height)/2),
                 scaledDim.width, scaledDim.height);
         stream.close();
-    }
-
-    private String getAgeRangeAtCon(Attendee attendee) {
-        String ageRangeName;
-        long ageAtCon = attendee.getAge(currentDateForAgeCalculation);
-        if (ageAtCon >= 18) {
-            ageRangeName = "adult";
-        } else if (ageAtCon >= 13) {
-            ageRangeName = "youth";
-        } else {
-            ageRangeName = "child";
-        }
-
-        return BadgeLib.getStaffAgeImageFilename(ageRangeName);
     }
 
     private void drawDepartmentBackgroundColorFront(PDPage page, Attendee attendee) throws IOException {

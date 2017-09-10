@@ -14,7 +14,6 @@ import java.util.List;
 import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.regex.Pattern;
 
 public class AttendeeBadge2017 extends FormatterBase  {
 
@@ -27,7 +26,7 @@ public class AttendeeBadge2017 extends FormatterBase  {
         super(null);
     }
 
-    public AttendeeBadge2017(PDDocument document) {
+    AttendeeBadge2017(PDDocument document) {
         super(document);
 
         frontBackground = BadgeLib.loadBackground("2017_attendee_badge.pdf");
@@ -43,7 +42,7 @@ public class AttendeeBadge2017 extends FormatterBase  {
     }
 
 
-    public void addBadge(Attendee attendee, Integer xOffset, Integer yOffset) throws IOException {
+    void addBadge(Attendee attendee, Integer xOffset, Integer yOffset) throws IOException {
 //        PDPage page = document.importPage(new PDPage(new PDRectangle(612f, 396f)));
 
         PDPage templatePage = frontBackground.getDocumentCatalog().getPages().get(0);
@@ -101,20 +100,6 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.close();
     }
 
-    private String getAgeRangeAtCon(Attendee attendee) {
-        String ageRangeName;
-        long ageAtCon = attendee.getAge(currentDateForAgeCalculation);
-        if (ageAtCon >= 18) {
-            ageRangeName = "adult";
-        } else if (ageAtCon >= 13) {
-            ageRangeName = "youth";
-        } else {
-            ageRangeName = "child";
-        }
-
-        return ageRangeName;
-    }
-
     private void drawBadgeTypeStripe(PDPage page, PDFont font, Attendee attendee) throws IOException {
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
 
@@ -165,7 +150,7 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
         stream.moveTextPositionByAmount(172, 275);   // First character position
 
-        String ageString = getAgeRangeAtCon(attendee);
+        String ageString = BadgeLib.getAgeRangeAtCon(attendee, currentDateForAgeCalculation);
         if (ageString.toLowerCase().equals("adult")) {
             stream.drawString("A");
             stream.moveTextPositionByAmount(-1, -32);

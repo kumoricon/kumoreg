@@ -9,20 +9,23 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.kumoricon.model.attendee.Attendee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component
 public class BadgeLib {
 
-    private static String badgeResourcePath = "/home/jason/kumoreg_resources";
+    /* Todo: badgeResourcePath should probably be configurable in the application.properties file, but
+       this will have to be refactored in to a Spring service so it can be autowired instead
+       of just being a static class.
+    */
+    private static String badgeResourcePath = "/usr/local/kumoreg/badgeResources";
     private static final Logger log = LoggerFactory.getLogger(BadgeLib.class);
     private static final Pattern badgeNumberPattern = Pattern.compile("([A-Za-z]+)(\\d+)");
 
@@ -84,11 +87,13 @@ public class BadgeLib {
     }
 
     /**
-     * Get the absolute path on disk of the age overlay image
-     * @param ageRange "adult", "youth", or "child"
-     * @return File path
+     * Get the absolute path on disk for the age range image
+     * @param attendee Current attendee
+     * @param currentDateForAgeCalculation Date to base age calculation off of
+     * @return File Path
      */
-    static String getStaffAgeImageFilename(String ageRange) {
+    static String getStaffAgeImageFilename(Attendee attendee, LocalDate currentDateForAgeCalculation) {
+        String ageRange = getAgeRangeAtCon(attendee, currentDateForAgeCalculation);
         if ("adult".equals(ageRange.toLowerCase())) {
             Path filePath = Paths.get(badgeResourcePath, "staffadult.png");
             return filePath.toAbsolutePath().toString();
@@ -209,4 +214,20 @@ public class BadgeLib {
             return "#FFFFFF";
         }
     }
+
+    public static String getAgeRangeAtCon(Attendee attendee, LocalDate currentDateForAgeCalculation) {
+        String ageRangeName;
+        long ageAtCon = attendee.getAge(currentDateForAgeCalculation);
+        if (ageAtCon >= 18) {
+            ageRangeName = "adult";
+        } else if (ageAtCon >= 13) {
+            ageRangeName = "youth";
+        } else {
+            ageRangeName = "child";
+        }
+
+        return ageRangeName;
+    }
+
+
 }
