@@ -24,11 +24,7 @@ public class StaffBadge2017 extends FormatterBase  {
 
     private LocalDate currentDateForAgeCalculation;
 
-    public StaffBadge2017() {
-        super(null);
-    }
-
-    public StaffBadge2017(PDDocument document) {
+    StaffBadge2017(PDDocument document) {
         super(document);
 
         bankGothic = BadgeLib.loadFont(document);
@@ -46,8 +42,7 @@ public class StaffBadge2017 extends FormatterBase  {
     }
 
 
-    public void addBadge(Attendee attendee, Integer xOffset, Integer yOffset) throws IOException {
-
+    void addBadge(Attendee attendee, Integer xOffset, Integer yOffset) throws IOException {
         PDPage templatePage = frontBackground.getDocumentCatalog().getPages().get(0);
         COSDictionary pageDict = templatePage.getCOSObject();
         COSDictionary newPageDict = new COSDictionary(pageDict);
@@ -90,7 +85,7 @@ public class StaffBadge2017 extends FormatterBase  {
         Dimension scaledDim = getScaledDimension(
                 new Dimension(xImage.getWidth(),  xImage.getHeight()),
                 new Dimension(149, 130));
-        stream.drawXObject(xImage,
+        stream.drawImage(xImage,
                 45 + ((149-scaledDim.width)/2),
                 335 + ((158-scaledDim.height)/2),
                 scaledDim.width, scaledDim.height);
@@ -107,7 +102,7 @@ public class StaffBadge2017 extends FormatterBase  {
         Dimension scaledDim = getScaledDimension(
                 new Dimension(xImage.getWidth(),  xImage.getHeight()),
                 new Dimension(149, 115));
-        stream.drawXObject(xImage,
+        stream.drawImage(xImage,
                 201 + ((149-scaledDim.width)/2),
                 344 + ((158-scaledDim.height)/2),
                 scaledDim.width, scaledDim.height);
@@ -158,7 +153,6 @@ public class StaffBadge2017 extends FormatterBase  {
         } else if (attendee.getStaffPositions().size() == 2) {
             int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
             String text = attendee.getStaffPositions().get(0);
-            float width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
 
             stream.setFont(bankGothic, fontSize);
             Matrix offsetLine1 = Matrix.getRotateInstance(90 * Math.PI * 0.25, 320, 145);
@@ -450,7 +444,7 @@ public class StaffBadge2017 extends FormatterBase  {
 
 
     private void drawImage(PDPage page, Attendee attendee) throws IOException {
-        String imageFilename = BadgeLib.getStaffImageFilename(attendee);;
+        String imageFilename = BadgeLib.getStaffImageFilename(attendee);
         if (imageFilename == null) {
             imageFilename = BadgeLib.getMascotImageFilename();
         }
@@ -461,7 +455,7 @@ public class StaffBadge2017 extends FormatterBase  {
         Dimension scaledDim = getScaledDimension(
                                 new Dimension(xImage.getWidth(),  xImage.getHeight()),
                                 new Dimension(149, 158));
-                                stream.drawXObject(xImage,
+                                stream.drawImage(xImage,
                                                 150 + ((149-scaledDim.width)/2),
                                                 334 + ((158-scaledDim.height)/2),
                                                    scaledDim.width, scaledDim.height);
@@ -492,7 +486,7 @@ public class StaffBadge2017 extends FormatterBase  {
         return new Dimension(new_width, new_height);
     }
 
-    public void closeTemplates() {
+    void closeTemplates() {
         if (frontBackground != null) {
             try {
                 frontBackground.close();

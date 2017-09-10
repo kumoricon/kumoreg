@@ -22,10 +22,6 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
     private LocalDate currentDateForAgeCalculation;
 
-    public AttendeeBadge2017() {
-        super(null);
-    }
-
     AttendeeBadge2017(PDDocument document) {
         super(document);
 
@@ -57,7 +53,7 @@ public class AttendeeBadge2017 extends FormatterBase  {
         drawAgeColorStripe(page, attendee);
         drawVerticalAgeRangeText(page, bankGothic, attendee);
         drawName(page, attendee);
-        drawBadgeTypeStripe(page, bankGothic, attendee);
+        drawBadgeTypeStripe(page, attendee);
         drawBadgeTypeText(page, bankGothic, attendee);
         drawBadgeNumber(page, bankGothic, attendee);
     }
@@ -84,23 +80,22 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.beginText();
         int fontSize = BadgeLib.findMaxFontSize(font, badgeNumberParts,boundingBox);
         stream.setFont(font, fontSize);
-        stream.appendRawCommands("2 Tr ");       // Set text rendering mode
 
         float textWidth = font.getStringWidth(badgeNumberParts.get(0));
         Float offset = textWidth * (fontSize/(2*1000.0f));
-        stream.moveTextPositionByAmount(185-offset, 105+fontSize);   // First character position
-        stream.drawString(badgeNumberParts.get(0));
+        stream.newLineAtOffset(185-offset, 105+fontSize);   // First character position
+        stream.showText(badgeNumberParts.get(0));
 
         if (badgeNumberParts.size() > 1) {
             textWidth = font.getStringWidth(badgeNumberParts.get(1));
             Float newOffset = textWidth * (fontSize/(2*1000.0f));
-            stream.moveTextPositionByAmount(offset-newOffset, -1*fontSize);   // First character position
-            stream.drawString(badgeNumberParts.get(1));
+            stream.newLineAtOffset(offset-newOffset, -1*fontSize);   // First character position
+            stream.showText(badgeNumberParts.get(1));
         }
         stream.close();
     }
 
-    private void drawBadgeTypeStripe(PDPage page, PDFont font, Attendee attendee) throws IOException {
+    private void drawBadgeTypeStripe(PDPage page, Attendee attendee) throws IOException {
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
 
         if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
@@ -108,21 +103,19 @@ public class AttendeeBadge2017 extends FormatterBase  {
         } else {
             stream.setNonStrokingColor(Color.black);
         }
-        stream.fillRect(206, 85, 253, 44);
-
+        stream.addRect(206, 85, 253, 44);
+        stream.fill();
         stream.close();
     }
 
     private void drawBadgeTypeText(PDPage page, PDFont font, Attendee attendee) throws IOException {
-        String badgeTypeText;
-        if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeText() != null) {
-            badgeTypeText = attendee.getBadge().getBadgeTypeText();
-        } else {
+        if (attendee.getBadge() == null || attendee.getBadge().getBadgeTypeText() == null) {
             return;     // no text, don't draw anything
         }
+        String badgeTypeText = attendee.getBadge().getBadgeTypeText();
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
 
-        PDRectangle boundingBox = new PDRectangle(206, 85, 253, 44);
+//        PDRectangle boundingBox = new PDRectangle(206, 85, 253, 44);
 
         stream.setLineWidth(0.5f);
         stream.beginText();
@@ -130,12 +123,11 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.setFont(font, fontSize);
         stream.setNonStrokingColor(Color.white);
         stream.setStrokingColor(Color.black);
-        stream.appendRawCommands("2 Tr ");       // Set text rendering mode
 
         float textWidth = font.getStringWidth(badgeTypeText);
         Float offset = textWidth * (fontSize/(2*1000.0f));
-        stream.moveTextPositionByAmount(330-offset, 100);   // First character position
-        stream.drawString(badgeTypeText);
+        stream.newLineAtOffset(330-offset, 100);   // First character position
+        stream.showText(badgeTypeText);
         stream.close();
     }
 
@@ -146,49 +138,48 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.setFont(font, 30);
         stream.setNonStrokingColor(Color.white);
         stream.setStrokingColor(Color.black);
-        stream.appendRawCommands("2 Tr ");       // Set text rendering mode
 
-        stream.moveTextPositionByAmount(172, 275);   // First character position
+        stream.newLineAtOffset(172, 275);   // First character position
 
         String ageString = BadgeLib.getAgeRangeAtCon(attendee, currentDateForAgeCalculation);
         if (ageString.toLowerCase().equals("adult")) {
-            stream.drawString("A");
-            stream.moveTextPositionByAmount(-1, -32);
-            stream.drawString("D");
-            stream.moveTextPositionByAmount(0, -32);
-            stream.drawString("U");
-            stream.moveTextPositionByAmount(2, -32);
-            stream.drawString("L");
-            stream.moveTextPositionByAmount(2, -32);
-            stream.drawString("T");
+            stream.showText("A");
+            stream.newLineAtOffset(-1, -32);
+            stream.showText("D");
+            stream.newLineAtOffset(0, -32);
+            stream.showText("U");
+            stream.newLineAtOffset(2, -32);
+            stream.showText("L");
+            stream.newLineAtOffset(2, -32);
+            stream.showText("T");
         } else if (ageString.toLowerCase().equals("youth")) {
-            stream.drawString("Y");
-            stream.moveTextPositionByAmount(-2, -32);
-            stream.drawString("O");
-            stream.moveTextPositionByAmount(0, -32);
-            stream.drawString("U");
-            stream.moveTextPositionByAmount(4, -32);
-            stream.drawString("T");
-            stream.moveTextPositionByAmount(-3, -32);
-            stream.drawString("H");
+            stream.showText("Y");
+            stream.newLineAtOffset(-2, -32);
+            stream.showText("O");
+            stream.newLineAtOffset(0, -32);
+            stream.showText("U");
+            stream.newLineAtOffset(4, -32);
+            stream.showText("T");
+            stream.newLineAtOffset(-3, -32);
+            stream.showText("H");
         } else if (ageString.toLowerCase().equals("child")) {
-            stream.drawString("C");
-            stream.moveTextPositionByAmount(0, -32);
-            stream.drawString("H");
-            stream.moveTextPositionByAmount(5, -32);
-            stream.drawString("I");
-            stream.moveTextPositionByAmount(-3, -32);
-            stream.drawString("L");
-            stream.moveTextPositionByAmount(-2, -32);
-            stream.drawString("D");
+            stream.showText("C");
+            stream.newLineAtOffset(0, -32);
+            stream.showText("H");
+            stream.newLineAtOffset(5, -32);
+            stream.showText("I");
+            stream.newLineAtOffset(-3, -32);
+            stream.showText("L");
+            stream.newLineAtOffset(-2, -32);
+            stream.showText("D");
         } else {
-            stream.drawString("V");
-            stream.moveTextPositionByAmount(0, -32);
-            stream.drawString("O");
-            stream.moveTextPositionByAmount(5, -32);
-            stream.drawString("I");
-            stream.moveTextPositionByAmount(-5, -32);
-            stream.drawString("D");
+            stream.showText("V");
+            stream.newLineAtOffset(0, -32);
+            stream.showText("O");
+            stream.newLineAtOffset(5, -32);
+            stream.showText("I");
+            stream.newLineAtOffset(-5, -32);
+            stream.showText("D");
         }
         stream.close();
     }
@@ -201,8 +192,8 @@ public class AttendeeBadge2017 extends FormatterBase  {
         } else {
             stream.setNonStrokingColor(Color.black);
         }
-        stream.fillRect(160, 85, 46, 230);
-
+        stream.addRect(160, 85, 46, 230);
+        stream.fill();
         stream.close();
     }
 
