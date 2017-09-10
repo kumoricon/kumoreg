@@ -206,6 +206,7 @@ public class AttendeeBadge2017 extends FormatterBase  {
         // stream.fillRect(285, 165, 170, 50);
 
         stream.beginText();
+        stream.setNonStrokingColor(Color.BLACK);
         if (attendee.getFanName() == null) {
             // Draw preferred name, no fan name
             int fontSize = BadgeLib.findMaxLineSize(bankGothic, attendee.getName(), 160, 50);
