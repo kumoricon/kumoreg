@@ -4,7 +4,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.kumoricon.model.attendee.Attendee;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class BadgeLib {
     static PDFont loadFont(PDDocument document) {
         Path fontPath = Paths.get(badgeResourcePath, "/Bitstream - BankGothic Md BT Medium.ttf");
         try {
-            return PDTrueTypeFont.loadTTF(document, fontPath.toFile());
+            return PDType0Font.load(document, fontPath.toFile());
         } catch (IOException ex) {
             log.warn("Error, couldn't load font '{}'", fontPath.toAbsolutePath());
             return PDType1Font.HELVETICA_BOLD;
@@ -180,7 +180,7 @@ public class BadgeLib {
     public static String findDepartmentColorCode(String department) {
         String dept;
         if (department == null) {
-            dept= "";
+            return "#FFFFFF";
         } else {
             dept = department.toLowerCase();
         }
@@ -228,6 +228,4 @@ public class BadgeLib {
 
         return ageRangeName;
     }
-
-
 }
