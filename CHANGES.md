@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 2.0.2 (Pending)
+- Version 2.0.3 (pending)
+
+- Version 2.0.2 (10/10/2017)
     - Split out badge type color bar and age range color bar
     - Added badge type to Print Test Badge screen
     - Added .json file import for staff information
