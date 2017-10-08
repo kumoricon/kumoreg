@@ -269,10 +269,10 @@ public class LoadBaseDataPresenter {
     private void addAttendeeBadges(StringBuilder results) {
         results.append("Creating badges\n");
         String[][] badgeList = {
-                {"Weekend", "#323E99", "60", "60", "45"},
-                {"Friday", "#323E99", "40", "40", "30"},
-                {"Saturday", "#323E99", "40", "40", "30"},
-                {"Sunday", "#323E99", "30", "30", "20"}};
+                {"Weekend", "#323E99", "65", "65", "45"},
+                {"Friday", "#000000", "50", "50", "30"},
+                {"Saturday", "#000000", "50", "50", "30"},
+                {"Sunday", "#000000", "40", "40", "20"}};
         for (String[] currentBadge : badgeList) {
             log.info("Creating badge {}", currentBadge[0]);
             Badge badge = BadgeFactory.createBadge(currentBadge[0], BadgeType.ATTENDEE,
