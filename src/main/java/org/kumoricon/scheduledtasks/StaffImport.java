@@ -72,6 +72,7 @@ public class StaffImport {
                 }
             }).create();
             ImportFile importFile = gson.fromJson(br, ImportFile.class);
+            br.close();
             return importFile;
         }
     }
@@ -106,8 +107,7 @@ public class StaffImport {
     private void processInputFiles() {
         Path inputPath = Paths.get(inputPathString);
 
-        try {
-            DirectoryStream<Path> stream = Files.newDirectoryStream(inputPath, "*.{json}");
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(inputPath, "*.{json}")) {
             int count = 0;
             int errors = 0;
             for (Path path : stream) {
