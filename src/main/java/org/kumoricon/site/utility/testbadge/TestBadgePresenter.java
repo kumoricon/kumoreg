@@ -42,6 +42,33 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     }
 
     /**
+     * Show the attendee badge window with automatically generated badges for all badge types.
+     * Generates badges Adult - Child - Youth
+     * @param view View
+     * @param xOffset Horizontal offset in points
+     * @param yOffset Vertical offset in points
+     */
+    public void showAttendeeBadgeWindow(AttendeePrintView view, Integer xOffset, Integer yOffset) {
+        if (xOffset == null) { xOffset = 0; }
+        if (yOffset == null) { yOffset = 0; }
+
+        log.info("{} generating test badges for all badge types with horizontal offset {} vertical offset {}",
+                view.getCurrentUsername(), xOffset, yOffset);
+        List<Attendee> attendees = new ArrayList<>();
+
+        for (Badge badge : badgeRepository.findByVisibleTrue()) {
+            attendees.add(attendeeFactory.generateDemoAttendee(badge));
+            attendees.add(attendeeFactory.generateYouthAttendee(badge));
+            attendees.add(attendeeFactory.generateChildAttendee(badge));
+        }
+
+        log.info("{} printing test badges for {}", view.getCurrentUsername(), attendees);
+        showAttendeeBadgeWindow(view, attendees, xOffset, yOffset);
+    }
+
+
+
+    /**
      * Show the attendee badge window with the given number of automatically generated badges.
      * Generates badges Adult - Child - Youth
      * @param view View
