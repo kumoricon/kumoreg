@@ -269,7 +269,7 @@ public class LoadBaseDataPresenter {
     private void addAttendeeBadges(StringBuilder results) {
         results.append("Creating badges\n");
         String[][] badgeList = {
-                {"Weekend", "#323E99", "65", "65", "45"},
+                {"Weekend", "#000000", "65", "65", "45"},
                 {"Friday", "#000000", "50", "50", "30"},
                 {"Saturday", "#000000", "50", "50", "30"},
                 {"Sunday", "#000000", "40", "40", "20"}};
