@@ -118,7 +118,7 @@ public class Person {
         // Suppress department if it's in their title. Todo: What if one department has suppressed=true
         //                                                   and others have suppressed=false?
         if (positions.size() > 0) {
-            if (positions.get(0).departmentSupresesd) {
+            if (positions.get(0).departmentSuppressed) {
                 attendee.setStaffDepartment("");
             } else {
                 attendee.setStaffDepartment(positions.get(0).department);
