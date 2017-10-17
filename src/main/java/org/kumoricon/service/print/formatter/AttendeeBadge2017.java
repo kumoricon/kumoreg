@@ -70,8 +70,8 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
 
-        stream.setNonStrokingColor(Color.white);
-        stream.setStrokingColor(Color.black);
+        String stripeColor = attendee.getCurrentAgeRange().getStripeColor();
+        stream.setNonStrokingColor(BadgeLib.getForegroundColor(stripeColor));
         // Bounding box:
 //         stream.fillRect(163, 95, 40, 30);
 
@@ -121,8 +121,12 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.beginText();
         int fontSize = BadgeLib.findMaxLineSize(font, badgeTypeText,240, 40);
         stream.setFont(font, fontSize);
-        stream.setNonStrokingColor(Color.white);
-        stream.setStrokingColor(Color.black);
+        if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
+            stream.setNonStrokingColor(BadgeLib.getForegroundColor(attendee.getBadge().getBadgeTypeBackgroundColor()));
+        } else {
+            stream.setNonStrokingColor(Color.WHITE);
+            stream.setStrokingColor(Color.black);
+        }
 
         float textWidth = font.getStringWidth(badgeTypeText);
         Float offset = textWidth * (fontSize/(2*1000.0f));
@@ -136,8 +140,9 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.setLineWidth(0.5f);
         stream.beginText();
         stream.setFont(font, 30);
-        stream.setNonStrokingColor(Color.white);
-        stream.setStrokingColor(Color.black);
+
+        String stripeColor = attendee.getCurrentAgeRange().getStripeColor();
+        stream.setNonStrokingColor(BadgeLib.getForegroundColor(stripeColor));
 
         stream.newLineAtOffset(172, 275);   // First character position
 

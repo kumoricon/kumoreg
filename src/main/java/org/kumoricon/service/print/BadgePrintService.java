@@ -1,6 +1,7 @@
 package org.kumoricon.service.print;
 
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.badge.BadgeType;
 import org.kumoricon.model.computer.Computer;
 import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,27 +31,46 @@ public class BadgePrintService extends PrintService {
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress, Integer xOffset, Integer yOffset, LocalDate ageAsOfDate) throws PrintException {
         String printerName;
-        List<Attendee> attendeesNotPrinted = findPrintedAttendees(attendees);
-
-        if (attendeesNotPrinted.size() == attendees.size()) {
-            return("Pre-printed badges ready for pickup: " + attendeesNotPrinted);
+        List<Attendee> attendeesNotPrinted = findUnprintedAttendees(attendees);
+        List<Attendee> attendeesPrinted = findPrintedAttendees(attendees);
+        if (attendeesNotPrinted.size() != attendees.size()) {
+            return("Pre-printed badges ready for pickup: " + attendeesPrinted);
         }
 
-        if (enablePrintingFromServer != null && enablePrintingFromServer) {
+        if (enablePrintingFromServer != null && enablePrintingFromServer && attendeesNotPrinted.size() > 0) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             BadgePrintFormatter badgePrintFormatter =
-                    getCurrentBadgeFormatter(attendees, xOffset, yOffset, ageAsOfDate);
+                    getCurrentBadgeFormatter(attendeesNotPrinted, xOffset, yOffset, ageAsOfDate);
             printerName = client.getPrinterName();
-            printDocument(badgePrintFormatter.getStream(), printerName);
+
+            // For staff badges, enable duplexing when printing (they're double sided)
+            // For all others, print single sided. Note that this a cheap hack - the entire document
+            // will be printed double sided if the first attendee is staff, otherwise they
+            // will all be printed single sided.
+            boolean setDuplexOn = false;
+            if (BadgeType.STAFF.equals(attendeesNotPrinted.get(0).getBadge().getBadgeType())) {
+                setDuplexOn = true;
+            }
+            printDocument(badgePrintFormatter.getStream(), printerName, setDuplexOn);
         } else {
             return("Printing from server not enabled. Select \"Show Selected in Browser\".");
         }
         return String.format("Printed %s badges to %s. %s pre-printed badges.",
-                attendees.size() - attendeesNotPrinted.size(),
+                attendeesNotPrinted.size(),
                 printerName,
-                attendeesNotPrinted.size());
+                attendeesPrinted.size());
     }
 
+
+    private static List<Attendee> findUnprintedAttendees(List<Attendee> attendees) {
+        List<Attendee> attendeesNotPrinted = new ArrayList<>();
+        for (Attendee attendee : attendees) {
+            if (!attendee.isBadgePrePrinted()) {
+                attendeesNotPrinted.add(attendee);
+            }
+        }
+        return attendeesNotPrinted;
+    }
 
     private static List<Attendee> findPrintedAttendees(List<Attendee> attendees) {
         List<Attendee> attendeesNotPrinted = new ArrayList<>();
@@ -72,25 +92,7 @@ public class BadgePrintService extends PrintService {
      * @throws PrintException Printer Error
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) throws PrintException {
-        String printerName;
-        List<Attendee> attendeesNotPrinted = findPrintedAttendees(attendees);
-        if (attendeesNotPrinted.size() == attendees.size()) {
-            return("Pre-printed badges ready for pickup: " + attendeesNotPrinted);
-        }
-
-        if (enablePrintingFromServer != null && enablePrintingFromServer) {
-            Computer client = computerService.findComputerByIP(clientIPAddress);
-            BadgePrintFormatter badgePrintFormatter =
-                    getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset(), LocalDate.now());
-            printerName = client.getPrinterName();
-            printDocument(badgePrintFormatter.getStream(), printerName);
-        } else {
-            return("Printing from server not enabled. Select \"Show Selected in Browser\".");
-        }
-        return String.format("Printed %s badges to %s. %s pre-printed badges.",
-                attendees.size() - attendeesNotPrinted.size(),
-                printerName,
-                attendeesNotPrinted.size());
+        return printBadgesForAttendees(attendees, clientIPAddress, 0, 0, LocalDate.now());
     }
 
     /**

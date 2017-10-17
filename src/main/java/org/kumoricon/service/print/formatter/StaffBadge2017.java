@@ -15,6 +15,7 @@ import org.kumoricon.model.attendee.Attendee;
 import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
+import java.util.List;
 
 public class StaffBadge2017 extends FormatterBase  {
 
@@ -130,278 +131,43 @@ public class StaffBadge2017 extends FormatterBase  {
 
     private void drawPositionsFront(PDPage page, Attendee attendee) throws IOException {
 
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         // Bounding box:
-//        stream.setNonStrokingColor(Color.red);
-//        stream.addRect(306, 144, 45, 170);
-//        stream.fill();
-        PDRectangle boundingBox = new PDRectangle(306, 144, 45, 170);
+        PDRectangle boundingBox = new PDRectangle(306, 144, 35, 200);
 
-        stream.setLineWidth(0.25f);
-        stream.beginText();
-        stream.setStrokingColor(Color.white);
-        stream.setNonStrokingColor(Color.black);
-        stream.setRenderingMode(RenderingMode.FILL_STROKE);
-
-        if (attendee.getStaffPositions().size() == 1) {
-            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
-            stream.setFont(bankGothic, fontSize);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 332, 145);
-            stream.setTextMatrix(offset);
-            stream.showText(attendee.getStaffPositions().get(0));
-
-        } else if (attendee.getStaffPositions().size() == 2) {
-            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
-            String text = attendee.getStaffPositions().get(0);
-
-            stream.setFont(bankGothic, fontSize);
-            Matrix offsetLine1 = Matrix.getRotateInstance(90 * Math.PI * 0.25, 320, 145);
-            stream.setTextMatrix(offsetLine1);
-            stream.showText(text);
-
-            text = attendee.getStaffPositions().get(1);
-            stream.setFont(bankGothic, fontSize);
-            Matrix offsetLine2 = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 145);
-            stream.setTextMatrix(offsetLine2);
-            stream.showText(text);
-        } else if (attendee.getStaffPositions().size() == 3) {
-            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
-            String text = attendee.getStaffPositions().get(0);
-            Matrix offsetLine1 = Matrix.getRotateInstance(90 * Math.PI * 0.25, 314, 145);
-            stream.setFont(bankGothic, fontSize);
-            stream.setTextMatrix(offsetLine1);
-            stream.showText(text);
-
-            text = attendee.getStaffPositions().get(1);
-            stream.setFont(bankGothic, fontSize);
-            Matrix offsetLine2 = Matrix.getRotateInstance(90 * Math.PI * 0.25, 324, 145);
-            stream.setTextMatrix(offsetLine2);
-            stream.showText(text);
-
-            text = attendee.getStaffPositions().get(2);
-            stream.setFont(bankGothic, fontSize);
-            Matrix offsetLine3 = Matrix.getRotateInstance(90 * Math.PI * 0.25, 334, 145);
-            stream.setTextMatrix(offsetLine3);
-            stream.showText(text);
-        }
-
-        stream.close();
+        Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
+        List<String> lines = BadgeLib.wrapPositions(attendee.getStaffPositions());
+        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, false);
     }
 
     private void drawPositionsBack(PDPage page, Attendee attendee) throws IOException {
 
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         // Bounding box:
-//        stream.setNonStrokingColor(Color.red);
-//        stream.addRect(45, 144, 45, 170);
-//        stream.fill();
-        PDRectangle boundingBox = new PDRectangle(45, 144, 45, 170);
+        PDRectangle boundingBox = new PDRectangle(55, 144, 35, 200);
 
-        stream.setLineWidth(0.25f);
-        stream.beginText();
-        stream.setStrokingColor(Color.white);
-        stream.setNonStrokingColor(Color.black);
-        stream.setRenderingMode(RenderingMode.FILL_STROKE);
-
-        if (attendee.getStaffPositions().size() == 1) {
-            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
-            float width = (bankGothic.getStringWidth(attendee.getStaffPositions().get(0)) / 1000) * fontSize;
-
-            stream.setFont(bankGothic, fontSize);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 68, 148+width);
-            stream.setTextMatrix(offset);
-            stream.showText(attendee.getStaffPositions().get(0));
-
-        } else if (attendee.getStaffPositions().size() == 2) {
-            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
-            String text = attendee.getStaffPositions().get(0);
-            float width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
-            Matrix offsetLine1 = Matrix.getRotateInstance(270 * Math.PI * 0.25, 76, 148+width);
-            stream.setFont(bankGothic, fontSize);
-            stream.setTextMatrix(offsetLine1);
-            stream.showText(text);
-
-            text = attendee.getStaffPositions().get(1);
-            width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
-            stream.setFont(bankGothic, fontSize);
-            Matrix offsetLine2 = Matrix.getRotateInstance(270 * Math.PI * 0.25, 62, 148+width);
-            stream.setTextMatrix(offsetLine2);
-            stream.showText(text);
-        } else if (attendee.getStaffPositions().size() == 3) {
-            int fontSize = BadgeLib.findMaxFontSize(bankGothic, attendee.getStaffPositions(), boundingBox);
-            String text = attendee.getStaffPositions().get(0);
-            stream.setFont(bankGothic, fontSize);
-            float width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
-            Matrix offsetLine1 = Matrix.getRotateInstance(270 * Math.PI * 0.25, 81, 148+width);
-            stream.setTextMatrix(offsetLine1);
-            stream.showText(text);
-
-            text = attendee.getStaffPositions().get(1);
-            stream.setFont(bankGothic, fontSize);
-            width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
-            Matrix offsetLine2 = Matrix.getRotateInstance(270 * Math.PI * 0.25, 72, 148+width);
-            stream.setTextMatrix(offsetLine2);
-            stream.showText(text);
-
-            text = attendee.getStaffPositions().get(2);
-            stream.setFont(bankGothic, fontSize);
-            width = (bankGothic.getStringWidth(text) / 1000) * fontSize;
-            Matrix offsetLine3 = Matrix.getRotateInstance(270 * Math.PI * 0.25, 63, 148+width);
-            stream.setTextMatrix(offsetLine3);
-            stream.showText(text);
-        }
-        stream.close();
+        Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
+        List<String> lines = BadgeLib.wrapPositions(attendee.getStaffPositions());
+        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, false);
     }
 
 
     private void drawDepartmentNameBack(PDPage page, Attendee attendee) throws IOException {
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         // Bounding box:
-//        stream.setNonStrokingColor(Color.red);
-//        stream.fillRect(45, 361, 45, 170);
-        stream.setLineWidth(0.25f);
-        stream.beginText();
-        stream.setStrokingColor(Color.white);
-        stream.setNonStrokingColor(Color.black);
-        stream.setRenderingMode(RenderingMode.FILL_STROKE);
-
-        if ("chair".equals(attendee.getStaffDepartment().toLowerCase()) ||
-                "department of the chair".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 46);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 56, 530);
-            stream.setTextMatrix(offset);
-            stream.showText("CHAIR");
-
-        } else if ("treasury".equals(attendee.getStaffDepartment().toLowerCase()) ||
-                "department of the treasurer".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 26);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 62, 525);
-            stream.setTextMatrix(offset);
-            stream.showText("TREASURY");
-        } else if ("security".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 28);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 61, 526);
-            stream.setTextMatrix(offset);
-            stream.showText("SECURITY");
-        } else if ("secretary".equals(attendee.getStaffDepartment().toLowerCase()) ||
-                "department of the secretary".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 26);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 61, 526);
-            stream.setTextMatrix(offset);
-            stream.showText("SECRETARY");
-        } else if ("relations".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 25);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 61, 527);
-            stream.setTextMatrix(offset);
-            stream.showText("RELATIONS");
-        } else if ("publicity".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 27);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 62, 527);
-            stream.setTextMatrix(offset);
-            stream.showText("PUBLICITY");
-        } else if ("programming".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 19);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 62, 529);
-            stream.setTextMatrix(offset);
-            stream.showText("PROGRAMMING");
-        } else if ("operations".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 22);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 62, 529);
-            stream.setTextMatrix(offset);
-            stream.showText("OPERATIONS");
-        } else if ("membership".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 21);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 62, 529);
-            stream.setTextMatrix(offset);
-            stream.showText("MEMBERSHIP");
-        } else if ("infrastructure".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 16);
-            Matrix offset = Matrix.getRotateInstance(270 * Math.PI * 0.25, 64, 529);
-            stream.setTextMatrix(offset);
-            stream.showText("INFRASTRUCTURE");
-        } else {
-            System.out.println(String.format("Error: Department %s not found", attendee.getStaffDepartment()));
-        }
-
-        stream.endText();
-        stream.close();
+        PDRectangle boundingBox = new PDRectangle(55, 361, 35, 156);
+        Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
+        String[] lines = {attendee.getStaffDepartment()};
+        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, false);
 
     }
 
     private void drawDepartmentNameFront(PDPage page, Attendee attendee) throws IOException {
 
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+//        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+
         // Bounding box:
-//        stream.setNonStrokingColor(Color.red);
-//        stream.fillRect(306, 361, 45, 170);
-
-        stream.setLineWidth(0.25f);
-        stream.beginText();
-        stream.setStrokingColor(Color.white);
-        stream.setNonStrokingColor(Color.black);
-        stream.setRenderingMode(RenderingMode.FILL_STROKE);
-
-
-        if ("chair".equals(attendee.getStaffDepartment().toLowerCase()) ||
-                "department of the chair".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 46);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 340, 362);
-            stream.setTextMatrix(offset);
-            stream.showText("CHAIR");
-
-        } else if ("treasury".equals(attendee.getStaffDepartment().toLowerCase()) ||
-                "department of the treasurer".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 26);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 366);
-            stream.setTextMatrix(offset);
-            stream.showText("TREASURY");
-        } else if ("security".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 28);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 364);
-            stream.setTextMatrix(offset);
-            stream.showText("SECURITY");
-        } else if ("secretary".equals(attendee.getStaffDepartment().toLowerCase()) ||
-                "department of the secretary".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 26);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 350);
-            stream.setTextMatrix(offset);
-            stream.showText("SECRETARY");
-        } else if ("relations".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 25);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 364);
-            stream.setTextMatrix(offset);
-            stream.showText("RELATIONS");
-        } else if ("publicity".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 27);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 364);
-            stream.setTextMatrix(offset);
-            stream.showText("PUBLICITY");
-        } else if ("programming".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 19);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 362);
-            stream.setTextMatrix(offset);
-            stream.showText("PROGRAMMING");
-        } else if ("operations".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 22);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 336, 363);
-            stream.setTextMatrix(offset);
-            stream.showText("OPERATIONS");
-        } else if ("membership".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 21);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 335, 363);
-            stream.setTextMatrix(offset);
-            stream.showText("MEMBERSHIP");
-        } else if ("infrastructure".equals(attendee.getStaffDepartment().toLowerCase())) {
-            stream.setFont(bankGothic, 16);
-            Matrix offset = Matrix.getRotateInstance(90 * Math.PI * 0.25, 334, 362);
-            stream.setTextMatrix(offset);
-            stream.showText("INFRASTRUCTURE");
-        } else {
-            System.out.println(String.format("Error: Department %s not found", attendee.getStaffDepartment()));
-        }
-
-        stream.endText();
-        stream.close();
+        PDRectangle boundingBox = new PDRectangle(306, 361, 35, 156);
+        Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
+        String[] lines = {attendee.getStaffDepartment()};
+        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, false);
     }
 
     private void drawName(PDPage page, Attendee attendee) throws IOException {
