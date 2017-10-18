@@ -32,7 +32,6 @@ public class BadgeLib {
     private static String badgeResourcePath = "/usr/local/kumoreg/badgeResources";
     private static final Logger log = LoggerFactory.getLogger(BadgeLib.class);
     private static final Pattern badgeNumberPattern = Pattern.compile("([A-Za-z]+)(\\d+)");
-    private static final int BRIGHTNESS_THRESHOLD = 130;
 
     /**
      * Loads BankGothic Md BT Medium.ttf in to a given document or falls back to Helvetica Bold
@@ -193,7 +192,7 @@ public class BadgeLib {
             return "#0a8141";
         } else if ("department of the treasurer".equals(dept)) {
             return "#0a8141";
-        } else if ("secretary".equals(dept)) {
+        } else if ("secretarial".equals(dept)) {
             return "#3a53a5";
         } else if ("department of the secretary".equals(dept)) {
             return "#3953a4"; // Not sure which color code is correct, this is from 2016
@@ -260,15 +259,16 @@ public class BadgeLib {
      * 24 characters, wrap that line to the second line. The original list of positions is not
      * changed.
      * @param positions List of positions
+     * @param maxLineLength Maximum line length in characters
      * @return List of positions
      */
-    static List<String> wrapPositions(List<String> positions) {
+    static List<String> wrapPositions(List<String> positions, int maxLineLength) {
         if (positions == null) {
             return new ArrayList<>();
         } else if (positions.size() != 1) {
             return new ArrayList<>(positions);
         } else {
-            if (positions.get(0).length() <= 24) {
+            if (positions.get(0).length() <= maxLineLength) {
                 return new ArrayList<>(positions);
             } else {
                 List<String> output = new ArrayList<>();
@@ -373,9 +373,6 @@ public class BadgeLib {
         PDRectangle pageSize = page.getMediaBox();
         float pageWidth = pageSize.getWidth();
         float pageHeight = pageSize.getHeight();
-        System.out.println("Page Width: " + pageWidth);
-        System.out.println("Page Height: " + pageHeight);
-
 
         /* Draw the outline of the bounding box */
         if (drawBoundingBox == true) {
@@ -392,7 +389,6 @@ public class BadgeLib {
         stream.beginText();
         stream.setNonStrokingColor(color);
 
-
         /* Create a TextMatrix object */
         // The text matrix allows drawing text normally without consideration for where it is located,
         // how big it is, or what direction it is facing
@@ -404,13 +400,11 @@ public class BadgeLib {
         float[] lineWidths = new float[lines.length];
         for (int i = 0; i < (lines.length); i++) {
             lineWidths[i] = font.getStringWidth(lines[i])/1000f*fontSize;
-            System.out.println("'" + lines[i] + "' Width: " + lineWidths[i]);
         }
 
         // Get the width of the longest line
         Arrays.sort(lineWidths);
         float maxlineWidth = lineWidths[(lines.length-1)];
-        System.out.println("Max Line Width: " + maxlineWidth);
 
         // Calculate autoScaleFactor based on the type of rotation
         float autoScaleFactor = 1.0f;
@@ -419,70 +413,47 @@ public class BadgeLib {
 
             // Calculate the scale factor to fit the longest line in the bounding box
             float fitWidthScaleFactor = boundaryHeight / maxlineWidth;
-            System.out.println("Fit Width Scale Factor: " + fitWidthScaleFactor);
 
             // Determine the value to scale the combined height of text to fit the boundary box
             float fitHeightScaleFactor = boundaryWidth / (lines.length*fontLeading);
-            System.out.println("Fit Height Scale Factor: " + fitHeightScaleFactor);
 
             // Go with the smaller of the calculated width and height scale values
             if (fitHeightScaleFactor < fitWidthScaleFactor)
                 autoScaleFactor = fitHeightScaleFactor;
             else
                 autoScaleFactor = fitWidthScaleFactor;
-            System.out.println("Auto Scale Factor: " + autoScaleFactor);
 
-            // Determine the Y offset for the starting point of the text
-            float textYOffset = 0.0f;
-            if (autoScaleFactor == fitWidthScaleFactor)
-                textYOffset = (boundaryHeight-(lines.length)*fontSize)/2;
-            else
-                textYOffset = (fontLeading-fontSize)*lines.length/2;
-
-            matrix.translate(boundaryX+(boundaryWidth/2), boundaryY);
+            matrix.translate(boundaryX+boundaryWidth, boundaryY);
             matrix.rotate(-Math.PI/2);
         } else if (rotation == ROTATION.LEFT){
             //The boundaryWidth and boundaryHeight variables are swapped for the rotate right and left cases
 
             // Calculate the scale factor to fit the longest line in the bounding box
             float fitWidthScaleFactor = boundaryHeight / maxlineWidth;
-            System.out.println("Fit Width Scale Factor: " + fitWidthScaleFactor);
 
             // Determine the value to scale the combined height of text to fit the boundary box
             float fitHeightScaleFactor = boundaryWidth / (lines.length*fontLeading);
-            System.out.println("Fit Height Scale Factor: " + fitHeightScaleFactor);
 
             // Go with the smaller of the calculated width and height scale values
             if (fitHeightScaleFactor < fitWidthScaleFactor)
                 autoScaleFactor = fitHeightScaleFactor;
             else
                 autoScaleFactor = fitWidthScaleFactor;
-            System.out.println("Auto Scale Factor: " + autoScaleFactor);
-
-            // Determine the Y offset for the starting point of the text
-            float textYOffset = 0.0f;
-            if (autoScaleFactor == fitWidthScaleFactor)
-                textYOffset = (boundaryHeight-(lines.length)*fontSize)/2;
-            else
-                textYOffset = (fontLeading-fontSize)*lines.length/2;
 
             matrix.translate(boundaryX,boundaryY-boundaryHeight);
             matrix.rotate(Math.PI/2);
         } else {
             // Calculate the scale factor to fit the longest line in the bounding box
             float fitWidthScaleFactor = boundaryWidth / maxlineWidth;
-            System.out.println("Fit Width Scale Factor: " + fitWidthScaleFactor);
 
             // Determine the value to scale the combined height of text to fit the boundary box
             float fitHeightScaleFactor = boundaryHeight / (lines.length*fontLeading);
-            System.out.println("Fit Height Scale Factor: " + fitHeightScaleFactor);
 
             // Go with the smaller of the calculated width and height scale values
             if (fitHeightScaleFactor < fitWidthScaleFactor)
                 autoScaleFactor = fitHeightScaleFactor;
             else
                 autoScaleFactor = fitWidthScaleFactor;
-            System.out.println("Auto Scale Factor: " + autoScaleFactor);
 
             // Determine the Y offset for the starting point of the text
             float textYOffset = 0.0f;
@@ -528,8 +499,6 @@ public class BadgeLib {
                 if (rotation == ROTATION.NONE)
                     lineOffset = (boundaryWidth / autoScaleFactor) - (font.getStringWidth(lines[i]) / 1000f * fontSize);
             }
-
-            System.out.println("Line Offset: " + lineOffset);
 
             // Move the cursor to the appropriate new location relative to its current old location
             stream.newLineAtOffset(lineOffset, -fontLeading);

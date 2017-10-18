@@ -12,6 +12,7 @@ import org.apache.pdfbox.pdmodel.graphics.state.RenderingMode;
 import org.apache.pdfbox.util.Matrix;
 import org.kumoricon.model.attendee.Attendee;
 
+import javax.imageio.IIOException;
 import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class StaffBadge2017 extends FormatterBase  {
     private PDDocument frontBackground;
     private PDDocument backBackground;
     private PDFont bankGothic;
-
+    private static final boolean DRAW_BOUNDING_BOX = false;
     private LocalDate currentDateForAgeCalculation;
 
     StaffBadge2017(PDDocument document) {
@@ -54,7 +55,7 @@ public class StaffBadge2017 extends FormatterBase  {
 
         // Positions are measured from the bottom left corner of the page at 72 DPI
         drawDepartmentBackgroundColorFront(page, attendee);
-        drawDepartmentNameFront(page, attendee);
+        //drawDepartmentNameFront(page, attendee);
         drawPositionsFront(page, attendee);
         drawImage(page, attendee);
         drawName(page, attendee);
@@ -69,7 +70,7 @@ public class StaffBadge2017 extends FormatterBase  {
 
         PDPage pageBack = document.importPage(new PDPage(newBackPageDict));
         drawDepartmentBackgroundColorBack(pageBack, attendee);
-        drawDepartmentNameBack(pageBack, attendee);
+        //drawDepartmentNameBack(pageBack, attendee);
         drawPositionsBack(pageBack, attendee);
         drawNameBack(pageBack, attendee);
         drawAgeImageBack(pageBack, attendee);
@@ -97,7 +98,7 @@ public class StaffBadge2017 extends FormatterBase  {
         String imageFilename = BadgeLib.getStaffAgeImageFilename(attendee, currentDateForAgeCalculation);
         if (imageFilename == null) { return; }
 
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, DRAW_BOUNDING_BOX);
 
         PDImageXObject xImage = PDImageXObject.createFromFile(imageFilename, document);
         Dimension scaledDim = getScaledDimension(
@@ -130,44 +131,61 @@ public class StaffBadge2017 extends FormatterBase  {
 
 
     private void drawPositionsFront(PDPage page, Attendee attendee) throws IOException {
+        Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
 
         // Bounding box:
-        PDRectangle boundingBox = new PDRectangle(306, 144, 35, 200);
-
-        Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
-        List<String> lines = BadgeLib.wrapPositions(attendee.getStaffPositions());
-        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, false);
+        PDRectangle boundingBox;
+        //if ("".equals(attendee.getStaffDepartment())) {
+        if (true) {
+            boundingBox = new PDRectangle(306, 173, 30, 325);
+            List<String> lines = BadgeLib.wrapPositions(attendee.getStaffPositions(), 36);
+            BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, DRAW_BOUNDING_BOX);
+        } else {
+            boundingBox = new PDRectangle(306, 148, 30, 200);
+            List<String> lines = BadgeLib.wrapPositions(attendee.getStaffPositions(), 16);
+            BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, DRAW_BOUNDING_BOX);
+        }
     }
 
     private void drawPositionsBack(PDPage page, Attendee attendee) throws IOException {
 
-        // Bounding box:
-        PDRectangle boundingBox = new PDRectangle(55, 144, 35, 200);
-
         Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
-        List<String> lines = BadgeLib.wrapPositions(attendee.getStaffPositions());
-        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, false);
+
+        // Bounding box:
+        PDRectangle boundingBox;
+        //if ("".equals(attendee.getStaffDepartment())) {
+        if (true) {
+            boundingBox = new PDRectangle(60, 173, 30, 325);
+            List<String> lines = BadgeLib.wrapPositions(attendee.getStaffPositions(), 36);
+            BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.RIGHT, 14, 14, true, DRAW_BOUNDING_BOX);
+        } else {
+            boundingBox = new PDRectangle(60, 148, 30, 200);
+            List<String> lines = BadgeLib.wrapPositions(attendee.getStaffPositions(), 16);
+            BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.RIGHT, 14, 14, true, DRAW_BOUNDING_BOX);
+        }
+
     }
 
 
     private void drawDepartmentNameBack(PDPage page, Attendee attendee) throws IOException {
+        if ("".equals(attendee.getStaffDepartment())) { return; }
         // Bounding box:
-        PDRectangle boundingBox = new PDRectangle(55, 361, 35, 156);
+        PDRectangle boundingBox = new PDRectangle(60, 361, 30, 156);
         Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
         String[] lines = {attendee.getStaffDepartment()};
-        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, false);
-
+        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.RIGHT, 14, 14, false, DRAW_BOUNDING_BOX);
     }
 
     private void drawDepartmentNameFront(PDPage page, Attendee attendee) throws IOException {
+        if ("".equals(attendee.getStaffDepartment())) { return; }
 
 //        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
 
         // Bounding box:
-        PDRectangle boundingBox = new PDRectangle(306, 361, 35, 156);
+        PDRectangle boundingBox = new PDRectangle(306, 361, 30, 156);
         Color color = BadgeLib.getForegroundColor(attendee.getStaffDepartmentColor());
         String[] lines = {attendee.getStaffDepartment()};
-        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, true, false);
+        BadgeLib.drawText(document, page, boundingBox, bankGothic, color, lines, BadgeLib.ALIGNMENT.CENTER, BadgeLib.ROTATION.LEFT, 14, 14, false, DRAW_BOUNDING_BOX);
     }
 
     private void drawName(PDPage page, Attendee attendee) throws IOException {
@@ -216,8 +234,14 @@ public class StaffBadge2017 extends FormatterBase  {
         }
 
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
-
-        PDImageXObject xImage = PDImageXObject.createFromFile(imageFilename, document);
+        PDImageXObject xImage;
+        try {
+            xImage = PDImageXObject.createFromFile(imageFilename, document);
+        } catch (IIOException ex) {
+            stream.close();
+            System.out.println("Error opening " + imageFilename);
+            return;
+        }
         Dimension scaledDim = getScaledDimension(
                                 new Dimension(xImage.getWidth(),  xImage.getHeight()),
                                 new Dimension(149, 158));

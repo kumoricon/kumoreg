@@ -13,21 +13,21 @@ public class BadgeLibTest {
     @Test
     public void wrapPositionsMultiplePositionsNotWrapped() throws Exception {
         List<String> input = Arrays.asList("Position 1 is really really long", "Position 2");
-        List<String> output = BadgeLib.wrapPositions(input);
+        List<String> output = BadgeLib.wrapPositions(input,18);
         assertArrayEquals(input.toArray(), output.toArray());
     }
 
     @Test
     public void wrapPositionsEmptyPositionsNotWrapped() throws Exception {
         List<String> input = Arrays.asList();
-        List<String> output = BadgeLib.wrapPositions(input);
+        List<String> output = BadgeLib.wrapPositions(input, 18);
         assertArrayEquals(input.toArray(), output.toArray());
     }
 
     @Test
     public void wrapPositionsSingleShortPositionNotWrapped() throws Exception {
         List<String> input = Arrays.asList("Position 1");
-        List<String> output = BadgeLib.wrapPositions(input);
+        List<String> output = BadgeLib.wrapPositions(input, 18);
         assertArrayEquals(input.toArray(), output.toArray());
     }
 
@@ -35,13 +35,13 @@ public class BadgeLibTest {
     public void wrapPositionsSinglePositionsWrapped() throws Exception {
         List<String> input = Arrays.asList("Position 1 is really really long");
         List<String> expected = Arrays.asList("Position 1 is really", "really long");
-        List<String> output = BadgeLib.wrapPositions(input);
+        List<String> output = BadgeLib.wrapPositions(input, 18);
         assertArrayEquals(expected.toArray(), output.toArray());
     }
 
     @Test
     public void wrapPositionsNullInput() throws Exception {
-        List<String> output = BadgeLib.wrapPositions(null);
+        List<String> output = BadgeLib.wrapPositions(null, 18);
         List<String> expected = new ArrayList<>();
         assertArrayEquals(expected.toArray(), output.toArray());
     }
@@ -49,7 +49,7 @@ public class BadgeLibTest {
     @Test
     public void wrapPositionsAssistantDirector() throws Exception {
         List<String> input = Arrays.asList("Assistant Director of Operations");
-        List<String> output = BadgeLib.wrapPositions(input);
+        List<String> output = BadgeLib.wrapPositions(input, 18);
         List<String> expected = Arrays.asList("Assistant Director of", "Operations");
         assertArrayEquals(expected.toArray(), output.toArray());
     }
