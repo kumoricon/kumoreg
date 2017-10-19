@@ -177,7 +177,7 @@ public class Attendee extends Record {
     public void setHistory(Set<AttendeeHistory> history) { this.history = history; }
 
     public void addHistoryEntry(User user, String message) {
-        if (user != null && message != null && !message.trim().equals("")) {
+        if (message != null && !message.trim().equals("")) {
             if (history == null) { history = new HashSet<>(); }
             history.add(new AttendeeHistory(user, this, message.trim()));
         }
