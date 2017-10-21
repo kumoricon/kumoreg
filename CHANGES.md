@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 2.0.3 (pending)
+- Version 2.0.4 (pending)
+
+- Version 2.0.3 (10/20/2017)
     - Fixed bug that would cause server to crash after running out of files
     - Added button to print example of all badge types
     - Added notes to staff import

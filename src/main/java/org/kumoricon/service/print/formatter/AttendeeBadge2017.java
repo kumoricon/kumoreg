@@ -19,19 +19,15 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
     private PDFont bankGothic;
     private PDDocument frontBackground;
-
+    private int xOffset;
+    private int yOffset;
     private LocalDate currentDateForAgeCalculation;
 
-    AttendeeBadge2017(PDDocument document) {
-        super(document);
-
-        frontBackground = BadgeLib.loadBackground("2017_attendee_badge.pdf");
-        bankGothic = BadgeLib.loadFont(document);
-        this.currentDateForAgeCalculation = LocalDate.now();
-    }
 
     public AttendeeBadge2017(PDDocument document, LocalDate currentDateForAgeCalculation) {
         super(document);
+        this.xOffset = 0;
+        this.yOffset = 0;
         frontBackground = BadgeLib.loadBackground("2017_attendee_badge.pdf");
         this.currentDateForAgeCalculation = currentDateForAgeCalculation;
         bankGothic = BadgeLib.loadFont(document);
@@ -39,15 +35,16 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
 
     void addBadge(Attendee attendee, Integer xOffset, Integer yOffset) throws IOException {
-//        PDPage page = document.importPage(new PDPage(new PDRectangle(612f, 396f)));
-
-        PDPage templatePage = frontBackground.getDocumentCatalog().getPages().get(0);
-        COSDictionary pageDict = templatePage.getCOSObject();
-        COSDictionary newPageDict = new COSDictionary(pageDict);
-        newPageDict.removeItem(COSName.ANNOTS);
-        newPageDict.removeItem(COSName.ACTUAL_TEXT);
-
-        PDPage page = document.importPage(new PDPage(newPageDict));
+//        PDPage templatePage = frontBackground.getDocumentCatalog().getPages().get(0);
+//        COSDictionary pageDict = templatePage.getCOSObject();
+//        COSDictionary newPageDict = new COSDictionary(pageDict);
+//        newPageDict.removeItem(COSName.ANNOTS);
+//        newPageDict.removeItem(COSName.ACTUAL_TEXT);
+//
+//        PDPage page = document.importPage(new PDPage(newPageDict));
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+        PDPage page = document.importPage(new PDPage(new PDRectangle(612f, 396f)));
 
         // Positions are measured from the bottom left corner of the page at 72 DPI
         drawAgeColorStripe(page, attendee);
@@ -191,6 +188,8 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
     private void drawAgeColorStripe(PDPage page, Attendee attendee) throws IOException {
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+        // This only needs to be set once in the page to set the global offset.
+        stream.concatenate2CTM(1, 0, 0, 1, xOffset, yOffset);
 
         if (attendee.getCurrentAgeRange() != null) {
             stream.setNonStrokingColor(Color.decode(attendee.getCurrentAgeRange().getStripeColor()));
