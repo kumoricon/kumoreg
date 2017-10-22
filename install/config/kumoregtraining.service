@@ -11,7 +11,7 @@ After=syslog.target
 [Service]
 User=kumoreg
 Group=kumoreg
-ExecStart=/usr/bin/java -jar /usr/local/kumoreg/kumoreg.jar --spring.config.location=/usr/local/kumoreg/application-training.properties
+ExecStart=/usr/bin/java -jar /usr/local/kumoreg/kumoreg.jar --spring.config.location=/usr/local/kumoreg/application-training.properties -Xmx512m -Xms256m
 SuccessExitStatus=143
 
 [Install]

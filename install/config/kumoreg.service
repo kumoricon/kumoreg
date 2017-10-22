@@ -11,7 +11,7 @@ After=syslog.target
 [Service]
 User=kumoreg
 Group=kumoreg
-ExecStart=/usr/local/kumoreg/kumoreg.jar
+ExecStart=/usr/local/kumoreg/kumoreg.jar -Xmx1024m -Xms256m
 SuccessExitStatus=143
 
 [Install]
