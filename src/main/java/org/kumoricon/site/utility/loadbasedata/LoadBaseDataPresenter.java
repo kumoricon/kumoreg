@@ -128,6 +128,7 @@ public class LoadBaseDataPresenter {
             {"reprint_badge_with_override", "Reprint badge if a user with reprint_badge right approves it"},
             {"badge_type_emerging_press", "Select/check in the \"Emerging Press\" badge type"},
             {"badge_type_standard_press", "Select/check in the \"Standard Press\" badge type"},
+            {"badge_type_small_press", "Select/check in the \"Small Press\" badge type"},
             {"badge_type_vip", "Select/check in the \"VIP\" badge type"},
             {"badge_type_artist", "Select/check in the \"Artist\" badge type"},
             {"badge_type_exhibitor", "Select/check in the \"Exhibitor\" badge type"},
@@ -190,11 +191,17 @@ public class LoadBaseDataPresenter {
                                                               "badge_type_standard_press", "badge_type_emerging_press",
                                                               "badge_type_exhibitor", "badge_type_guest",
                                                               "badge_type_panelist", "badge_type_industry",
+                                                              "badge_type_small_press",
                                                               "pre_reg_check_in_edit"});
+        roles.put("MSO", new String[] {"pre_reg_check_in",
+                "attendee_search", "print_badge", "attendee_edit",
+                "attendee_add_note", "reprint_badge", "view_staff_report",
+                "view_check_in_by_hour_report", "badge_type_staff",
+                "pre_reg_check_in_edit"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
-                "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
+                "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist", "badge_type_small_press",
                 "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
                 "view_attendance_report", "view_check_in_by_hour_report", "view_till_report", "view_export",
                 "view_check_in_by_user_report", "pre_reg_check_in_edit", "manage_orders", "manage_till_sessions"});
@@ -203,6 +210,7 @@ public class LoadBaseDataPresenter {
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
+                "badge_type_small_press",
                 "badge_type_staff", "view_role_report", "view_attendance_report", "view_attendance_report_revenue",
                 "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
                 "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions",
@@ -243,7 +251,8 @@ public class LoadBaseDataPresenter {
                               {"Coordinator", "User", "Coordinator"},
                               {"Manager", "User", "Manager"},
                               {"Director", "User", "Director"},
-                              {"Ops", "User", "ops"}};
+                              {"Ops", "User", "ops"},
+                              {"Member Services", "Person", "MSO"}};
 
         for (String[] currentUser : userList) {
             log.info("Creating user {}", currentUser[0]);
@@ -334,6 +343,13 @@ public class LoadBaseDataPresenter {
         guest.setWarningMessage("Guest check in. See your coordinator!");
         results.append("    Creating ").append(guest.toString()).append("\n");
         badgeRepository.save(guest);
+
+        log.info("Creating badge Small Press");
+        Badge smallPress = BadgeFactory.createBadge("Small Press", BadgeType.OTHER,"Small Press", "#800080", 0f, 0f, 0f);
+        smallPress.setRequiredRight("badge_type_small_press");
+        smallPress.setWarningMessage("Press check in. See your coordinator!");
+        results.append("    Creating ").append(smallPress.toString()).append("\n");
+        badgeRepository.save(smallPress);
 
         log.info("Creating badge Emerging Press");
         Badge ePress = BadgeFactory.createBadge("Emerging Press", BadgeType.OTHER,"E Press", "#1DE5D1", 0f, 0f, 0f);

@@ -35,7 +35,7 @@ public class ImportAttendeeView extends BaseView implements View {
 
         addComponent(instructions);
         ImportAttendeePresenter.UploadReceiver receiver = handler.getUploadReceiver();
-        Upload upload = new Upload("Upload CSV file", receiver);
+        Upload upload = new Upload("Upload JSON file", receiver);
         upload.addSucceededListener(receiver);
         upload.addFailedListener(receiver);
         addComponent(upload);

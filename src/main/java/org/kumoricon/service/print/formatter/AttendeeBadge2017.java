@@ -42,7 +42,7 @@ public class AttendeeBadge2017 extends FormatterBase  {
 //        newPageDict.removeItem(COSName.ACTUAL_TEXT);
 //
 //        PDPage page = document.importPage(new PDPage(newPageDict));
-        this.xOffset = xOffset;
+        this.xOffset = xOffset; // Todo: don't store this in the class
         this.yOffset = yOffset;
         PDPage page = document.importPage(new PDPage(new PDRectangle(612f, 396f)));
 

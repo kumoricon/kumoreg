@@ -1,5 +1,6 @@
 package org.kumoricon.site.utility.importattendee;
 
+import com.google.gson.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
@@ -15,15 +16,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 class AttendeeImporterService {
     private final SessionService sessionService;
@@ -208,5 +209,137 @@ class AttendeeImporterService {
         return String.format("ONL%1$05d", badgeNumber);
     }
 
+    private List<AttendeeRecord> loadFile(BufferedReader bufferedReader) throws Exception {
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
+            @Override
+            public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                return LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ISO_LOCAL_DATE);
+            }
+        }).create();
+        AttendeeRecord[] output = gson.fromJson(bufferedReader, AttendeeRecord[].class);
 
+        return Arrays.asList(output);
+    }
+
+
+    public String importFromJSON(InputStreamReader reader, User user) {
+        log.info("{} starting data import", user);
+        BufferedReader jsonFile = new BufferedReader(reader);
+        try {
+            List<AttendeeRecord> attendees = loadFile(jsonFile);
+            List<Attendee> attendeesToAdd = new ArrayList<>();
+            List<Order> ordersToAdd = new ArrayList<>();
+
+            HashMap<String, Badge> badges = getBadgeHashMap();
+            HashMap<String, Order> orders = getOrderHashMap();
+            User currentUser = userRepository.findOne(user.getId());
+
+            int count = 0;
+            for (AttendeeRecord record : attendees) {
+                count++;
+                if (count % 1000 == 0) { log.info("Loading line " + count); }
+
+                Attendee attendee = new Attendee();
+                attendee.setFirstName(record.firstName);
+                attendee.setLastName(record.lastName);
+                attendee.setLegalFirstName(record.firstNameOnId);
+                attendee.setLegalLastName(record.lastNameOnId);
+                attendee.setFanName(record.fanName);
+                attendee.setBadgeNumber(generateBadgeNumber(currentUser.getNextBadgeNumber()));
+                attendee.setZip(record.postal);
+                attendee.setCountry(record.country);
+                attendee.setPhoneNumber(FieldCleaner.cleanPhoneNumber(record.phone));
+                attendee.setEmail(record.email);
+                attendee.setBirthDate(LocalDate.parse(record.birthdate, formatter));
+                attendee.setEmergencyContactFullName(record.emergencyName);
+                attendee.setEmergencyContactPhone(FieldCleaner.cleanPhoneNumber(record.emergencyPhone));
+                attendee.setParentIsEmergencyContact(record.emergencyContactSameAsParent);
+                attendee.setParentFullName(record.parentName);
+                attendee.setParentPhone(FieldCleaner.cleanPhoneNumber(record.parentPhone));
+                attendee.setPaid(true);     // All are paid, there isn't a specific flag for it
+                try {
+                    attendee.setPaidAmount(new BigDecimal(record.amountPaidInCents / 100));
+                } catch (NumberFormatException e) {
+                    attendee.setPaidAmount(BigDecimal.ZERO);
+                }
+
+                if (badges.containsKey(record.membershipType)) {
+                    attendee.setBadge(badges.get(record.membershipType));
+                } else {
+                    log.error("Badge type " + record.membershipType + " not found on line " + count);
+                    throw new RuntimeException("Badge type " + record.membershipType + " not found on line " + count);
+                }
+
+                if (orders.containsKey(record.orderId)) {
+                    Order currentOrder = orders.get(record.orderId);
+                    attendee.setOrder(currentOrder);
+                    currentOrder.addAttendee(attendee);
+                } else {
+                    Order o = new Order();
+                    o.setOrderTakenByUser(currentUser);
+                    o.setOrderId(record.orderId);
+                    o.addAttendee(attendee);
+                    orders.put(o.getOrderId(), o);
+                    ordersToAdd.add(o);
+                    attendee.setOrder(o);
+                }
+                if (!record.notes.isEmpty() && !record.notes.trim().isEmpty()) {
+                    attendee.addHistoryEntry(currentUser, record.notes);
+                }
+                if (!record.vipTShirtSize.trim().isEmpty()) {
+                    attendee.addHistoryEntry(currentUser, "VIP T-Shirt size: " + record.vipTShirtSize);
+                }
+                attendee.setPreRegistered(true);
+                attendeesToAdd.add(attendee);
+            }
+
+            log.info("Read " + count + " lines");
+            log.info("Setting paid/unpaid status in {} orders", ordersToAdd.size());
+
+            if (sessionService.userHasOpenSession(currentUser)) {
+                log.info("{} closed open session {} before import",
+                        currentUser, sessionService.getCurrentSessionForUser(currentUser));
+            }
+            Session session = sessionService.getNewSessionForUser(currentUser);
+            for (Order o : ordersToAdd) {
+                validatePaidStatus(o);
+                if (o.getPaid()) {
+                    Payment p = new Payment();
+                    p.setAmount(o.getTotalAmount());
+                    p.setPaymentType(Payment.PaymentType.PREREG);
+                    p.setPaymentTakenAt(LocalDateTime.now());
+                    p.setPaymentLocation("kumoricon.org");
+                    p.setPaymentTakenBy(currentUser);
+                    p.setSession(session);
+                    p.setOrder(o);
+                    o.addPayment(p);
+                }
+            }
+
+
+            log.info("{} saving {} orders and {} attendees to database", user, ordersToAdd.size(), attendeesToAdd.size());
+            orderRepository.save(ordersToAdd);
+
+            userRepository.save(currentUser);
+
+            log.info("{} closing session used during import");
+            sessionService.closeSessionForUser(currentUser);
+
+            jsonFile.close();
+
+            log.info("{} done importing data", user);
+            return String.format("Imported %s attendees and %s orders", attendeesToAdd.size(), ordersToAdd.size());
+
+        } catch (Exception ex) {
+            log.error("Error parsing file: ", ex.getMessage(), ex);
+            return "Error parsing file: " + ex.getMessage();
+        } finally {
+            try {
+                jsonFile.close();
+            } catch (IOException ex) {
+                log.error("Error closing file", ex);
+            }
+        }
+
+    }
 }
