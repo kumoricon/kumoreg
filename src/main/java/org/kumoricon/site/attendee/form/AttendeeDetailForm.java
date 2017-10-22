@@ -109,6 +109,14 @@ public class AttendeeDetailForm extends GridLayout {
         });
 
 
+        // Mark required fields. Phone *or* email is required, so not set here
+        firstName.setRequired(true);
+        lastName.setRequired(true);
+        birthDate.setRequired(true);
+        emergencyContactFullName.setRequired(true);
+        emergencyContactPhone.setRequired(true);
+        badge.setRequired(true);
+
         addComponent(firstName, 0, 0);
         addComponent(lastName, 1, 0);
         addComponent(legalFirstName, 0, 1);
