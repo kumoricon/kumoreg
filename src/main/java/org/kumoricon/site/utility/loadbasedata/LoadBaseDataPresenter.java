@@ -360,7 +360,7 @@ public class LoadBaseDataPresenter {
         badgeRepository.save(guest);
 
         log.info("Creating badge Small Press");
-        Badge smallPress = BadgeFactory.createBadge("Small Press", BadgeType.OTHER,"Small Press", "#800080", 0f, 0f, 0f);
+        Badge smallPress = BadgeFactory.createBadge("Small Press", BadgeType.OTHER,"Small Press", "#007c5f", 0f, 0f, 0f);
         smallPress.setRequiredRight("badge_type_small_press");
         smallPress.setWarningMessage("Press check in. See your coordinator!");
         results.append("    Creating ").append(smallPress.toString()).append("\n");
