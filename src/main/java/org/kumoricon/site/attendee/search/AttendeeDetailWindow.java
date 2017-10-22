@@ -69,7 +69,6 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
         form.show(attendee);
 
         form.setAllFieldsButCheckInDisabled();
-        btnCheckIn.setEnabled(!attendee.getCheckedIn());
         setEditableFields(getParentView().getCurrentUser());
     }
 
@@ -194,8 +193,14 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
         }
 
         if (user.hasRight("pre_reg_check_in") && form.getAttendee() != null && !form.getAttendee().getCheckedIn()) {
-            btnCheckIn.setVisible(true);
-            btnCheckIn.setEnabled(true);
+            Badge badge = form.getAttendee().getBadge();
+            if (badge != null && user.hasRight(badge.getRequiredRight())) {
+                btnCheckIn.setVisible(true);
+                btnCheckIn.setEnabled(true);
+            } else {
+                btnCheckIn.setVisible(true);
+                btnCheckIn.setEnabled(false);
+            }
         } else {
             btnCheckIn.setVisible(false);
             btnCheckIn.setEnabled(false);
