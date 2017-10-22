@@ -114,45 +114,47 @@ public class LoadBaseDataPresenter {
     private void addRights(StringBuilder results) {
         results.append("Creating rights\n");
         String[][] rights = {
-            {"at_con_registration", "Add new attendees via At-Con Registration and close till"},
-            {"at_con_registration_blacklist", "Allow at-con registration for names on the blacklist"},
-            {"pre_reg_check_in", "Check in preregistered attendees"},
-            {"pre_reg_check_in_edit", "Edit preregistered attendee information during check in"},
-            {"attendee_search", "Search for and view attendees"},
-            {"attendee_edit", "Edit attendees from mySearch results"},
-            {"attendee_add_note", "Edit notes field on attendees, but no other fields"},
-            {"attendee_edit_with_override", "Edit attendee if a user with attendee_edit right approves it"},
-            {"attendee_override_price", "Manually set price for attendee"},
-            {"print_badge", "Print badge on attendee check in"},
-            {"reprint_badge", "Reprint attendee badges after attendee is checked in"},
-            {"reprint_badge_with_override", "Reprint badge if a user with reprint_badge right approves it"},
-            {"badge_type_emerging_press", "Select/check in the \"Emerging Press\" badge type"},
-            {"badge_type_standard_press", "Select/check in the \"Standard Press\" badge type"},
-            {"badge_type_small_press", "Select/check in the \"Small Press\" badge type"},
-            {"badge_type_vip", "Select/check in the \"VIP\" badge type"},
-            {"badge_type_artist", "Select/check in the \"Artist\" badge type"},
-            {"badge_type_exhibitor", "Select/check in the \"Exhibitor\" badge type"},
-            {"badge_type_guest", "Select/check in the \"Guest\" badge type"},
-            {"badge_type_industry", "Select/check in the \"Industry\" badge type"},
-            {"badge_type_panelist", "Select/check in the \"Panelist\" badge type"},
-            {"badge_type_staff", "Select/check in the \"Staff\" badge type"},
-            {"view_attendance_report", "View attendance report (counts only)"},
-            {"view_attendance_report_revenue", "View attendance report (with revenue totals)"},
-            {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
-            {"view_check_in_by_user_report", "View attendee check ins per user report"},
-            {"view_staff_report", "View staff report (lists name/phone numbers)"},
-            {"view_role_report", "View registration system role report"},
-            {"view_till_report", "View till report"},
-            {"view_export", "Export information/reports"},
-            {"manage_staff", "Add/edit users and reset passwords"},
-            {"manage_pass_types", "Add/edit badge types"},
-            {"manage_roles", "Add/edit security roles"},
-            {"manage_orders", "List/edit orders after they have been placed"},
-            {"manage_devices", "Add/edit devices (computer/printer mappings)"},
-            {"manage_till_sessions", "View/Close Till Sessions for other users"},
-            {"import_pre_reg_data", "Import pre-registered attendees and orders"},
-            {"load_base_data", "Load default data (users, roles, rights)"},
-            {"pre_print_badges", "Pre-print badges for all attendees with a particular badge type"}
+                {"at_con_registration", "Add new attendees via At-Con Registration and close till"},
+                {"at_con_registration_blacklist", "Allow at-con registration for names on the blacklist"},
+                {"pre_reg_check_in", "Check in preregistered attendees"},
+                {"pre_reg_check_in_edit", "Edit preregistered attendee information during check in"},
+                {"attendee_search", "Search for and view attendees"},
+                {"attendee_edit", "Edit attendees from mySearch results"},
+                {"attendee_add_note", "Edit notes field on attendees, but no other fields"},
+                {"attendee_edit_with_override", "Edit attendee if a user with attendee_edit right approves it"},
+                {"attendee_override_price", "Manually set price for attendee"},
+                {"print_badge", "Print badge on attendee check in"},
+                {"reprint_badge", "Reprint attendee badges after attendee is checked in"},
+                {"reprint_badge_with_override", "Reprint badge if a user with reprint_badge right approves it"},
+                {"badge_type_weekend", "Select/check in the \"Weekend\" badge type"},
+                {"badge_type_day", "Select/check in the individual day badge types"},
+                {"badge_type_emerging_press", "Select/check in the \"Emerging Press\" badge type"},
+                {"badge_type_standard_press", "Select/check in the \"Standard Press\" badge type"},
+                {"badge_type_small_press", "Select/check in the \"Small Press\" badge type"},
+                {"badge_type_vip", "Select/check in the \"VIP\" badge type"},
+                {"badge_type_artist", "Select/check in the \"Artist\" badge type"},
+                {"badge_type_exhibitor", "Select/check in the \"Exhibitor\" badge type"},
+                {"badge_type_guest", "Select/check in the \"Guest\" badge type"},
+                {"badge_type_industry", "Select/check in the \"Industry\" badge type"},
+                {"badge_type_panelist", "Select/check in the \"Panelist\" badge type"},
+                {"badge_type_staff", "Select/check in the \"Staff\" badge type"},
+                {"view_attendance_report", "View attendance report (counts only)"},
+                {"view_attendance_report_revenue", "View attendance report (with revenue totals)"},
+                {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
+                {"view_check_in_by_user_report", "View attendee check ins per user report"},
+                {"view_staff_report", "View staff report (lists name/phone numbers)"},
+                {"view_role_report", "View registration system role report"},
+                {"view_till_report", "View till report"},
+                {"view_export", "Export information/reports"},
+                {"manage_staff", "Add/edit users and reset passwords"},
+                {"manage_pass_types", "Add/edit badge types"},
+                {"manage_roles", "Add/edit security roles"},
+                {"manage_orders", "List/edit orders after they have been placed"},
+                {"manage_devices", "Add/edit devices (computer/printer mappings)"},
+                {"manage_till_sessions", "View/Close Till Sessions for other users"},
+                {"import_pre_reg_data", "Import pre-registered attendees and orders"},
+                {"load_base_data", "Load default data (users, roles, rights)"},
+                {"pre_print_badges", "Pre-print badges for all attendees with a particular badge type"}
         };
 
         for (String[] rightInfo : rights) {
@@ -166,16 +168,18 @@ public class LoadBaseDataPresenter {
         results.append("Creating roles\n");
         HashMap<String, String[]> roles = new HashMap<>();
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
+                                        "badge_type_weekend", "badge_type_day", "badge_type_panelist",
                                          "attendee_add_note", "attendee_edit_with_override",
                                          "reprint_badge_with_override"});
         roles.put("Staff - Specialty Badges", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
                                          "attendee_add_note", "attendee_edit_with_override",
                                          "reprint_badge_with_override", "badge_type_artist",
                                          "badge_type_standard_press", "badge_type_emerging_press",
-                                         "badge_type_exhibitor", "badge_type_guest",
+                                         "badge_type_exhibitor", "badge_type_guest", "badge_type_small_press",
                                          "badge_type_panelist", "badge_type_industry", "pre_reg_check_in_edit"});
 
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
+                                               "badge_type_weekend", "badge_type_day",
                                                "print_badge", "attendee_edit", "attendee_add_note",
                                                "reprint_badge", "view_staff_report",
                                                "view_check_in_by_hour_report", "pre_reg_check_in_edit"});
@@ -200,6 +204,7 @@ public class LoadBaseDataPresenter {
                 "pre_reg_check_in_edit"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
+                "badge_type_weekend", "badge_type_day",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist", "badge_type_small_press",
                 "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_staff", "view_staff_report",
@@ -208,6 +213,7 @@ public class LoadBaseDataPresenter {
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "attendee_override_price", "reprint_badge", "manage_staff", "manage_pass_types",
+                "badge_type_weekend", "badge_type_day",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_small_press",
@@ -252,7 +258,7 @@ public class LoadBaseDataPresenter {
                               {"Manager", "User", "Manager"},
                               {"Director", "User", "Director"},
                               {"Ops", "User", "ops"},
-                              {"Member Services", "Person", "MSO"}};
+                              {"mso", "Person", "MSO"}};
 
         for (String[] currentUser : userList) {
             log.info("Creating user {}", currentUser[0]);
@@ -277,8 +283,15 @@ public class LoadBaseDataPresenter {
 
     private void addAttendeeBadges(StringBuilder results) {
         results.append("Creating badges\n");
+
+        log.info("Creating badge Weekend");
+        Badge weekend = BadgeFactory.createBadge("Weekend", BadgeType.ATTENDEE, "Weekend", "#000000", 65, 65, 45);
+        weekend.setRequiredRight("badge_type_weekend");
+        weekend.setWarningMessage("Attendee check in. See your coordinator!");
+        results.append("    Creating ").append(weekend.toString()).append("\n");
+        badgeRepository.save(weekend);
+
         String[][] badgeList = {
-                {"Weekend", "#000000", "65", "65", "45"},
                 {"Friday", "#000000", "50", "50", "30"},
                 {"Saturday", "#000000", "50", "50", "30"},
                 {"Sunday", "#000000", "40", "40", "20"}};
@@ -290,6 +303,8 @@ public class LoadBaseDataPresenter {
                     Float.parseFloat(currentBadge[2]),
                     Float.parseFloat(currentBadge[3]),
                     Float.parseFloat(currentBadge[4]));
+            badge.setRequiredRight("badge_type_day");
+            badge.setWarningMessage("Attendee check in. See your coordinator!");
             results.append("    Creating ").append(badge.toString()).append("\n");
             badgeRepository.save(badge);
         }

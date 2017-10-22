@@ -4,6 +4,7 @@ Change Log
     - Import attendees in JSON format
     - Added Small Press badge type
     - Required fields for attendees are marked with an asterisk (phone OR email is required, not set as required)
+    - Set security requirements on all badge types and updated roles appropriately
 
 - Version 2.0.3 (10/20/2017)
     - Fixed bug that would cause server to crash after running out of files
