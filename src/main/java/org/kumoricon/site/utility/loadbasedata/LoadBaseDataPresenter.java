@@ -374,7 +374,7 @@ public class LoadBaseDataPresenter {
         badgeRepository.save(ePress);
 
         log.info("Creating badge Standard Press");
-        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.OTHER,"S Press", "#1DE5D1", 0f, 0f, 0f);
+        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.OTHER,"S Press", "#16b7a7", 0f, 0f, 0f);
         sPress.setRequiredRight("badge_type_standard_press");
         sPress.setWarningMessage("Press check in. See your coordinator!");
         results.append("    Creating ").append(sPress.toString()).append("\n");
