@@ -346,7 +346,7 @@ public class LoadBaseDataPresenter {
         badgeRepository.save(artist);
 
         log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", "#00FFFF", 0f, 0f, 0f);
+        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", "#00597c", 0f, 0f, 0f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
         results.append("    Creating ").append(exhibitor.toString()).append("\n");
