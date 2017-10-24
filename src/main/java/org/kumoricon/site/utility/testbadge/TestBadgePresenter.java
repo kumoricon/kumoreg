@@ -102,7 +102,7 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     }
 
     @Override
-    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
+    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, boolean forcePrintAll) {
         if (attendeeList == null) { return; }
         printBadges((BaseView) view, attendeeList, null, null);
         view.showPrintBadgeWindow(attendeeList);

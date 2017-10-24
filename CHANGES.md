@@ -5,6 +5,8 @@ Change Log
     - Added Small Press badge type
     - Required fields for attendees are marked with an asterisk (phone OR email is required, not set as required)
     - Set security requirements on all badge types and updated roles appropriately
+    - Added Pre-print badge button to Attendee window
+    - Badge color updates
 
 - Version 2.0.3 (10/20/2017)
     - Fixed bug that would cause server to crash after running out of files

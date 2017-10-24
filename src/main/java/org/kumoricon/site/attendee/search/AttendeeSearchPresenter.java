@@ -111,7 +111,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         if (overrideUser == null) {
             if (view.currentUserHasRight("reprint_badge")) {
                 log.info("{} reprinting badge(s) for {}", view.getCurrentUsername(), attendee);
-                showAttendeeBadgeWindow(view, attendeeList);
+                showAttendeeBadgeWindow(view, attendeeList, false);
             } else {
                 view.showOverrideRequiredWindow(this, attendeeList);
             }
@@ -119,7 +119,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             if (overrideUser.hasRight("reprint_badge")) {
                 log.info("{} reprinting badge(s) for {} with override from {}",
                         view.getCurrentUsername(), attendee, overrideUser);
-                showAttendeeBadgeWindow(view, attendeeList);
+                showAttendeeBadgeWindow(view, attendeeList, false);
             } else {
                 view.notifyError("Override user does not have the required right");
                 log.error("{} requested an override to reprint a badge for {} but {} did not have the reprint_badge right",
@@ -128,6 +128,33 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             }
         }
     }
+
+    public void saveAttendeeAndPrePrintBadge(Window window, Attendee attendee) {
+        try {
+            if (view.currentUserHasRight("attendee_edit")) {
+                attendeeValidator.validate(attendee);        // Only validate fields if the user actually has the ability to edit them
+            }
+            attendee.addHistoryEntry(view.getCurrentUser(), "Pre-printed badge");
+            attendee.setBadgePrePrinted(true);
+            attendee = attendeeRepository.save(attendee);
+            log.info("{} saved {}", view.getCurrentUsername(), attendee);
+            view.refresh();
+        } catch (ValidationException e) {
+            view.notifyError(e.getMessage());
+            log.error("{} tried to save {} and got error {}", view.getCurrentUsername(), attendee, e.getMessage());
+            return;
+        }
+
+        window.close();
+        List<Attendee> attendeeList = new ArrayList<>();
+        attendeeList.add(attendee);
+
+        if (view.currentUserHasRight("pre_print_badges")) {
+                log.info("{} pre-printing badge(s) for {}", view.getCurrentUsername(), attendee);
+                showAttendeeBadgeWindow(view, attendeeList, true);
+        }
+    }
+
 
     public void cancelAttendee(AttendeeDetailWindow window) {
         window.close();
@@ -153,9 +180,19 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     }
 
     @Override
-    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
+    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, boolean forcePrintAll) {
         if (attendeeList != null) {
-            printBadges((BaseView)view, attendeeList);
+            if (forcePrintAll) {
+                printBadges((BaseView)view, attendeeList);
+            } else {
+                List<Attendee> attendeesToPrint = new ArrayList<>();
+                for (Attendee attendee : attendeeList) {
+                    if (!attendee.isBadgePrePrinted()) {
+                        attendeesToPrint.add(attendee);
+                    }
+                }
+                printBadges((BaseView)view, attendeesToPrint);
+            }
             view.showPrintBadgeWindow(attendeeList);
         }
     }
@@ -165,12 +202,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         log.info("{} reported badge(s) printed successfully for {}",
                 printBadgeWindow.getParentView().getCurrentUser(), attendees);
         if (printBadgeWindow != null) {
-            // Set all attendees as not having a pre-printed badge ready for pickup
-            for (Attendee attendee :attendees) {
-                attendee.setBadgePrePrinted(false);
-            }
-            attendeeRepository.save(attendees);
-
             if (attendees.size() > 0) {
                 Attendee attendee = attendees.get(0);
                 if (attendee.getOrder() != null) {
@@ -232,7 +263,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
                 List<Attendee> attendeeList = new ArrayList<>();
                 attendeeList.add(attendee);
                 window.close();
-                showAttendeeBadgeWindow(window.getParentView(), attendeeList);
+                showAttendeeBadgeWindow(window.getParentView(), attendeeList, false);
             }
         }
     }
