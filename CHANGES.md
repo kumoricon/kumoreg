@@ -1,6 +1,10 @@
 Change Log
 ----------------
-- Version 2.0.4 (pending)
+- Version 2.0.5 (10/25/2017)
+    - Clear badge preprinted flag when a staffer is imported
+    - Remove staff that were deleted from online system during data import
+
+- Version 2.0.4 (10/24/2017)
     - Import attendees in JSON format
     - Added Small Press badge type
     - Required fields for attendees are marked with an asterisk (phone OR email is required, not set as required)

@@ -13,14 +13,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -99,7 +97,18 @@ public class StaffImport {
 
         if (file.actions != null) {
             for (Action action : file.actions) {
-                log.info(action.toString());
+                for (String staffId : action.deleted) {
+                    log.info("Deleting staff id {}", staffId);
+                    List<Attendee> attendees = attendeeRepository.findByStaffId(staffId);
+                    if (attendees.size() == 1) {
+                        log.info("Deleting {}", attendees.get(0));
+                        attendeeRepository.delete(attendees.get(0));
+                    } else if (attendees.size() == 0) {
+                        log.info("No Attendee with staff id {} not found, skipping", staffId);
+                    } else {
+                        log.error("While deleting staff, found more than one attendee with staff id {}. Skipping." , staffId);
+                    }
+                }
             }
         }
     }
