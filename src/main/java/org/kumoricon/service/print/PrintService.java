@@ -62,13 +62,13 @@ public abstract class PrintService {
             if (name.equals(thisPrinterName)) { return printer; }
         }
 
-        javax.print.PrintService printer = PrintServiceLookup.lookupDefaultPrintService();
-        if (printer != null) {
-            log.warn("Printer \"{}\" not found, using default printer \"{}\"", name, printer.getName());
-            return printer;
-        }
+//        javax.print.PrintService printer = PrintServiceLookup.lookupDefaultPrintService();
+//        if (printer != null) {
+//            log.warn("Printer \"{}\" not found, using default printer \"{}\"", name, printer.getName());
+//            return printer;
+//        }
 
-        log.error("Printer \"{}\" not found, no default printer found. Set a printer as default.", name);
+        log.error("Printer \"{}\" not found, no default printer found.", name);
         throw new PrintException("Error: Printer named '" + name + "' does not exist and no default printer set");
     }
 

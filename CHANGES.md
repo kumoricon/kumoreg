@@ -1,5 +1,10 @@
 Change Log
 ----------------
+- Version 2.0.8 (Pending)
+
+- Version 2.0.7 (10/27/2017)
+    - Fixed file handle leak caused by PDFBox
+
 - Version 2.0.5 (10/25/2017)
     - Clear badge preprinted flag when a staffer is imported
     - Remove staff that were deleted from online system during data import

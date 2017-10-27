@@ -233,24 +233,21 @@ public class StaffBadge2017 extends FormatterBase  {
             imageFilename = BadgeLib.getMascotImageFilename();
         }
 
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         PDImageXObject xImage;
-        try {
+        try (PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false)) {
             xImage = PDImageXObject.createFromFile(imageFilename, document);
-        } catch (IIOException ex) {
-            stream.close();
-            System.out.println("Error opening " + imageFilename);
-            return;
-        }
-        Dimension scaledDim = getScaledDimension(
-                                new Dimension(xImage.getWidth(),  xImage.getHeight()),
-                                new Dimension(149, 158));
-                                stream.drawImage(xImage,
-                                                150 + ((149-scaledDim.width)/2),
-                                                334 + ((158-scaledDim.height)/2),
-                                                   scaledDim.width, scaledDim.height);
+            Dimension scaledDim = getScaledDimension(
+                    new Dimension(xImage.getWidth(),  xImage.getHeight()),
+                    new Dimension(149, 158));
+            stream.drawImage(xImage,
+                    150 + ((149-scaledDim.width)/2),
+                    334 + ((158-scaledDim.height)/2),
+                    scaledDim.width, scaledDim.height);
 //            stream.fillRect(150, 334, 149, 158);
-        stream.close();
+            stream.close();
+        } catch (IIOException ex) {
+            System.out.println("Error opening " + imageFilename);
+        }
     }
 
     private static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {

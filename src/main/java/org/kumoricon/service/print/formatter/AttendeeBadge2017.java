@@ -93,16 +93,33 @@ public class AttendeeBadge2017 extends FormatterBase  {
     }
 
     private void drawBadgeTypeStripe(PDPage page, Attendee attendee) throws IOException {
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+//        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+//
+//        if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
+//            stream.setNonStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
+//            stream.setStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
+//        } else {
+//            stream.setNonStrokingColor(Color.black);
+//            stream.setStrokingColor(Color.black);
+//        }
+//        stream.addRect(206, 85, 253, 44);
+//        stream.fill();
+//        stream.close();
 
-        if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
-            stream.setNonStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
+        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+        // This only needs to be set once in the page to set the global offset.
+        stream.concatenate2CTM(1, 0, 0, 1, 0,0);
+
+        if (attendee.getCurrentAgeRange() != null) {
+            stream.setNonStrokingColor(Color.decode(attendee.getCurrentAgeRange().getStripeColor()));
         } else {
             stream.setNonStrokingColor(Color.black);
         }
         stream.addRect(206, 85, 253, 44);
         stream.fill();
         stream.close();
+
+
     }
 
     private void drawBadgeTypeText(PDPage page, PDFont font, Attendee attendee) throws IOException {

@@ -40,8 +40,9 @@ public class BadgeLib {
      */
     static PDFont loadFont(PDDocument document) {
         Path fontPath = Paths.get(badgeResourcePath, "/Bitstream - BankGothic Md BT Medium.ttf");
-        try {
-            return PDType0Font.load(document, fontPath.toFile());
+
+        try (InputStream stream = new FileInputStream(fontPath.toFile())) {
+            return PDType0Font.load(document, stream);
         } catch (IOException ex) {
             log.warn("Error, couldn't load font '{}'", fontPath.toAbsolutePath());
             return PDType1Font.HELVETICA_BOLD;
@@ -56,8 +57,9 @@ public class BadgeLib {
     static PDDocument loadBackground(String filename) {
         Path filePath = Paths.get(badgeResourcePath, filename);
         PDDocument background;
-        try {
-            background = PDDocument.load(filePath.toFile());
+        try (InputStream stream = new FileInputStream(filePath.toFile())) {
+            background = PDDocument.load(stream);
+            return background;
         } catch (IOException ex) {
             log.warn("Couldn't load PDF {}, falling back to blank page", filename);
             background = new PDDocument();
