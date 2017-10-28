@@ -18,7 +18,7 @@ import java.lang.*;
 public class ComputerPresenter {
     @Autowired
     private ComputerRepository computerRepository;
-    private AddPrinterWindow printerInstallWindow = new AddPrinterWindow();
+    private AddPrinterWindow printerInstallWindow;
     private static final Logger log = LoggerFactory.getLogger(ComputerPresenter.class);
 
     public ComputerPresenter() {
@@ -38,6 +38,9 @@ public class ComputerPresenter {
     }
 
     public void addPrinter(ComputerView view) {
+
+        printerInstallWindow = null;
+        printerInstallWindow = new AddPrinterWindow();
 
         // Add a handler to run when a printer is installed successfully
         this.printerInstallWindow.installSuccessHandler = new PrinterWindowCallback() {
@@ -60,6 +63,7 @@ public class ComputerPresenter {
 
         printerInstallWindow.clearInputFields();
         view.showWindow(printerInstallWindow);
+
     }
 
     public void saveComputer(ComputerView view, Computer computer) {
