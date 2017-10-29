@@ -1,6 +1,15 @@
 Change Log
 ----------------
-- Version 2.0.8 (Pending)
+- Version 2.0.9 (Pending)
+
+
+- Version 2.0.8 (10/28/2017)
+    - Day badges use age range color on bottom of badge. Fixed color of font
+      to be white or black on that as appropriate
+    - Only validate attendee detail form in handler, not in the form itself
+      (fixes bug where a missing field would only show the "parental consent
+      form not received" message)
+    - After showing search results, select all text in the search box and focus on that
 
 - Version 2.0.7 (10/27/2017)
     - Fixed file handle leak caused by PDFBox

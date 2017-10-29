@@ -93,33 +93,38 @@ public class AttendeeBadge2017 extends FormatterBase  {
     }
 
     private void drawBadgeTypeStripe(PDPage page, Attendee attendee) throws IOException {
-//        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
-//
-//        if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
-//            stream.setNonStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
-//            stream.setStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
-//        } else {
-//            stream.setNonStrokingColor(Color.black);
-//            stream.setStrokingColor(Color.black);
-//        }
-//        stream.addRect(206, 85, 253, 44);
-//        stream.fill();
-//        stream.close();
 
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
-        // This only needs to be set once in the page to set the global offset.
-        stream.concatenate2CTM(1, 0, 0, 1, 0,0);
+        if (attendee.getBadge() != null &&
+                (attendee.getBadge().getBadgeTypeText().equals("Friday") ||
+                 attendee.getBadge().getBadgeTypeText().equals("Saturday") ||
+                 attendee.getBadge().getBadgeTypeText().equals("Sunday"))) {
+            PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+            // This only needs to be set once in the page to set the global offset.
+            stream.concatenate2CTM(1, 0, 0, 1, 0,0);
 
-        if (attendee.getCurrentAgeRange() != null) {
-            stream.setNonStrokingColor(Color.decode(attendee.getCurrentAgeRange().getStripeColor()));
+            if (attendee.getCurrentAgeRange() != null) {
+                stream.setNonStrokingColor(Color.decode(attendee.getCurrentAgeRange().getStripeColor()));
+            } else {
+                stream.setNonStrokingColor(Color.black);
+            }
+            stream.addRect(206, 85, 253, 44);
+            stream.fill();
+            stream.close();
+
         } else {
-            stream.setNonStrokingColor(Color.black);
+            PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+
+            if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
+                stream.setNonStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
+                stream.setStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
+            } else {
+                stream.setNonStrokingColor(Color.black);
+                stream.setStrokingColor(Color.black);
+            }
+            stream.addRect(206, 85, 253, 44);
+            stream.fill();
+            stream.close();
         }
-        stream.addRect(206, 85, 253, 44);
-        stream.fill();
-        stream.close();
-
-
     }
 
     private void drawBadgeTypeText(PDPage page, PDFont font, Attendee attendee) throws IOException {
@@ -135,11 +140,25 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.beginText();
         int fontSize = BadgeLib.findMaxLineSize(font, badgeTypeText,240, 40);
         stream.setFont(font, fontSize);
-        if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
-            stream.setNonStrokingColor(BadgeLib.getForegroundColor(attendee.getBadge().getBadgeTypeBackgroundColor()));
+        if (attendee.getBadge() != null &&
+                (attendee.getBadge().getBadgeTypeText().equals("Friday") ||
+                        attendee.getBadge().getBadgeTypeText().equals("Saturday") ||
+                        attendee.getBadge().getBadgeTypeText().equals("Sunday"))) {
+            if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
+                stream.setNonStrokingColor(BadgeLib.getForegroundColor(attendee.getCurrentAgeRange().getStripeColor()));
+            } else {
+                stream.setNonStrokingColor(Color.WHITE);
+                stream.setStrokingColor(Color.black);
+            }
+
         } else {
-            stream.setNonStrokingColor(Color.WHITE);
-            stream.setStrokingColor(Color.black);
+            if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
+                stream.setNonStrokingColor(BadgeLib.getForegroundColor(attendee.getBadge().getBadgeTypeBackgroundColor()));
+            } else {
+                stream.setNonStrokingColor(Color.WHITE);
+                stream.setStrokingColor(Color.black);
+            }
+
         }
 
         float textWidth = font.getStringWidth(badgeTypeText);
