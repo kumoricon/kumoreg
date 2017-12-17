@@ -232,7 +232,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         orderRepository.save(currentOrder);
 
         if (badgesToPrint.size() > 0) {
-            showAttendeeBadgeWindow(view, badgesToPrint);
+            showAttendeeBadgeWindow(view, badgesToPrint, false);
         } else {
             view.navigateTo("/");
         }
@@ -250,7 +250,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     }
 
     @Transactional
-    private String generateBadgeNumber(OrderView view) {
+    String generateBadgeNumber(OrderView view) {
         User user = userRepository.findOne(view.getCurrentUser().getId());
         String badgeNumber = String.format("%1S%2$05d", user.getBadgePrefix(), user.getNextBadgeNumber());
 
@@ -279,7 +279,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     }
 
     @Override
-    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList) {
+    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, boolean printAll) {
         log.info("{} printing badge(s) for: {}", view.getCurrentUsername(), attendeeList);
         printBadges((BaseView) view, attendeeList);
         view.showPrintBadgeWindow(attendeeList);

@@ -21,7 +21,7 @@ public class ReportPrintService extends PrintService {
             ReportPrintFormatter formatter =
                     new ReportPrintFormatter(reportText, client.getxOffset(), client.getyOffset());
             try {
-                printDocument(formatter.getStream(), client.getPrinterName());
+                printDocument(formatter.getStream(), client.getPrinterName(), false);
                 return "Printed to " + client.getPrinterName();
             } catch (PrintException e) {
                 log.error(String.format("Error printing report for %s: %s",

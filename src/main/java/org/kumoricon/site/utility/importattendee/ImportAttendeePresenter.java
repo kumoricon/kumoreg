@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.io.*;
+import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -66,7 +67,8 @@ public class ImportAttendeePresenter {
 
             try {
                 InputStreamReader reader = new InputStreamReader(new FileInputStream(file), UTF_8);
-                result = importer.importFromTSV(reader, view.getCurrentUser());
+                result = importer.importFromJSON(reader, view.getCurrentUser());
+//                result = importer.importFromTSV(reader, view.getCurrentUser());
                 reader.close();
             } catch (Exception e) {
                 log.error("Error importing attendees: ", e.getMessage());

@@ -105,6 +105,7 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         attendeeBeanList.removeAllItems();
         attendeeBeanList.addAll(attendees);
         tblResult.sort(sortBy, sortOrder);
+        txtSearch.selectAll();
     }
 
     private void search() {

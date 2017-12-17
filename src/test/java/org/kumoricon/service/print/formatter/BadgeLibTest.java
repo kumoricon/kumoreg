@@ -2,11 +2,74 @@ package org.kumoricon.service.print.formatter;
 
 import org.junit.Test;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class BadgeLibTest {
+    @Test
+    public void wrapPositionsMultiplePositionsNotWrapped() throws Exception {
+        List<String> input = Arrays.asList("Position 1 is really really long", "Position 2");
+        List<String> output = BadgeLib.wrapPositions(input,18);
+        assertArrayEquals(input.toArray(), output.toArray());
+    }
+
+    @Test
+    public void wrapPositionsEmptyPositionsNotWrapped() throws Exception {
+        List<String> input = Arrays.asList();
+        List<String> output = BadgeLib.wrapPositions(input, 18);
+        assertArrayEquals(input.toArray(), output.toArray());
+    }
+
+    @Test
+    public void wrapPositionsSingleShortPositionNotWrapped() throws Exception {
+        List<String> input = Arrays.asList("Position 1");
+        List<String> output = BadgeLib.wrapPositions(input, 18);
+        assertArrayEquals(input.toArray(), output.toArray());
+    }
+
+    @Test
+    public void wrapPositionsSinglePositionsWrapped() throws Exception {
+        List<String> input = Arrays.asList("Position 1 is really really long");
+        List<String> expected = Arrays.asList("Position 1 is really", "really long");
+        List<String> output = BadgeLib.wrapPositions(input, 18);
+        assertArrayEquals(expected.toArray(), output.toArray());
+    }
+
+    @Test
+    public void wrapPositionsNullInput() throws Exception {
+        List<String> output = BadgeLib.wrapPositions(null, 18);
+        List<String> expected = new ArrayList<>();
+        assertArrayEquals(expected.toArray(), output.toArray());
+    }
+
+    @Test
+    public void wrapPositionsAssistantDirector() throws Exception {
+        List<String> input = Arrays.asList("Assistant Director of Operations");
+        List<String> output = BadgeLib.wrapPositions(input, 18);
+        List<String> expected = Arrays.asList("Assistant Director of", "Operations");
+        assertArrayEquals(expected.toArray(), output.toArray());
+    }
+
+
+    @Test
+    public void getForegroundColorForBlack() throws Exception {
+        assertEquals(Color.WHITE, BadgeLib.getForegroundColor("#000000"));
+    }
+
+    @Test
+    public void getForegroundColorForWhite() throws Exception {
+        assertEquals(Color.BLACK, BadgeLib.getForegroundColor("#FFFFFF"));
+    }
+
+    @Test
+    public void getForegroundColorForBrightYellow() throws Exception {
+        assertEquals(Color.BLACK, BadgeLib.getForegroundColor("#FFFF00"));
+    }
+
     @Test
     public void splitBadgeNumberNormal() throws Exception {
         List<String> result = BadgeLib.splitBadgeNumber("TST12345");

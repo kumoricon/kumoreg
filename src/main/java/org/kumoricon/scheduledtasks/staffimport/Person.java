@@ -1,6 +1,7 @@
 package org.kumoricon.scheduledtasks.staffimport;
 
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.service.print.formatter.BadgeLib;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ public class Person {
     public String ageCategoryConCurrentTerm;
     public String badgeImpactingLastModified;
     public List<Position> positions;
+    public List<String> notes;
     public boolean hasBadgeImage;
     public String badgeImageFileType;
 
@@ -118,7 +120,7 @@ public class Person {
         // Suppress department if it's in their title. Todo: What if one department has suppressed=true
         //                                                   and others have suppressed=false?
         if (positions.size() > 0) {
-            if (positions.get(0).departmentSupresesd) {
+            if (positions.get(0).departmentSuppressed) {
                 attendee.setStaffDepartment("");
             } else {
                 attendee.setStaffDepartment(positions.get(0).department);
@@ -154,6 +156,22 @@ public class Person {
         if (isDifferent(attendee.getStaffImageFilename(), filename)) {
             updated = true;
             attendee.setStaffImageFilename(filename);
+        }
+
+        if (notes != null) {
+            for (String note: notes) {
+                boolean foundInExisting = false;
+                for (AttendeeHistory historyEntry : attendee.getHistory()) {
+                    if (note.equals(historyEntry.getMessage())) {
+                        foundInExisting = true;
+                        break;
+                    }
+                }
+                if (!foundInExisting) {
+                    attendee.addHistoryEntry(null, note);
+                    updated = true;
+                }
+            }
         }
 
         return updated;

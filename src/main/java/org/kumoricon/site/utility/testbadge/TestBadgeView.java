@@ -72,6 +72,9 @@ public class TestBadgeView extends BaseView implements View, AttendeePrintView {
         addComponent(notes);
         notes.setVisible(currentUserHasRight("manage_devices"));
 
+        Button printAllBadges = new Button("Print all badge types");
+        printAllBadges.addClickListener(clickEvent -> handler.showAttendeeBadgeWindow(this, getXOffset(), getYOffset()));
+        addComponent(printAllBadges);
         handler.showCurrentOffsets(this, getCurrentClientIPAddress());
     }
 

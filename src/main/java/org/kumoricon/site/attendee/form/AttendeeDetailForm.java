@@ -12,6 +12,7 @@ import com.vaadin.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.fieldconverter.DateToLocalDateConverter;
 
@@ -24,24 +25,24 @@ import static org.kumoricon.site.attendee.FieldFactory.*;
 
 
 public class AttendeeDetailForm extends GridLayout {
-    private TextField firstName = createNameField("First Name", 1);
-    private TextField lastName = createNameField("Last Name", 2);
+    private TextField firstName = createNameField("First Name*", 1);
+    private TextField lastName = createNameField("Last Name*", 2);
     private TextField legalFirstName = createNameField("Legal First Name", 3);
     private TextField legalLastName = createNameField("Legal Last Name", 4);
     private TextField fanName = createTextField("Fan Name", 5);
     private TextField badgeNumber = createTextField("Badge Number", 6);
-    private TextField phoneNumber = createPhoneNumberField("Phone", 7);
+    private TextField phoneNumber = createPhoneNumberField("Phone* (phone OR e-mail required)", 7);
     private DateField birthDate = createDateField("", 8);
-    private TextField email = createTextField("Email", 9);
+    private TextField email = createTextField("Email*", 9);
     private TextField zip = createTextField("Zip", 10);
     private Label age = new Label("");
-    private TextField emergencyContactFullName = createNameField("Emergency Contact Name", 11);
-    private TextField emergencyContactPhone = createPhoneNumberField("Emergency Contact Phone", 12);
+    private TextField emergencyContactFullName = createNameField("Emergency Contact Name*", 11);
+    private TextField emergencyContactPhone = createPhoneNumberField("Emergency Contact Phone*", 12);
     private TextField parentFullName = createNameField("Parent Name", 13);
     private TextField parentPhone = createPhoneNumberField("Parent Phone", 14);
     private CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 15);
     private CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
-    private NativeSelect badge = createNativeSelect("Pass Type", 17);
+    private NativeSelect badge = createNativeSelect("Pass Type*", 17);
     private TextField paidAmount = createTextField("Manual Price", 18);
     private CheckBox compedBadge = createCheckBox("Comped Badge", 19);
     private CheckBox checkedIn = createCheckBox("Attendee Checked In", 20);
@@ -108,7 +109,6 @@ public class AttendeeDetailForm extends GridLayout {
             }
         });
 
-
         addComponent(firstName, 0, 0);
         addComponent(lastName, 1, 0);
         addComponent(legalFirstName, 0, 1);
@@ -120,7 +120,7 @@ public class AttendeeDetailForm extends GridLayout {
         HorizontalLayout h = new HorizontalLayout();
         h.setSpacing(true);
         h.setMargin(false);
-        h.setCaption("Birthdate");
+        h.setCaption("Birthdate*");
         birthDate.setCaption(null);         // Can't set this when the object is created, need to remove caption
         h.addComponent(birthDate);
         h.addComponent(age);
@@ -245,6 +245,12 @@ public class AttendeeDetailForm extends GridLayout {
             fieldGroup.commit();
         } catch (FieldGroup.CommitException e) {
             System.out.println(e);
+            StringBuilder sb = new StringBuilder();
+            for (Field f : e.getInvalidFields().keySet()) {
+                sb.append(e.getInvalidFields().get(f).getMessage());
+                sb.append("\n");
+            }
+            throw new RuntimeException(sb.toString());
         }
         return attendeeBean.getBean();
     }

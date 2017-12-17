@@ -19,19 +19,15 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
     private PDFont bankGothic;
     private PDDocument frontBackground;
-
+    private int xOffset;
+    private int yOffset;
     private LocalDate currentDateForAgeCalculation;
 
-    AttendeeBadge2017(PDDocument document) {
-        super(document);
-
-        frontBackground = BadgeLib.loadBackground("2017_attendee_badge.pdf");
-        bankGothic = BadgeLib.loadFont(document);
-        this.currentDateForAgeCalculation = LocalDate.now();
-    }
 
     public AttendeeBadge2017(PDDocument document, LocalDate currentDateForAgeCalculation) {
         super(document);
+        this.xOffset = 0;
+        this.yOffset = 0;
         frontBackground = BadgeLib.loadBackground("2017_attendee_badge.pdf");
         this.currentDateForAgeCalculation = currentDateForAgeCalculation;
         bankGothic = BadgeLib.loadFont(document);
@@ -39,15 +35,16 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
 
     void addBadge(Attendee attendee, Integer xOffset, Integer yOffset) throws IOException {
-//        PDPage page = document.importPage(new PDPage(new PDRectangle(612f, 396f)));
-
-        PDPage templatePage = frontBackground.getDocumentCatalog().getPages().get(0);
-        COSDictionary pageDict = templatePage.getCOSObject();
-        COSDictionary newPageDict = new COSDictionary(pageDict);
-        newPageDict.removeItem(COSName.ANNOTS);
-        newPageDict.removeItem(COSName.ACTUAL_TEXT);
-
-        PDPage page = document.importPage(new PDPage(newPageDict));
+//        PDPage templatePage = frontBackground.getDocumentCatalog().getPages().get(0);
+//        COSDictionary pageDict = templatePage.getCOSObject();
+//        COSDictionary newPageDict = new COSDictionary(pageDict);
+//        newPageDict.removeItem(COSName.ANNOTS);
+//        newPageDict.removeItem(COSName.ACTUAL_TEXT);
+//
+//        PDPage page = document.importPage(new PDPage(newPageDict));
+        this.xOffset = xOffset; // Todo: don't store this in the class
+        this.yOffset = yOffset;
+        PDPage page = document.importPage(new PDPage(new PDRectangle(612f, 396f)));
 
         // Positions are measured from the bottom left corner of the page at 72 DPI
         drawAgeColorStripe(page, attendee);
@@ -70,8 +67,8 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
 
-        stream.setNonStrokingColor(Color.white);
-        stream.setStrokingColor(Color.black);
+        String stripeColor = attendee.getCurrentAgeRange().getStripeColor();
+        stream.setNonStrokingColor(BadgeLib.getForegroundColor(stripeColor));
         // Bounding box:
 //         stream.fillRect(163, 95, 40, 30);
 
@@ -96,16 +93,38 @@ public class AttendeeBadge2017 extends FormatterBase  {
     }
 
     private void drawBadgeTypeStripe(PDPage page, Attendee attendee) throws IOException {
-        PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
 
-        if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
-            stream.setNonStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
+        if (attendee.getBadge() != null &&
+                (attendee.getBadge().getBadgeTypeText().equals("Friday") ||
+                 attendee.getBadge().getBadgeTypeText().equals("Saturday") ||
+                 attendee.getBadge().getBadgeTypeText().equals("Sunday"))) {
+            PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+            // This only needs to be set once in the page to set the global offset.
+            stream.concatenate2CTM(1, 0, 0, 1, 0,0);
+
+            if (attendee.getCurrentAgeRange() != null) {
+                stream.setNonStrokingColor(Color.decode(attendee.getCurrentAgeRange().getStripeColor()));
+            } else {
+                stream.setNonStrokingColor(Color.black);
+            }
+            stream.addRect(206, 85, 253, 44);
+            stream.fill();
+            stream.close();
+
         } else {
-            stream.setNonStrokingColor(Color.black);
+            PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+
+            if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
+                stream.setNonStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
+                stream.setStrokingColor(Color.decode(attendee.getBadge().getBadgeTypeBackgroundColor()));
+            } else {
+                stream.setNonStrokingColor(Color.black);
+                stream.setStrokingColor(Color.black);
+            }
+            stream.addRect(206, 85, 253, 44);
+            stream.fill();
+            stream.close();
         }
-        stream.addRect(206, 85, 253, 44);
-        stream.fill();
-        stream.close();
     }
 
     private void drawBadgeTypeText(PDPage page, PDFont font, Attendee attendee) throws IOException {
@@ -121,8 +140,26 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.beginText();
         int fontSize = BadgeLib.findMaxLineSize(font, badgeTypeText,240, 40);
         stream.setFont(font, fontSize);
-        stream.setNonStrokingColor(Color.white);
-        stream.setStrokingColor(Color.black);
+        if (attendee.getBadge() != null &&
+                (attendee.getBadge().getBadgeTypeText().equals("Friday") ||
+                        attendee.getBadge().getBadgeTypeText().equals("Saturday") ||
+                        attendee.getBadge().getBadgeTypeText().equals("Sunday"))) {
+            if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
+                stream.setNonStrokingColor(BadgeLib.getForegroundColor(attendee.getCurrentAgeRange().getStripeColor()));
+            } else {
+                stream.setNonStrokingColor(Color.WHITE);
+                stream.setStrokingColor(Color.black);
+            }
+
+        } else {
+            if (attendee.getBadge() != null && attendee.getBadge().getBadgeTypeBackgroundColor() != null) {
+                stream.setNonStrokingColor(BadgeLib.getForegroundColor(attendee.getBadge().getBadgeTypeBackgroundColor()));
+            } else {
+                stream.setNonStrokingColor(Color.WHITE);
+                stream.setStrokingColor(Color.black);
+            }
+
+        }
 
         float textWidth = font.getStringWidth(badgeTypeText);
         Float offset = textWidth * (fontSize/(2*1000.0f));
@@ -136,8 +173,9 @@ public class AttendeeBadge2017 extends FormatterBase  {
         stream.setLineWidth(0.5f);
         stream.beginText();
         stream.setFont(font, 30);
-        stream.setNonStrokingColor(Color.white);
-        stream.setStrokingColor(Color.black);
+
+        String stripeColor = attendee.getCurrentAgeRange().getStripeColor();
+        stream.setNonStrokingColor(BadgeLib.getForegroundColor(stripeColor));
 
         stream.newLineAtOffset(172, 275);   // First character position
 
@@ -186,6 +224,8 @@ public class AttendeeBadge2017 extends FormatterBase  {
 
     private void drawAgeColorStripe(PDPage page, Attendee attendee) throws IOException {
         PDPageContentStream stream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
+        // This only needs to be set once in the page to set the global offset.
+        stream.concatenate2CTM(1, 0, 0, 1, xOffset, yOffset);
 
         if (attendee.getCurrentAgeRange() != null) {
             stream.setNonStrokingColor(Color.decode(attendee.getCurrentAgeRange().getStripeColor()));

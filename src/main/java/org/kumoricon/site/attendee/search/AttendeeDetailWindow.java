@@ -35,6 +35,7 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
     private CheckBox attendeeInformationVerified;
     private CheckBox parentalConsentFormReceived;
     private Button btnInfoReceived;
+    private Button btnPrePrintBadge;
     private HorizontalLayout buttonBar = new HorizontalLayout();
 
     private AttendeeSearchPresenter handler;
@@ -69,7 +70,6 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
         form.show(attendee);
 
         form.setAllFieldsButCheckInDisabled();
-        btnCheckIn.setEnabled(!attendee.getCheckedIn());
         setEditableFields(getParentView().getCurrentUser());
     }
 
@@ -113,14 +113,24 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
                 handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
         checkInPopup = buildCheckInPopupView();
 
+        btnPrePrintBadge = new Button("Pre-Print Badge");
+        btnPrePrintBadge.addClickListener((Button.ClickListener) clickEvent -> {
+            try {
+                form.commit();
+                handler.saveAttendeeAndPrePrintBadge(this, form.getAttendee());
+            } catch (FieldGroup.CommitException e) {
+                parentView.notifyError(e.getMessage());
+            }
+        });
+
         buttonBar.addComponent(btnSave);
         buttonBar.addComponent(btnEdit);
         buttonBar.addComponent(btnSaveAndReprint);
         buttonBar.addComponent(btnAddNote);
         buttonBar.addComponent(btnCheckIn);
         buttonBar.addComponent(checkInPopup);
+        buttonBar.addComponent(btnPrePrintBadge);
         buttonBar.addComponent(btnCancel);
-
         return buttonBar;
     }
 
@@ -165,6 +175,14 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
 
         btnAddNote.setEnabled(user.hasRight("attendee_add_note"));
 
+        if (user.hasRight("pre_print_badges") && form.getAttendee() != null && !form.getAttendee().getCheckedIn()) {
+            btnPrePrintBadge.setVisible(true);
+            btnPrePrintBadge.setEnabled(true);
+        } else {
+            btnPrePrintBadge.setVisible(false);
+            btnPrePrintBadge.setEnabled(false);
+        }
+
         // save and reprint badge only if the attendee is already checked in
         if (form.getAttendee() != null && form.getAttendee().getCheckedIn()) {
             btnSaveAndReprint.setVisible(true);
@@ -194,8 +212,14 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
         }
 
         if (user.hasRight("pre_reg_check_in") && form.getAttendee() != null && !form.getAttendee().getCheckedIn()) {
-            btnCheckIn.setVisible(true);
-            btnCheckIn.setEnabled(true);
+            Badge badge = form.getAttendee().getBadge();
+            if (badge != null && user.hasRight(badge.getRequiredRight())) {
+                btnCheckIn.setVisible(true);
+                btnCheckIn.setEnabled(true);
+            } else {
+                btnCheckIn.setVisible(true);
+                btnCheckIn.setEnabled(false);
+            }
         } else {
             btnCheckIn.setVisible(false);
             btnCheckIn.setEnabled(false);

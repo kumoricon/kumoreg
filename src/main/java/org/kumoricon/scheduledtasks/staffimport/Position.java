@@ -5,5 +5,5 @@ public class Position {
     public String title;
     public String rank;
     public String department;
-    public boolean departmentSupresesd;
+    public boolean departmentSuppressed;
 }

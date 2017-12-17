@@ -1,6 +1,35 @@
 Change Log
 ----------------
-- Version 2.0.3 (pending)
+- Version 2.0.9 (Pending)
+
+
+- Version 2.0.8 (10/28/2017)
+    - Day badges use age range color on bottom of badge. Fixed color of font
+      to be white or black on that as appropriate
+    - Only validate attendee detail form in handler, not in the form itself
+      (fixes bug where a missing field would only show the "parental consent
+      form not received" message)
+    - After showing search results, select all text in the search box and focus on that
+
+- Version 2.0.7 (10/27/2017)
+    - Fixed file handle leak caused by PDFBox
+
+- Version 2.0.5 (10/25/2017)
+    - Clear badge preprinted flag when a staffer is imported
+    - Remove staff that were deleted from online system during data import
+
+- Version 2.0.4 (10/24/2017)
+    - Import attendees in JSON format
+    - Added Small Press badge type
+    - Required fields for attendees are marked with an asterisk (phone OR email is required, not set as required)
+    - Set security requirements on all badge types and updated roles appropriately
+    - Added Pre-print badge button to Attendee window
+    - Badge color updates
+
+- Version 2.0.3 (10/20/2017)
+    - Fixed bug that would cause server to crash after running out of files
+    - Added button to print example of all badge types
+    - Added notes to staff import
 
 - Version 2.0.2 (10/10/2017)
     - Split out badge type color bar and age range color bar
