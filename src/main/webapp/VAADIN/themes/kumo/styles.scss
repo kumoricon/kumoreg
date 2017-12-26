@@ -23,9 +23,13 @@
   cursor: pointer;
 }
 
-// Modifies the left hand menu when in training mode
+// In training mode, set the background so that it's obvious this is the training site
 .kumoTrainingMode {
   background: url("img/trainingbackground.png");
+}
+
+.kumoNormalMode {
+  background: white url("img/logo.png") no-repeat bottom right;
 }
 
 // Modal window positioned in the bottom left corner of the screen
@@ -34,4 +38,9 @@
   top: auto !important;
   right: auto !important;
   bottom: 20px;
+}
+
+// Right-align menuitems (like the logout button)
+.v-menubar-menuitem-menuRight {
+  float: right;
 }
