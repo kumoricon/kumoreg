@@ -20,7 +20,7 @@ public class ImportAttendeeView extends BaseView implements View {
 
     private final ImportAttendeePresenter handler;
 
-    private final Label instructions = new Label("Upload a Tab-separated file containing preregistered attendees:");
+    private final Label instructions = new Label("Upload a data file containing pre-registered attendees:");
     private final TextArea status = new TextArea("");
 
     @Autowired
