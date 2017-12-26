@@ -73,10 +73,6 @@ public class KumoRegUI extends UI {
 
         baseLayout.addComponent(menuBar);
 
-
-
-//        if (getLoggedInUser() != null) { buildMenu(); }
-
         final Panel viewContainer = new Panel();
         viewContainer.setSizeFull();
         baseLayout.addComponent(viewContainer);

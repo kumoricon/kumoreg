@@ -28,6 +28,7 @@ public class LoginView extends BaseView implements View {
         formLayout.addComponent(usernameField);
         formLayout.addComponent(passwordField);
         formLayout.addComponent(loginButton);
+        formLayout.setWidth(null);
         addComponent(formLayout);
 
         loginButton.setClickShortcut( ShortcutAction.KeyCode.ENTER ) ;
@@ -43,6 +44,8 @@ public class LoginView extends BaseView implements View {
             }
         });
         usernameField.focus();
+
+        setComponentAlignment(formLayout, Alignment.MIDDLE_CENTER);
     }
 
     public void showNewPasswordWindow() {
