@@ -34,7 +34,7 @@ public class LogoutView extends BaseView implements View {
         spacer.setHeight("5em");
         addComponent(warning);
         warning.setSizeUndefined();
-        setComponentAlignment(warning, Alignment.MIDDLE_CENTER);
+//        setComponentAlignment(warning, Alignment.MIDDLE_CENTER);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSpacing(true);
@@ -48,7 +48,7 @@ public class LogoutView extends BaseView implements View {
         horizontalLayout.addComponent(logout);
         logout.addClickListener((Button.ClickListener) clickEvent -> handler.logout(this));
         addComponent(horizontalLayout);
-        setComponentAlignment(horizontalLayout, Alignment.MIDDLE_CENTER);
+//        setComponentAlignment(horizontalLayout, Alignment.MIDDLE_CENTER);
     }
 
     @Override

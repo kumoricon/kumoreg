@@ -76,7 +76,7 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
 
         addComponent(h);
         addComponent(tblResult);
-        setExpandRatio(tblResult, 1.0f);
+//        setExpandRatio(tblResult, 1.0f);
         txtSearch.focus();
 
     }

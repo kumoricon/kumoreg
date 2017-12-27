@@ -32,9 +32,8 @@ public class UserListView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        setMargin(true);
-        setSpacing(true);
         userList.setNullSelectionAllowed(false);
+        userList.setCaption("");
         userList.setImmediate(true);
         userList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         userList.setItemCaptionPropertyId("username");

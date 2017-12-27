@@ -45,7 +45,7 @@ public class StaffReportView extends BaseView implements View {
         dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
         dataGrid.setWidth(600, Unit.PIXELS);
         dataGrid.addStyleName("kumoHeaderOnlyHandPointer");
-        setExpandRatio(dataGrid, .9f);
+//        setExpandRatio(dataGrid, .9f);
     }
 
     public void afterSuccessfulFetch(List<User> users) {

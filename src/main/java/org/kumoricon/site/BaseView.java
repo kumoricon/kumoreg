@@ -2,10 +2,7 @@ package org.kumoricon.site;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.*;
 import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
 import org.slf4j.Logger;
@@ -14,7 +11,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.PostConstruct;
 
-public class BaseView extends VerticalLayout implements View {
+public class BaseView extends CssLayout implements View {
 
     private static final Logger log = LoggerFactory.getLogger(BaseView.class);
 
@@ -93,8 +90,9 @@ public class BaseView extends VerticalLayout implements View {
     @PostConstruct
     protected void initLayout() {
         // For every [child] view, do this:
-        setSpacing(true);
-        setMargin(true);
+//        setSpacing(true);
+//        setMargin(true);
+        addStyleName("kumoBaseView");
     }
 
     public String getCurrentClientIPAddress() {

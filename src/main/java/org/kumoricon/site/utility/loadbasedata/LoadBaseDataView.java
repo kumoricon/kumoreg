@@ -34,7 +34,7 @@ public class LoadBaseDataView extends BaseView implements View {
         addComponent(results);
         results.setSizeFull();
         results.setEnabled(false);
-        setExpandRatio(results, 1.0f);
+//        setExpandRatio(results, 1.0f);
 
         loadData.addClickListener((Button.ClickListener) clickEvent -> handler.loadDataButtonClicked(this));
         loadLiteData.addClickListener((Button.ClickListener) clickEvent -> handler.loadLiteDataButtonClicked(this));

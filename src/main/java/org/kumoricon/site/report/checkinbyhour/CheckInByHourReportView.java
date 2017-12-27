@@ -35,7 +35,7 @@ public class CheckInByHourReportView extends BaseView implements View, ReportVie
         addComponent(data);
         data.setContentMode(ContentMode.HTML);
         handler.fetchReportData(this);
-        setExpandRatio(data, 1f);
+//        setExpandRatio(data, 1f);
         data.setSizeFull();
         data.setWidthUndefined();
     }

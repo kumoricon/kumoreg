@@ -32,6 +32,15 @@
   background: white url("img/logo.png") no-repeat bottom right;
 }
 
+.kumoBaseView {
+  width: 100%;
+  padding-top: .5em;
+  border-top: 1px solid gray;
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: center;
+}
+
 // Modal window positioned in the bottom left corner of the screen
 .kumoConfirmationWindow {
   left: 20px;

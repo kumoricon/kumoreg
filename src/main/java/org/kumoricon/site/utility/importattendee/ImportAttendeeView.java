@@ -43,7 +43,7 @@ public class ImportAttendeeView extends BaseView implements View {
         status.setWidth(600, Sizeable.Unit.PIXELS);
         status.setEnabled(false);
         addComponent(status);
-        setExpandRatio(status, 1.0f);
+//        setExpandRatio(status, 1.0f);
     }
 
     public void appendStatus(String s) {

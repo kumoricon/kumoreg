@@ -68,7 +68,7 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
 
         addComponent(header);
         addComponent(attendeeTable);
-        setExpandRatio(attendeeTable, 1.0f);
+//        setExpandRatio(attendeeTable, 1.0f);
         handler.showBadgeTypes(this);
         attendeeTable.setContainerDataSource(attendeeContainer);
         attendeeTable.setVisibleColumns("lastName", "firstName", "fanName", "badgeNumber", "checkedIn", "checkInTime");

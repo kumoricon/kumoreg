@@ -45,7 +45,7 @@ public class LoginView extends BaseView implements View {
         });
         usernameField.focus();
 
-        setComponentAlignment(formLayout, Alignment.MIDDLE_CENTER);
+//        setComponentAlignment(formLayout, Alignment.MIDDLE_CENTER);
     }
 
     public void showNewPasswordWindow() {

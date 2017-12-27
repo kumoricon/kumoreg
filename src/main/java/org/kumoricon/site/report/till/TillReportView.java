@@ -32,7 +32,7 @@ public class TillReportView extends BaseView implements View {
         addComponent(refresh);
         addComponent(data);
         data.setContentMode(ContentMode.HTML);
-        setExpandRatio(data, 1f);
+//        setExpandRatio(data, 1f);
         data.setHeightUndefined();
 
         refresh.addClickListener((Button.ClickListener) clickEvent -> {
