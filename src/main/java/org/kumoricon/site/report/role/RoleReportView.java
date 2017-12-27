@@ -35,9 +35,7 @@ public class RoleReportView extends BaseView implements View, ReportView {
         addComponent(data);
         data.setContentMode(ContentMode.HTML);
         handler.fetchReportData(this);
-//        setExpandRatio(data, 1f);
-        data.setSizeFull();
-
+        data.setWidth("900px");
     }
 
 

@@ -29,9 +29,10 @@ public class TillReportPresenter {
 
         List<Session> sessions = sessionService.getAllSessions();
 
-        output.append(String.format("%s\n", LocalDateTime.now()));
-
         // Header
+        output.append("<div class=\"kumoReport\">");
+        output.append("<h2>Till Report</h2>");
+        output.append(String.format("%s\n", LocalDateTime.now()));
         output.append("<table border=\"1\" cellpadding=\"2\"><tr>");
         output.append("<td>User</td>");
         output.append("<td>Session</td>");
@@ -59,7 +60,7 @@ public class TillReportPresenter {
             output.append("</tr>");
         }
 
-        output.append("</table>");
+        output.append("</table></div>");
         log.info("{} till report generated in {} ms",
                 view.getCurrentUsername(), System.currentTimeMillis() - startTime);
         view.showData(output.toString());

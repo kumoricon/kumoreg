@@ -139,7 +139,7 @@ public class SessionService {
         for (Payment.PaymentType pt : Payment.PaymentType.values()) {
             BigDecimal amount = paymentRepository.getTotalByPaymentTypeForSessionId(session.getId(), pt.getValue());
             if (amount != null) {
-                output.append(String.format("%1$-20s    $%2$10s\n", pt.toString(), amount));
+                output.append(String.format("%1$-10s    $%2$10s\n", pt.toString(), amount));
             }
         }
         return output.toString();

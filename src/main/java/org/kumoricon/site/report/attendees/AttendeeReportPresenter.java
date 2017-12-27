@@ -95,6 +95,7 @@ public class AttendeeReportPresenter implements ReportPresenter {
     @Override
     public void fetchReportData(ReportView view) {
         StringBuilder sb = new StringBuilder();
+        sb.append("<div class=\"kumoReport\">");
         sb.append(getTotalsByBadgeType());
         if (view.currentUserHasRight("view_attendance_report_revenue")) {
             sb.append(buildTableWithRevenue("At Con Check Ins By Day", attendeeRepository.findAtConCheckInCountsByDate()));
@@ -105,6 +106,7 @@ public class AttendeeReportPresenter implements ReportPresenter {
         }
         sb.append(buildAttendanceCounts(
                 attendeeRepository.findTotalAttendeeCount(), attendeeRepository.findWarmBodyCount()));
+        sb.append("</div>");
         log.info("{} viewed Attendee Report", view.getCurrentUser());
         view.afterSuccessfulFetch(sb.toString());
     }

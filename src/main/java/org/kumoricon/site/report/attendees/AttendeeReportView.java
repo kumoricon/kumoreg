@@ -33,10 +33,8 @@ public class AttendeeReportView extends BaseView implements View, ReportView {
         refresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
         addComponent(data);
         data.setContentMode(ContentMode.HTML);
+        data.setWidth("800px");
         handler.fetchReportData(this);
-//        setExpandRatio(data, 1f);
-        data.setSizeFull();
-        data.setWidth("100%");
     }
 
     @Override
