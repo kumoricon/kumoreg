@@ -27,7 +27,7 @@ import org.kumoricon.site.report.staff.StaffReportView;
 import org.kumoricon.site.report.till.TillReportView;
 import org.kumoricon.site.role.RoleView;
 import org.kumoricon.site.tillsession.TillSessionView;
-import org.kumoricon.site.user.UserView;
+import org.kumoricon.site.user.UserListView;
 import org.kumoricon.site.utility.closeouttill.CloseOutTillView;
 import org.kumoricon.site.utility.importattendee.ImportAttendeeView;
 import org.kumoricon.site.utility.loadbasedata.LoadBaseDataView;
@@ -144,7 +144,7 @@ public class KumoRegUI extends UI {
 
             MenuBar.MenuItem admin = menu.addItem("Administration", null, null);
             if (getLoggedInUser().hasRight("manage_staff")) {
-                admin.addItem("Users", null, v -> getNavigator().navigateTo(UserView.VIEW_NAME));
+                admin.addItem("Users", null, v -> getNavigator().navigateTo(UserListView.VIEW_NAME));
             }
             if (getLoggedInUser().hasRight("manage_roles")) {
                 admin.addItem("Roles", null, v -> getNavigator().navigateTo(RoleView.VIEW_NAME));
