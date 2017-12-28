@@ -34,7 +34,7 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
     private ComboBox badgeType = new ComboBox();
     private Button refresh = new Button("Refresh");
     private BeanItemContainer<Attendee> attendeeContainer = new BeanItemContainer<>(Attendee.class);
-    private Table attendeeTable = new Table("Attendees");
+    private Table attendeeTable = new Table(null);
 
     @PostConstruct
     public void init() {
@@ -68,7 +68,6 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
 
         addComponent(header);
         addComponent(attendeeTable);
-//        setExpandRatio(attendeeTable, 1.0f);
         handler.showBadgeTypes(this);
         attendeeTable.setContainerDataSource(attendeeContainer);
         attendeeTable.setVisibleColumns("lastName", "firstName", "fanName", "badgeNumber", "checkedIn", "checkInTime");
