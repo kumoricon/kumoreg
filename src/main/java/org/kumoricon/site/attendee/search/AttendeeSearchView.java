@@ -49,7 +49,6 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         f.setMargin(false);
         f.setSpacing(false);
         txtSearch.setSizeFull();
-        txtSearch.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> search());
         txtSearch.setImmediate(true);
         txtSearch.setTextChangeEventMode(AbstractTextField.TextChangeEventMode.EAGER);
         f.addComponent(txtSearch);
@@ -98,6 +97,7 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
             }
             handler.searchFor(searchString);
         }
+        txtSearch.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> search());
     }
 
     public void afterSuccessfulFetch(List<Attendee> attendees) {
