@@ -36,18 +36,15 @@ public class RoleView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSpacing(true);
-        roleList.setCaption("Roles");
+        roleList.setCaption("");
         roleList.setNullSelectionAllowed(false);
         roleList.setWidth(500, Unit.PIXELS);
         roleList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         roleList.setItemCaptionPropertyId("name");
 
         roleList.setImmediate(true);
-        layout.addComponent(roleList);
-        layout.addComponent(btnAddNew);
+        addComponent(btnAddNew);
+        addComponent(roleList);
 
         roleList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
                 handler.roleSelected(this, (Role)valueChangeEvent.getProperty().getValue()));
@@ -57,7 +54,6 @@ public class RoleView extends BaseView implements View {
             handler.addNewRole(this);
         });
 
-        addComponent(layout);
         handler.showRoleList(this);
     }
 

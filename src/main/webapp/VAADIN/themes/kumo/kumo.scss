@@ -10,6 +10,14 @@ $v-animations-enabled: false;
 .kumo {
   @include valo;
 
+  .v-widget {
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+
+  .v-menubar-borderless {
+    border-bottom: 1px solid black;
+  }
   // Your theme's rules go here
 }
 

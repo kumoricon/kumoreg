@@ -38,16 +38,9 @@ public class TillSessionView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        VerticalLayout pageLayout = new VerticalLayout();
-        pageLayout.setSizeFull();
-        pageLayout.setSpacing(true);
 
-        HorizontalLayout buttons = new HorizontalLayout();
-        buttons.setSpacing(true);
-        buttons.setMargin(false);
-        buttons.addComponent(btnShowOpen);
-        buttons.addComponent(btnShowAll);
-        pageLayout.addComponent(buttons);
+        addComponent(btnShowOpen);
+        addComponent(btnShowAll);
 
         btnShowOpen.addClickListener((Button.ClickListener) clickEvent -> showOpenClicked());
         btnShowAll.addClickListener((Button.ClickListener) clickEvent -> showAllClicked());
@@ -56,15 +49,13 @@ public class TillSessionView extends BaseView implements View {
                     sessionClicked((Session)b.getBean());
                 });
 
-        pageLayout.addComponent(sessionTable);
+        addComponent(sessionTable);
 
         sessionTable.setWidth("90%");
         sessionTable.setNullSelectionAllowed(false);
         sessionTable.setImmediate(true);
         sessionTable.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         sessionTable.addGeneratedColumn("manage", new CloseButtonColumnGenerator());
-
-        addComponent(pageLayout);
 
         handler.showOpenTillSessionList(this);
     }
