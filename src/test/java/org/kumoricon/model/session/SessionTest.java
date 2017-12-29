@@ -24,7 +24,7 @@ public class SessionTest {
         // Only allow setting the end time if it is null - it shouldn't change
         Session s = new Session();
         LocalDateTime now = LocalDateTime.now();
-        s.setEnd(LocalDateTime.now());
+        s.setEnd(now);
         s.setEnd(LocalDateTime.of(2015, 8, 1, 11, 11, 11));
         assertEquals(now, s.getEnd());
     }
