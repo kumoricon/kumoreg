@@ -1,11 +1,15 @@
 package org.kumoricon.site.attendee.window;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.BrowserFrame;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Window;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
-import com.vaadin.ui.*;
+import com.vaadin.v7.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.BaseView;

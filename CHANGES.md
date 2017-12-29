@@ -1,7 +1,12 @@
 Change Log
 ----------------
 - Version 2.0.9 (Pending)
-
+    - Layout change for speed (Base on CSSLayout)
+    - Upgrade to Vaadin 8.1.0
+    - Upgrade to Spring Boot 1.5.2
+    - Trainingmode defaults to false
+    - Minor UI corrections
+    - Fixed bug where adding printers through UI would fail after repeated use
 
 - Version 2.0.8 (10/28/2017)
     - Day badges use age range color on bottom of badge. Fixed color of font

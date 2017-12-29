@@ -1,6 +1,7 @@
 package org.kumoricon;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
@@ -38,6 +39,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Theme("kumo")
 @SpringUI
+@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 public class KumoRegUI extends UI {
     @Autowired
     private SpringViewProvider viewProvider;

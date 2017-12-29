@@ -1,12 +1,12 @@
 package org.kumoricon.site.report.staff;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
-import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
+import com.vaadin.v7.ui.Grid;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.fieldconverter.RoleToStringConverter;

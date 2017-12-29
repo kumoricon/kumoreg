@@ -3,7 +3,7 @@ package org.kumoricon.site.utility.closeouttill;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.tillsession.ReportWindow;
 import org.springframework.beans.factory.annotation.Autowired;

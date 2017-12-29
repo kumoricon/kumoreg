@@ -2,7 +2,7 @@ package org.kumoricon.site.attendee.form;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.user.User;

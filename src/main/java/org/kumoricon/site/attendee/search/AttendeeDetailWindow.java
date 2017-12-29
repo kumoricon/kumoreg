@@ -1,11 +1,14 @@
 package org.kumoricon.site.attendee.search;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.PopupView;
+import com.vaadin.ui.Window;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.*;
+import com.vaadin.v7.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;

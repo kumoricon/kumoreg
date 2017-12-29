@@ -1,9 +1,13 @@
 package org.kumoricon.site.attendee.window;
 
-import com.vaadin.data.Property;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Window;
+import com.vaadin.v7.data.Property;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.*;
+import com.vaadin.v7.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.order.Payment;

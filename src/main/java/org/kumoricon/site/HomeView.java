@@ -3,11 +3,11 @@ package org.kumoricon.site;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ServiceException;
-import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.renderers.NumberRenderer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.renderers.NumberRenderer;
 import org.kumoricon.model.badge.Badge;
 import org.springframework.beans.factory.annotation.Autowired;
 

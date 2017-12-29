@@ -1,15 +1,15 @@
 package org.kumoricon.site.role;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.VerticalLayout;
 import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.site.BaseView;
