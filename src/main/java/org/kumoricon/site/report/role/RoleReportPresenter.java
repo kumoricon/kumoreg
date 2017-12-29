@@ -52,9 +52,12 @@ public class RoleReportPresenter implements ReportPresenter {
 
     @Override
     public void fetchReportData(ReportView view) {
+        StringBuilder report = new StringBuilder();
+        report.append("<div class=\"kumoReport\">");
         List<Role> roles = roleRepository.findAll();
-        String report = buildTable("Role List", roles);
-        view.afterSuccessfulFetch(report);
+        report.append(buildTable("Role List", roles));
+        report.append("</div>");
+        view.afterSuccessfulFetch(report.toString());
         log.info("{} viewed Role Report", view.getCurrentUser());
     }
 }

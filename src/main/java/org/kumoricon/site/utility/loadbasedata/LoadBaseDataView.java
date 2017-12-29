@@ -4,8 +4,8 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.TextArea;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,7 +34,7 @@ public class LoadBaseDataView extends BaseView implements View {
         addComponent(results);
         results.setSizeFull();
         results.setEnabled(false);
-        setExpandRatio(results, 1.0f);
+//        setExpandRatio(results, 1.0f);
 
         loadData.addClickListener((Button.ClickListener) clickEvent -> handler.loadDataButtonClicked(this));
         loadLiteData.addClickListener((Button.ClickListener) clickEvent -> handler.loadLiteDataButtonClicked(this));

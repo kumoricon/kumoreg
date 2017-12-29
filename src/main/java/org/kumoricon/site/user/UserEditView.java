@@ -1,21 +1,32 @@
 package org.kumoricon.site.user;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Notification;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.*;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.v7.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.user.User;
+import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.FieldFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
-class UserEditWindow extends Window {
+@ViewScope
+@SpringView(name = UserEditView.VIEW_NAME)
+class UserEditView extends BaseView implements View {
 
     private final TextField username = FieldFactory.createTextField("Username");
     private final TextField firstName = FieldFactory.createNameField("First Name");
@@ -31,20 +42,17 @@ class UserEditWindow extends Window {
     private final Button btnResetPassword = new Button("Reset Password");
 
     private final UserPresenter handler;
-    private final UserView parentView;
+    public static final String VIEW_NAME = "user";
+    public static final String REQUIRED_RIGHT = "manage_staff";
 
-    public UserEditWindow(UserView parentView, UserPresenter userPresenter, List<Role> roleList) {
-        super("Edit User");
-        this.handler = userPresenter;
-        this.parentView = parentView;
-        setIcon(FontAwesome.USER);
-        center();
-        setModal(true);
-        setResizable(false);
+    @Autowired
+    public UserEditView(UserPresenter handler) {
+        this.handler = handler;
 
-        role.setContainerDataSource(new BeanItemContainer<>(Role.class, roleList));
-        role.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        role.setItemCaptionPropertyId("name");
+    }
+
+    @PostConstruct
+    public void init() {
 
         FormLayout form = new FormLayout();
         form.setMargin(true);
@@ -91,15 +99,15 @@ class UserEditWindow extends Window {
             }
         });
 
-        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelUser(this));
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> navigateTo(UserListView.VIEW_NAME));
 
         form.addComponent(buttons);
 
         form.addComponent(btnResetPassword);
         btnResetPassword.addClickListener((Button.ClickListener) clickEvent -> handler.resetPassword(this, getUser()));
-        setContent(form);
         btnSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        addComponent(form);
     }
 
     private void updateUsername() {
@@ -123,9 +131,18 @@ class UserEditWindow extends Window {
         return userBean.getBean();
     }
 
-    void showUser(User user) {
+    void showUser(User user, List<Role> availableRoles) {
+        role.setContainerDataSource(new BeanItemContainer<>(Role.class, handler.getAvailableRoles()));
+        role.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        role.setItemCaptionPropertyId("name");
         userBeanFieldGroup.setItemDataSource(user);
     }
 
-    public UserView getParentView() { return parentView; }
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        super.enter(viewChangeEvent);
+        String parameters = viewChangeEvent.getParameters();
+        handler.showUser(this, parameters);
+    }
+
 }

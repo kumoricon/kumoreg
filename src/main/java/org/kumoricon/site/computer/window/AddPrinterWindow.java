@@ -1,9 +1,11 @@
 package org.kumoricon.site.computer.window;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Window;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.*;
+import com.vaadin.v7.ui.*;
 import org.kumoricon.model.printer.Printer;
 import java.util.ArrayList;
 import java.util.List;

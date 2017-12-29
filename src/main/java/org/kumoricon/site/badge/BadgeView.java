@@ -1,12 +1,14 @@
 package org.kumoricon.site.badge;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Layout;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.*;
+import com.vaadin.v7.ui.*;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,23 @@ public class BadgeView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        Layout leftPanel = buildLeftPanel();
-        addComponent(leftPanel);
+        badgeList.setCaption("");
+        badgeList.setNullSelectionAllowed(false);
+        badgeList.setMultiSelect(false);
+        badgeList.setImmediate(true);
+        badgeList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        badgeList.setItemCaptionPropertyId("name");
+        addComponent(btnAddNew);
+        addComponent(badgeList);
+
+        badgeList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
+                handler.badgeSelected(this, (Badge)valueChangeEvent.getProperty().getValue()));
+
+        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
+            badgeList.select(null);
+            handler.addNewBadge(this);
+        });
+
         handler.showBadgeList(this);
     }
 
@@ -60,30 +77,6 @@ public class BadgeView extends BaseView implements View {
         badgeList.setColumnHeaders("Name", "Stripe Color", "Badge Type", "Required Security Right", "Visible");
         badgeList.sort(sortBy, sortOrder);
     }
-
-    private VerticalLayout buildLeftPanel() {
-        VerticalLayout leftPanel = new VerticalLayout();
-        leftPanel.setMargin(true);
-        leftPanel.setSpacing(true);
-        badgeList.setCaption("Badge Types");
-        badgeList.setNullSelectionAllowed(false);
-        badgeList.setMultiSelect(false);
-        badgeList.setImmediate(true);
-        badgeList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        badgeList.setItemCaptionPropertyId("name");
-        leftPanel.addComponent(btnAddNew);
-        leftPanel.addComponent(badgeList);
-
-        badgeList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
-                handler.badgeSelected(this, (Badge)valueChangeEvent.getProperty().getValue()));
-
-        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
-            badgeList.select(null);
-            handler.addNewBadge(this);
-        });
-        return leftPanel;
-    }
-
 
     public void showBadge(Badge badge) {
         badgeEditWindow = new BadgeEditWindow(this, handler);

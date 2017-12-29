@@ -1,9 +1,9 @@
 package org.kumoricon.site.attendee;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.validator.RegexpValidator;
-import com.vaadin.ui.*;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.validator.RegexpValidator;
+import com.vaadin.v7.ui.*;
 import org.kumoricon.service.FieldCleaner;
 
 import java.util.Date;

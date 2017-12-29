@@ -3,7 +3,10 @@ package org.kumoricon.site;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Notification;
+import com.vaadin.v7.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +31,7 @@ public class LoginView extends BaseView implements View {
         formLayout.addComponent(usernameField);
         formLayout.addComponent(passwordField);
         formLayout.addComponent(loginButton);
+        formLayout.setWidth(null);
         addComponent(formLayout);
 
         loginButton.setClickShortcut( ShortcutAction.KeyCode.ENTER ) ;
@@ -43,6 +47,8 @@ public class LoginView extends BaseView implements View {
             }
         });
         usernameField.focus();
+
+//        setComponentAlignment(formLayout, Alignment.MIDDLE_CENTER);
     }
 
     public void showNewPasswordWindow() {

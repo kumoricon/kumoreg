@@ -1,11 +1,11 @@
 package org.kumoricon.site.report.attendees;
 
 import com.vaadin.navigator.View;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 import org.kumoricon.site.report.ReportView;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +33,8 @@ public class AttendeeReportView extends BaseView implements View, ReportView {
         refresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
         addComponent(data);
         data.setContentMode(ContentMode.HTML);
+        data.setWidth("800px");
         handler.fetchReportData(this);
-        setExpandRatio(data, 1f);
-        data.setSizeFull();
-        data.setWidth("100%");
     }
 
     @Override

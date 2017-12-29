@@ -1,13 +1,16 @@
 package org.kumoricon.site.attendee.search;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.event.ItemClickEvent;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.*;
+import com.vaadin.v7.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
@@ -46,7 +49,6 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         f.setMargin(false);
         f.setSpacing(false);
         txtSearch.setSizeFull();
-        txtSearch.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> search());
         txtSearch.setImmediate(true);
         txtSearch.setTextChangeEventMode(AbstractTextField.TextChangeEventMode.EAGER);
         f.addComponent(txtSearch);
@@ -76,7 +78,6 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
 
         addComponent(h);
         addComponent(tblResult);
-        setExpandRatio(tblResult, 1.0f);
         txtSearch.focus();
 
     }
@@ -96,6 +97,7 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
             }
             handler.searchFor(searchString);
         }
+        txtSearch.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> search());
     }
 
     public void afterSuccessfulFetch(List<Attendee> attendees) {

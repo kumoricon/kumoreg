@@ -1,6 +1,6 @@
 package org.kumoricon.site.fieldconverter;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;

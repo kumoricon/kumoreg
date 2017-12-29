@@ -4,7 +4,9 @@ import com.vaadin.navigator.View;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.v7.ui.VerticalLayout;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,13 +30,20 @@ public class ExportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        addComponent(attendeeExportBtn);
+        VerticalLayout layout = new VerticalLayout();
+        layout.setSpacing(true);
+        layout.setWidthUndefined();
+        layout.addComponent(attendeeExportBtn);
         FileDownloader attendeeDownloader = new FileDownloader(handler.createAttendeeExport(this));
         attendeeDownloader.extend(attendeeExportBtn);
 
-        addComponent(tillExportBtn);
+        layout.addComponent(tillExportBtn);
         FileDownloader tillDownloader = new FileDownloader(handler.createTillExport(this));
         tillDownloader.extend(tillExportBtn);
+
+        layout.setComponentAlignment(attendeeExportBtn, Alignment.TOP_CENTER);
+        layout.setComponentAlignment(tillExportBtn, Alignment.TOP_CENTER);
+        addComponent(layout);
     }
 
     public String getRequiredRight() {

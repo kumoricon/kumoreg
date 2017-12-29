@@ -54,7 +54,7 @@ public class LogoutPresenter {
         log.info("{} logged out via logout button", view.getCurrentUsername());
         KumoRegUI ui = (KumoRegUI)KumoRegUI.getCurrent();
         ui.setLoggedInUser(null);
-        ui.removeMenu();
+        ui.buildMenu();
         ui.getNavigator().navigateTo(LoginView.VIEW_NAME);
         view.notify("Logged out");
     }

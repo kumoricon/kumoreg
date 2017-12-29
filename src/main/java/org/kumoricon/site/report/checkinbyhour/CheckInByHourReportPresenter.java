@@ -43,8 +43,11 @@ public class CheckInByHourReportPresenter implements ReportPresenter {
 
     @Override
     public void fetchReportData(ReportView view) {
-        String report = buildTable("Check Ins By Hour", attendeeRepository.findCheckInCountsByHour());
-        view.afterSuccessfulFetch(report);
+        StringBuilder report = new StringBuilder();
+        report.append("<div class=\"kumoReport\">");
+        report.append(buildTable("Check Ins By Hour", attendeeRepository.findCheckInCountsByHour()));
+        report.append("</div>");
+        view.afterSuccessfulFetch(report.toString());
         log.info("{} viewed Check Ins By Hour Report", view.getCurrentUser());
     }
 }

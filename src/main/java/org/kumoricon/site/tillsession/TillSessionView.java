@@ -1,12 +1,15 @@
 package org.kumoricon.site.tillsession;
 
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.event.ItemClickEvent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Window;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.*;
+import com.vaadin.v7.ui.*;
 import org.kumoricon.model.session.Session;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.fieldconverter.StringToLocalDateTimeConverter;
@@ -35,16 +38,9 @@ public class TillSessionView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        VerticalLayout pageLayout = new VerticalLayout();
-        pageLayout.setSizeFull();
-        pageLayout.setSpacing(true);
 
-        HorizontalLayout buttons = new HorizontalLayout();
-        buttons.setSpacing(true);
-        buttons.setMargin(false);
-        buttons.addComponent(btnShowOpen);
-        buttons.addComponent(btnShowAll);
-        pageLayout.addComponent(buttons);
+        addComponent(btnShowOpen);
+        addComponent(btnShowAll);
 
         btnShowOpen.addClickListener((Button.ClickListener) clickEvent -> showOpenClicked());
         btnShowAll.addClickListener((Button.ClickListener) clickEvent -> showAllClicked());
@@ -53,15 +49,13 @@ public class TillSessionView extends BaseView implements View {
                     sessionClicked((Session)b.getBean());
                 });
 
-        pageLayout.addComponent(sessionTable);
+        addComponent(sessionTable);
 
         sessionTable.setWidth("90%");
         sessionTable.setNullSelectionAllowed(false);
         sessionTable.setImmediate(true);
         sessionTable.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         sessionTable.addGeneratedColumn("manage", new CloseButtonColumnGenerator());
-
-        addComponent(pageLayout);
 
         handler.showOpenTillSessionList(this);
     }

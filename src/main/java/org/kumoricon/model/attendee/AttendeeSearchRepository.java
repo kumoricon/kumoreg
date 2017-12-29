@@ -50,9 +50,9 @@ public class AttendeeSearchRepository {
     private Predicate buildOrPredicatesForWord(CriteriaBuilder builder, Root<Attendee> root, String word) {
         Predicate hasFirstName = builder.like(root.get("firstName"), "%" + word + "%");
         Predicate hasLastName = builder.like(root.get("lastName"), "%" + word + "%");
-        Predicate hasfanName = builder.like(root.get("fanName"), "%" + word + "%");
+        Predicate hasFanName = builder.like(root.get("fanName"), "%" + word + "%");
         Predicate hasLegalFirstName = builder.like(root.get("legalFirstName"), "%" + word + "%");
         Predicate hasLegalLastName = builder.like(root.get("legalLastName"), "%" + word + "%");
-        return builder.or(hasFirstName, hasLastName, hasfanName, hasLegalFirstName, hasLegalLastName);
+        return builder.or(hasFirstName, hasLastName, hasFanName, hasLegalFirstName, hasLegalLastName);
     }
 }

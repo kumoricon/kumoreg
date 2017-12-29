@@ -3,11 +3,11 @@ package org.kumoricon.site;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ServiceException;
-import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.renderers.NumberRenderer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.renderers.NumberRenderer;
 import org.kumoricon.model.badge.Badge;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +25,7 @@ public class HomeView extends BaseView implements View {
     private HomePresenter handler;
 
     private Label welcome = new Label("Welcome to Kumoricon!");
-    private Grid passTypesTable = new Grid("Pass Types");
+    private Grid passTypesTable = new Grid("");
 
     @PostConstruct
     void init() {
@@ -33,7 +33,7 @@ public class HomeView extends BaseView implements View {
 
         passTypesTable.setWidth(750, Unit.PIXELS);
         passTypesTable.setHeightMode(HeightMode.ROW);
-        passTypesTable.addColumn("fanName", String.class);
+        passTypesTable.addColumn("Badge Type", String.class);
         passTypesTable.addColumn("adult", BigDecimal.class);
         passTypesTable.addColumn("youth", BigDecimal.class);
         passTypesTable.addColumn("child", BigDecimal.class);
@@ -58,7 +58,7 @@ public class HomeView extends BaseView implements View {
         passTypesTable.setSelectionMode(Grid.SelectionMode.NONE);
 
         addComponent(passTypesTable);
-        setExpandRatio(passTypesTable, 1.0f);
+//        setExpandRatio(passTypesTable, 1.0f);
         handler.showBadges(this);
     }
 

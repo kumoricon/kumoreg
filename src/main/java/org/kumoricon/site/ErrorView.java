@@ -3,7 +3,7 @@ package org.kumoricon.site;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 
 import javax.annotation.PostConstruct;
 

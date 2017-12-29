@@ -6,8 +6,8 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.utility.closeouttill.CloseOutTillView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class LogoutView extends BaseView implements View {
         spacer.setHeight("5em");
         addComponent(warning);
         warning.setSizeUndefined();
-        setComponentAlignment(warning, Alignment.MIDDLE_CENTER);
+//        setComponentAlignment(warning, Alignment.MIDDLE_CENTER);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSpacing(true);
@@ -48,7 +48,7 @@ public class LogoutView extends BaseView implements View {
         horizontalLayout.addComponent(logout);
         logout.addClickListener((Button.ClickListener) clickEvent -> handler.logout(this));
         addComponent(horizontalLayout);
-        setComponentAlignment(horizontalLayout, Alignment.MIDDLE_CENTER);
+//        setComponentAlignment(horizontalLayout, Alignment.MIDDLE_CENTER);
     }
 
     @Override

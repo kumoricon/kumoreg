@@ -1,14 +1,16 @@
 package org.kumoricon.site.attendee.search;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.StringToDateConverter;
-import com.vaadin.event.ItemClickEvent;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.converter.StringToDateConverter;
+import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.*;
+import com.vaadin.v7.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.attendee.AttendeePrintView;
@@ -34,7 +36,7 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
     private ComboBox badgeType = new ComboBox();
     private Button refresh = new Button("Refresh");
     private BeanItemContainer<Attendee> attendeeContainer = new BeanItemContainer<>(Attendee.class);
-    private Table attendeeTable = new Table("Attendees");
+    private Table attendeeTable = new Table(null);
 
     @PostConstruct
     public void init() {
@@ -49,16 +51,6 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
         badgeType.setNullSelectionAllowed(false);
         badgeType.setNewItemsAllowed(false);
         badgeType.setWidth("400px");
-        badgeType.addValueChangeListener((Property.ValueChangeListener) event -> {
-            if (event.getProperty() != null) {
-                Badge b = (Badge) event.getProperty().getValue();
-                if (b != null) {
-                    navigateTo(VIEW_NAME + "/" + b.getId());
-                } else {
-                    navigateTo(VIEW_NAME);
-                }
-            }
-        });
         refresh.addClickListener((Button.ClickListener) clickEvent ->
                 handler.showAttendeeList(this, (Badge) badgeType.getValue()));
         header.addComponent(badgeTypeLabel);
@@ -68,7 +60,6 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
 
         addComponent(header);
         addComponent(attendeeTable);
-        setExpandRatio(attendeeTable, 1.0f);
         handler.showBadgeTypes(this);
         attendeeTable.setContainerDataSource(attendeeContainer);
         attendeeTable.setVisibleColumns("lastName", "firstName", "fanName", "badgeNumber", "checkedIn", "checkInTime");
@@ -109,29 +100,35 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
             } catch (NumberFormatException e) {
                 // Garbage input in the URL - treat it as null
             }
-            Badge currentValue = (Badge) badgeType.getValue();
 
-            // If the badge selection box isn't already set to the parameter in the URL, change it.
-            // This will fire the value change listener again
-            boolean selectionChanged = false;
-            if (parameter != null && (currentValue == null || !parameter.equals(currentValue.getId()))) {
-                for (Object item : badgeType.getItemIds()) {
-                    Badge badge = (Badge) item;
-                    if (parameter.equals(badge.getId())) {
-                        badgeType.select(badge);
-                        selectionChanged = true;
-                        break;
-                    }
+            // Set the badgeType selection based on the ID in the URL
+            for (Object item : badgeType.getItemIds()) {
+                Badge badge = (Badge) item;
+                if (parameter.equals(badge.getId())) {
+                    badgeType.select(badge);
+                    break;
                 }
             }
-            if (!selectionChanged) {
-                // Selection wasn't changed, so load attendees for this badge type
-                handler.showAttendeeList(this, parameter);
-            }
+
+            handler.showAttendeeList(this, parameter);
         } else {
             badgeType.select(null);
             afterAttendeeFetch(new ArrayList<>());
         }
+
+        // Add the valueChangeListener after loading data so it doens't get fired
+        // twice
+        badgeType.addValueChangeListener((Property.ValueChangeListener) event -> {
+            if (event.getProperty() != null) {
+                Badge b = (Badge) event.getProperty().getValue();
+                if (b != null) {
+                    navigateTo(VIEW_NAME + "/" + b.getId());
+                } else {
+                    navigateTo(VIEW_NAME);
+                }
+            }
+        });
+
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.kumoricon.site.fieldconverter;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.kumoricon.model.user.User;
