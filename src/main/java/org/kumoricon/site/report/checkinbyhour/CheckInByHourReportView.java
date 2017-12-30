@@ -20,7 +20,7 @@ public class CheckInByHourReportView extends BaseView implements View, ReportVie
 
     private final CheckInByHourReportPresenter handler;
 
-    private final Button refresh = new Button("Refresh");
+    private final Button btnRefresh = new Button("Refresh");
     private final Label data = new Label();
 
     @Autowired
@@ -30,9 +30,8 @@ public class CheckInByHourReportView extends BaseView implements View, ReportVie
 
     @PostConstruct
     public void init() {
-        addComponent(refresh);
-        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
-        addComponent(data);
+        btnRefresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
+        addComponents(data, btnRefresh);
         data.setContentMode(ContentMode.HTML);
         handler.fetchReportData(this);
         data.setWidth("600px");

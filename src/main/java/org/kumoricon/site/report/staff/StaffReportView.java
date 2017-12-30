@@ -23,7 +23,7 @@ public class StaffReportView extends BaseView implements View {
 
     private final StaffReportPresenter handler;
 
-    private final Button refresh = new Button("Refresh");
+    private final Button btnRefresh = new Button("Refresh");
     private final Grid dataGrid = new Grid("");
 
     @Autowired
@@ -33,10 +33,9 @@ public class StaffReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        addComponent(refresh);
-        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.showUserList(this));
+        btnRefresh.addClickListener((Button.ClickListener) clickEvent -> handler.showUserList(this));
 
-        addComponent(dataGrid);
+        addComponents(dataGrid, btnRefresh);
         handler.showUserList(this);
         dataGrid.setColumns("lastName", "firstName", "username", "phone", "role");
         dataGrid.getColumn("role").setConverter(new RoleToStringConverter());

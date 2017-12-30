@@ -15,7 +15,7 @@ public class TillReportView extends BaseView implements View {
     public static final String VIEW_NAME = "tillReport";
     public static final String REQUIRED_RIGHT = "view_till_report";
 
-    private final Button refresh = new Button("Refresh");
+    private final Button btnRefresh = new Button("Refresh");
     private final Label data = new Label();
 
     private final TillReportPresenter handler;
@@ -27,14 +27,13 @@ public class TillReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        addComponent(refresh);
-        addComponent(data);
+        addComponents(data, btnRefresh);
         data.setContentMode(ContentMode.HTML);
         data.setWidth("1000px");
         data.setHeightUndefined();
 
-        refresh.addClickListener((Button.ClickListener) clickEvent -> {
-            refresh.setCaption("Refresh");
+        btnRefresh.addClickListener((Button.ClickListener) clickEvent -> {
+            btnRefresh.setCaption("Refresh");
             handler.showAllTills(this);
         });
 

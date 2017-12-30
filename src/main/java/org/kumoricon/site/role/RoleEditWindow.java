@@ -28,9 +28,9 @@ class RoleEditWindow extends Window {
 
 
     private final RolePresenter handler;
-    private final RoleView parentView;
+    private final RoleListView parentView;
 
-    RoleEditWindow(RoleView parentView, RolePresenter rolePresenter, List<Right> rights) {
+    RoleEditWindow(RoleListView parentView, RolePresenter rolePresenter, List<Right> rights) {
         super("Edit Role");
         this.handler = rolePresenter;
         this.parentView = parentView;
@@ -66,7 +66,7 @@ class RoleEditWindow extends Window {
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
                 roleBeanFieldGroup.commit();
-                handler.saveRole(this, getRole());
+//                handler.saveRole(this, getRole());
             } catch (Exception e) {
                 parentView.notifyError(e.getMessage());
             }
@@ -94,5 +94,5 @@ class RoleEditWindow extends Window {
         name.selectAll();
     }
 
-    public RoleView getParentView() { return parentView; }
+    public RoleListView getParentView() { return parentView; }
 }

@@ -79,4 +79,8 @@ public class Role extends Record {
     public void clearRights() {
         this.rights.clear();
     }
+
+    public void setRights(Set<Right> rights) {
+        this.rights = rights;
+    }
 }

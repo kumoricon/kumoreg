@@ -19,7 +19,7 @@ public class AttendeeReportView extends BaseView implements View, ReportView {
     public static final String REQUIRED_RIGHT = "view_attendance_report";
     private final AttendeeReportPresenter handler;
 
-    private final Button refresh = new Button("Refresh");
+    private final Button btnRefresh = new Button("Refresh");
     private final Label data = new Label();
 
     @Autowired
@@ -29,9 +29,8 @@ public class AttendeeReportView extends BaseView implements View, ReportView {
 
     @PostConstruct
     public void init() {
-        addComponent(refresh);
-        refresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
-        addComponent(data);
+        btnRefresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
+        addComponents(data, btnRefresh);
         data.setContentMode(ContentMode.HTML);
         data.setWidth("800px");
         handler.fetchReportData(this);

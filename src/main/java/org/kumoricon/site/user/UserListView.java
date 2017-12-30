@@ -39,8 +39,7 @@ public class UserListView extends BaseView implements View {
         userList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         userList.setItemCaptionPropertyId("username");
 
-        addComponent(btnAddNew);
-        addComponent(userList);
+        addComponents(userList, btnAddNew);
 
         userList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
                     User u = (User)valueChangeEvent.getProperty().getValue();

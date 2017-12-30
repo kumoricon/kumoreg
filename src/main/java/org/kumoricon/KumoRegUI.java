@@ -26,7 +26,7 @@ import org.kumoricon.site.report.export.ExportView;
 import org.kumoricon.site.report.role.RoleReportView;
 import org.kumoricon.site.report.staff.StaffReportView;
 import org.kumoricon.site.report.till.TillReportView;
-import org.kumoricon.site.role.RoleView;
+import org.kumoricon.site.role.RoleListView;
 import org.kumoricon.site.tillsession.TillSessionView;
 import org.kumoricon.site.user.UserListView;
 import org.kumoricon.site.utility.closeouttill.CloseOutTillView;
@@ -149,7 +149,7 @@ public class KumoRegUI extends UI {
                 admin.addItem("Users", null, v -> getNavigator().navigateTo(UserListView.VIEW_NAME));
             }
             if (getLoggedInUser().hasRight("manage_roles")) {
-                admin.addItem("Roles", null, v -> getNavigator().navigateTo(RoleView.VIEW_NAME));
+                admin.addItem("Roles", null, v -> getNavigator().navigateTo(RoleListView.VIEW_NAME));
             }
             if (getLoggedInUser().hasRight("manage_pass_types")) {
                 admin.addItem("Badge Types", null, v -> getNavigator().navigateTo(BadgeView.VIEW_NAME));

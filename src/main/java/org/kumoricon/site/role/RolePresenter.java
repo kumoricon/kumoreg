@@ -24,48 +24,38 @@ public class RolePresenter {
         this.rightRepository = rightRepository;
     }
 
-    void roleSelected(RoleView view, Role role) {
-        if (role != null) {
-            view.navigateTo(RoleView.VIEW_NAME + "/" + role.getId().toString());
-            view.showRole(role, rightRepository.findAll());
-        }
-    }
-
-    void addNewRole(RoleView view) {
-        view.navigateTo(RoleView.VIEW_NAME);
-        Role role = new Role();
-        view.showRole(role, rightRepository.findAll());
-        log.info("{} added new role", view.getCurrentUsername());
+    void addNewRole(RoleListView view) {
+        log.info("{} adding new role", view.getCurrentUsername());
+        view.navigateTo(RoleEditView.VIEW_NAME);
     }
 
     public void cancel(RoleEditWindow window) {
-        RoleView view = window.getParentView();
+        RoleListView view = window.getParentView();
         window.close();
-        view.navigateTo(RoleView.VIEW_NAME);
-        view.clearSelection();
+        view.navigateTo(RoleListView.VIEW_NAME);
     }
 
-    void saveRole(RoleEditWindow window, Role role) {
-        RoleView view = window.getParentView();
+    void saveRole(RoleEditView view, Role role) {
         roleRepository.save(role);
-        window.close();
-        view.navigateTo(RoleView.VIEW_NAME);
-        showRoleList(view);
+        view.navigateTo(RoleListView.VIEW_NAME);
         log.info("{} saved role {}", view.getCurrentUsername(), role);
     }
 
-    void showRoleList(RoleView view) {
+    void showRoleList(RoleListView view) {
         List<Role> roles = roleRepository.findAll();
         view.afterSuccessfulFetch(roles);
         log.info("{} viewed role list", view.getCurrentUsername());
     }
 
-    void navigateToRole(RoleView view, String parameters) {
-        if (parameters != null) {
-            Integer id = Integer.parseInt(parameters);
-            Role role = roleRepository.findOne(id);
-            view.selectRole(role);
-            log.info("{} viewed role {}", view.getCurrentUsername(), role);
+    public void showRole(RoleEditView view, String parameters) {
+        Integer roleId;
+        try {
+            roleId = Integer.parseInt(parameters);
+            Role role = roleRepository.findOne(roleId);
+            view.showRole(role, rightRepository.findAll());
+        } catch (NumberFormatException ex) {
+            Role role = new Role();
+            view.showRole(role, rightRepository.findAll());
         }
     }
 }

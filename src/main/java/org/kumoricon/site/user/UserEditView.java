@@ -57,6 +57,7 @@ class UserEditView extends BaseView implements View {
         FormLayout form = new FormLayout();
         form.setMargin(true);
         form.setSpacing(true);
+        form.setWidth("400px");
 
         userBeanFieldGroup.bind(firstName, "firstName");
         firstName.focus();

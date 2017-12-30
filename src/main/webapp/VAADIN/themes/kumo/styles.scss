@@ -17,6 +17,10 @@
   cursor: pointer;
 }
 
+.kumoHandPointer .v-grid-row {
+  cursor: pointer;
+}
+
 // For tables with the .kumoHeaderOnlyHandPointer class, only change the cursor to pointer for the header
 // Used for tables that can be sorted but individual items can't be clicked on
 .kumoHeaderOnlyHandPointer .v-grid-header {
