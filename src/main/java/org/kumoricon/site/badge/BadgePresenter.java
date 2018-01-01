@@ -22,54 +22,43 @@ public class BadgePresenter {
         this.badgeRepository = badgeRepository;
     }
 
-    public void badgeSelected(BadgeView view, Badge badge) {
-        if (badge != null) {
-            log.info("{} viewed badge {}", view.getCurrentUsername(), badge);
-            view.navigateTo(BadgeView.VIEW_NAME + "/" + badge.getId().toString());
-            view.showBadge(badge);
-        }
-    }
-
-    public void addNewBadge(BadgeView view) {
-        log.info("{} created new badge", view.getCurrentUsername());
-        view.navigateTo(BadgeView.VIEW_NAME);
-        Badge newBadge = BadgeFactory.createEmptyBadge();
-        view.showBadge(newBadge);
-    }
-
-    public void cancelBadge(BadgeView view) {
-        view.clearSelection();
-        view.navigateTo(BadgeView.VIEW_NAME);
-        view.closeBadgeEditWindow();
-    }
-
-    public void saveBadge(BadgeView view, Badge badge) {
-        log.info("{} saved badge {}", view.getCurrentUsername(), badge);
-        badgeRepository.save(badge);
-        view.navigateTo(BadgeView.VIEW_NAME);
-        showBadgeList(view);
-    }
-
-    public void showBadgeList(BadgeView view) {
+    public void showBadgeList(BadgeListView view) {
         log.info("{} viewed badge list", view.getCurrentUsername());
         List<Badge> badges = badgeRepository.findAll();
         view.afterSuccessfulFetch(badges);
     }
 
-    public void navigateToBadge(BadgeView view, String parameters) {
-        if (parameters != null) {
-            Integer id = Integer.parseInt(parameters);
-            Badge badge = badgeRepository.findOne(id);
-            if (badge != null) {
-                view.selectBadge(badge);
-            } else {
+    public void showBadge(BadgeEditView view, Integer badgeId) {
+        if (badgeId != null) {
+            Badge badge = badgeRepository.findOne(badgeId);
+            if (badge == null) {
                 log.error("{} tried to view badge id {} but it was not found in the database",
-                    view.getCurrentUsername(), id);
+                        view.getCurrentUsername(), badgeId);
+                view.notifyError(String.format("Badge %s not found", badgeId));
+            } else {
+                log.info("{} viewed badge {}", view.getCurrentUsername(), badgeId);
+                view.afterSuccessfulFetch(badge);
             }
+        } else {
+            // Create new badge
+            log.info("{} created new badge", view.getCurrentUsername());
+            view.afterSuccessfulFetch(BadgeFactory.createEmptyBadge());
+        }
+
+    }
+
+    public void saveBadge(BadgeEditView view, Badge badge) {
+        try {
+            badgeRepository.save(badge);
+            log.info("{} saved badge {}", view.getCurrentUsername(), badge);
+            view.navigateTo(BadgeListView.VIEW_NAME);
+        } catch (Exception ex) {
+            log.error("{} got an error saving badge {}: {}", view.getCurrentUsername(), badge, ex);
+            view.notifyError(ex.getMessage());
         }
     }
 
-// Currently not used because badges may be set as not visible, but may not be deleted outright
+    // Currently not used because badges may be set as not visible, but may not be deleted outright
 //    public void deleteBadge(BadgeView view, Badge badge) {
 //        if (badge.getId() != null) {
 //            log.info("{} deleted badge {}", view.getCurrentUsername(), badge);

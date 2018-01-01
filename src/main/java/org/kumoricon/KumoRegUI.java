@@ -17,7 +17,7 @@ import org.kumoricon.site.attendee.reg.OrderListView;
 import org.kumoricon.site.attendee.reg.OrderView;
 import org.kumoricon.site.attendee.search.AttendeeSearchByBadgeView;
 import org.kumoricon.site.attendee.search.AttendeeSearchView;
-import org.kumoricon.site.badge.BadgeView;
+import org.kumoricon.site.badge.BadgeListView;
 import org.kumoricon.site.computer.ComputerView;
 import org.kumoricon.site.report.attendees.AttendeeReportView;
 import org.kumoricon.site.report.checkinbyhour.CheckInByHourReportView;
@@ -152,7 +152,7 @@ public class KumoRegUI extends UI {
                 admin.addItem("Roles", null, v -> getNavigator().navigateTo(RoleListView.VIEW_NAME));
             }
             if (getLoggedInUser().hasRight("manage_pass_types")) {
-                admin.addItem("Badge Types", null, v -> getNavigator().navigateTo(BadgeView.VIEW_NAME));
+                admin.addItem("Badge Types", null, v -> getNavigator().navigateTo(BadgeListView.VIEW_NAME));
             }
             if (getLoggedInUser().hasRight("manage_devices")) {
                 admin.addItem("Printers", null, v -> getNavigator().navigateTo(ComputerView.VIEW_NAME));

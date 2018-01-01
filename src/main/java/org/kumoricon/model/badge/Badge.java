@@ -98,4 +98,7 @@ public class Badge extends Record {
         }
     }
 
+    public void setAgeRanges(List<AgeRange> ageRanges) {
+        this.ageRanges = ageRanges;
+    }
 }
