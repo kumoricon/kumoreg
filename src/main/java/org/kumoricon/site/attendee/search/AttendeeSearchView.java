@@ -63,8 +63,9 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
                 "Badge Number", "Age", "Zip", "Checked In");
         tblResult.addStyleName("kumoHandPointer");
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
-
-            handler.showAttendee((Integer) itemClickEvent.getItem().getItemProperty("id").getValue());
+            navigateTo(AttendeeSearchDetailView.VIEW_NAME +
+                    "/" + txtSearch.getValue() +
+                    "/" + (Integer) itemClickEvent.getItem().getItemProperty("id").getValue());
         });
 
         btnSearch.addClickListener((Button.ClickListener) clickEvent -> search());
@@ -119,22 +120,11 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         handler.searchFor(txtSearch.getValue());
     }
 
-    public BeanItemContainer<Attendee> getAttendeeBeanList() {
-        return attendeeBeanList;
-    }
-
     public void setHandler(AttendeeSearchPresenter presenter) {
         this.handler = presenter;
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
-
-    public void showAttendee(Attendee attendee, List<Badge> all) {
-        AttendeeDetailWindow window = new AttendeeDetailWindow(this, handler);
-        window.setAvailableBadges(all);
-        window.showAttendee(attendee);
-        showWindow(window);
-    }
 
     @Override
     public void showPrintBadgeWindow(List<Attendee> attendeeList) {

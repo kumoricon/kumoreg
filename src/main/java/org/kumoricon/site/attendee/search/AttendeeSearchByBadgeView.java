@@ -71,7 +71,7 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
             }
         });
         attendeeTable.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
-                handler.showAttendee((Integer) itemClickEvent.getItem().getItemProperty("id").getValue()));
+                handler.showAttendee(this, (Integer) itemClickEvent.getItem().getItemProperty("id").getValue()));
 
         attendeeTable.setSizeFull();
     }
@@ -142,4 +142,6 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
     }
 
 
+    public void showAttendee(Attendee attendee, List<Badge> all) {
+    }
 }

@@ -55,17 +55,27 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     public AttendeeSearchPresenter() {
     }
 
-    public void showAttendee(int id) {
+    public void showAttendee(AttendeeSearchByBadgeView bView, int id) {
         Attendee attendee = attendeeRepository.findOne(id);
         if (attendee != null) {
-            log.info("{} displayed Attendee {}", view.getCurrentUsername(), attendee);
-            view.showAttendee(attendee, badgeRepository.findAll());
+            log.info("{} displayed Attendee {}", bView.getCurrentUsername(), attendee);
+            bView.showAttendee(attendee, badgeRepository.findAll());
         } else {
             log.error("{} tried to display Attendee id {} and it was not found", view.getCurrentUsername(), id);
-            view.notify("Error: attendee " + id + " not found.");
+            bView.notify("Error: attendee " + id + " not found.");
         }
     }
 
+    public void showAttendee(AttendeeSearchDetailView dView, int id) {
+        Attendee attendee = attendeeRepository.findOne(id);
+        if (attendee != null) {
+            dView.showAttendee(attendee, badgeRepository.findAll());
+            log.info("{} displayed Attendee {}", dView.getCurrentUsername(), attendee);
+        } else {
+            log.error("{} tried to display Attendee id {} and it was not found", view.getCurrentUsername(), id);
+            dView.notify("Error: attendee " + id + " not found.");
+        }
+    }
     public void saveAttendee(AttendeeDetailWindow window, Attendee attendee) {
         AttendeePrintView view = window.getParentView();
         try {

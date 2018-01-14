@@ -1,5 +1,7 @@
 package org.kumoricon;
 
+import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.navigator.SpringViewProvider;
 import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.RightRepository;
 import org.kumoricon.model.role.Role;
@@ -9,10 +11,13 @@ import org.kumoricon.model.user.UserFactory;
 import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 @SpringBootApplication
 public class KumoregApplication {
@@ -22,6 +27,15 @@ public class KumoregApplication {
         SpringApplication.run(KumoregApplication.class, args);
     }
 
+    @Autowired
+    ApplicationContext applicationContext;
+
+    @Bean
+    @Primary
+    @UIScope
+    SpringViewProvider templateViewProvider() {
+        return new UriTemplateViewProvider(applicationContext, null);
+    }
 
     @Bean CommandLineRunner loadDefaultRole(RoleRepository roleRepository, RightRepository rightRepository, UserRepository userRepository) {
         return (args) -> {
