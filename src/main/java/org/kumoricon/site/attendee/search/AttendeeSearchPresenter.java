@@ -55,7 +55,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     public AttendeeSearchPresenter() {
     }
 
-    public void showAttendee(AttendeeSearchByBadgeView bView, int id) {
+    public void showAttendee(AttendeeDetailView bView, int id) {
         Attendee attendee = attendeeRepository.findOne(id);
         if (attendee != null) {
             log.info("{} displayed Attendee {}", bView.getCurrentUsername(), attendee);
@@ -76,23 +76,21 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             dView.notify("Error: attendee " + id + " not found.");
         }
     }
-    public void saveAttendee(AttendeeDetailWindow window, Attendee attendee) {
-        AttendeePrintView view = window.getParentView();
+    public void saveAttendee(AttendeePrintView view, Attendee attendee) {
         try {
             attendeeValidator.validate(attendee);
             attendee = attendeeRepository.save(attendee);
             view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
-            window.close();
             view.refresh();
         } catch (ValidationException e) {
             log.error("{} tried to save {} and got error {}",
-                    window.getCurrentUser(), attendee, e.getMessage());
+                    view.getCurrentUser(), attendee, e.getMessage());
             view.notifyError(e.getMessage());
         }
     }
 
-    public void saveAttendeeAndReprintBadge(Window window, Attendee attendee, User overrideUser) {
+    public void saveAttendeeAndReprintBadge(AttendeeDetailView view, Attendee attendee, User overrideUser) {
         try {
             if (view.currentUserHasRight("attendee_edit")) {
                 attendeeValidator.validate(attendee);        // Only validate fields if the user actually has the ability to edit them
@@ -113,7 +111,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             return;
         }
 
-        window.close();
         List<Attendee> attendeeList = new ArrayList<>();
         attendeeList.add(attendee);
         // If no override user, check permissions on the current user
@@ -139,7 +136,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         }
     }
 
-    public void saveAttendeeAndPrePrintBadge(Window window, Attendee attendee) {
+    public void saveAttendeeAndPrePrintBadge(AttendeeDetailView view, Attendee attendee) {
         try {
             if (view.currentUserHasRight("attendee_edit")) {
                 attendeeValidator.validate(attendee);        // Only validate fields if the user actually has the ability to edit them
@@ -155,7 +152,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             return;
         }
 
-        window.close();
         List<Attendee> attendeeList = new ArrayList<>();
         attendeeList.add(attendee);
 
@@ -178,7 +174,8 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
         if (overrideUser != null && overrideUser.checkPassword(password) && overrideUser.hasRight("reprint_badge")) {
             log.info("{} got reprint badges override from {}", view.getCurrentUsername(), overrideUser);
-            saveAttendeeAndReprintBadge(window, targets.get(0), overrideUser);
+//            saveAttendeeAndReprintBadge(window, targets.get(0), overrideUser);
+            throw new RuntimeException("Not implemented"); //TODO
         } else {
             view.notify("Bad username or password");
         }
@@ -309,9 +306,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     @Override
     public void overrideEditCancel(OverrideRequiredForEditWindow window) { window.close(); }
 
-    public void overrideEdit(AttendeeDetailWindow attendeeDetailWindow) {
-        view.showOverrideEditWindow(this, attendeeDetailWindow);
-    }
 
     public void addNote(AttendeeDetailWindow attendeeDetailWindow, String message) {
         // Handle adding a note. Make sure the note gets saveed to the database even if the AttendeeDetailWindow
@@ -320,7 +314,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         Attendee attendee = attendeeDetailWindow.getAttendee();
         log.info("{} added note \"{}\" to {}",
                 view.getCurrentUsername(),
-                message.replaceAll("(\\r|\\n)+", " "),
+                message.replaceAll("([\\r\\n])+", " "),
                 attendee);
         AttendeeHistory ah = new AttendeeHistory(view.getCurrentUser(), attendee, message);
         attendeeHistoryRepository.save(ah);

@@ -87,7 +87,7 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
         btnCancel = new Button("Cancel");
         btnEdit = new Button("Edit (Override)");
         btnEdit.addClickListener((Button.ClickListener) clickEvent -> {
-           handler.overrideEdit(this);
+//           handler.overrideEdit(this);
         });
 
         btnCheckIn = new Button("Check In");
@@ -103,28 +103,28 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
             btnSaveAndReprint = new Button("Reprint Badge (Override)");
         }
 
-        btnSave.addClickListener((Button.ClickListener) clickEvent -> {
-            try {
-                form.commit();
-                handler.saveAttendee(this, form.getAttendee());
-            } catch (FieldGroup.CommitException e) {
-                parentView.notifyError(e.getMessage());
-            }
-        });
+//        btnSave.addClickListener((Button.ClickListener) clickEvent -> {
+//            try {
+//                form.commit();
+//                handler.saveAttendee(this, form.getAttendee());
+//            } catch (FieldGroup.CommitException e) {
+//                parentView.notifyError(e.getMessage());
+//            }
+//        });
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee(this));
-        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent ->
-                handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
+//        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent ->
+//                handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
         checkInPopup = buildCheckInPopupView();
 
         btnPrePrintBadge = new Button("Pre-Print Badge");
-        btnPrePrintBadge.addClickListener((Button.ClickListener) clickEvent -> {
-            try {
-                form.commit();
-                handler.saveAttendeeAndPrePrintBadge(this, form.getAttendee());
-            } catch (FieldGroup.CommitException e) {
-                parentView.notifyError(e.getMessage());
-            }
-        });
+//        btnPrePrintBadge.addClickListener((Button.ClickListener) clickEvent -> {
+//            try {
+//                form.commit();
+//                handler.saveAttendeeAndPrePrintBadge(this, form.getAttendee());
+//            } catch (FieldGroup.CommitException e) {
+//                parentView.notifyError(e.getMessage());
+//            }
+//        });
 
         buttonBar.addComponent(btnSave);
         buttonBar.addComponent(btnEdit);

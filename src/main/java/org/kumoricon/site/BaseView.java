@@ -74,6 +74,14 @@ public class BaseView extends CssLayout implements View {
     }
 
     /**
+     * "Close" the current view, returning to whatever the parent is. For example, if the view
+     * open is "/order/1234/123", then calling close() should navigate to "/order/1234"
+     */
+    public void close() {
+        navigateTo("/");
+    }
+
+    /**
      * Refresh any data in the current view. Override this!
      */
     public void refresh() {

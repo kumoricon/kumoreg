@@ -37,6 +37,7 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
     private Button refresh = new Button("Refresh");
     private BeanItemContainer<Attendee> attendeeContainer = new BeanItemContainer<>(Attendee.class);
     private Table attendeeTable = new Table(null);
+    private String searchString;
 
     @PostConstruct
     public void init() {
@@ -70,8 +71,13 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
                 return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
             }
         });
-        attendeeTable.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
-                handler.showAttendee(this, (Integer) itemClickEvent.getItem().getItemProperty("id").getValue()));
+        attendeeTable.addStyleName("kumoHandPointer");
+
+        attendeeTable.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
+            navigateTo(AttendeeSearchByBadgeDetailView.VIEW_NAME +
+                    "/" + searchString +
+                    "/" + itemClickEvent.getItem().getItemProperty("id").getValue());
+                });
 
         attendeeTable.setSizeFull();
     }
@@ -97,6 +103,7 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
             Integer parameter = null;
             try {
                 parameter = Integer.parseInt(parameters);
+                searchString = parameters;
             } catch (NumberFormatException e) {
                 // Garbage input in the URL - treat it as null
             }

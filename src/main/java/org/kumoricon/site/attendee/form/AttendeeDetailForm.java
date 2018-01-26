@@ -74,7 +74,7 @@ public class AttendeeDetailForm extends GridLayout {
         setRows(10);
         setMargin(new MarginInfo(false, true, true, true));
         setSpacing(true);
-        setWidth("100%");
+        setWidth("80%");
         setColumnExpandRatio(0, 0);
         setColumnExpandRatio(1, 0);
         setColumnExpandRatio(2, 1);
