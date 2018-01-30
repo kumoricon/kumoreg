@@ -42,7 +42,8 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setSizeFull();
+        setWidth("100%");
+        setHeight("95%");
         HorizontalLayout header = new HorizontalLayout();
         header.setSpacing(true);
         badgeType.setPageLength(15);
@@ -79,7 +80,8 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
                     "/" + itemClickEvent.getItem().getItemProperty("id").getValue());
                 });
 
-        attendeeTable.setSizeFull();
+        attendeeTable.setWidth("100%");
+        attendeeTable.setHeight("90%");
     }
 
     public void afterAttendeeFetch(List<Attendee> attendees) {

@@ -161,11 +161,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         }
     }
 
-
-    public void cancelAttendee(AttendeeDetailWindow window) {
-        window.close();
-    }
-
     public AttendeeSearchView getView() { return view; }
     public void setView(AttendeeSearchView view) { this.view = view; }
 
@@ -179,11 +174,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         } else {
             view.notify("Bad username or password");
         }
-    }
-
-    @Override
-    public void overrideCancel(OverrideRequiredWindow window) {
-        window.close();
     }
 
     @Override

@@ -59,6 +59,10 @@ public class AttendeeSearchByBadgeDetailView extends AttendeeDetailView implemen
         handler.showAttendee(this, attendeeId);
     }
 
+    @Override
+    public String getRequiredRight() {
+        return REQUIRED_RIGHT;
+    }
 
     @Override
     public void close() {

@@ -111,7 +111,7 @@ public class AttendeeDetailWindow extends Window implements DetailFormHandler, C
 //                parentView.notifyError(e.getMessage());
 //            }
 //        });
-        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee(this));
+//        btnCancel.addClickListener((Button.ClickListener) clickEvent -> handler.cancelAttendee(this));
 //        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent ->
 //                handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
         checkInPopup = buildCheckInPopupView();

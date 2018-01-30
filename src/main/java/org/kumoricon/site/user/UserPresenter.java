@@ -3,6 +3,7 @@ package org.kumoricon.site.user;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.role.RoleRepository;
 import org.kumoricon.model.user.User;
+import org.kumoricon.model.user.UserFactory;
 import org.kumoricon.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +53,12 @@ public class UserPresenter {
     public List<Role> getAvailableRoles() { return roleRepository.findAll(); }
 
     public void showUser(UserEditView view, String userId) {
-        if (userId != null) {
+        if (userId != null && !userId.trim().isEmpty()) {
             log.info("{} viewed user {}", view.getCurrentUsername(), userId);
             User user = userRepository.findOne(Integer.parseInt(userId));
             view.showUser(user, getAvailableRoles());
         } else {
-            view.showUser(new User(), getAvailableRoles());
+            view.showUser(UserFactory.newUser(), getAvailableRoles());
         }
 
     }

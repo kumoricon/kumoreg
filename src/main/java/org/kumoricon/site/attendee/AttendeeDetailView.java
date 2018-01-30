@@ -57,10 +57,20 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         btnSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
 
-        
+        setButtonVisibility();
+
         form.setAllFieldsButCheckInDisabled();
         addComponents(form, buttons);
 
+    }
+
+    private void setButtonVisibility() {
+        btnSave.setVisible(currentUserHasRight("attendee_edit"));
+        btnEdit.setVisible(currentUserHasRight("attendee_edit_with_override") && !currentUserHasRight("attendee_edit"));
+        btnCheckIn.setVisible(currentUserHasRight("pre_reg_check_in"));
+        btnPrePrintBadge.setVisible(currentUserHasRight("pre_print_badges"));
+        btnSaveAndReprint.setVisible(currentUserHasRight("reprint_badge") || currentUserHasRight("reprint_badge_with_override"));
+        btnAddNote.setVisible(currentUserHasRight("attendee_add_note"));
     }
 
 

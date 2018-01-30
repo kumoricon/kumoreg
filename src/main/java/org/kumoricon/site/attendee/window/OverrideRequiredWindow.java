@@ -48,7 +48,7 @@ public class OverrideRequiredWindow extends Window {
 
         override.addClickListener((Button.ClickListener) clickEvent ->
                 handler.overrideLogin(this, username.getValue(), password.getValue(), targets));
-        cancel.addClickListener((Button.ClickListener) clickEvent -> handler.overrideCancel(this));
+        cancel.addClickListener((Button.ClickListener) clickEvent -> close());
 
         verticalLayout.addComponent(horizontalLayout);
         username.focus();

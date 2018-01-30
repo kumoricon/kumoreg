@@ -133,7 +133,7 @@ class UserEditView extends BaseView implements View {
     }
 
     void showUser(User user, List<Role> availableRoles) {
-        role.setContainerDataSource(new BeanItemContainer<>(Role.class, handler.getAvailableRoles()));
+        role.setContainerDataSource(new BeanItemContainer<>(Role.class, availableRoles));
         role.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         role.setItemCaptionPropertyId("name");
         userBeanFieldGroup.setItemDataSource(user);

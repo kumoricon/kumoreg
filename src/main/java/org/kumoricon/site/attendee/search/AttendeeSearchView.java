@@ -41,7 +41,8 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setSizeFull();
+        setWidth("100%");
+        setHeight("95%");
 
         attendeeBeanList = new BeanItemContainer<>(Attendee.class, new ArrayList<>());
 
@@ -55,7 +56,8 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
 
         btnSearch = new Button("Search");
         tblResult = new Table();
-        tblResult.setSizeFull();
+        tblResult.setWidth("95%");
+        tblResult.setHeight("90%");
         tblResult.setContainerDataSource(attendeeBeanList);
         tblResult.setVisibleColumns("firstName", "lastName", "legalFirstName", "legalLastName", "fanName",
                 "badgeNumber", "age", "zip", "checkedIn");

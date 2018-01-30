@@ -60,6 +60,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
     public void init() {
         FormLayout orderInfo = new FormLayout();
         orderId.setWidth(400, Unit.PIXELS);
+        orderId.setVisible(false);
         orderInfo.addComponent(orderId);
         addComponent(orderInfo);
 
