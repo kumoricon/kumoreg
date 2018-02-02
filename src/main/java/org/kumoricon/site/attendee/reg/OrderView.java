@@ -55,6 +55,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
     private BeanItemContainer<Payment> paymentBeanList;
     private Button addPayment = new Button("Take Payment");
     private Order currentOrder;
+    String orderIdNumber;
 
     @PostConstruct
     public void init() {
@@ -81,8 +82,10 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
                 });
 
         orderInfo.addComponent(attendeeList);
-        attendeeList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent ->
-                handler.selectAttendee(this, (Attendee)itemClickEvent.getItemId()));
+        attendeeList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
+            Attendee attendee = (Attendee)itemClickEvent.getItemId();
+            navigateTo(AttendeeRegDetailView.VIEW_NAME + "/" + orderIdNumber + "/" + attendee.getId());
+        });
 
         orderInfo.addComponent(addAttendee);
         orderInfo.addComponent(orderTotal);
@@ -100,7 +103,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
         orderInfo.addComponent(notes);
         notes.setSizeFull();
 
-        addAttendee.addClickListener((Button.ClickListener) clickEvent -> handler.addNewAttendee(this));
+        addAttendee.addClickListener((Button.ClickListener) clickEvent -> navigateTo(AttendeeRegDetailView.VIEW_NAME + "/" + orderIdNumber + "/" + "new"));
         addPayment.addClickListener((Button.ClickListener) clickEvent -> showPaymentWindow());
         orderComplete.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney(this));
         cancel.addClickListener((Button.ClickListener) clickEvent -> showConfirmCancelWindow());
@@ -117,8 +120,8 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
             // If no parameters, create a new order and navigate to it
             handler.createNewOrder(this);
         } else {
-            String searchString = viewChangeEvent.getParameters();
-            handler.showOrder(this, Integer.parseInt(searchString));
+            orderIdNumber = viewChangeEvent.getParameters();
+            handler.showOrder(this, Integer.parseInt(orderIdNumber));
         }
     }
 
@@ -182,6 +185,15 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
             addPayment.setEnabled(true);
         }
 
+        if (order.getPaid()) {
+            attendeeList.setEnabled(false);
+            orderComplete.setEnabled(false);
+            addAttendee.setEnabled(false);
+            addPayment.setEnabled(false);
+            paymentList.setEnabled(false);
+            notes.setEnabled(false);
+        }
+
         if (!currentUserHasRight("manage_orders")) {
             setEnabled(!order.getPaid());   // Disable editing if the order has been paid
         }
@@ -193,20 +205,6 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
 
-    public void showCreditCardAuthWindow() {
-        CreditCardAuthWindow creditCardAuthWindow = new CreditCardAuthWindow(this, handler);
-        showWindow(creditCardAuthWindow);
-    }
-
-    public void showAttendeeDetail(Attendee attendee, List<Badge> availableBadgeTypes) {
-        AttendeeWindow attendeeWindow = new AttendeeWindow(this, handler);
-        AttendeeDetailForm form = attendeeWindow.getDetailForm();
-        form.setAvailableBadges(availableBadgeTypes);
-        form.show(attendee);
-        form.setManualPriceEnabled(currentUserHasRight("attendee_override_price"));
-        form.setParentFormReceivedVisible(true);
-        showWindow(attendeeWindow);
-    }
 
     @Override
     public void showPrintBadgeWindow(List<Attendee> attendeeList) {

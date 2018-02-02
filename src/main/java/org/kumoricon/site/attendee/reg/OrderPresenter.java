@@ -81,6 +81,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         } else {
             log.error("{} tried to view order {} and it was not found.", view.getCurrentUsername(), id);
             view.notifyError("Error: order " + id + " not found.");
+            view.close();
         }
     }
 
@@ -134,10 +135,15 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         view.navigateTo("");
     }
 
-    public void addNewAttendee(OrderView view) {
+    public void addNewAttendee(AttendeeRegDetailView view, int orderId) {
         log.info("{} created new attendee", view.getCurrentUsername());
         Attendee newAttendee = new Attendee();
-        Order order = view.getOrder();
+        Order order = orderRepository.findOne(orderId);
+
+        if (order == null) {
+            view.notifyError(String.format("Order %s not found", orderId));
+            view.close();
+        }
 
         newAttendee.setBadgeNumber(generateBadgeNumber(view));
         newAttendee.setOrder(order);
@@ -150,7 +156,14 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             newAttendee.setEmergencyContactPhone(lastAttendee.getEmergencyContactPhone());
         }
 
-        selectAttendee(view, newAttendee);
+        List<Badge> badgeTypesUserCanSee = new ArrayList<>();
+        for (Badge badge : badgeRepository.findByVisibleTrue()) {
+            if (badge.getRequiredRight() == null || view.currentUserHasRight(badge.getRequiredRight())) {
+                badgeTypesUserCanSee.add(badge);
+            }
+        }
+
+        view.showAttendee(newAttendee, badgeTypesUserCanSee);
     }
 
     public void addAttendeeToOrder(OrderView view, Attendee attendee) {
@@ -238,19 +251,8 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         }
     }
 
-    public void selectAttendee(OrderView view, Attendee attendee) {
-        log.info("{} viewed attendee {}", view.getCurrentUsername(), attendee);
-        List<Badge> badgeTypesUserCanSee = new ArrayList<>();
-        for (Badge badge : badgeRepository.findByVisibleTrue()) {
-            if (badge.getRequiredRight() == null || view.currentUserHasRight(badge.getRequiredRight())) {
-                badgeTypesUserCanSee.add(badge);
-            }
-        }
-        view.showAttendeeDetail(attendee, badgeTypesUserCanSee);
-    }
-
     @Transactional
-    String generateBadgeNumber(OrderView view) {
+    String generateBadgeNumber(AttendeeRegDetailView view) {
         User user = userRepository.findOne(view.getCurrentUser().getId());
         String badgeNumber = String.format("%1S%2$05d", user.getBadgePrefix(), user.getNextBadgeNumber());
 

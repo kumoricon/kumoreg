@@ -35,15 +35,15 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     protected Integer attendeeId;
 
-    private AttendeeDetailForm form = new AttendeeDetailForm(this);
-    private Button btnSave;
-    private Button btnCancel;
-    private Button btnCheckIn;
-    private Button btnSaveAndReprint;
-    private Button btnPrePrintBadge;
-    private Button btnAddNote;
-    private Button btnEdit;
-    private PopupView checkInPopup;
+    protected AttendeeDetailForm form = new AttendeeDetailForm(this);
+    protected Button btnSave;
+    protected Button btnCancel;
+    protected Button btnCheckIn;
+    protected Button btnSaveAndReprint;
+    protected Button btnPrePrintBadge;
+    protected Button btnAddNote;
+    protected Button btnEdit;
+    protected PopupView checkInPopup;
 
     @Autowired
     protected AttendeeSearchPresenter handler;
@@ -64,7 +64,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     }
 
-    private void setButtonVisibility() {
+    protected void setButtonVisibility() {
         btnSave.setVisible(currentUserHasRight("attendee_edit"));
         btnEdit.setVisible(currentUserHasRight("attendee_edit_with_override") && !currentUserHasRight("attendee_edit"));
         btnCheckIn.setVisible(currentUserHasRight("pre_reg_check_in"));
@@ -74,19 +74,9 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
     }
 
 
-    public void afterSuccessfulFetch(Attendee attendee) {
-        form.show(attendee);
-    }
-
-
     @Override
     public void refresh() {
         handler.showAttendee(this, attendeeId);
-    }
-
-
-    public void setHandler(AttendeeSearchPresenter presenter) {
-        this.handler = presenter;
     }
 
     public void showAttendee(Attendee attendee, List<Badge> all) {
@@ -176,7 +166,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
     }
 
 
-    private PopupView buildCheckInPopupView() {
+    protected PopupView buildCheckInPopupView() {
         com.vaadin.v7.ui.CheckBox attendeeInformationVerified = new com.vaadin.v7.ui.CheckBox("Information Verified");
         com.vaadin.v7.ui.CheckBox parentalConsentFormReceived = new com.vaadin.v7.ui.CheckBox("Parental Consent Form Received");
         Button btnInfoReceived = new Button("Save");
@@ -202,7 +192,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     }
 
-    private void showAddNoteWindow() {
+    protected void showAddNoteWindow() {
 
     }
 

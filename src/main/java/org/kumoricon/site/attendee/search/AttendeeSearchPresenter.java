@@ -2,10 +2,7 @@ package org.kumoricon.site.attendee.search;
 
 import com.vaadin.ui.Window;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.model.attendee.AttendeeHistory;
-import org.kumoricon.model.attendee.AttendeeHistoryRepository;
-import org.kumoricon.model.attendee.AttendeeRepository;
+import org.kumoricon.model.attendee.*;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
@@ -76,13 +73,13 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             dView.notify("Error: attendee " + id + " not found.");
         }
     }
-    public void saveAttendee(AttendeePrintView view, Attendee attendee) {
+    public void saveAttendee(AttendeeDetailView view, Attendee attendee) {
         try {
             attendeeValidator.validate(attendee);
             attendee = attendeeRepository.save(attendee);
             view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
-            view.refresh();
+            view.close();
         } catch (ValidationException e) {
             log.error("{} tried to save {} and got error {}",
                     view.getCurrentUser(), attendee, e.getMessage());
