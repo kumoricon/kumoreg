@@ -35,7 +35,7 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = OrderView.VIEW_NAME)
-public class OrderView extends BaseView implements View, AttendeePrintView, PaymentHandler {
+public class OrderView extends BaseView implements View, AttendeePrintView {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "at_con_registration";
 
@@ -74,12 +74,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
         paymentBeanList = new BeanItemContainer<>(Payment.class, new ArrayList<>());
         paymentList.setContainerDataSource(paymentBeanList);
         paymentList.setWidth(500, Unit.PIXELS);
-        paymentList.addStyleName("kumoHandPointer");
         paymentList.setPageLength(3);
-        paymentList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
-                    BeanItem b = (BeanItem)itemClickEvent.getItem();
-                    showPaymentWindow((Payment)b.getBean());
-                });
 
         orderInfo.addComponent(attendeeList);
         attendeeList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
@@ -104,7 +99,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
         notes.setSizeFull();
 
         addAttendee.addClickListener((Button.ClickListener) clickEvent -> navigateTo(AttendeeRegDetailView.VIEW_NAME + "/" + orderIdNumber + "/" + "new"));
-        addPayment.addClickListener((Button.ClickListener) clickEvent -> showPaymentWindow());
+        addPayment.addClickListener((Button.ClickListener) clickEvent -> navigateTo(OrderPaymentView.VIEW_NAME + "/" + orderIdNumber + "/payment"));
         orderComplete.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney(this));
         cancel.addClickListener((Button.ClickListener) clickEvent -> showConfirmCancelWindow());
 
@@ -125,17 +120,6 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
         }
     }
 
-    private void showPaymentWindow(Payment payment) {
-        PaymentWindow window = new PaymentWindow(this, payment);
-        showWindow(window);
-    }
-
-    private void showPaymentWindow() {
-        BigDecimal total = BigDecimal.valueOf(Double.parseDouble(orderTotal.getValue()));
-        BigDecimal paid = BigDecimal.valueOf(Double.parseDouble(paymentTotal.getValue()));
-        PaymentWindow window = new PaymentWindow(this, total.subtract(paid).toString());
-        showWindow(window);
-    }
 
     private void enableFields(boolean enable) {
         addAttendee.setEnabled(enable);
@@ -236,23 +220,4 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
         WarningWindow window = new WarningWindow("This person matches a name on the attendee blacklist");
         showWindow(window);
     }
-
-    public void addPayment(PaymentWindow window, Payment payment) {
-        try {
-            handler.savePayment(this, payment);
-            window.close();
-        } catch (ValueException ex) {
-            notifyError(ex.getMessage());
-        }
-    }
-
-    public void deletePayment(PaymentWindow window, Payment payment) {
-        try {
-            handler.deletePayment(this, payment);
-            window.close();
-        } catch (Exception ex) {
-            notifyError(ex.getMessage());
-        }
-    }
-
 }

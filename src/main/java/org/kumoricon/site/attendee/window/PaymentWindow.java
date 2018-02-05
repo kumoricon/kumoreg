@@ -79,11 +79,6 @@ public class PaymentWindow extends Window {
         }
     }
 
-    public PaymentWindow(PaymentHandler handler, String amount) {
-        this(handler);
-        this.amount.setValue(amount);
-    }
-
     public PaymentWindow(PaymentHandler handler) {
         super("Payment");
         this.handler = handler;
@@ -99,7 +94,7 @@ public class PaymentWindow extends Window {
         setModal(true);
         setClosable(true);
         center();
-        setWidth(500, Unit.PIXELS);
+        setWidth(550, Unit.PIXELS);
     }
 
     private void buildContents() {

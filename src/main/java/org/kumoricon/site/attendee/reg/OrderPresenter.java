@@ -117,13 +117,13 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         view.afterSuccessfulFetch(saved);
     }
 
-    public void deletePayment(OrderView view, Payment payment) {
-        Order order = view.getOrder();
+    public void deletePayment(OrderPaymentView view, int orderId, Payment payment) {
+        Order order = orderRepository.findOne(orderId);
         log.info("{} removed payment {} from {}", view.getCurrentUsername(), payment, order);
         order.removePayment(payment);
         paymentRepository.delete(payment);
         Order saved = orderRepository.save(order);
-        view.afterSuccessfulFetch(saved);
+        view.showPayments(saved);
     }
 
     public void cancelOrder(OrderView view) {
@@ -305,5 +305,13 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         log.info("{} printing badge(s) for {} (reprint during order)",
                 printBadgeWindow.getParentView().getCurrentUser(), attendeeList);
         printBadges(printBadgeWindow.getParentView(), attendeeList);
+    }
+
+    public void showPayment(OrderPaymentView view, Integer orderId) {
+        log.info("{} viewed payment info for {}",
+            view.getCurrentUser(),
+            orderId);
+        Order order = orderRepository.findOne(orderId);
+        view.showPayments(order);
     }
 }
