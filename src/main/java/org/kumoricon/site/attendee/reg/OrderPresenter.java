@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import sun.security.validator.ValidatorException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -73,11 +72,11 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         view.navigateTo(OrderView.VIEW_NAME + "/" + order.getId());
     }
 
-    public void showOrder(OrderView view, int id) {
+    public void showOrder(PaymentView view, int id) {
         Order order = orderRepository.findOne(id);
         if (order != null) {
             log.info("{} viewed order {}", view.getCurrentUsername(), order);
-            view.afterSuccessfulFetch(order);
+            view.showOrder(order);
         } else {
             log.error("{} tried to view order {} and it was not found.", view.getCurrentUsername(), id);
             view.notifyError("Error: order " + id + " not found.");
@@ -85,18 +84,12 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         }
     }
 
-    public void savePayment(OrderView view, Payment payment) {
-        Order order = view.getOrder();
-
+    public void savePayment(PaymentView view, Order order, Payment payment) throws ValidationException {
         if (Payment.PaymentType.PREREG.equals(payment.getPaymentType()) && !view.currentUserHasRight("import_pre_reg_data")) {
             throw new ValueException("Only users with import_pre_reg_data right can select the PreReg payment type");
         }
-        try {
-            PaymentValidator.validate(payment);
-        } catch (ValidationException e) {
-            view.notify(e.getMessage());
-            throw new ValueException(e.getMessage());
-        }
+        PaymentValidator.validate(payment);
+
         // Only update user, time and location if they're null - otherwise someone could be saving
         // changes to an existing payment
         if (payment.getPaymentTakenBy() == null) {
@@ -114,16 +107,17 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         log.info("{} saved payment {} to {}", view.getCurrentUsername(), payment, order);
         order.addPayment(payment);
         Order saved = orderRepository.save(order);
-        view.afterSuccessfulFetch(saved);
+        // TODO: If order paid, navigate to print badges screen
     }
 
-    public void deletePayment(OrderPaymentView view, int orderId, Payment payment) {
+    public void deletePayment(PaymentView view, int orderId, Payment payment) {
         Order order = orderRepository.findOne(orderId);
         log.info("{} removed payment {} from {}", view.getCurrentUsername(), payment, order);
+
         order.removePayment(payment);
-        paymentRepository.delete(payment);
+        payment.setOrder(null);
         Order saved = orderRepository.save(order);
-        view.showPayments(saved);
+        paymentRepository.deleteById(payment.getId());
     }
 
     public void cancelOrder(OrderView view) {
@@ -184,7 +178,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             }
         }
         order = orderRepository.save(order);
-        view.afterSuccessfulFetch(order);
+        view.showOrder(order);
 
     }
 
@@ -210,7 +204,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             Order result = orderRepository.save(order);
             attendeeRepository.deleteById(attendee.getId());
             view.notify(name + " deleted");
-            view.afterSuccessfulFetch(result);
+            view.showOrder(result);
         }
     }
 
@@ -312,6 +306,6 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             view.getCurrentUser(),
             orderId);
         Order order = orderRepository.findOne(orderId);
-        view.showPayments(order);
+        view.showOrder(order);
     }
 }

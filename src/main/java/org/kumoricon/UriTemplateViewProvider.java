@@ -69,8 +69,6 @@ public class UriTemplateViewProvider extends SpringViewProvider implements Seria
 
         for (ViewInfo view : views) {
             if (!view.getViewName().isEmpty() && new UriTemplate(view.getViewName()).matches(viewAndParameters)) {
-                LOGGER.info("getViewName template match - [{}] is a valid view, match with {}", view.getViewName(),
-                        viewAndParameters);
                 return viewAndParameters;// view.getViewName();
             }
         }
@@ -80,11 +78,8 @@ public class UriTemplateViewProvider extends SpringViewProvider implements Seria
         String viewPart = viewAndParameters;
         while ((lastSlash = viewPart.lastIndexOf('/')) > -1) {
             viewPart = viewPart.substring(0, lastSlash);
-            LOGGER.info("getViewName Checking if [{}] is a valid view", viewPart);
             for (ViewInfo view : views) {
-                LOGGER.info("viewName: {}", view.getViewName());
                 if (view.getViewName().equals(viewPart)) {
-                    LOGGER.info("getViewName prefix match - [{}] is a valid view", view.getViewName());
                     return view.getViewName();
                 }
             }
@@ -113,8 +108,6 @@ public class UriTemplateViewProvider extends SpringViewProvider implements Seria
             // perform template matching
             for (String name : viewNames) {
                 if (!name.isEmpty() && new UriTemplate(name).matches(viewName)) {
-                    LOGGER.info("getAllowedViewsForCurrentUI template match - [{}] is a valid view, match with {}",
-                            name, viewName);
                     allViews = new HashSet<>();
                     // add the matching bean names
                     allViews.addAll(getViewNameToBeanNamesMap().get(name));

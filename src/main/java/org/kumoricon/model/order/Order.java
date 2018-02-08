@@ -8,10 +8,8 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.user.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -139,6 +137,14 @@ public class Order extends Record {
             return String.format("[Order %s: %s]", id, orderId);
         } else {
             return String.format("[Order: %s]", orderId);
+        }
+    }
+
+    public BigDecimal getBalanceDue() {
+        if (getTotalPaid().compareTo(getTotalAmount()) < 0) {
+            return getTotalAmount().subtract(getTotalPaid());
+        } else {
+            return BigDecimal.ZERO;
         }
     }
 }

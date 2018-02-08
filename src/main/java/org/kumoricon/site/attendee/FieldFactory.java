@@ -68,6 +68,25 @@ public class FieldFactory {
         return textField;
     }
 
+    /**
+     * Returns a field that accepts digits 0-9 and "." Shows empty for null values.
+     * @param name Field name
+     * @param tabIndex Tab index
+     * @return TextField
+     */
+    public static TextField createDollarField(String name, int tabIndex) {
+        TextField textField = createDollarField(name);
+        textField.setTabIndex(tabIndex);
+        return textField;
+    }
+
+    public static TextField createDollarField(String name) {
+        TextField textField = createTextField(name);
+        textField.addValidator(new RegexpValidator("\\$?[0-9]+?\\.?[0-9]?[0-9]?", "This is not a number"));
+        return textField;
+    }
+
+
 
     /**
      * Returns a field that will automatically capitalize names on blur (tab-out). Shows empty for null values.

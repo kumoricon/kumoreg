@@ -2,7 +2,6 @@ package org.kumoricon.site.attendee.reg;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.navigator.View;
@@ -10,18 +9,13 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.v7.ui.*;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.FieldFactory;
-import org.kumoricon.site.attendee.PaymentHandler;
-import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.window.ConfirmationWindow;
-import org.kumoricon.site.attendee.window.PaymentWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.site.attendee.window.WarningWindow;
 import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
@@ -35,7 +29,7 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = OrderView.VIEW_NAME)
-public class OrderView extends BaseView implements View, AttendeePrintView {
+public class OrderView extends BaseView implements View, AttendeePrintView, PaymentView {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "at_con_registration";
 
@@ -134,7 +128,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView {
         return currentOrder;
     }
 
-    public void afterSuccessfulFetch(Order order) {
+    public void showOrder(Order order) {
         Object[] sortBy = {attendeeList.getSortContainerPropertyId()};
         boolean[] sortOrder = {attendeeList.isSortAscending()};
 

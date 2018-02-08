@@ -6,6 +6,7 @@ import org.hibernate.annotations.NotFoundAction;
 import org.kumoricon.model.Record;
 import org.kumoricon.model.session.Session;
 import org.kumoricon.model.user.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

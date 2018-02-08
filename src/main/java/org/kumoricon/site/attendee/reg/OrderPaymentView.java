@@ -8,9 +8,9 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
+import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.PaymentHandler;
-import org.kumoricon.site.attendee.window.PaymentWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 
@@ -19,7 +19,7 @@ import java.util.Map;
 
 @ViewScope
 @SpringView(name = OrderPaymentView.TEMPLATE)
-public class OrderPaymentView extends BaseView implements View, PaymentHandler {
+public class OrderPaymentView extends BaseView implements View, PaymentHandler, PaymentView {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "at_con_registration";
 
@@ -36,6 +36,7 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler {
     private Grid<Payment> paymentGrid = new Grid<>();
 
     protected Integer orderId;
+    protected Order order;
     private OrderPresenter orderPresenter;
 
     @Autowired
@@ -54,8 +55,7 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler {
         paymentGrid.addStyleName("kumoHandPointer");
         paymentGrid.setSelectionMode(Grid.SelectionMode.NONE);
         paymentGrid.addItemClickListener(a -> {
-            PaymentWindow window = new PaymentWindow(this, a.getItem());
-            showWindow(window);
+            navigateTo(OrderPaymentRecordView.VIEW_NAME + "/" + orderId + "/payment/" + a.getItem().getId());
         });
 
         leftSide.addComponents(orderTotal, amountPaid, remaining, paymentGrid);
@@ -86,6 +86,9 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler {
             navigateTo("/");
         }
 
+        btnTakeCash.addClickListener(c -> navigateTo(OrderPaymentCashView.VIEW_NAME + "/" + this.orderId + "/payment/addCash"));
+        btnTakeCredit.addClickListener(c -> navigateTo(OrderPaymentCreditView.VIEW_NAME + "/" + this.orderId + "/payment/addCredit"));
+        btnTakeCheck.addClickListener(c -> navigateTo(OrderPaymentCheckView.VIEW_NAME + "/" + this.orderId + "/payment/addCheck"));
         orderPresenter.showPayment(this, orderId);
     }
 
@@ -113,7 +116,8 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler {
         return REQUIRED_RIGHT;
     }
 
-    public void showPayments(Order order) {
+    public void showOrder(Order order) {
+        this.order = order;
         orderTotal.setValue(String.format("$%s", order.getTotalAmount()));
         amountPaid.setValue(String.format("$%s", order.getTotalPaid()));
         remaining.setValue(String.format("$%s", order.getTotalAmount().subtract(order.getTotalPaid())));
@@ -125,13 +129,23 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler {
         btnTakeCheck.setEnabled(!paidInFull);
     }
 
-    @Override
-    public void addPayment(PaymentWindow window, Payment payment) {
-
+    public void addPayment(Payment payment) {
+        payment.setOrder(order);
+        try {
+            orderPresenter.savePayment(this, order, payment);
+            close();
+        } catch (ValidationException e) {
+            notifyError(e.getMessage());
+        }
     }
 
     @Override
-    public void deletePayment(PaymentWindow window, Payment payment) {
+    public void deletePayment(Payment payment) {
         orderPresenter.deletePayment(this, orderId, payment);
     }
+
+    Order getOrder() {
+        return this.order;
+    }
+
 }
