@@ -1,6 +1,7 @@
 Change Log
 ----------------
 - Version 3.0.1 (Pending)
+    - Moved most windows to their own views
 
 - Version 3.0.0 (12/29/2017)
     - Layout change for speed (Base on CSSLayout)
@@ -9,7 +10,7 @@ Change Log
     - Trainingmode defaults to false
     - Minor UI corrections
     - Fixed bug where adding printers through UI would fail after repeated use
-    - _UI migration to individual views still needed_
+    - UI migration to individual views still needed_
 
 - Version 2.0.8 (10/28/2017)
     - Day badges use age range color on bottom of badge. Fixed color of font
