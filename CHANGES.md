@@ -2,6 +2,8 @@ Change Log
 ----------------
 - Version 3.0.1 (Pending)
     - Moved most windows to their own views
+    - Require both phone number and email address when registering at con
+    
 
 - Version 3.0.0 (12/29/2017)
     - Layout change for speed (Base on CSSLayout)

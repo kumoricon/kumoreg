@@ -11,7 +11,7 @@
       "description": "Badge format to use - 'lite' or 'full'."
     },
     {
-      "name": "kumoreg.validation.attendee.requirePhoneOrEmail",
+      "name": "kumoreg.validation.attendee.requirePhoneAndEmail",
       "type": "java.lang.Boolean",
       "description": "Whether to require attendees to have either a phone or an email (default true)."
     },

@@ -40,7 +40,7 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField legalLastName = createNameField("Legal Last Name", 4);
     private TextField fanName = createTextField("Fan Name", 5);
     private TextField badgeNumber = createTextField("Badge Number", 6);
-    private TextField phoneNumber = createPhoneNumberField("Phone* (phone OR e-mail required)", 7);
+    private TextField phoneNumber = createPhoneNumberField("Phone*)", 7);
     private DateField birthDate = createDateField("", 8);
     private TextField email = createTextField("Email*", 9);
     private TextField zip = createTextField("Zip", 10);

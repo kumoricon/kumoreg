@@ -12,7 +12,7 @@ import java.time.LocalDate;
  */
 @Service
 public class AttendeeValidator extends Validator {
-    @Value("${kumoreg.validation.attendee.requirePhoneOrEmail:true}")
+    @Value("${kumoreg.validation.attendee.requirePhoneAndEmail:true}")
     protected Boolean requirePhoneAndEmail;
 
     /**
@@ -23,9 +23,13 @@ public class AttendeeValidator extends Validator {
     public void validate(Attendee a) throws ValidationException {
         if (isNullOrEmpty(a.getFirstName())) { throw new ValidationException("First name is required"); }
         if (isNullOrEmpty(a.getLastName())) { throw new ValidationException("Last name is required"); }
-        if (requirePhoneAndEmail && isNullOrEmpty(a.getPhoneNumber()) && isNullOrEmpty(a.getEmail())) {
-            throw new ValidationException("Phone Number or Email is required");
+        if (requirePhoneAndEmail && isNullOrEmpty(a.getPhoneNumber())) {
+            throw new ValidationException("Phone Number is required");
         }
+        if (requirePhoneAndEmail && isNullOrEmpty(a.getEmail())) {
+            throw new ValidationException("Email is required");
+        }
+
         if (a.getPaidAmount() == null || a.getPaidAmount().compareTo(BigDecimal.ZERO) < 0) {
             throw new ValidationException("Paid amount may not be negative");
         }
