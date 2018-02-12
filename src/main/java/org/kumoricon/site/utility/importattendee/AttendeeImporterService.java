@@ -242,6 +242,7 @@ class AttendeeImporterService {
                 Attendee attendee = new Attendee();
                 attendee.setFirstName(record.firstName);
                 attendee.setLastName(record.lastName);
+                attendee.setNameIsLegalName(record.nameOnIdIsPreferredName);
                 attendee.setLegalFirstName(record.firstNameOnId);
                 attendee.setLegalLastName(record.lastNameOnId);
                 attendee.setFanName(record.fanName);

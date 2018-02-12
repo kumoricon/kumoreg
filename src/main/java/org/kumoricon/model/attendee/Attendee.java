@@ -20,6 +20,7 @@ public class Attendee extends Record {
     private String lastName;
     private String legalFirstName;
     private String legalLastName;
+    private Boolean nameIsLegalName;
     private String fanName;                   // Fan Name (optional)
     @Column(unique=true)
     private String badgeNumber;
@@ -68,6 +69,7 @@ public class Attendee extends Record {
         this.parentIsEmergencyContact = false;
         this.history = new HashSet<>();
         this.badgePrePrinted = false;
+        this.nameIsLegalName = true;
     }
 
 
@@ -107,6 +109,14 @@ public class Attendee extends Record {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public Boolean getNameIsLegalName() {
+        return nameIsLegalName;
+    }
+
+    public void setNameIsLegalName(Boolean nameIsLegalName) {
+        this.nameIsLegalName = nameIsLegalName;
+    }
 
     public LocalDate getBirthDate() { return birthDate; }
     public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }

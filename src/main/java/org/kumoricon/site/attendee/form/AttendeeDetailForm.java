@@ -38,9 +38,10 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField lastName = createNameField("Last Name*", 2);
     private TextField legalFirstName = createNameField("Legal First Name", 3);
     private TextField legalLastName = createNameField("Legal Last Name", 4);
+    private CheckBox nameIsLegalName = createCheckBox("Name is legal name", 5);
     private TextField fanName = createTextField("Fan Name", 5);
     private TextField badgeNumber = createTextField("Badge Number", 6);
-    private TextField phoneNumber = createPhoneNumberField("Phone*)", 7);
+    private TextField phoneNumber = createPhoneNumberField("Phone*", 7);
     private DateField birthDate = createDateField("", 8);
     private TextField email = createTextField("Email*", 9);
     private TextField zip = createTextField("Zip", 10);
@@ -199,6 +200,29 @@ public class AttendeeDetailForm extends GridLayout {
         addComponent(hist, 2, 0, 2, 6);
     }
 
+    public void hideLegalNameFields() {
+        removeComponent(legalFirstName);
+
+        addComponent(nameIsLegalName, 0, 1);
+        nameIsLegalName.setVisible(false);
+
+        nameIsLegalName.setVisible(true);
+        nameIsLegalName.setValue(true);
+        nameIsLegalName.setImmediate(true);
+        legalFirstName.setVisible(false);
+        legalLastName.setVisible(false);
+        nameIsLegalName.addValueChangeListener(e -> {
+            removeComponent(nameIsLegalName);
+            addComponent(legalFirstName, 0, 1);
+            legalFirstName.setVisible(true);
+            legalLastName.setVisible(true);
+        });
+    }
+
+    public void hideFanNameField() {
+        fanName.setVisible(false);
+    }
+
     public void show(Attendee attendee) {
         attendeeBean = new BeanItem<>(attendee);
         fieldGroup.setItemDataSource(attendeeBean);
@@ -208,6 +232,9 @@ public class AttendeeDetailForm extends GridLayout {
             } catch(ServiceException e) {
                 Notification.show(e.getMessage());
             }
+        }
+        if (attendee.getNameIsLegalName()) {
+            hideLegalNameFields();
         }
         badge.select(attendee.getBadge());
         setMinorFieldsEnabled(attendee.isMinor());

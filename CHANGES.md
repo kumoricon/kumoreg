@@ -3,7 +3,9 @@ Change Log
 - Version 3.0.1 (Pending)
     - Moved most windows to their own views
     - Require both phone number and email address when registering at con
-    
+    - Don't show Fan Name field when registering at con
+    - Hide legal first name and legal last name by default, added checkbox to display
+      those fields
 
 - Version 3.0.0 (12/29/2017)
     - Layout change for speed (Base on CSSLayout)
@@ -12,7 +14,7 @@ Change Log
     - Trainingmode defaults to false
     - Minor UI corrections
     - Fixed bug where adding printers through UI would fail after repeated use
-    - UI migration to individual views still needed_
+    - UI migration to individual views still needed
 
 - Version 2.0.8 (10/28/2017)
     - Day badges use age range color on bottom of badge. Fixed color of font

@@ -73,6 +73,7 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
         }
         form.setAvailableBadges(all);
         form.show(attendee);
+        form.hideFanNameField();
     }
 
 
