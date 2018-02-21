@@ -135,6 +135,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
             try {
                 form.commit();
                 handler.saveAttendee(this, form.getAttendee());
+                close();
             } catch (FieldGroup.CommitException e) {
                 notifyError(e.getMessage());
             }

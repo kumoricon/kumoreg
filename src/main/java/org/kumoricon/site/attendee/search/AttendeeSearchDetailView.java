@@ -41,6 +41,11 @@ public class AttendeeSearchDetailView extends AttendeeDetailView implements View
     }
 
     @Override
+    public void showAddNoteWindow() {
+        navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/note/new");
+    }
+
+    @Override
     public void close() {
         navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
     }

@@ -73,17 +73,18 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             dView.notify("Error: attendee " + id + " not found.");
         }
     }
-    public void saveAttendee(AttendeeDetailView view, Attendee attendee) {
+    public Attendee saveAttendee(AttendeeDetailView view, Attendee attendee) {
         try {
             attendeeValidator.validate(attendee);
             attendee = attendeeRepository.save(attendee);
             view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
-            view.close();
+            return attendee;
         } catch (ValidationException e) {
             log.error("{} tried to save {} and got error {}",
                     view.getCurrentUser(), attendee, e.getMessage());
             view.notifyError(e.getMessage());
+            return null;
         }
     }
 
@@ -295,7 +296,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
 
 
     public void addNote(AttendeeDetailWindow attendeeDetailWindow, String message) {
-        // Handle adding a note. Make sure the note gets saveed to the database even if the AttendeeDetailWindow
+        // Handle adding a note. Make sure the note gets saveed to the database even if the view
         // is closed without saving the attendee. (For example, if the user has rights to add notes but not edit
         // attendees.
         Attendee attendee = attendeeDetailWindow.getAttendee();

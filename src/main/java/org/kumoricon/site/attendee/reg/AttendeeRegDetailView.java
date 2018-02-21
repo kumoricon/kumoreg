@@ -7,6 +7,7 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
@@ -29,6 +30,8 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
 
     protected Integer attendeeId;
     protected Integer orderId;
+
+    private Button btnDelete;
 
     private OrderPresenter orderPresenter;
 
@@ -99,15 +102,22 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
             try {
                 form.commit();
                 handler.saveAttendee(this, form.getAttendee());
+                close();
             } catch (FieldGroup.CommitException e) {
                 notifyError(e.getMessage());
             }
         });
+
+        btnDelete = new Button("Delete");
+        btnDelete.addStyleName(ValoTheme.BUTTON_DANGER);
+        btnDelete.addClickListener((Button.ClickListener) clickEvent -> {
+           orderPresenter.removeAttendeeFromOrder(this, form.getAttendee());
+           navigateTo(VIEW_NAME + "/" + orderId);
+        });
+
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> close());
 
-        buttons.addComponent(btnSave);
-        buttons.addComponent(btnAddNote);
-        buttons.addComponent(btnCancel);
+        buttons.addComponents(btnSave, btnAddNote, btnDelete, btnCancel);
         return buttons;
     }
 
@@ -115,6 +125,14 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
     protected void setButtonVisibility() {
         btnSave.setVisible(currentUserHasRight("at_con_registration"));
         btnAddNote.setVisible(currentUserHasRight("attendee_add_note"));
+    }
+
+    @Override
+    protected void showAddNoteWindow() {
+        Attendee attendee = handler.saveAttendee(this, form.getAttendee());
+        if (attendee != null) {
+            navigateTo(VIEW_NAME + "/" + attendee.getOrder().getId() + "/" + attendee.getId() + "/note/new");
+        }
     }
 
     @Override

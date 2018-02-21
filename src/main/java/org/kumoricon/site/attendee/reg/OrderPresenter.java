@@ -2,6 +2,8 @@ package org.kumoricon.site.attendee.reg;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.attendee.AttendeeHistory;
+import org.kumoricon.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
@@ -57,6 +59,9 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private AttendeeHistoryRepository attendeeHistoryRepository;
 
     private static final Logger log = LoggerFactory.getLogger(OrderPresenter.class);
 
@@ -193,18 +198,21 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         return total;
     }
 
-    public void removeAttendeeFromOrder(OrderView view, Attendee attendee) {
+    public void removeAttendeeFromOrder(AttendeeRegDetailView view, Attendee attendee) {
         if (attendee != null && !attendee.getCheckedIn()) {
             String name = attendee.getName();
-            Order order = view.getOrder();
+            Order order = attendee.getOrder();
             log.info("{} removed attendee {} from order {}. Attendee deleted.", view.getCurrentUsername(), attendee, order);
             order.removeAttendee(attendee);
             attendee.setOrder(null);
 
+            attendeeHistoryRepository.deleteInBatch(attendee.getHistory());
+
             Order result = orderRepository.save(order);
             attendeeRepository.deleteById(attendee.getId());
             view.notify(name + " deleted");
-            view.showOrder(result);
+        } else {
+            view.notify("Error: " + attendee.toString() + " is checked in and may not be deleted");
         }
     }
 
