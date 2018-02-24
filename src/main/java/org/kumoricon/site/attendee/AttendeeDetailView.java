@@ -18,17 +18,14 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
-import org.kumoricon.site.attendee.search.AttendeeSearchView;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.site.attendee.window.ViewNoteWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.util.UriTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
 
 @ViewScope
 public abstract class AttendeeDetailView extends BaseView implements View, AttendeePrintView, DetailFormHandler {
@@ -64,6 +61,12 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     }
 
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        checkPermissions();
+        setButtonVisibility();
+    }
+
     protected void setButtonVisibility() {
         btnSave.setVisible(currentUserHasRight("attendee_edit"));
         btnEdit.setVisible(currentUserHasRight("attendee_edit_with_override") && !currentUserHasRight("attendee_edit"));
@@ -82,6 +85,10 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
     public void showAttendee(Attendee attendee, List<Badge> all) {
         form.setAvailableBadges(all);
         form.show(attendee);
+
+        btnCheckIn.setEnabled(!attendee.getCheckedIn());
+        btnSaveAndReprint.setEnabled(attendee.getCheckedIn());
+        btnPrePrintBadge.setEnabled(!attendee.getCheckedIn());
     }
 
     @Override
@@ -188,9 +195,9 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         return new PopupView(null, layout);
     }
 
+    public abstract void btnCheckInClicked();
 
-    private void showCheckInWindow() {
-
+    protected void showCheckInWindow() {
     }
 
     protected void showAddNoteWindow() {

@@ -1,7 +1,5 @@
 package org.kumoricon.site.attendee.search;
 
-import com.vaadin.ui.Window;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.*;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
@@ -73,6 +71,18 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             dView.notify("Error: attendee " + id + " not found.");
         }
     }
+
+    public void showAttendee(CheckInView cView, Integer id) {
+        Attendee attendee = attendeeRepository.findOne(id);
+        if (attendee != null) {
+            cView.showAttendee(attendee);
+            log.info("{} displayed Attendee {}", cView.getCurrentUsername(), attendee);
+        } else {
+            log.error("{} tried to display Attendee id {} and it was not found", view.getCurrentUsername(), id);
+            cView.notify("Error: attendee " + id + " not found.");
+        }
+    }
+
     public Attendee saveAttendee(AttendeeDetailView view, Attendee attendee) {
         try {
             attendeeValidator.validate(attendee);
@@ -247,6 +257,27 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         return true;
     }
 
+    private Boolean validateBeforeCheckIn(CheckInView view, Attendee attendee) {
+        try {
+            attendeeValidator.validate(attendee);
+        } catch (ValidationException e) {
+            view.notifyError(e.getMessage());
+            return false;
+        }
+        if (attendee.isMinor()) {
+            if (!view.parentalConsentFormReceived()) {
+                view.notify("Error: Parental consent form has not been received");
+                return false;
+            }
+        }
+        if (!view.informationVerified()) {
+            view.notify("Error: Information not verified");
+            return false;
+        }
+        return true;
+    }
+
+
     public void checkInAttendee(AttendeeDetailWindow window, Attendee attendee) {
         log.info("{} checked in preregistered attendee {}", window.getParentView().getCurrentUser(), attendee);
         if (attendee != null) {
@@ -262,6 +293,21 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             }
         }
     }
+
+    public void checkInAttendee(CheckInView view, Attendee attendee) {
+        log.info("{} checked in preregistered attendee {}", view.getCurrentUser(), attendee);
+        if (attendee != null) {
+            if (validateBeforeCheckIn(view, attendee)) {
+                attendee.setParentFormReceived(view.parentalConsentFormReceived());
+                attendee.addHistoryEntry(view.getCurrentUser(), "Attendee Checked In");
+                attendee.setCheckedIn(true);
+                attendeeRepository.save(attendee);
+                List<Attendee> attendeeList = new ArrayList<>();
+                attendeeList.add(attendee);
+            }
+        }
+    }
+
 
     public void searchFor(String searchString) {
         if (searchString != null && !searchString.trim().isEmpty()) {

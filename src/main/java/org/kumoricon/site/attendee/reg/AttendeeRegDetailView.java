@@ -122,6 +122,11 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
     }
 
     @Override
+    public void btnCheckInClicked() {
+        // Not used in at-con registration
+    }
+
+    @Override
     protected void setButtonVisibility() {
         btnSave.setVisible(currentUserHasRight("at_con_registration"));
         btnAddNote.setVisible(currentUserHasRight("attendee_add_note"));

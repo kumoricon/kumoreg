@@ -41,8 +41,20 @@ public class AttendeeSearchDetailView extends AttendeeDetailView implements View
     }
 
     @Override
+    public void btnCheckInClicked() {
+        handler.saveAttendee(this, form.getAttendee());
+        navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/checkin");
+    }
+
+    @Override
     public void showAddNoteWindow() {
         navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/note/new");
+    }
+
+    @Override
+    protected void showCheckInWindow() {
+        handler.saveAttendee(this, form.getAttendee());
+        navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/checkin");
     }
 
     @Override
