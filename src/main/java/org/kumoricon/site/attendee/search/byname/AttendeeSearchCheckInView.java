@@ -1,29 +1,30 @@
-package org.kumoricon.site.attendee.search;
+package org.kumoricon.site.attendee.search.byname;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.site.attendee.CheckInView;
+import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 
 import java.util.Map;
 
 @ViewScope
-@SpringView(name = AttendeeSearchByBadgeCheckInView.TEMPLATE)
-public class AttendeeSearchByBadgeCheckInView extends CheckInView implements View {
-    public static final String VIEW_NAME = "attendeeSearchByBadge";
+@SpringView(name = AttendeeSearchCheckInView.TEMPLATE)
+public class AttendeeSearchCheckInView extends CheckInView implements View {
+    public static final String VIEW_NAME = "attendeeSearch";
     public static final String REQUIRED_RIGHT = "pre_reg_check_in";
 
-    public static final String TEMPLATE = "attendeeSearchByBadge/{badgeType}/{attendeeId}/checkin";
+    public static final String TEMPLATE = "attendeeSearch/{searchString}/{attendeeId}/checkin";
     public static final UriTemplate URI_TEMPLATE = new UriTemplate(TEMPLATE);
 
     protected Integer attendeeId;
     protected String searchString;
 
     @Autowired
-    public AttendeeSearchByBadgeCheckInView(AttendeeSearchPresenter handler) {
+    public AttendeeSearchCheckInView(AttendeeSearchPresenter handler) {
         super(handler);
     }
 
@@ -32,7 +33,7 @@ public class AttendeeSearchByBadgeCheckInView extends CheckInView implements Vie
 
         Map<String, String> map = URI_TEMPLATE.match(viewChangeEvent.getViewName());
 
-        this.searchString = map.get("badgeType");
+        this.searchString = map.get("searchString");
         try {
             attendeeId = Integer.parseInt(map.get("attendeeId"));
         } catch (NumberFormatException ex) {
@@ -45,16 +46,15 @@ public class AttendeeSearchByBadgeCheckInView extends CheckInView implements Vie
     @Override
     protected void btnCheckInClicked() {
         handler.checkInAttendee(this, attendee);
-        navigateTo(AttendeeSearchByBadgeView.VIEW_NAME + "/" + searchString);
+        navigateTo(AttendeeSearchView.VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendeeId + "/badge");
     }
-
 
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId);
+            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
         } else {
-            navigateTo(VIEW_NAME + "/" + searchString);
+            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
         }
     }
 

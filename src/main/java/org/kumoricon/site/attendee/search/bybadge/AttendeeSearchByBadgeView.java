@@ -1,4 +1,4 @@
-package org.kumoricon.site.attendee.search;
+package org.kumoricon.site.attendee.search.bybadge;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -14,6 +14,8 @@ import com.vaadin.v7.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.attendee.AttendeePrintView;
+import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
+import org.kumoricon.site.attendee.search.byname.AttendeeSearchView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;

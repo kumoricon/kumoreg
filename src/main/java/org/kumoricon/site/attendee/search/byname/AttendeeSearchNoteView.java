@@ -1,28 +1,29 @@
-package org.kumoricon.site.attendee.search;
+package org.kumoricon.site.attendee.search.byname;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.site.attendee.NoteView;
+import org.kumoricon.site.attendee.search.AttendeeHistoryPresenter;
 import org.springframework.web.util.UriTemplate;
 
 import java.util.Map;
 
 @ViewScope
-@SpringView(name = AttendeeSearchByBadgeNoteView.TEMPLATE)
-public class AttendeeSearchByBadgeNoteView extends NoteView implements View {
+@SpringView(name = AttendeeSearchNoteView.TEMPLATE)
+public class AttendeeSearchNoteView extends NoteView implements View {
     public static final String VIEW_NAME = "attendeeSearch";
     public static final String REQUIRED_RIGHT = "attendee_search";
 
-    public static final String TEMPLATE = "attendeeSearchByBadge/{badgeType}/{attendeeId}/note/{noteId}";
+    public static final String TEMPLATE = "attendeeSearch/{searchString}/{attendeeId}/note/{noteId}";
     public static final UriTemplate URI_TEMPLATE = new UriTemplate(TEMPLATE);
 
     protected Integer attendeeId;
-    protected String badgeType;
+    protected String searchString;
     protected String noteId;
 
-    public AttendeeSearchByBadgeNoteView(AttendeeHistoryPresenter handler) {
+    public AttendeeSearchNoteView(AttendeeHistoryPresenter handler) {
         super(handler);
     }
 
@@ -31,7 +32,7 @@ public class AttendeeSearchByBadgeNoteView extends NoteView implements View {
 
         Map<String, String> map = URI_TEMPLATE.match(viewChangeEvent.getViewName());
 
-        this.badgeType = map.get("badgeType");
+        this.searchString = map.get("searchString");
         try {
             attendeeId = Integer.parseInt(map.get("attendeeId"));
             noteId = map.get("noteId");
@@ -45,7 +46,6 @@ public class AttendeeSearchByBadgeNoteView extends NoteView implements View {
             showOnlyAddControls(false);
             try {
                 Integer noteIdNumber = Integer.parseInt(noteId);
-                handler.showNote(this, noteIdNumber);
             } catch (NumberFormatException ex) {
                 notifyError("Bad Note id: must be integer");
             }
@@ -61,9 +61,9 @@ public class AttendeeSearchByBadgeNoteView extends NoteView implements View {
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(AttendeeSearchByBadgeDetailView.VIEW_NAME + "/" + badgeType + "/" + attendeeId);
+            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
         } else {
-            navigateTo(AttendeeSearchByBadgeDetailView.VIEW_NAME + "/" + badgeType);
+            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
         }
     }
 

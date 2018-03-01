@@ -11,6 +11,7 @@ import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
+import org.kumoricon.site.attendee.PrintBadgeView;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,6 +127,12 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     }
 
     @Override
+    public void badgePrintSuccess(PrintBadgeView view, List<Attendee> attendees) {
+        log.info("{} reports test badges printed successfully for {}",
+                view.getCurrentUser(), attendees);
+    }
+
+    @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         if (printBadgeWindow == null) {
             return;
@@ -142,9 +149,27 @@ public class TestBadgePresenter implements PrintBadgeHandler {
     }
 
     @Override
+    public void reprintBadges(BaseView view, List<Attendee> attendees) {
+        TestBadgeView tbView = (TestBadgeView) view;
+        if (attendees.size() > 0) {
+            log.info("{} reprinting test badges for {}",
+                    view.getCurrentUsername(), attendees, tbView.getXOffset(), tbView.getYOffset());
+            view.notify("Reprinting badges");
+            printBadges(view, attendees, tbView.getXOffset(), tbView.getYOffset());
+        } else {
+            view.notify("No attendees selected");
+        }
+    }
+
+    @Override
     public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         TestBadgeView view = (TestBadgeView) printBadgeWindow.getParentView();
         return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset(), LocalDate.now());
+    }
+
+    @Override
+    public BadgePrintFormatter getBadgeFormatter(PrintBadgeView printBadgeView, List<Attendee> attendees) {
+        return null;
     }
 
     /**

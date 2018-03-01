@@ -122,6 +122,11 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
     }
 
     @Override
+    protected void reprintClicked() {
+        // Not used during at-con registration
+    }
+
+    @Override
     public void btnCheckInClicked() {
         // Not used in at-con registration
     }

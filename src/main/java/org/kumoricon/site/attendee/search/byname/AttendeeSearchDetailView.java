@@ -1,4 +1,4 @@
-package org.kumoricon.site.attendee.search;
+package org.kumoricon.site.attendee.search.byname;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -7,6 +7,7 @@ import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.site.attendee.AttendeeDetailView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.DetailFormHandler;
+import org.kumoricon.site.attendee.search.bybadge.AttendeeSearchByBadgeRePrintBadgeView;
 import org.springframework.web.util.UriTemplate;
 import java.util.Map;
 
@@ -38,6 +39,12 @@ public class AttendeeSearchDetailView extends AttendeeDetailView implements View
         }
 
         handler.showAttendee(this, attendeeId);
+    }
+
+    @Override
+    protected void reprintClicked() {
+        handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null);
+        navigateTo(AttendeeSearchRePrintBadgeView.VIEW_NAME + "/" + searchString + "/" + attendeeId + "/reprint");
     }
 
     @Override

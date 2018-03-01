@@ -41,4 +41,9 @@ public class BadgePrintingPresenter {
     public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         return badgePrintService.getCurrentBadgeFormatter(attendees, printBadgeWindow.getParentView().getCurrentClientIPAddress());
     }
+
+    public BadgePrintFormatter getBadgeFormatter(PrintBadgeView view, List<Attendee> attendees) {
+        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getCurrentClientIPAddress());
+    }
+
 }

@@ -8,7 +8,6 @@ import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeeDetailView;
 import org.kumoricon.site.attendee.OverrideEditHandler;
 import org.kumoricon.site.attendee.search.AttendeeDetailWindow;
-import org.kumoricon.site.attendee.search.AttendeeSearchDetailView;
 
 
 public class OverrideRequiredForEditWindow extends Window {

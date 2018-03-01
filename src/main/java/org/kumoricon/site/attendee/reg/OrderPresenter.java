@@ -22,6 +22,7 @@ import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.BadgePrintingPresenter;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
+import org.kumoricon.site.attendee.PrintBadgeView;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -303,10 +304,29 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     }
 
     @Override
+    public void badgePrintSuccess(PrintBadgeView view, List<Attendee> attendees) {
+        log.info("{} reported badge(s) printed successfully for {}",
+                view.getCurrentUser(), attendees);
+
+        // Attendees registering at-con should not have pre-printed badges, so don't bother
+        // resetting attendee.badgePrePrinted here.
+        view.notify("Order Complete");
+        view.navigateTo("/");
+
+    }
+
+    @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         log.info("{} printing badge(s) for {} (reprint during order)",
                 printBadgeWindow.getParentView().getCurrentUser(), attendeeList);
         printBadges(printBadgeWindow.getParentView(), attendeeList);
+    }
+
+    @Override
+    public void reprintBadges(BaseView view, List<Attendee> attendees) {
+        log.info("{} printing badge(s) for {} (reprint during order)",
+                view.getCurrentUser(), attendees);
+        printBadges(view, attendees);
     }
 
     public void showPayment(OrderPaymentView view, Integer orderId) {

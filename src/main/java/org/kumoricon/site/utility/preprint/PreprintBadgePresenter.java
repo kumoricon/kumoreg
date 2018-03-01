@@ -12,6 +12,7 @@ import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
+import org.kumoricon.site.attendee.PrintBadgeView;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +98,13 @@ public class PreprintBadgePresenter implements PrintBadgeHandler {
     }
 
     @Override
+    public void badgePrintSuccess(PrintBadgeView view, List<Attendee> attendees) {
+        log.info("{} reports test badges printed successfully for {}",
+                view.getCurrentUser(), attendees);
+        view.close();
+    }
+
+    @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         if (printBadgeWindow == null) {
             return;
@@ -113,8 +121,28 @@ public class PreprintBadgePresenter implements PrintBadgeHandler {
     }
 
     @Override
+    public void reprintBadges(BaseView baseView, List<Attendee> attendees) {
+        PreprintBadgeView view = (PreprintBadgeView) baseView;
+        if (attendees.size() > 0) {
+            log.info("{} reprinting test badges for {}",
+                    view.getCurrentUsername(), attendees, view.getXOffset(), view.getYOffset());
+            view.notify("Reprinting badges");
+            printBadges(view, attendees, view.getXOffset(), view.getYOffset(), view.getDateForAgeCalculation());
+        } else {
+            view.notify("No attendees selected");
+        }
+    }
+
+    @Override
     public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
         PreprintBadgeView view = (PreprintBadgeView) printBadgeWindow.getParentView();
+        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset(), view.getDateForAgeCalculation());
+    }
+
+    @Override
+    public BadgePrintFormatter getBadgeFormatter(PrintBadgeView printBadgeView, List<Attendee> attendees) {
+        // Todo: Wow, that's ugly.
+        PreprintBadgeView view = (PreprintBadgeView) (BaseView)printBadgeView;
         return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset(), view.getDateForAgeCalculation());
     }
 

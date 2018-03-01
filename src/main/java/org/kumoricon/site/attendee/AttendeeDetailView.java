@@ -18,6 +18,7 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
+import org.kumoricon.site.attendee.search.byname.AttendeeSearchRePrintBadgeView;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
@@ -148,8 +149,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
             }
         });
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> close());
-        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent ->
-                handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null));
+        btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent -> reprintClicked());
         checkInPopup = buildCheckInPopupView();
 
         btnPrePrintBadge = new Button("Pre-Print Badge");
@@ -173,6 +173,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         return buttons;
     }
 
+    protected abstract void reprintClicked();
 
     protected PopupView buildCheckInPopupView() {
         com.vaadin.v7.ui.CheckBox attendeeInformationVerified = new com.vaadin.v7.ui.CheckBox("Information Verified");

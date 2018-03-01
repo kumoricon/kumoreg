@@ -33,7 +33,7 @@ public class BadgePrintService extends PrintService {
         String printerName;
 
         if (enablePrintingFromServer != null && !enablePrintingFromServer) {
-            return("Printing from server not enabled. Select \"Show Selected in Browser\".");
+            return("Printing from server not enabled");
         }
         if (attendees.size() > 0) {
             Computer client = computerService.findComputerByIP(clientIPAddress);

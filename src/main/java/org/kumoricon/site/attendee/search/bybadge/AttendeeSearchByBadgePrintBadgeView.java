@@ -1,29 +1,31 @@
-package org.kumoricon.site.attendee.search;
+package org.kumoricon.site.attendee.search.bybadge;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import org.kumoricon.site.attendee.CheckInView;
+import org.kumoricon.site.attendee.PrintBadgeView;
+import org.kumoricon.site.attendee.search.byname.AttendeeSearchView;
+import org.kumoricon.site.attendee.search.PrintBadgePresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 
 import java.util.Map;
 
 @ViewScope
-@SpringView(name = AttendeeSearchCheckInView.TEMPLATE)
-public class AttendeeSearchCheckInView extends CheckInView implements View {
-    public static final String VIEW_NAME = "attendeeSearch";
-    public static final String REQUIRED_RIGHT = "pre_reg_check_in";
+@SpringView(name = AttendeeSearchByBadgePrintBadgeView.TEMPLATE)
+public class AttendeeSearchByBadgePrintBadgeView extends PrintBadgeView implements View {
+    public static final String VIEW_NAME = "attendeeSearchByBadge";
+    public static final String REQUIRED_RIGHT = "print_badge";
 
-    public static final String TEMPLATE = "attendeeSearch/{searchString}/{attendeeId}/checkin";
+    public static final String TEMPLATE = "attendeeSearchByBadge/{badgeType}/{attendeeId}/badge";
     public static final UriTemplate URI_TEMPLATE = new UriTemplate(TEMPLATE);
 
     protected Integer attendeeId;
-    protected String searchString;
+    protected String badgeType;
 
     @Autowired
-    public AttendeeSearchCheckInView(AttendeeSearchPresenter handler) {
+    public AttendeeSearchByBadgePrintBadgeView(PrintBadgePresenter handler) {
         super(handler);
     }
 
@@ -32,7 +34,7 @@ public class AttendeeSearchCheckInView extends CheckInView implements View {
 
         Map<String, String> map = URI_TEMPLATE.match(viewChangeEvent.getViewName());
 
-        this.searchString = map.get("searchString");
+        this.badgeType = map.get("badgeType");
         try {
             attendeeId = Integer.parseInt(map.get("attendeeId"));
         } catch (NumberFormatException ex) {
@@ -42,18 +44,14 @@ public class AttendeeSearchCheckInView extends CheckInView implements View {
         handler.showAttendee(this, attendeeId);
     }
 
-    @Override
-    protected void btnCheckInClicked() {
-        handler.checkInAttendee(this, attendee);
-        navigateTo(AttendeeSearchView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
-    }
+
 
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
+            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + badgeType + "/" + attendeeId);
         } else {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
+            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + badgeType);
         }
     }
 

@@ -6,7 +6,6 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.site.attendee.NoteView;
 import org.kumoricon.site.attendee.search.AttendeeHistoryPresenter;
-import org.kumoricon.site.attendee.search.AttendeeSearchByBadgeDetailView;
 import org.springframework.web.util.UriTemplate;
 
 import java.util.Map;

@@ -10,6 +10,9 @@ import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.*;
+import org.kumoricon.site.attendee.search.bybadge.AttendeeSearchByBadgeView;
+import org.kumoricon.site.attendee.search.byname.AttendeeSearchDetailView;
+import org.kumoricon.site.attendee.search.byname.AttendeeSearchView;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
@@ -112,36 +115,34 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             attendee.addHistoryEntry(view.getCurrentUser(), historyMessage);
             attendee = attendeeRepository.save(attendee);
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
-            view.refresh();
         } catch (ValidationException e) {
             view.notifyError(e.getMessage());
             log.error("{} tried to save {} and got error {}", view.getCurrentUsername(), attendee, e.getMessage());
-            return;
         }
-
-        List<Attendee> attendeeList = new ArrayList<>();
-        attendeeList.add(attendee);
-        // If no override user, check permissions on the current user
-
-        if (overrideUser == null) {
-            if (view.currentUserHasRight("reprint_badge")) {
-                log.info("{} reprinting badge(s) for {}", view.getCurrentUsername(), attendee);
-                showAttendeeBadgeWindow(view, attendeeList, false);
-            } else {
-                view.showOverrideRequiredWindow(this, attendeeList);
-            }
-        } else {
-            if (overrideUser.hasRight("reprint_badge")) {
-                log.info("{} reprinting badge(s) for {} with override from {}",
-                        view.getCurrentUsername(), attendee, overrideUser);
-                showAttendeeBadgeWindow(view, attendeeList, false);
-            } else {
-                view.notifyError("Override user does not have the required right");
-                log.error("{} requested an override to reprint a badge for {} but {} did not have the reprint_badge right",
-                        view.getCurrentUsername(), attendee, overrideUser);
-                view.showOverrideRequiredWindow(this, attendeeList);
-            }
-        }
+// Handle this by navigating to one of the RePrint views
+//        List<Attendee> attendeeList = new ArrayList<>();
+//        attendeeList.add(attendee);
+//        // If no override user, check permissions on the current user
+//
+//        if (overrideUser == null) {
+//            if (view.currentUserHasRight("reprint_badge")) {
+//                log.info("{} reprinting badge(s) for {}", view.getCurrentUsername(), attendee);
+//                showAttendeeBadgeWindow(view, attendeeList, false);
+//            } else {
+//                view.showOverrideRequiredWindow(this, attendeeList);
+//            }
+//        } else {
+//            if (overrideUser.hasRight("reprint_badge")) {
+//                log.info("{} reprinting badge(s) for {} with override from {}",
+//                        view.getCurrentUsername(), attendee, overrideUser);
+//                showAttendeeBadgeWindow(view, attendeeList, false);
+//            } else {
+//                view.notifyError("Override user does not have the required right");
+//                log.error("{} requested an override to reprint a badge for {} but {} did not have the reprint_badge right",
+//                        view.getCurrentUsername(), attendee, overrideUser);
+//                view.showOverrideRequiredWindow(this, attendeeList);
+//            }
+//        }
     }
 
     public void saveAttendeeAndPrePrintBadge(AttendeeDetailView view, Attendee attendee) {
@@ -153,7 +154,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
             attendee.setBadgePrePrinted(true);
             attendee = attendeeRepository.save(attendee);
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
-            view.refresh();
         } catch (ValidationException e) {
             view.notifyError(e.getMessage());
             log.error("{} tried to save {} and got error {}", view.getCurrentUsername(), attendee, e.getMessage());
@@ -222,10 +222,29 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     }
 
     @Override
+    public void badgePrintSuccess(PrintBadgeView view, List<Attendee> attendees) {
+        log.info("{} reported badge(s) printed successfully for {}",
+                view.getCurrentUser(), attendees);
+        if (attendees.size() > 0) {
+            Attendee attendee = attendees.get(0);
+        }
+    }
+
+    @Override
     public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
         if (attendeeList.size() > 0) {
             log.info("{} reprinting badges due to error for {}", view.getCurrentUsername(), attendeeList);
             printBadges(printBadgeWindow.getParentView(), attendeeList);
+        } else {
+            view.notify("No attendees selected");
+        }
+    }
+
+    @Override
+    public void reprintBadges(BaseView view, List<Attendee> attendees) {
+        if (attendees.size() > 0) {
+            log.info("{} reprinting badges due to error for {}", view.getCurrentUsername(), attendees);
+            printBadges(view, attendees);
         } else {
             view.notify("No attendees selected");
         }

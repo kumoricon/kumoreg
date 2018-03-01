@@ -1,4 +1,4 @@
-package org.kumoricon.site.attendee.search;
+package org.kumoricon.site.attendee.search.bybadge;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -37,6 +37,12 @@ public class AttendeeSearchByBadgeDetailView extends AttendeeDetailView implemen
         }
 
         handler.showAttendee(this, attendeeId);
+    }
+
+    @Override
+    protected void reprintClicked() {
+        handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null);
+        navigateTo(AttendeeSearchByBadgeRePrintBadgeView.VIEW_NAME + "/" + searchString + "/" + attendeeId + "/reprint");
     }
 
     @Override
