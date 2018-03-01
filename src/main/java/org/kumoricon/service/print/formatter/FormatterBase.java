@@ -3,13 +3,10 @@ package org.kumoricon.service.print.formatter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.util.Matrix;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 
 class FormatterBase {
     final PDDocument document;

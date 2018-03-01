@@ -1,7 +1,6 @@
 package org.kumoricon.site.utility.preprint;
 
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.model.attendee.AttendeeFactory;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Controller;
 
 import javax.print.PrintException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 

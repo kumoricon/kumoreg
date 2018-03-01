@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.io.*;
-import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

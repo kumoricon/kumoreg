@@ -46,7 +46,7 @@ public class AddPrinterWindow extends Window {
         layout.setMargin(true);
 
         //Create a combo box with an item for each printer model
-        List<Printer> modelList = new ArrayList<Printer>();
+        List<Printer> modelList = new ArrayList<>();
         /* TODO pull model information from a database table */
         /* TEMPORARY */ modelList.add(new Printer("", "8610"));
         /* TEMPORARY */ modelList.add(new Printer("", "251"));

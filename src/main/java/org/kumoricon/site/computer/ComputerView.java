@@ -40,8 +40,8 @@ public class ComputerView extends BaseView implements View {
     private Label lblLeftSubtitle;
     private Label lblRightTitle;
     private Label lblRightSubtitle;
-    private BeanItemContainer<Computer> computerList = new BeanItemContainer<Computer>(Computer.class);
-    private BeanItemContainer<Printer> printerList = new BeanItemContainer<Printer>(Printer.class);
+    private BeanItemContainer<Computer> computerList = new BeanItemContainer<>(Computer.class);
+    private BeanItemContainer<Printer> printerList = new BeanItemContainer<>(Printer.class);
     private Button btnAddComputer = new Button("Add");
     private Button btnDeleteComputer = new Button("Delete");
     private Button btnAddPrinter = new Button("Install...");
@@ -76,12 +76,12 @@ public class ComputerView extends BaseView implements View {
 
         gridComputers.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
             @Override
-            public void preCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+            public void preCommit(FieldGroup.CommitEvent commitEvent) {
 
             }
 
             @Override
-            public void postCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+            public void postCommit(FieldGroup.CommitEvent commitEvent) {
                 Item editedItem = commitEvent.getFieldBinder().getItemDataSource();
                 BeanItem<Computer> item = (BeanItem<Computer>) editedItem;
                 handler.saveComputer(ComputerView.this, item.getBean());

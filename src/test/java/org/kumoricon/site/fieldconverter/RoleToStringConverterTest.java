@@ -23,28 +23,28 @@ public class RoleToStringConverterTest {
     }
 
     @Test(expected=Converter.ConversionException.class)
-    public void convertToModel() throws Exception {
+    public void convertToModel() {
         converter.convertToModel("Test", Role.class, Locale.ENGLISH);
     }
 
     @Test
-    public void convertToPresentation() throws Exception {
+    public void convertToPresentation() {
         assertEquals("Role with name", "Tester", converter.convertToPresentation(role, String.class, Locale.ENGLISH));
     }
 
     @Test
-    public void convertToPresentationNullName() throws Exception {
+    public void convertToPresentationNullName() {
         assertEquals("Role with null name", "Role ID 1",
                 converter.convertToPresentation(roleWithNullName, String.class, Locale.ENGLISH));
     }
 
     @Test
-    public void getModelType() throws Exception {
+    public void getModelType() {
         assertEquals(Role.class, converter.getModelType());
     }
 
     @Test
-    public void getPresentationType() throws Exception {
+    public void getPresentationType() {
         assertEquals(String.class, converter.getPresentationType());
     }
 

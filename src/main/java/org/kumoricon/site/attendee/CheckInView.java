@@ -6,11 +6,8 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.site.BaseView;
-import org.kumoricon.site.attendee.search.AttendeeHistoryPresenter;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.time.format.DateTimeFormatter;

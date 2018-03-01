@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.print.PrintException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

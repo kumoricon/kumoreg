@@ -120,7 +120,7 @@ public class Printer extends Record {
     }
 
     public static List<Printer> getPrinterList() {
-        List<Printer> printers = new ArrayList<Printer>();
+        List<Printer> printers = new ArrayList<>();
 
         // Remove the PrintServiceLookup class from AppContext
         // This forces Java to rebuild its printer list during the next call to lookupPrinterServices

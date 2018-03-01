@@ -7,7 +7,6 @@ import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.site.attendee.AttendeeDetailView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.DetailFormHandler;
-import org.kumoricon.site.attendee.search.bybadge.AttendeeSearchByBadgeRePrintBadgeView;
 import org.springframework.web.util.UriTemplate;
 import java.util.Map;
 

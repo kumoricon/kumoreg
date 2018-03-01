@@ -15,32 +15,32 @@ public class DateToLocalDateConverterTest {
     private final Date date = new Date(1451635200000L);             // 1/1/2016 00:00:00 PST
 
     @Test
-    public void convertToModel() throws Exception {
+    public void convertToModel() {
         assertEquals(localDate, converter.convertToModel(date, LocalDate.class, Locale.ENGLISH));
     }
 
     @Test
-    public void convertToModelNull() throws Exception {
+    public void convertToModelNull() {
         assertNull(converter.convertToModel(null, LocalDate.class, Locale.ENGLISH));
     }
 
     @Test
-    public void convertToPresentation() throws Exception {
+    public void convertToPresentation() {
         assertEquals(date, converter.convertToPresentation(localDate, Date.class, Locale.ENGLISH));
     }
 
     @Test
-    public void convertToPresentationNull() throws Exception {
+    public void convertToPresentationNull() {
         assertNull(converter.convertToPresentation(null, Date.class, Locale.ENGLISH));
     }
 
     @Test
-    public void getModelType() throws Exception {
+    public void getModelType() {
         assertEquals(LocalDate.class, converter.getModelType());
     }
 
     @Test
-    public void getPresentationType() throws Exception {
+    public void getPresentationType() {
         assertEquals(Date.class, converter.getPresentationType());
     }
 

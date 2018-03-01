@@ -14,18 +14,18 @@ public class UserTest {
     private User user;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         user = UserFactory.newUser("Alice", "Smith");
     }
 
     @Test
-    public void setUsernameForcesLowercase() throws Exception {
+    public void setUsernameForcesLowercase() {
         user.setUsername("SomeUser");
         assertEquals("someuser", user.getUsername());
     }
 
     @Test
-    public void resetPassword() throws Exception {
+    public void resetPassword() {
         // Make sure to override the salt to a known value
         user.setSalt("ABCD");
         user.resetPassword();
@@ -34,17 +34,17 @@ public class UserTest {
     }
 
     @Test(expected = ValueException.class)
-    public void setPasswordThrowsExceptionForNull() throws Exception {
+    public void setPasswordThrowsExceptionForNull() {
         user.setPassword(null);
     }
 
     @Test(expected = ValueException.class)
-    public void setPasswordThrowsExceptionForEmpty() throws Exception {
+    public void setPasswordThrowsExceptionForEmpty() {
         user.setPassword(" ");
     }
 
     @Test
-    public void getNextBadgeNumberIncrements() throws Exception {
+    public void getNextBadgeNumberIncrements() {
         int startingNumber = user.getLastBadgeNumberCreated();
         int newBadgeNumber = user.getNextBadgeNumber();
         int lastBadgeNumber = user.getNextBadgeNumber();
@@ -54,12 +54,12 @@ public class UserTest {
     }
 
     @Test
-    public void hasRightReturnsFalseWhenNoRoleExists() throws Exception {
+    public void hasRightReturnsFalseWhenNoRoleExists() {
         assertFalse(user.hasRight("Test"));
     }
 
     @Test
-    public void hasRight() throws Exception {
+    public void hasRight() {
         Role tester = new Role("Tester");
         tester.addRight(new Right("do_stuff"));
         user.setRole(tester);
@@ -68,12 +68,12 @@ public class UserTest {
     }
 
     @Test
-    public void checkPasswordReturnsFalseForNull() throws Exception {
+    public void checkPasswordReturnsFalseForNull() {
         assertFalse(user.checkPassword(null));
     }
 
     @Test
-    public void checkPassword() throws Exception {
+    public void checkPassword() {
         user.setPassword("testing123");
         assertTrue(user.checkPassword("testing123"));
     }

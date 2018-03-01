@@ -21,23 +21,23 @@ public class UserFactoryTest {
     }
 
     @Test
-    public void generateUserName() throws Exception {
+    public void generateUserName() {
         assertEquals(UserFactory.generateUserName("Jim", "O'malley"), "jomalley");
     }
 
     @Test
-    public void generateUserNameFromNull() throws Exception {
+    public void generateUserNameFromNull() {
         assertEquals("generateUserName handles null", "", UserFactory.generateUserName(null, null));
     }
 
     @Test
-    public void generateBadgePrefix() throws Exception {
+    public void generateBadgePrefix() {
         User user = UserFactory.newUser("Test", "User");
         assertEquals("badgePrefix is first and last initials", "TU", user.getBadgePrefix());
     }
 
     @Test
-    public void generateBadgePrefixIsUppercase() throws Exception {
+    public void generateBadgePrefixIsUppercase() {
         User user = UserFactory.newUser("test", "user");
         assertEquals("badgePrefix is uppercase", "TU", user.getBadgePrefix());
     }
@@ -47,7 +47,7 @@ public class UserFactoryTest {
      * @param user User record
      * @throws Exception
      */
-    private void defaultFieldsSet(User user) throws Exception {
+    private void defaultFieldsSet(User user) {
         assertNull("ID should be null", user.getId());
         assertTrue("User enabled", user.getEnabled());
         assertTrue("Password flagged to be reset", user.getResetPassword());

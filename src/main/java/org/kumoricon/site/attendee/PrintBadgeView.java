@@ -2,24 +2,15 @@ package org.kumoricon.site.attendee;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
-import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.HorizontalLayout;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.BaseView;
-import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 import org.kumoricon.site.attendee.search.PrintBadgePresenter;
-import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
 
 import javax.annotation.PostConstruct;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public abstract class PrintBadgeView extends BaseView implements View {
     public static final String VIEW_NAME = "order";

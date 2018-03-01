@@ -29,12 +29,6 @@ public class RolePresenter {
         view.navigateTo(RoleEditView.VIEW_NAME);
     }
 
-    public void cancel(RoleEditWindow window) {
-        RoleListView view = window.getParentView();
-        window.close();
-        view.navigateTo(RoleListView.VIEW_NAME);
-    }
-
     void saveRole(RoleEditView view, Role role) {
         roleRepository.save(role);
         view.navigateTo(RoleListView.VIEW_NAME);

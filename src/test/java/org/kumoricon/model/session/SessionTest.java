@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class SessionTest {
     @Test
-    public void setStartOnlyIfNull() throws Exception {
+    public void setStartOnlyIfNull() {
         // Only allow setting the start time if it is null - it shouldn't change
         Session s = new Session();
         LocalDateTime now = LocalDateTime.now();
@@ -20,7 +20,7 @@ public class SessionTest {
     }
 
     @Test
-    public void setEnd() throws Exception {
+    public void setEnd() {
         // Only allow setting the end time if it is null - it shouldn't change
         Session s = new Session();
         LocalDateTime now = LocalDateTime.now();
@@ -30,7 +30,7 @@ public class SessionTest {
     }
 
     @Test
-    public void setUser() throws Exception {
+    public void setUser() {
         // Only allow setting the user if it is null - it shouldn't change
         Session s = new Session();
         User bob = UserFactory.newUser("Bob", "Smith");
@@ -41,14 +41,14 @@ public class SessionTest {
     }
 
     @Test
-    public void setOpenTrue() throws Exception {
+    public void setOpenTrue() {
         Session s = new Session();
         s.setOpen(true);
         assertTrue(s.isOpen());
     }
 
     @Test
-    public void setOpenFalse() throws Exception {
+    public void setOpenFalse() {
         Session s = new Session();
         s.setOpen(false);
         assertFalse(s.isOpen());

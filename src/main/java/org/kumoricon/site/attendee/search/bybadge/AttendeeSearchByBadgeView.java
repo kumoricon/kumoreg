@@ -41,6 +41,10 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
     private Table attendeeTable = new Table(null);
     private String searchString;
 
+    public AttendeeSearchByBadgeView(AttendeeSearchPresenter handler) {
+        super(handler);
+    }
+
     @PostConstruct
     public void init() {
         handler.setView(this);
@@ -147,12 +151,8 @@ public class AttendeeSearchByBadgeView extends AttendeeSearchView implements Vie
         handler.showAttendeeList(this, (Badge) badgeType.getValue());
     }
 
-
     public String getRequiredRight() {
         return REQUIRED_RIGHT;
     }
 
-
-    public void showAttendee(Attendee attendee, List<Badge> all) {
-    }
 }

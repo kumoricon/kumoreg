@@ -17,12 +17,12 @@ import static org.junit.Assert.assertTrue;
 public class OrderTest {
     Order order;
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         order = createTestOrder();
     }
 
     @Test
-    public void generateOrderIdAreRandom() throws Exception {
+    public void generateOrderIdAreRandom() {
         // Make sure generated order IDs are not repeated.
         Set<String> ids = new HashSet<>();
         for (int i = 0; i < 20; i++) {
@@ -32,7 +32,7 @@ public class OrderTest {
     }
 
     @Test
-    public void paymentCompleteSetsPaid() throws Exception {
+    public void paymentCompleteSetsPaid() {
         User user = UserFactory.newUser("Draco", "Ula");
         order.paymentComplete(user);
 
@@ -40,7 +40,7 @@ public class OrderTest {
     }
 
     @Test
-    public void paymentCompleteSetsAttendeesPaid() throws Exception {
+    public void paymentCompleteSetsAttendeesPaid() {
         User user = UserFactory.newUser("Draco", "Ula");
         order.paymentComplete(user);
 

@@ -16,7 +16,7 @@ public class AttendeeValidatorTest {
     private Attendee attendee;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         attendee = demoAttendee();
         validator.requirePhoneAndEmail = true;
     }
@@ -68,7 +68,7 @@ public class AttendeeValidatorTest {
         validator.validate(attendee);
     }
 
-    @Test
+    @Test(expected = ValidationException.class)
     public void emailMissing() throws Exception {
         attendee.setEmail(null);
         validator.validate(attendee);
@@ -156,6 +156,7 @@ public class AttendeeValidatorTest {
         attendee.setFanName("SuperFlyGuy");
         attendee.setBadgeNumber("TST12340");
         attendee.setCountry("United States of America");
+        attendee.setEmail("test@example.com");
         attendee.setZip("97201");
         attendee.setPhoneNumber("123-123-1234");
         attendee.setCheckedIn(true);

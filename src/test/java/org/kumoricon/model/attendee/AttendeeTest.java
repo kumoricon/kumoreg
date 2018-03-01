@@ -16,54 +16,54 @@ import static junit.framework.TestCase.*;
 public class AttendeeTest {
     private Attendee attendee;
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         attendee = new Attendee();
     }
 
     @Test
-    public void isMinorChild() throws Exception {
+    public void isMinorChild() {
         LocalDate birthDate = LocalDate.now().minusYears(5);
         attendee.setBirthDate(birthDate);
         assertTrue("Child attendee is minor", attendee.isMinor());
     }
 
     @Test
-    public void isMinorAdult() throws Exception {
+    public void isMinorAdult() {
         LocalDate birthDate = LocalDate.now().minusYears(18);
         attendee.setBirthDate(birthDate);
         assertFalse("Adult attendee is not minor", attendee.isMinor());
     }
 
     @Test
-    public void isMinorBirthdateNotSet() throws Exception {
+    public void isMinorBirthdateNotSet() {
         assertTrue("Attendee is minor if birthdate is null", attendee.isMinor());
     }
 
 
 
     @Test
-    public void getAge() throws Exception {
+    public void getAge() {
         LocalDate birthDate = LocalDate.now().minusYears(18);
         attendee.setBirthDate(birthDate);
         assertEquals("Age calculated correctly", (Long) 18L, attendee.getAge());
     }
 
     @Test
-    public void getAgeMinor() throws Exception {
+    public void getAgeMinor() {
         LocalDate birthDate = LocalDate.now().minusYears(18).plusDays(1);
         attendee.setBirthDate(birthDate);
         assertEquals("Age calculated correctly", (Long) 17L, attendee.getAge());
     }
 
     @Test
-    public void getAgeBirthdateNotSet() throws Exception {
+    public void getAgeBirthdateNotSet() {
         assertNull("Birthdate is empty", attendee.getBirthDate());
         assertEquals("Age is 0 when birthdate null", (Long) 0L, attendee.getAge());
     }
 
 
     @Test
-    public void addHistoryEntry() throws Exception {
+    public void addHistoryEntry() {
         User user = UserFactory.newUser("Test", "User");
         attendee.addHistoryEntry(user, "This is a test");
         Set<AttendeeHistory> results = attendee.getHistory();
@@ -75,7 +75,7 @@ public class AttendeeTest {
     }
 
     @Test
-    public void addHistoryEntryWontAddEmptyMessages() throws Exception {
+    public void addHistoryEntryWontAddEmptyMessages() {
         User user = UserFactory.newUser("Test", "User");
         attendee.addHistoryEntry(user, null);
         attendee.addHistoryEntry(user, "");
@@ -84,21 +84,21 @@ public class AttendeeTest {
     }
 
     @Test
-    public void setCheckedInTrue() throws Exception {
+    public void setCheckedInTrue() {
         attendee.setCheckedIn(true);
         assertTrue("checkedIn flag set", attendee.getCheckedIn());
         assertEquals("check in date set", new Date(), attendee.getCheckInTime());
     }
 
     @Test
-    public void setCheckedInFalse() throws Exception {
+    public void setCheckedInFalse() {
         attendee.setCheckedIn(false);
         assertFalse("checkedIn flag cleared", attendee.getCheckedIn());
         assertNull("check in date cleared", attendee.getCheckInTime());
     }
 
     @Test
-    public void toStringTest() throws Exception {
+    public void toStringTest() {
         attendee.setId(1);
         attendee.setFirstName("Test");
         attendee.setLastName("Guy");

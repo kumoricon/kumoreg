@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class ValidatorTest {
     @Test
-    public void isNullOrEmptyTrue() throws Exception {
+    public void isNullOrEmptyTrue() {
         assertTrue(Validator.isNullOrEmpty(""));
         assertTrue(Validator.isNullOrEmpty(" "));
         assertTrue(Validator.isNullOrEmpty("      "));
@@ -15,7 +15,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void isNullOrEmptyFalse() throws Exception {
+    public void isNullOrEmptyFalse() {
         assertFalse(Validator.isNullOrEmpty("a"));
         assertFalse(Validator.isNullOrEmpty("The quick brown fox jumped over the lazy dog"));
     }

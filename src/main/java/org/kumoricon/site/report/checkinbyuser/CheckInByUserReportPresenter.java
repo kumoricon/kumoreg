@@ -1,7 +1,6 @@
 package org.kumoricon.site.report.checkinbyuser;
 
 import org.kumoricon.model.attendee.AttendeeHistoryRepository;
-import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.site.report.ReportPresenter;
 import org.kumoricon.site.report.ReportView;
 import org.slf4j.Logger;

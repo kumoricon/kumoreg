@@ -209,7 +209,7 @@ class AttendeeImporterService {
         return String.format("ONL%1$05d", badgeNumber);
     }
 
-    private List<AttendeeRecord> loadFile(BufferedReader bufferedReader) throws Exception {
+    private List<AttendeeRecord> loadFile(BufferedReader bufferedReader) {
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
             @Override
             public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {

@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 
 public class AgeRangeTest {
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ageRange = new AgeRange();
     }
 
@@ -23,38 +23,38 @@ public class AgeRangeTest {
      to that range. Those limits are also set in the database.
      */
     @Test
-    public void setMinAgeGTE0() throws Exception {
+    public void setMinAgeGTE0() {
         ageRange.setMinAge(-1);
         assertEquals(0, ageRange.getMinAge());
     }
 
     @Test
-    public void setMinAgeLTE255() throws Exception {
+    public void setMinAgeLTE255() {
         ageRange.setMinAge(256);
         assertEquals(255, ageRange.getMinAge());
     }
 
     @Test
-    public void setMaxAgeGTE0() throws Exception {
+    public void setMaxAgeGTE0() {
         ageRange.setMaxAge(-1);
         assertEquals(0, ageRange.getMaxAge());
     }
 
     @Test
-    public void setMaxAgeLTE255() throws Exception {
+    public void setMaxAgeLTE255() {
         ageRange.setMaxAge(256);
         assertEquals(255, ageRange.getMaxAge());
     }
 
 
     @Test
-    public void setCostGTE0() throws Exception {
+    public void setCostGTE0() {
         ageRange.setCost(BigDecimal.valueOf(-1.1));
         assertEquals(BigDecimal.ZERO, ageRange.getCost());
     }
 
     @Test
-    public void isValidForAge() throws Exception {
+    public void isValidForAge() {
         ageRange.setMinAge(6);
         ageRange.setMaxAge(18);
         assertFalse(ageRange.isValidForAge(-1));

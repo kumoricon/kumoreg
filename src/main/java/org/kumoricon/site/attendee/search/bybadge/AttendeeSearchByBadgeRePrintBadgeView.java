@@ -6,7 +6,6 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.site.attendee.PrintBadgeView;
 import org.kumoricon.site.attendee.search.PrintBadgePresenter;
-import org.kumoricon.site.attendee.search.byname.AttendeeSearchView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 

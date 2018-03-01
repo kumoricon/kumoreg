@@ -23,28 +23,28 @@ public class BadgeToStringConverterTest {
     }
 
     @Test(expected=Converter.ConversionException.class)
-    public void convertToModel() throws Exception {
+    public void convertToModel() {
         converter.convertToModel("Test", Badge.class, Locale.ENGLISH);
     }
 
     @Test
-    public void convertToPresentation() throws Exception {
+    public void convertToPresentation() {
         assertEquals("Badge with name", "Test Badge", converter.convertToPresentation(badge, String.class, Locale.ENGLISH));
     }
 
     @Test
-    public void convertToPresentationNullName() throws Exception {
+    public void convertToPresentationNullName() {
         assertEquals("Badge with null name", "Badge ID 1", converter.convertToPresentation(badgeWithNullName, String.class, Locale.ENGLISH));
     }
 
 
     @Test
-    public void getModelType() throws Exception {
+    public void getModelType() {
         assertEquals(Badge.class, converter.getModelType());
     }
 
     @Test
-    public void getPresentationType() throws Exception {
+    public void getPresentationType() {
         assertEquals(String.class, converter.getPresentationType());
     }
 

@@ -1,7 +1,5 @@
 package org.kumoricon.site.utility.importattendee;
 
-import java.time.LocalDate;
-
 public class AttendeeRecord {
     public String firstName;
     public String lastName;

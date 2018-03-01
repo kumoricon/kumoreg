@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class BadgeFactoryTest {
     @Test
-    public void createBadge() throws Exception {
+    public void createBadge() {
         Badge b = BadgeFactory.createBadge("Weekend Test", BadgeType.ATTENDEE, "Weekend", "#00FF00", 0f, 0f, 0f);
         assertEquals("Weekend Test", b.getName());
         assertEquals("Weekend", b.getBadgeTypeText());
@@ -22,7 +22,7 @@ public class BadgeFactoryTest {
     }
 
     @Test
-    public void createEmptyBadge() throws Exception {
+    public void createEmptyBadge() {
         Badge b = BadgeFactory.createEmptyBadge();
         assertEquals(4, b.getAgeRanges().size());
         assertEquals("", b.getName());

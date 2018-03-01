@@ -16,14 +16,14 @@ public class RoleTest {
     Right doThings = new Right("do_things", "Can do things");
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         role = new Role("Tester");
         role.addRight(doStuff);
         role.addRight(doThings);
     }
 
     @Test
-    public void addRight() throws Exception {
+    public void addRight() {
         Right testRight = new Right("test");
         role.addRight(testRight);
         assertTrue("Right was added", role.getRights().contains(testRight));
@@ -31,7 +31,7 @@ public class RoleTest {
     }
 
     @Test
-    public void addRights() throws Exception {
+    public void addRights() {
         Right r1 = new Right("right1");
         Right r2 = new Right("right2");
         Set<Right> rights = new HashSet<>(2);
@@ -45,7 +45,7 @@ public class RoleTest {
     }
 
     @Test
-    public void removeRight() throws Exception {
+    public void removeRight() {
         // Remove the right with the given name; tests finding a right with the given name
         role.removeRight("do_stuff");
         assertFalse("Right was removed", role.getRights().contains(doStuff));
@@ -54,7 +54,7 @@ public class RoleTest {
     }
 
     @Test
-    public void removeRightNotCaseSensitive() throws Exception {
+    public void removeRightNotCaseSensitive() {
         // Remove the right with the given name; tests finding a right with the given name
         role.removeRight("Do_Stuff");
         assertFalse("Right was removed", role.getRights().contains(doStuff));
@@ -63,21 +63,21 @@ public class RoleTest {
     }
 
     @Test
-    public void hasRight() throws Exception {
+    public void hasRight() {
         assertTrue(role.hasRight("do_stuff"));
         assertTrue(role.hasRight("do_things"));
         assertFalse(role.hasRight("not_this"));
     }
 
     @Test
-    public void hasRightNotCaseSensitive() throws Exception {
+    public void hasRightNotCaseSensitive() {
         assertTrue(role.hasRight("Do_Stuff"));
         assertTrue(role.hasRight("Do_Things"));
         assertFalse(role.hasRight("Not_This"));
     }
 
     @Test
-    public void hasRightReturnsTrueForSuperAdmin() throws Exception {
+    public void hasRightReturnsTrueForSuperAdmin() {
         role.addRight(new Right("super_admin", "Can do it all"));
         assertTrue(role.hasRight("do_stuff"));
         assertTrue(role.hasRight("do_things"));

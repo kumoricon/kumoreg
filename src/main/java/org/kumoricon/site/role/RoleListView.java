@@ -8,7 +8,6 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
-import org.kumoricon.model.role.Right;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;

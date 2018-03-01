@@ -90,7 +90,7 @@ public class UriTemplateViewProvider extends SpringViewProvider implements Seria
     @Override
     protected List<ViewInfo> getAllowedViewsForCurrentUI(String viewName) {
 
-        List<ViewInfo> views = new ArrayList<ViewInfo>();
+        List<ViewInfo> views = new ArrayList<>();
         Set<String> allViews = getViewNameToBeanNamesMap().get(viewName);
         if (allViews == null) {
             // there is no direct match. so all have to be inspected for

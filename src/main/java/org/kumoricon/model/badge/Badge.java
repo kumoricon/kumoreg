@@ -87,7 +87,7 @@ public class Badge extends Record {
                 return ageRange.getCost();
             }
         }
-        throw new ServiceException("Error: No valid age range found in badge {} for age {}".format(this.name, age));
+        throw new ServiceException(String.format(this.name, age));
     }
 
     public String toString() {

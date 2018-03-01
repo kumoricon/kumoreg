@@ -14,10 +14,7 @@ import com.vaadin.v7.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.site.attendee.search.AttendeeDetailWindow;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
-import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
-import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,13 +28,17 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
     public static final String VIEW_NAME = "attendeeSearch";
     public static final String REQUIRED_RIGHT = "attendee_search";
 
-    @Autowired
-    private AttendeeSearchPresenter handler;
+    private final AttendeeSearchPresenter handler;
 
     private TextField txtSearch = new TextField("Search");
     private Button btnSearch = new Button("Search");
     private Table tblResult;
     private BeanItemContainer<Attendee> attendeeBeanList;
+
+    @Autowired
+    public AttendeeSearchView(AttendeeSearchPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     public void init() {
@@ -68,7 +69,7 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         tblResult.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
             navigateTo(AttendeeSearchDetailView.VIEW_NAME +
                     "/" + txtSearch.getValue() +
-                    "/" + (Integer) itemClickEvent.getItem().getItemProperty("id").getValue());
+                    "/" + itemClickEvent.getItem().getItemProperty("id").getValue());
         });
 
         btnSearch.addClickListener((Button.ClickListener) clickEvent -> search());
@@ -123,26 +124,11 @@ public class AttendeeSearchView extends BaseView implements View, AttendeePrintV
         handler.searchFor(txtSearch.getValue());
     }
 
-    public void setHandler(AttendeeSearchPresenter presenter) {
-        this.handler = presenter;
-    }
-
     public String getRequiredRight() { return REQUIRED_RIGHT; }
 
     @Override
     public void showPrintBadgeWindow(List<Attendee> attendeeList) {
         PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
         showWindow(printBadgeWindow);
-    }
-
-    public void showOverrideRequiredWindow(AttendeeSearchPresenter presenter, List<Attendee> attendeeList)
-    {
-        OverrideRequiredWindow overrideRequiredWindow = new OverrideRequiredWindow(presenter, "reprint_badge", attendeeList);
-        showWindow(overrideRequiredWindow);
-    }
-
-    public void showOverrideEditWindow(AttendeeSearchPresenter presenter, AttendeeDetailWindow attendeeDetailWindow) {
-        OverrideRequiredForEditWindow window = new OverrideRequiredForEditWindow(presenter, "attendee_edit", attendeeDetailWindow);
-        showWindow(window);
     }
 }

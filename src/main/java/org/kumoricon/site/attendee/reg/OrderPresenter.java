@@ -2,7 +2,6 @@ package org.kumoricon.site.attendee.reg;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.model.attendee.AttendeeRepository;
 import org.kumoricon.model.badge.Badge;

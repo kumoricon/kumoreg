@@ -9,14 +9,14 @@ import static org.junit.Assert.*;
 
 public class PersonTest {
     @Test
-    public void isDifferentString() throws Exception {
+    public void isDifferentString() {
         assertTrue(Person.isDifferent("abc", "def"));
         assertTrue(Person.isDifferent(null, "abc"));
         assertFalse(Person.isDifferent((String)null, null));
     }
 
     @Test
-    public void isDifferentBoolean() throws Exception {
+    public void isDifferentBoolean() {
         assertTrue(Person.isDifferent(true, false));
         assertTrue(Person.isDifferent(false, true));
         assertFalse(Person.isDifferent(true, true));
@@ -24,7 +24,7 @@ public class PersonTest {
     }
 
     @Test
-    public void isDifferentLocalDate() throws Exception {
+    public void isDifferentLocalDate() {
         LocalDate localDate1 = LocalDate.of(2017, 1, 1);
         LocalDate localDate2 = LocalDate.of(2017, 1, 2);
         LocalDate localDate3 = LocalDate.of(2017, 1, 1);
@@ -34,7 +34,7 @@ public class PersonTest {
     }
 
     @Test
-    public void isDifferentBigDecimal() throws Exception {
+    public void isDifferentBigDecimal() {
         assertTrue(Person.isDifferent(BigDecimal.ZERO, BigDecimal.ONE));
         assertTrue(Person.isDifferent(null, BigDecimal.ZERO));
         assertFalse(Person.isDifferent(BigDecimal.TEN, BigDecimal.TEN));

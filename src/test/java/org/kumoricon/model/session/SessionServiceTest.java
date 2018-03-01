@@ -45,7 +45,7 @@ public class SessionServiceTest {
     private static boolean setUpIsDone = false;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         if (setUpIsDone) {
             return;
         }
@@ -59,7 +59,7 @@ public class SessionServiceTest {
 
 
     @Test
-    public void getCurrentSessionForUser() throws Exception {
+    public void getCurrentSessionForUser() {
         // Sequential calls to getCurrentSessionForUser should return the same session
         User user = userRepository.findOne(2);
         Session s = sessionService.getCurrentSessionForUser(user);
@@ -68,13 +68,13 @@ public class SessionServiceTest {
 
 
     @Test
-    public void userHasOpenSession() throws Exception {
+    public void userHasOpenSession() {
         User user = userRepository.findOne(2);
         assertTrue(sessionService.userHasOpenSession(user));
     }
 
     @Test
-    public void userHasOpenSessionAfterClosingCurrentSession() throws Exception {
+    public void userHasOpenSessionAfterClosingCurrentSession() {
         User user = userRepository.findOne(2);
         assertTrue(sessionService.userHasOpenSession(user));
         sessionService.closeSessionForUser(user);
@@ -82,7 +82,7 @@ public class SessionServiceTest {
     }
 
     @Test
-    public void closeSessionForUser() throws Exception {
+    public void closeSessionForUser() {
         User user = userRepository.findOne(2);
         Session openSession = sessionService.getCurrentSessionForUser(user);
         sessionService.closeSessionForUser(user);
@@ -93,13 +93,13 @@ public class SessionServiceTest {
     }
 
     @Test
-    public void getAllOpenSessions() throws Exception {
+    public void getAllOpenSessions() {
         List<Session> sessions = sessionService.getAllOpenSessions();
         assertEquals(3, sessions.size());
     }
 
     @Test
-    public void getTotalForSession() throws Exception {
+    public void getTotalForSession() {
         User user = userRepository.findOne(2);
         Session session = sessionService.getCurrentSessionForUser(user);
 

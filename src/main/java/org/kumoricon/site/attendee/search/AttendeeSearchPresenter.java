@@ -35,9 +35,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     private AttendeeSearchService attendeeSearchService;
 
     @Autowired
-    private AttendeeHistoryRepository attendeeHistoryRepository;
-
-    @Autowired
     private BadgeRepository badgeRepository;
 
     @Autowired
@@ -256,26 +253,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         }
     }
 
-    private Boolean validateBeforeCheckIn(AttendeeDetailWindow window, Attendee attendee) {
-        try {
-            attendeeValidator.validate(attendee);
-        } catch (ValidationException e) {
-            view.notifyError(e.getMessage());
-            return false;
-        }
-        if (attendee.isMinor()) {
-            if (!window.parentalConsentFormReceived()) {
-                window.getParentView().notify("Error: Parental consent form has not been received");
-                return false;
-            }
-        }
-        if (!window.informationVerified()) {
-            window.getParentView().notify("Error: Information not verified");
-            return false;
-        }
-        return true;
-    }
-
     private Boolean validateBeforeCheckIn(CheckInView view, Attendee attendee) {
         try {
             attendeeValidator.validate(attendee);
@@ -297,22 +274,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     }
 
 
-    public void checkInAttendee(AttendeeDetailWindow window, Attendee attendee) {
-        log.info("{} checked in preregistered attendee {}", window.getParentView().getCurrentUser(), attendee);
-        if (attendee != null) {
-            if (validateBeforeCheckIn(window, attendee)) {
-                attendee.setParentFormReceived(window.parentalConsentFormReceived());
-                attendee.addHistoryEntry(window.getParentView().getCurrentUser(), "Attendee Checked In");
-                attendee.setCheckedIn(true);
-                attendeeRepository.save(attendee);
-                List<Attendee> attendeeList = new ArrayList<>();
-                attendeeList.add(attendee);
-                window.close();
-                showAttendeeBadgeWindow(window.getParentView(), attendeeList, false);
-            }
-        }
-    }
-
     public void checkInAttendee(CheckInView view, Attendee attendee) {
         log.info("{} checked in preregistered attendee {}", view.getCurrentUser(), attendee);
         if (attendee != null) {
@@ -321,8 +282,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
                 attendee.addHistoryEntry(view.getCurrentUser(), "Attendee Checked In");
                 attendee.setCheckedIn(true);
                 attendeeRepository.save(attendee);
-                List<Attendee> attendeeList = new ArrayList<>();
-                attendeeList.add(attendee);
             }
         }
     }
@@ -341,37 +300,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
                 view.notify("No matching attendees found");
             }
         }
-    }
-
-    @Override
-    public void overrideEditLogin(OverrideRequiredForEditWindow window, String username, String password, AttendeeDetailWindow attendeeDetailWindow) {
-        User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
-        if (overrideUser != null && overrideUser.checkPassword(password) && overrideUser.hasRight("attendee_edit")) {
-            log.info("{} got edit override from {} to edit {}",
-                    view.getCurrentUsername(), overrideUser, attendeeDetailWindow.getAttendee());
-            window.close();
-            attendeeDetailWindow.enableEditing(overrideUser);
-        } else {
-            view.notify("Bad username or password");
-        }
-    }
-
-    @Override
-    public void overrideEditCancel(OverrideRequiredForEditWindow window) { window.close(); }
-
-
-    public void addNote(AttendeeDetailWindow attendeeDetailWindow, String message) {
-        // Handle adding a note. Make sure the note gets saveed to the database even if the view
-        // is closed without saving the attendee. (For example, if the user has rights to add notes but not edit
-        // attendees.
-        Attendee attendee = attendeeDetailWindow.getAttendee();
-        log.info("{} added note \"{}\" to {}",
-                view.getCurrentUsername(),
-                message.replaceAll("([\\r\\n])+", " "),
-                attendee);
-        AttendeeHistory ah = new AttendeeHistory(view.getCurrentUser(), attendee, message);
-        attendeeHistoryRepository.save(ah);
-        attendeeDetailWindow.showHistory(attendeeHistoryRepository.findByAttendee(attendee));
     }
 
     public void showAttendeeList(AttendeeSearchByBadgeView view, Integer badgeId) {
@@ -401,5 +329,15 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
 
     public void showBadgeTypes(AttendeeSearchByBadgeView view) {
         view.afterBadgeTypeFetch(badgeRepository.findByVisibleTrue());
+    }
+
+    @Override
+    public void overrideEditLogin(OverrideRequiredForEditWindow window, String username, String password, AttendeeDetailView attendeeDetailWindow) {
+        // TODO
+    }
+
+    @Override
+    public void overrideEditCancel(OverrideRequiredForEditWindow window) {
+        // TODO
     }
 }

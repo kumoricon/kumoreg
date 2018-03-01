@@ -21,29 +21,29 @@ public class UserToStringConverterTest {
     }
 
     @Test(expected=Converter.ConversionException.class)
-    public void convertToModel() throws Exception {
+    public void convertToModel() {
         converter.convertToModel("Test", User.class, Locale.ENGLISH);
     }
 
     @Test
-    public void convertToPresentation() throws Exception {
+    public void convertToPresentation() {
         TestCase.assertEquals("User with name", "tuser",
                 converter.convertToPresentation(user, String.class, Locale.ENGLISH));
     }
 
     @Test
-    public void convertToPresentationNullName() throws Exception {
+    public void convertToPresentationNullName() {
         TestCase.assertEquals("User with name", "1",
                 converter.convertToPresentation(userWithNullName, String.class, Locale.ENGLISH));
     }
 
     @Test
-    public void getModelType() throws Exception {
+    public void getModelType() {
         assertEquals(User.class, converter.getModelType());
     }
 
     @Test
-    public void getPresentationType() throws Exception {
+    public void getPresentationType() {
         assertEquals(String.class, converter.getPresentationType());
     }
 

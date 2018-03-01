@@ -14,7 +14,7 @@ public class AttendeeImporterServiceTest {
     private Attendee bob;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         order = new Order();
         alice = new Attendee();
         alice.setFirstName("Alice");
