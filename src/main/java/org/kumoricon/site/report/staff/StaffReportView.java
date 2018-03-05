@@ -1,15 +1,14 @@
 package org.kumoricon.site.report.staff;
 
-import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
-import com.vaadin.v7.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.Grid;
+import com.vaadin.ui.Grid;
+import org.kumoricon.BaseGridView;
+import org.kumoricon.model.role.Role;
 import org.kumoricon.model.user.User;
-import org.kumoricon.site.BaseView;
-import org.kumoricon.site.fieldconverter.RoleToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -17,14 +16,14 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = StaffReportView.VIEW_NAME)
-public class StaffReportView extends BaseView implements View {
+public class StaffReportView extends BaseGridView implements View {
     public static final String VIEW_NAME = "staffReport";
     public static final String REQUIRED_RIGHT = "view_staff_report";
 
     private final StaffReportPresenter handler;
 
     private final Button btnRefresh = new Button("Refresh");
-    private final Grid dataGrid = new Grid("");
+    private final Grid<User> dataGrid = new Grid<>("");
 
     @Autowired
     public StaffReportView(StaffReportPresenter handler) {
@@ -33,21 +32,29 @@ public class StaffReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
+        setColumns(2);
+        setRows(1);
+        setColumnExpandRatio(0, 10);
+        setColumnExpandRatio(1, 1);
         btnRefresh.addClickListener((Button.ClickListener) clickEvent -> handler.showUserList(this));
 
-        addComponents(dataGrid, btnRefresh);
+        addComponent(dataGrid, 0, 0);
+        addComponent(btnRefresh, 1, 0);
         handler.showUserList(this);
-        dataGrid.setColumns("lastName", "firstName", "username", "phone", "role");
-        dataGrid.getColumn("role").setConverter(new RoleToStringConverter());
-        dataGrid.setEditorEnabled(false);
+        dataGrid.addColumn(User::getLastName).setCaption("Last Name");
+        dataGrid.addColumn(User::getFirstName).setCaption("First Name");
+        dataGrid.addColumn(User::getUsername).setCaption("User Name");
+        dataGrid.addColumn(User::getPhone).setCaption("Phone Number");
+        dataGrid.addColumn(User::getRole, Role::getName).setCaption("Role");
+        dataGrid.getEditor().setEnabled(false);
         dataGrid.setHeightMode(HeightMode.ROW);
         dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        dataGrid.setWidth(600, Unit.PIXELS);
+        dataGrid.setWidth("100%");
         dataGrid.addStyleName("kumoHeaderOnlyHandPointer");
     }
 
     public void afterSuccessfulFetch(List<User> users) {
-        dataGrid.setContainerDataSource(new BeanItemContainer<>(User.class, users));
+        dataGrid.setItems(users);
         if (users.size() > 0) { dataGrid.setHeightByRows(users.size()); }
     }
 

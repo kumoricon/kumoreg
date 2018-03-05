@@ -1,20 +1,20 @@
 package org.kumoricon.site.report.role;
 
 import com.vaadin.navigator.View;
-import com.vaadin.v7.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.site.report.ReportView;
-import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
 @ViewScope
 @SpringView(name = RoleReportView.VIEW_NAME)
-public class RoleReportView extends BaseView implements View, ReportView {
+public class RoleReportView extends BaseGridView implements View, ReportView {
     public static final String VIEW_NAME = "roleReport";
     public static final String REQUIRED_RIGHT = "view_role_report";
 
@@ -30,14 +30,18 @@ public class RoleReportView extends BaseView implements View, ReportView {
 
     @PostConstruct
     public void init() {
+        setColumns(2);
+        setRows(1);
+        setColumnExpandRatio(0, 10);
+        setColumnExpandRatio(1, 1);
         btnRefresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
-        addComponents(data, btnRefresh);
+
+        addComponent(data, 0, 0);
+        addComponent(btnRefresh, 1, 0);
         data.setContentMode(ContentMode.HTML);
         handler.fetchReportData(this);
-        data.setWidth("900px");
+        data.setWidth("100%");
     }
-
-
 
     public String getRequiredRight() {
         return REQUIRED_RIGHT;

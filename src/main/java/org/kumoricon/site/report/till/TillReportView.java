@@ -1,17 +1,17 @@
 package org.kumoricon.site.report.till;
 
 import com.vaadin.navigator.View;
-import com.vaadin.v7.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.Label;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.Label;
-import org.kumoricon.site.BaseView;
+import org.kumoricon.BaseGridView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
 @SpringView(name = org.kumoricon.site.report.till.TillReportView.VIEW_NAME)
-public class TillReportView extends BaseView implements View {
+public class TillReportView extends BaseGridView implements View {
     public static final String VIEW_NAME = "tillReport";
     public static final String REQUIRED_RIGHT = "view_till_report";
 
@@ -27,9 +27,14 @@ public class TillReportView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        addComponents(data, btnRefresh);
+        setColumns(2);
+        setRows(1);
+        setColumnExpandRatio(0, 10);
+        setColumnExpandRatio(1, 1);
+        addComponent(data, 0, 0);
+        addComponent(btnRefresh, 1, 0);
         data.setContentMode(ContentMode.HTML);
-        data.setWidth("1000px");
+        data.setWidth("100%");
         data.setHeightUndefined();
 
         btnRefresh.addClickListener((Button.ClickListener) clickEvent -> {
