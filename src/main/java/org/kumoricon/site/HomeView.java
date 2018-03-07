@@ -3,21 +3,18 @@ package org.kumoricon.site;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ServiceException;
-import com.vaadin.v7.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.renderers.NumberRenderer;
+import com.vaadin.ui.Label;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.badge.Badge;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Locale;
 
 @SpringView(name = HomeView.VIEW_NAME)
-public class HomeView extends BaseView implements View {
+public class HomeView extends BaseGridView implements View {
     public static final String VIEW_NAME = "";
     public static final String REQUIRED_RIGHT = null;
 
@@ -25,40 +22,20 @@ public class HomeView extends BaseView implements View {
     private HomePresenter handler;
 
     private Label welcome = new Label("Welcome to Kumoricon!");
-    private Grid passTypesTable = new Grid("");
+    private Label priceList = new Label("");
 
     @PostConstruct
     void init() {
-        addComponent(welcome);
+        setColumns(3);
+        setRows(2);
 
-        passTypesTable.setWidth(750, Unit.PIXELS);
-        passTypesTable.setHeightMode(HeightMode.ROW);
-        passTypesTable.addColumn("Badge Type", String.class);
-        passTypesTable.addColumn("adult", BigDecimal.class);
-        passTypesTable.addColumn("youth", BigDecimal.class);
-        passTypesTable.addColumn("child", BigDecimal.class);
-        passTypesTable.addColumn("under5", BigDecimal.class);
+        addComponent(welcome, 0, 0);
+        addComponent(priceList, 1, 1);
+        priceList.setContentMode(ContentMode.HTML);
 
-        Grid.Column adult = passTypesTable.getColumn("adult");
-        Grid.Column youth = passTypesTable.getColumn("youth");
-        Grid.Column child = passTypesTable.getColumn("child");
-        Grid.Column under5 = passTypesTable.getColumn("under5");
-
-        adult.setRenderer(new NumberRenderer("$%.2f", Locale.ENGLISH));
-        adult.setHeaderCaption("Adult (18+)");
-
-        youth.setRenderer(new NumberRenderer("$%.2f", Locale.ENGLISH));
-        youth.setHeaderCaption("Youth (13 - 17)");
-        child.setRenderer(new NumberRenderer("$%.2f", Locale.ENGLISH));
-        child.setHeaderCaption("Child (6 - 12)");
-        under5.setRenderer(new NumberRenderer("$%.2f", Locale.ENGLISH));
-        under5.setHeaderCaption("5 and under");
-
-        passTypesTable.setEnabled(false);
-        passTypesTable.setSelectionMode(Grid.SelectionMode.NONE);
-
-        addComponent(passTypesTable);
-//        setExpandRatio(passTypesTable, 1.0f);
+        setColumnExpandRatio(0, 1);
+        setColumnExpandRatio(1, 3);
+        setColumnExpandRatio(2, 1);
         handler.showBadges(this);
     }
 
@@ -72,17 +49,31 @@ public class HomeView extends BaseView implements View {
     public String getRequiredRight() { return REQUIRED_RIGHT; }
 
     public void showBadges(List<Badge> badges) {
+        /* TODO: Make this look better. Border on the table, bold header row, right-align numbers, etc
+          Add any CSS classes to styles.scss. */
+        StringBuilder output = new StringBuilder();
+        output.append("<table>");
+        output.append("<tr>");
+        output.append("<td>Badge Type</td>");
+        output.append("<td>Adult (18+)</td>");
+        output.append("<td>Youth (13 - 17)</td>");
+        output.append("<td>Child (6 - 12)</td>");
+        output.append("<td>5 and Under</td>");
+        output.append("</tr>");
         for (Badge badge : badges) {
             try {
-                passTypesTable.addRow(badge.getName(),
-                        badge.getCostForAge(35L),
-                        badge.getCostForAge(17L),
-                        badge.getCostForAge(11L),
-                        badge.getCostForAge(4L));
+                output.append("<tr>");
+                output.append("<td>" + badge.getName() + "</td>");
+                output.append("<td>$" + badge.getCostForAge(35L) + "</td>");
+                output.append("<td>$" + badge.getCostForAge(17L) + "</td>");
+                output.append("<td>$" + badge.getCostForAge(11L) + "</td>");
+                output.append("<td>$" + badge.getCostForAge(4L) + "</td>");
+                output.append("</tr>");
             } catch (ServiceException e) {
                 notifyError("Error getting age ranges for badge " + badge.getName());
             }
         }
-        passTypesTable.setHeightByRows(badges.size());
+        output.append("</table>");
+        priceList.setValue(output.toString());
     }
 }

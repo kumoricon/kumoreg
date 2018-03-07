@@ -1,10 +1,9 @@
 package org.kumoricon.site;
 
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.site.attendee.FieldFactory;
@@ -12,9 +11,9 @@ import org.kumoricon.site.attendee.FieldFactory;
 
 public class NewPasswordWindow extends Window {
 
-    PasswordField password = FieldFactory.createPasswordField("New Password", 1);
-    PasswordField verifyPassword = FieldFactory.createPasswordField("Verity Password", 2);
-    Button save = new Button("Save");
+    private PasswordField password = FieldFactory.createPasswordField("New Password", 1);
+    private PasswordField verifyPassword = FieldFactory.createPasswordField("Verity Password", 2);
+    private Button save = new Button("Save");
 
     private LoginPresenter handler;
     private LoginView parentView;
@@ -23,7 +22,6 @@ public class NewPasswordWindow extends Window {
         super("Set Password");
         this.handler = loginPresenter;
         this.parentView = parentView;
-        setIcon(FontAwesome.LOCK);
         setModal(true);
         center();
         setClosable(false);

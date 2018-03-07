@@ -6,24 +6,27 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.ui.*;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.annotation.PostConstruct;
 
-import static org.kumoricon.site.attendee.FieldFactory.createTextField;
 
 @SpringView(name = LoginView.VIEW_NAME)
 public class LoginView extends BaseView implements View {
     public static final String VIEW_NAME = "login";
     public static final String REQUIRED_RIGHT = null;
 
-    @Autowired
-    private LoginPresenter handler;
+    private final LoginPresenter handler;
 
-    private TextField usernameField = createTextField("Username");
+    private TextField usernameField = new TextField("Username");
     private PasswordField passwordField = new PasswordField("Password");
     private Button loginButton = new Button("Login");
+
+    @Autowired
+    public LoginView(LoginPresenter handler) {
+        this.handler = handler;
+    }
 
     @PostConstruct
     void init() {
@@ -47,8 +50,6 @@ public class LoginView extends BaseView implements View {
             }
         });
         usernameField.focus();
-
-//        setComponentAlignment(formLayout, Alignment.MIDDLE_CENTER);
     }
 
     public void showNewPasswordWindow() {
