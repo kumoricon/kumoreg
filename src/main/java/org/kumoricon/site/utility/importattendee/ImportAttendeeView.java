@@ -4,17 +4,17 @@ import com.vaadin.navigator.View;
 import com.vaadin.server.Sizeable;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.TextArea;
-import com.vaadin.v7.ui.Upload;
-import org.kumoricon.site.BaseView;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.Upload;
+import org.kumoricon.BaseGridView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
 @ViewScope
 @SpringView(name = ImportAttendeeView.VIEW_NAME)
-public class ImportAttendeeView extends BaseView implements View {
+public class ImportAttendeeView extends BaseGridView implements View {
     public static final String VIEW_NAME = "importAttendees";
     public static final String REQUIRED_RIGHT = "import_pre_reg_data";
 
@@ -31,19 +31,22 @@ public class ImportAttendeeView extends BaseView implements View {
     @PostConstruct
     public void init() {
         handler.setView(this);
-        setSizeFull();
 
-        addComponent(instructions);
+        setColumns(3);
+        setRows(2);
+        setColumnExpandRatio(1, 5);
+
+
+        addComponent(instructions, 0, 0);
         ImportAttendeePresenter.UploadReceiver receiver = handler.getUploadReceiver();
         Upload upload = new Upload("Upload JSON file", receiver);
         upload.addSucceededListener(receiver);
         upload.addFailedListener(receiver);
-        addComponent(upload);
+        addComponent(upload, 0, 1);
         status.setSizeFull();
         status.setWidth(600, Sizeable.Unit.PIXELS);
         status.setEnabled(false);
-        addComponent(status);
-//        setExpandRatio(status, 1.0f);
+        addComponent(status, 1, 1);
     }
 
     public void appendStatus(String s) {

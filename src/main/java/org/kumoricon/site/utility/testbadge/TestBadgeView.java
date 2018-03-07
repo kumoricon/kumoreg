@@ -1,80 +1,83 @@
 package org.kumoricon.site.utility.testbadge;
 
 import com.vaadin.navigator.View;
+import com.vaadin.server.StreamResource;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.NativeSelect;
-import com.vaadin.v7.ui.TextField;
-import org.kumoricon.model.attendee.Attendee;
+import com.vaadin.ui.*;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.badge.Badge;
-import org.kumoricon.site.BaseView;
-import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.site.attendee.FieldFactory;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
 @SpringView(name = TestBadgeView.VIEW_NAME)
-public class TestBadgeView extends BaseView implements View, AttendeePrintView {
+public class TestBadgeView extends BaseGridView implements View {
     public static final String VIEW_NAME = "testBadge";
     public static final String REQUIRED_RIGHT = null;
 
     private final TestBadgePresenter handler;
 
-    private NativeSelect badgeType;
+    private NativeSelect<Badge> badgeType;
     private TextField xOffset;
     private TextField yOffset;
+    private BrowserFrame pdf;
 
     @Autowired
     public TestBadgeView(TestBadgePresenter handler) {this.handler = handler;}
 
     @PostConstruct
     public void init() {
-        NativeSelect numberOfBadges = FieldFactory.createNativeSelect("Badges to generate:", 1);
-        numberOfBadges.addItems(1, 2, 3);
+        setColumns(2);
+        setRows(7);
+        setColumnExpandRatio(0, 10);
+
+        pdf = new BrowserFrame();
+        pdf.setWidth("500px");
+        pdf.setHeight("500px");
+        addComponent(pdf, 0, 0, 0, 5);
+
+
+        NativeSelect<Integer> numberOfBadges = new NativeSelect<>("Number of Badges");
+        numberOfBadges.setItems(1, 2, 3);
         numberOfBadges.setValue(1);
-        numberOfBadges.setNullSelectionAllowed(false);
-        addComponent(numberOfBadges);
+        numberOfBadges.setEmptySelectionAllowed(false);
+        addComponent(numberOfBadges, 1, 0);
 
-        badgeType = FieldFactory.createNativeSelect("Badge Type", 2);
-        badgeType.setMultiSelect(false);
-        badgeType.setNullSelectionAllowed(false);
+        badgeType = new NativeSelect<>("Badge Type");
+        badgeType.setEmptySelectionAllowed(false);
         List<Badge> availableBadges = handler.getBadges();
-        badgeType.addItems(availableBadges);
+        badgeType.setItems(availableBadges);
         badgeType.setValue(availableBadges.get(0));
-        addComponent(badgeType);
+        addComponent(badgeType, 1, 1);
 
-        xOffset = FieldFactory.createNegativeNumberField("Horizontal Offset (points)", 3);
-        yOffset = FieldFactory.createNegativeNumberField("Vertical Offset (points)", 4);
-        xOffset.setNullSettingAllowed(false);
-        yOffset.setNullSettingAllowed(false);
+        xOffset = new TextField("Horizontal Offset (points)");
+        yOffset = new TextField("Vertical Offset (points)");
         xOffset.setDescription("Points (1/72 inch). Negative values move left, positive values move right");
         yOffset.setDescription("Points (1/72 inch). Negative values move down, positive values move up");
         xOffset.setValue("0");
         yOffset.setValue("0");
-        addComponent(xOffset);
-        addComponent(yOffset);
+        addComponent(xOffset, 1, 2);
+        addComponent(yOffset, 1, 3);
 
         xOffset.setVisible(currentUserHasRight("manage_devices"));
         yOffset.setVisible(currentUserHasRight("manage_devices"));
 
         Button display = new Button("Print Test Badges");
-        display.setTabIndex(4);
-        addComponent(display);
+        addComponent(display,1 ,4);
         display.focus();
         display.addClickListener((Button.ClickListener) clickEvent ->
-                handler.showAttendeeBadgeWindow(this, (Integer) numberOfBadges.getValue(), (Badge) badgeType.getValue(), getXOffset(), getYOffset()));
-
-        Label notes = new Label("Note: Changed offsets will not be saved. Set them in Administration > Computers.");
-        addComponent(notes);
-        notes.setVisible(currentUserHasRight("manage_devices"));
+                handler.printBadges(this, numberOfBadges.getValue(), badgeType.getValue(), getXOffset(), getYOffset()));
 
         Button printAllBadges = new Button("Print all badge types");
-        printAllBadges.addClickListener(clickEvent -> handler.showAttendeeBadgeWindow(this, getXOffset(), getYOffset()));
-        addComponent(printAllBadges);
+        printAllBadges.addClickListener(clickEvent -> handler.printBadges(this, getXOffset(), getYOffset()));
+        addComponent(printAllBadges, 1, 5);
+
+        Label notes = new Label("Note: Changed offsets will not be saved. Set them in Administration > Computers.");
+        addComponent(notes, 1, 6);
+        notes.setVisible(currentUserHasRight("manage_devices"));
+
         handler.showCurrentOffsets(this, getCurrentClientIPAddress());
     }
 
@@ -113,9 +116,16 @@ public class TestBadgeView extends BaseView implements View, AttendeePrintView {
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
 
-    @Override
-    public void showPrintBadgeWindow(List<Attendee> attendeeList) {
-        PrintBadgeWindow window = new PrintBadgeWindow(this, handler, attendeeList);
-        showWindow(window);
+    public void showPDF(BadgePrintFormatter source) {
+        String filename = "testbadge" + System.currentTimeMillis() + ".pdf";
+        StreamResource resource = new StreamResource(source, filename);
+        removeComponent(pdf);
+        pdf = new BrowserFrame("", resource);
+        pdf.setWidth("500px");
+        pdf.setHeight("500px");
+        addComponent(pdf, 0, 0, 0, 5);
+        resource.setMIMEType("application/pdf");
+        resource.getStream().setParameter("Content-Disposition", "attachment; filename=" + filename);
+
     }
 }

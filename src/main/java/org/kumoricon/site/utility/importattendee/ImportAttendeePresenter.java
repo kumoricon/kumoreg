@@ -1,7 +1,7 @@
 package org.kumoricon.site.utility.importattendee;
 
 
-import com.vaadin.v7.ui.Upload;
+import com.vaadin.ui.Upload;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.model.session.SessionService;
