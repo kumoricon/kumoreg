@@ -1,23 +1,16 @@
 package org.kumoricon.site.user;
 
-import com.vaadin.ui.Button;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Notification;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.v7.data.util.BeanItem;
-import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.data.Binder;
+import com.vaadin.ui.*;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.v7.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.role.Role;
 import org.kumoricon.model.user.User;
-import org.kumoricon.site.BaseView;
-import org.kumoricon.site.attendee.FieldFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -26,16 +19,17 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = UserEditView.VIEW_NAME)
-class UserEditView extends BaseView implements View {
+class UserEditView extends BaseGridView implements View {
 
-    private final TextField username = FieldFactory.createTextField("Username");
-    private final TextField firstName = FieldFactory.createNameField("First Name");
-    private final TextField lastName = FieldFactory.createNameField("Last Name");
-    private final TextField badgePrefix = FieldFactory.createTextField("Badge Prefix");
-    private final NativeSelect role = new NativeSelect("Role");
-    private final TextField phone = FieldFactory.createTextField("Phone");
+    private final TextField username = new TextField("Username");
+    private final TextField firstName = new TextField("First Name");
+    private final TextField lastName = new TextField("Last Name");
+    private final TextField badgePrefix = new TextField("Badge Prefix");
+    private final NativeSelect<Role> role = new NativeSelect<>("Role");
+    private final TextField phone = new TextField("Phone");
+    private final CheckBox enabled = new CheckBox("Enabled");
 
-    private final BeanFieldGroup<User> userBeanFieldGroup = new BeanFieldGroup<>(User.class);
+    private final Binder<User> binder = new Binder<>();
 
     private final Button btnSave = new Button("Save");
     private final Button btnCancel = new Button("Cancel");
@@ -48,51 +42,50 @@ class UserEditView extends BaseView implements View {
     @Autowired
     public UserEditView(UserPresenter handler) {
         this.handler = handler;
-
     }
 
     @PostConstruct
     public void init() {
+        setColumns(3);
+        setRows(4);
+        setRowExpandRatio(3, 10);
 
         FormLayout form = new FormLayout();
         form.setMargin(true);
         form.setSpacing(true);
         form.setWidth("400px");
 
-        userBeanFieldGroup.bind(firstName, "firstName");
+        binder.bind(firstName, User::getFirstName, User::setFirstName);
         firstName.focus();
         firstName.selectAll();
-        firstName.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> updateUsername());
+        firstName.addValueChangeListener(valueChangeEvent -> updateUsername());
         form.addComponent(firstName);
 
-        userBeanFieldGroup.bind(lastName, "lastName");
-        lastName.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> updateUsername());
+        binder.bind(lastName, User::getLastName, User::setLastName);
+        lastName.addValueChangeListener(valueChangeEvent -> updateUsername());
         form.addComponent(lastName);
 
-        userBeanFieldGroup.bind(role, "role");
-        role.setNullSelectionAllowed(false);
+        binder.bind(role, User::getRole, User::setRole);
+        role.setEmptySelectionAllowed(false);
         form.addComponent(role);
 
-        userBeanFieldGroup.bind(username, "username");
+        binder.bind(username, User::getUsername, User::setUsername);
         form.addComponent(username);
 
-        userBeanFieldGroup.bind(badgePrefix, "badgePrefix");
+        binder.bind(badgePrefix, User::getBadgePrefix, User::setBadgePrefix);
         badgePrefix.setWidth("6em");
         form.addComponent(badgePrefix);
 
-        userBeanFieldGroup.bind(phone, "phone");
+        binder.bind(phone, User::getPhone, User::setPhone);
         form.addComponent(phone);
-        form.addComponent(userBeanFieldGroup.buildAndBind("Enabled", "enabled"));
 
-        HorizontalLayout buttons = new HorizontalLayout();
-        buttons.setSpacing(true);
-        buttons.addComponent(btnSave);
-        buttons.addComponent(btnCancel);
+        binder.bind(enabled, User::getEnabled, User::setEnabled);
+        form.addComponent(enabled);
+
 
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
-                userBeanFieldGroup.commit();
-                handler.saveUser(this, userBeanFieldGroup.getItemDataSource().getBean());
+                handler.saveUser(this, binder.getBean());
             } catch (DataIntegrityViolationException e) {
                 Notification.show("Error saving user: Constraint violation. Duplicate username or badge prefix?");
             } catch (Exception e) {
@@ -102,13 +95,15 @@ class UserEditView extends BaseView implements View {
 
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> navigateTo(UserListView.VIEW_NAME));
 
-        form.addComponent(buttons);
 
-        form.addComponent(btnResetPassword);
         btnResetPassword.addClickListener((Button.ClickListener) clickEvent -> handler.resetPassword(this, getUser()));
         btnSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        addComponent(form);
+
+        addComponent(form, 1, 0, 1, 3);
+        addComponent(btnSave, 2, 0);
+        addComponent(btnCancel, 2, 1);
+        addComponent(btnResetPassword, 2, 2);
     }
 
     private void updateUsername() {
@@ -128,15 +123,13 @@ class UserEditView extends BaseView implements View {
     }
 
     private User getUser() {
-        BeanItem<User> userBean = userBeanFieldGroup.getItemDataSource();
-        return userBean.getBean();
+        return binder.getBean();
     }
 
     void showUser(User user, List<Role> availableRoles) {
-        role.setContainerDataSource(new BeanItemContainer<>(Role.class, availableRoles));
-        role.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        role.setItemCaptionPropertyId("name");
-        userBeanFieldGroup.setItemDataSource(user);
+        role.setItems(availableRoles);
+        binder.setBean(user);
+        role.setItemCaptionGenerator(Role::getName);
     }
 
     @Override

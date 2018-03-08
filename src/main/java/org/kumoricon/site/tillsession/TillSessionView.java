@@ -1,19 +1,14 @@
 package org.kumoricon.site.tillsession;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.data.util.BeanItem;
-import com.vaadin.v7.data.util.BeanItemContainer;
-import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.v7.ui.*;
+import com.vaadin.ui.renderers.ButtonRenderer;
 import org.kumoricon.model.session.Session;
 import org.kumoricon.site.BaseView;
-import org.kumoricon.site.fieldconverter.StringToLocalDateTimeConverter;
-import org.kumoricon.site.fieldconverter.UserToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -27,7 +22,7 @@ public class TillSessionView extends BaseView implements View {
 
     private final TillSessionPresenter handler;
 
-    private final Table sessionTable = new Table();
+    private final Grid<Session> sessionTable = new Grid<>();
     private final Button btnShowOpen = new Button("Show Open Sessions");
     private final Button btnShowAll = new Button("Show All");
 
@@ -39,23 +34,26 @@ public class TillSessionView extends BaseView implements View {
     @PostConstruct
     public void init() {
 
-        addComponent(btnShowOpen);
-        addComponent(btnShowAll);
-
         btnShowOpen.addClickListener((Button.ClickListener) clickEvent -> showOpenClicked());
         btnShowAll.addClickListener((Button.ClickListener) clickEvent -> showAllClicked());
-        sessionTable.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
-                    BeanItem b = (BeanItem)itemClickEvent.getItem();
-                    sessionClicked((Session)b.getBean());
-                });
+        sessionTable.addItemClickListener(itemClickEvent -> sessionClicked(itemClickEvent.getItem()));
 
-        addComponent(sessionTable);
+        sessionTable.addColumn(Session::getId).setCaption("ID");
+        sessionTable.addColumn(session -> session.getUser().getFirstName() + " " + session.getUser().getLastName()).setCaption("User");
+        sessionTable.addColumn(Session::getStart).setCaption("Start Time");
+        sessionTable.addColumn(Session::getEnd).setCaption("End Time");
+        sessionTable.addColumn(Session::isOpen).setCaption("Open");
+        sessionTable.addColumn(session -> "Close",
+                new ButtonRenderer(clickEvent -> {
+                    Session s = (Session)clickEvent.getItem();
+                    closeSessionClicked((s.getId()));
+                }));
 
         sessionTable.setWidth("90%");
-        sessionTable.setNullSelectionAllowed(false);
-        sessionTable.setImmediate(true);
-        sessionTable.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        sessionTable.addGeneratedColumn("manage", new CloseButtonColumnGenerator());
+
+        addComponent(btnShowOpen);
+        addComponent(btnShowAll);
+        addComponent(sessionTable);
 
         handler.showOpenTillSessionList(this);
     }
@@ -73,37 +71,16 @@ public class TillSessionView extends BaseView implements View {
     }
 
     public void afterSuccessfulFetch(List<Session> sessions) {
-        Object[] sortBy = {sessionTable.getSortContainerPropertyId()};
-        boolean[] sortOrder = {sessionTable.isSortAscending()};
-        sessionTable.setContainerDataSource(new BeanItemContainer<>(Session.class, sessions));
-        sessionTable.setVisibleColumns("id", "user", "start", "end", "open", "manage");
-        sessionTable.setColumnHeaders("Id", "User", "Start Time", "End Time", "Open", "");
-        sessionTable.setConverter("user", new UserToStringConverter());
-        sessionTable.setConverter("start", new StringToLocalDateTimeConverter());
-        sessionTable.setConverter("end", new StringToLocalDateTimeConverter());
-        sessionTable.sort(sortBy, sortOrder);
-    }
-
-    class CloseButtonColumnGenerator implements Table.ColumnGenerator {
-        public Component generateCell(Table source, Object item, Object columnId) {
-            Session session = (Session)item;
-
-            if (session.isOpen()) {
-                Button button = new Button("Close Session");
-                button.setData(session.getId());
-                button.addClickListener((Button.ClickListener) clickEvent -> {
-                    Integer sessionId = (Integer)clickEvent.getButton().getData();
-                    closeSessionClicked(sessionId);
-                });
-                return button;
-            }
-            return null;
-        }
+        sessionTable.setItems(sessions);
     }
 
     private void closeSessionClicked(Integer sessionId) {
-        handler.closeSession(this, sessionId);
-        handler.showOpenTillSessionList(this);
+        try {
+            handler.closeSession(this, sessionId);
+            handler.showOpenTillSessionList(this);
+        } catch (RuntimeException ex) {
+            notify(ex.getMessage());
+        }
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }

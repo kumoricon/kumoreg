@@ -1,16 +1,13 @@
 package org.kumoricon.site.user;
 
 import com.vaadin.ui.Button;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.v7.ui.*;
+import com.vaadin.ui.Grid;
 import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
-import org.kumoricon.site.fieldconverter.RoleToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +20,7 @@ public class UserListView extends BaseView implements View {
     public static final String REQUIRED_RIGHT = "manage_staff";
 
     private final UserPresenter handler;
-    private final Table userList = new Table("Users");
+    private final Grid<User> userList = new Grid<>();
     private final Button btnAddNew = new Button("Add New");
 
     @Autowired
@@ -33,23 +30,25 @@ public class UserListView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        userList.setNullSelectionAllowed(false);
-        userList.setCaption("");
-        userList.setImmediate(true);
-        userList.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        userList.setItemCaptionPropertyId("username");
+        userList.setWidth("800px");
+        userList.setSelectionMode(Grid.SelectionMode.NONE);
 
-        addComponents(userList, btnAddNew);
+        userList.addColumn(User::getUsername).setCaption("Username");
+        userList.addColumn(User::getFirstName).setCaption("First Name");
+        userList.addColumn(User::getLastName).setCaption("Last Name");
+        userList.addColumn(user -> user.getRole().getName()).setCaption("Role");
+        userList.addColumn(User::getBadgePrefix).setCaption("Badge Prefix");
+        userList.addColumn(User::getLastBadgeNumberCreated).setCaption("Last Badge Number");
+        userList.addColumn(User::getEnabled).setCaption("Enabled");
 
-        userList.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
-                    User u = (User)valueChangeEvent.getProperty().getValue();
-                    navigateTo(UserEditView.VIEW_NAME + "/" + u.getId());
-                });
-
-        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
-            navigateTo(UserEditView.VIEW_NAME);
+        userList.addItemClickListener(clickEvent -> {
+            User u = clickEvent.getItem();
+            navigateTo(UserEditView.VIEW_NAME + "/" + u.getId());
         });
 
+        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> navigateTo(UserEditView.VIEW_NAME));
+
+        addComponents(userList, btnAddNew);
         handler.showUserList(this);
     }
 
@@ -59,14 +58,7 @@ public class UserListView extends BaseView implements View {
     }
 
     public void afterSuccessfulFetch(List<User> users) {
-        Object[] sortBy = {userList.getSortContainerPropertyId()};
-        boolean[] sortOrder = {userList.isSortAscending()};
-        userList.setContainerDataSource(new BeanItemContainer<>(User.class, users));
-        userList.setVisibleColumns("username", "firstName", "lastName", "role", "badgePrefix", "lastBadgeNumberCreated", "enabled");
-        userList.setColumnHeaders("Username", "First Name", "Last Name", "Role", "Badge Prefix", "Last Badge Number", "Enabled");
-        userList.setConverter("role", new RoleToStringConverter());
-        userList.sort(sortBy, sortOrder);
-        userList.setPageLength(users.size());
+        userList.setItems(users);
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
