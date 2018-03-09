@@ -1,32 +1,25 @@
 package org.kumoricon.site.attendee.window;
 
-import com.vaadin.ui.BrowserFrame;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Window;
-import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.ui.*;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
-import com.vaadin.v7.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
-import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PrintBadgeWindow extends Window {
 
-    Button printedSuccessfully = new Button("Printed Successfully?");
-    Button reprint = new Button("Reprint Selected");
-    Button showBadgeInBrowser = new Button("Show Selected In Browser");
+    private Button printedSuccessfully = new Button("Printed Successfully?");
+    private Button reprint = new Button("Reprint Selected");
+    private Button showBadgeInBrowser = new Button("Show Selected In Browser");
 
-    Grid attendeeGrid;
-    BeanItemContainer<Attendee> container;
+    Grid<Attendee> attendeeGrid;
 
     private PrintBadgeHandler handler;
     private BaseView parentView;
@@ -45,20 +38,20 @@ public class PrintBadgeWindow extends Window {
         verticalLayout.setMargin(true);
         verticalLayout.setSpacing(true);
 
-        container =  new BeanItemContainer<>(Attendee.class, attendeeList);
-        attendeeGrid = new Grid(container);
-        attendeeGrid.removeAllColumns();
-        attendeeGrid.addColumn("firstName");
-        attendeeGrid.addColumn("lastName");
-        attendeeGrid.addColumn("age");
-        attendeeGrid.addColumn("badge");
-        attendeeGrid.getColumn("badge").setConverter(new BadgeToStringConverter());
+        attendeeGrid = new Grid<>();
+        attendeeGrid.addColumn(Attendee::getFirstName).setCaption("First Name");
+        attendeeGrid.addColumn(Attendee::getLastName).setCaption("Last Name");
+        attendeeGrid.addColumn(Attendee::getAge).setCaption("Age");
+        attendeeGrid.addColumn(attendee -> attendee.getBadge().getName()).setCaption("Badge");
         attendeeGrid.setSizeFull();
         attendeeGrid.addStyleName("kumoHeaderOnlyHandPointer");
         attendeeGrid.setColumnOrder("firstName", "lastName", "age");
         attendeeGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-        Grid.MultiSelectionModel m  = (Grid.MultiSelectionModel) attendeeGrid.getSelectionModel();
-        m.selectAll();
+        attendeeGrid.setItems(attendeeList);
+        for (Attendee a : attendeeList) {
+            attendeeGrid.select(a);
+        }
+
         verticalLayout.addComponent(attendeeGrid);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -69,17 +62,12 @@ public class PrintBadgeWindow extends Window {
         printedSuccessfully.focus();
 
         reprint.addClickListener((Button.ClickListener) clickEvent -> {
-            List<Attendee> selectedAttendees = new ArrayList<>();
-            for (Object sel : attendeeGrid.getSelectedRows()) {
-                selectedAttendees.add((Attendee) sel);
-            }
+            List<Attendee> selectedAttendees = new ArrayList<>(attendeeGrid.getSelectedItems());
             handler.reprintBadges(this, selectedAttendees);
         });
+
         showBadgeInBrowser.addClickListener((Button.ClickListener) clickEvent -> {
-            List<Attendee> selectedAttendees = new ArrayList<>();
-            for (Object sel : attendeeGrid.getSelectedRows()) {
-                selectedAttendees.add((Attendee) sel);
-            }
+            List<Attendee> selectedAttendees = new ArrayList<>(attendeeGrid.getSelectedItems());
             showBadgesInBrowser(selectedAttendees);
         });
         printedSuccessfully.addClickListener((Button.ClickListener) clickEvent ->
@@ -120,5 +108,4 @@ public class PrintBadgeWindow extends Window {
     public void setHandler(PrintBadgeHandler handler) { this.handler = handler; }
 
     public BaseView getParentView() { return parentView; }
-    public void setParentView(BaseView parentView) { this.parentView = parentView; }
 }
