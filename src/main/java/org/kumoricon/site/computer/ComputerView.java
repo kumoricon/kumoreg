@@ -1,30 +1,28 @@
 package org.kumoricon.site.computer;
 
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Panel;
-import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.fieldgroup.FieldGroup;
-import com.vaadin.v7.data.util.BeanItem;
-import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.data.Binder;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.*;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.v7.ui.*;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.computer.Computer;
 import org.kumoricon.model.printer.Printer;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 @ViewScope
 @SpringView(name = ComputerView.VIEW_NAME)
-public class ComputerView extends BaseView implements View {
+public class ComputerView extends BaseGridView implements View {
     public static final String VIEW_NAME = "computers";
     public static final String REQUIRED_RIGHT = "manage_devices";
 
@@ -32,16 +30,14 @@ public class ComputerView extends BaseView implements View {
     private ComputerPresenter handler;
     private static final Logger log = LoggerFactory.getLogger(ComputerView.class);
 
-    private Grid gridComputers = new Grid();
-    private Grid gridPrinters = new Grid();
+    private Grid<Computer> gridComputers = new Grid<>();
+    private Grid<Printer> gridPrinters = new Grid<>();
     private Panel panelLeft = new Panel();
     private Panel panelRight = new Panel();
     private Label lblLeftTitle;
     private Label lblLeftSubtitle;
     private Label lblRightTitle;
     private Label lblRightSubtitle;
-    private BeanItemContainer<Computer> computerList = new BeanItemContainer<>(Computer.class);
-    private BeanItemContainer<Printer> printerList = new BeanItemContainer<>(Printer.class);
     private Button btnAddComputer = new Button("Add");
     private Button btnDeleteComputer = new Button("Delete");
     private Button btnAddPrinter = new Button("Install...");
@@ -52,49 +48,48 @@ public class ComputerView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
+        setColumns(7);
+        setRows(6);
 
-        //Create an overall page layout with two columns
-        HorizontalLayout pageLayout = new HorizontalLayout();
-        pageLayout.setSizeFull();
-        pageLayout.setSpacing(true);
 
         // Left column (computers)
-        VerticalLayout layoutLeft = new VerticalLayout();
-        layoutLeft.setSizeUndefined();
-        layoutLeft.setMargin(true);
-        layoutLeft.setSpacing(true);
-        lblLeftTitle = new Label ("<span style='font-size:24px'>Computers</span>",ContentMode.HTML);
+        lblLeftTitle = new Label ("<span style='font-size:24px'>Computers</span>");
+        lblLeftTitle.setContentMode(ContentMode.HTML);
         lblLeftSubtitle = new Label("<span style='font-size:12px'>This computer's IP address is: </span>" + getCurrentClientIPAddress(), ContentMode.HTML);
-        layoutLeft.addComponent(lblLeftTitle);
-        layoutLeft.addComponent(lblLeftSubtitle);
-        gridComputers.setEditorEnabled(true);
+        addComponent(lblLeftTitle, 0, 0, 2, 0);
+        addComponent(lblLeftSubtitle, 0, 1, 2, 1);
+
+        addComponent(gridComputers,0,2, 2, 2);
         gridComputers.setSelectionMode(Grid.SelectionMode.SINGLE);
         gridComputers.setColumnReorderingAllowed(true);
-        gridComputers.setContainerDataSource(computerList);
-        gridComputers.removeColumn("id");
-        gridComputers.removeColumn("uuid");
 
-        gridComputers.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
-            @Override
-            public void preCommit(FieldGroup.CommitEvent commitEvent) {
+        Binder<Computer> binder = gridComputers.getEditor().getBinder();
 
-            }
+        TextField ipAddressField = new TextField();
+        TextField xOffsetField = new TextField();
+        TextField yOffsetField = new TextField();
+        TextField printerNameField = new TextField();
 
-            @Override
-            public void postCommit(FieldGroup.CommitEvent commitEvent) {
-                Item editedItem = commitEvent.getFieldBinder().getItemDataSource();
-                BeanItem<Computer> item = (BeanItem<Computer>) editedItem;
-                handler.saveComputer(ComputerView.this, item.getBean());
-            }
-        });
+        Binder.Binding<Computer, String> nameBinding = binder.bind(ipAddressField, Computer::getIpAddress, Computer::setIpAddress);
+        Grid.Column<Computer, String> column = gridComputers.addColumn(Computer::getIpAddress);
+        column.setEditorBinding(nameBinding);
 
-        layoutLeft.addComponent(gridComputers);
+        Binder.Binding<Computer, String> printerNameBinding = binder.bind(printerNameField, Computer::getPrinterName, Computer::setPrinterName);
+        Grid.Column<Computer, String> printerNameColumn = gridComputers.addColumn(Computer::getPrinterName);
+        printerNameColumn.setEditorBinding(printerNameBinding);
+        gridComputers.getEditor().setEnabled(true);
 
-        HorizontalLayout computerButtons = new HorizontalLayout();
-        computerButtons.setSpacing(true);
-        computerButtons.addComponent(btnAddComputer);
-        computerButtons.addComponent(btnDeleteComputer);
-        computerButtons.addComponent(btnViewInstructions);
+        gridComputers.getEditor().addSaveListener(editorSaveEvent -> handler.saveComputer(this, editorSaveEvent.getBean()));
+
+//        gridComputers.addColumn(Computer::getIpAddress).setCaption("IP Address").setEditorComponent(new TextField(), Computer::setIpAddress);
+//        gridComputers.addColumn(Computer::getxOffset).setCaption("X Offset").setEditorComponent(new TextField(), Computer::setxOffset);
+//        gridComputers.addColumn(Computer::getyOffset).setCaption("Y Offset").setEditorComponent(new TextField(), Computer::setyOffset);
+//        gridComputers.addColumn(Computer::getPrinterName).setCaption("Printer").setEditorComponent(new TextField(), Computer::setPrinterName);
+
+
+        addComponent(btnAddComputer, 0, 4);
+        addComponent(btnDeleteComputer, 1, 4);
+        addComponent(btnViewInstructions, 2, 4);
 
         btnViewInstructions.addClickListener((Button.ClickListener) clickEvent -> {
             handler.showInstructions(this);
@@ -105,39 +100,39 @@ public class ComputerView extends BaseView implements View {
         });
 
         btnDeleteComputer.addClickListener((Button.ClickListener) clickEvent -> {
-            BeanItem<Computer> item = computerList.getItem(gridComputers.getSelectedRow());
-            if (item != null) {
-                handler.deleteComputer(this, item.getBean());
+            Set<Computer> selected = gridComputers.getSelectedItems();
+
+            for (Computer c : selected) {
+                handler.deleteComputer(this, c);
             }
         });
-        layoutLeft.addComponent(computerButtons);
 
-        panelLeft.setContent(layoutLeft);
+
 
         // Right column (printers)
-        VerticalLayout layoutRight = new VerticalLayout();
-        layoutRight.setSizeUndefined();
-        layoutRight.setMargin(true);
-        layoutRight.setSpacing(true);
+
         lblRightTitle = new Label("<span style='font-size:24px'>Printers</span>",ContentMode.HTML);
         lblRightSubtitle = new Label("<span style='font-size:12px'>Only printers listed below can be used to print badges</span>",ContentMode.HTML);
-        layoutRight.addComponent(lblRightTitle);
-        layoutRight.addComponent(lblRightSubtitle);
-        layoutRight.addComponent(gridPrinters);
-        gridPrinters.setEditorEnabled(false);
+
+        addComponent(lblRightTitle, 4, 0, 6, 0);
+        addComponent(lblRightSubtitle, 4, 1, 6, 1);
+
         gridPrinters.setSelectionMode(Grid.SelectionMode.SINGLE);
         gridPrinters.setColumnReorderingAllowed(true);
-        gridPrinters.setContainerDataSource(printerList);
-        gridPrinters.removeColumn("id");
-        gridPrinters.removeColumn("uuid");
-        gridPrinters.setColumnOrder("name", "model");
+        gridPrinters.getEditor().setEnabled(true);
 
-        HorizontalLayout printerButtons = new HorizontalLayout();
-        printerButtons.setSpacing(true);
-        printerButtons.addComponent(btnAddPrinter);
-        printerButtons.addComponent(btnDeletePrinter);
-        printerButtons.addComponent(btnRefreshPrinterGrid);
-        printerButtons.addComponent(btnEditPrinterModels);
+        gridPrinters.addColumn(Printer::getName).setCaption("Name");
+        gridPrinters.addColumn(Printer::getIpAddress).setCaption("IP Address");
+        gridPrinters.addColumn(Printer::getModel).setCaption("Model");
+        gridPrinters.addColumn(Printer::getStatus).setCaption("Status");
+
+        addComponent(gridPrinters, 4, 2, 6, 2);
+
+        addComponent(btnAddPrinter, 4, 4);
+        addComponent(btnDeletePrinter, 5, 4);
+        addComponent(btnRefreshPrinterGrid, 6, 4);
+//        addComponent(btnEditPrinterModels, 8, 4);
+
         /* TEMPORARY */ btnEditPrinterModels.setEnabled(false); /* TODO implement printer model feature */
 
         btnAddPrinter.addClickListener((Button.ClickListener) clickEvent -> {
@@ -145,9 +140,9 @@ public class ComputerView extends BaseView implements View {
         });
 
         btnDeletePrinter.addClickListener((Button.ClickListener) clickEvent -> {
-            BeanItem<Printer> item = printerList.getItem(gridPrinters.getSelectedRow());
-            if (item != null) {
-                handler.deletePrinter(this, item.getBean());
+            Set<Printer> selected = gridPrinters.getSelectedItems();
+            for (Printer p : selected) {
+                handler.deletePrinter(this, p);
             }
         });
 
@@ -155,13 +150,6 @@ public class ComputerView extends BaseView implements View {
             handler.refreshPrinterList(this);
         });
 
-        layoutRight.addComponent(printerButtons);
-        panelRight.setContent(layoutRight);
-
-        // Display the page
-        pageLayout.addComponent(panelLeft);
-        pageLayout.addComponent(panelRight);
-        addComponent(pageLayout);
 
         // Populate data
         handler.showComputerList(this);
@@ -178,20 +166,13 @@ public class ComputerView extends BaseView implements View {
     }
 
     public void afterSuccessfulComputerFetch(List<Computer> computers) {
-        computerList.removeAllItems();
-        computerList.addAll(computers);
+        gridComputers.setItems(computers);
     }
 
     public void afterSuccessfulPrinterFetch(List<Printer> printers) {
-        printerList.removeAllItems();
-        printerList.addAll(printers);
+        gridPrinters.setItems(printers);
     }
-
-    public void clearSelection() { gridComputers.select(null); }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
 
-    public void addComputer(Computer computer) {
-        computerList.addItem(computer);
-    }
 }

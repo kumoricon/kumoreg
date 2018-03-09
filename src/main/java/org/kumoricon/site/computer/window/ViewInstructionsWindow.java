@@ -2,11 +2,8 @@ package org.kumoricon.site.computer.window;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.v7.shared.ui.label.ContentMode;
-import com.vaadin.v7.ui.*;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.*;
 
 public class ViewInstructionsWindow extends Window {
 
@@ -26,14 +23,11 @@ public class ViewInstructionsWindow extends Window {
         verticalLayout.setMargin(true);
         verticalLayout.setSpacing(true);
         verticalLayout.addComponent(labelInstructionText);
-
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setSpacing(true);
-        horizontalLayout.addComponent(btnClose);
+        verticalLayout.addComponent(btnClose);
+        verticalLayout.setComponentAlignment(btnClose, Alignment.MIDDLE_CENTER);
 
         btnClose.addClickListener((Button.ClickListener) clickEvent -> close());
 
-        verticalLayout.addComponent(horizontalLayout);
         setContent(verticalLayout);
 
         labelInstructionText.setContentMode(ContentMode.HTML);

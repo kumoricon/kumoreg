@@ -1,39 +1,24 @@
 package org.kumoricon.site.computer.window;
 
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Window;
-import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.ui.*;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.v7.ui.*;
 import org.kumoricon.model.printer.Printer;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AddPrinterWindow extends Window {
 
     public static final String REQUIRED_RIGHT = "manage_devices";
     private TextField txtHostname = new TextField("Hostname: ");
-    private ComboBox comboboxModel;
+    private ComboBox<String> comboboxModel;
     private Button btnCancel = new Button("Cancel");
     private Button btnInstall = new Button("Install");
     private Label labelBlankLine = new Label(" ");
-    private Boolean cancelPressed = false;
     private Printer printer = new Printer();
 
     public PrinterWindowCallback installSuccessHandler;
     public PrinterWindowCallback installFailureHandler;
-
-    public Boolean getCancelPressed() {
-        return this.cancelPressed;
-    }
-    public void setCancelPressed(Boolean value) {
-        this.cancelPressed = value;
-    }
-
-    public String getTxtHostname() {
-        return txtHostname.getValue();
-    }
 
     public Printer getInstalledPrinter() {
         return this.printer;
@@ -46,15 +31,10 @@ public class AddPrinterWindow extends Window {
         layout.setMargin(true);
 
         //Create a combo box with an item for each printer model
-        List<Printer> modelList = new ArrayList<>();
         /* TODO pull model information from a database table */
-        /* TEMPORARY */ modelList.add(new Printer("", "8610"));
-        /* TEMPORARY */ modelList.add(new Printer("", "251"));
-        /* TEMPORARY */ modelList.add(new Printer("", "0000"));
-        BeanItemContainer<Printer> objects = new BeanItemContainer(Printer.class, modelList);
-        this.comboboxModel = new ComboBox("Model", objects);
-        this.comboboxModel.setTextInputAllowed(false);
-        this.comboboxModel.setItemCaptionPropertyId("model");
+        List<String> modelList = Arrays.asList("8610", "251", "0000");
+        this.comboboxModel = new ComboBox<>("Model");
+        comboboxModel.setItems(modelList);
         layout.addComponent(txtHostname);
         layout.addComponent(comboboxModel);
         setIcon(FontAwesome.PRINT);
@@ -73,22 +53,21 @@ public class AddPrinterWindow extends Window {
         setContent(layout);
 
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> {
-            this.setCancelPressed(true);
             this.close();
         });
 
         btnInstall.addClickListener((Button.ClickListener) clickEvent -> {
-            String model = ((Printer) comboboxModel.getValue()).getModel();
+            String model = (comboboxModel.getValue());
             this.printer.setName(this.txtHostname.getValue());
             this.printer.setModel(model);
 
             // Validate input
-            if (this.printer.getModel() == "") {
+            if (this.printer.getModel().equals("")) {
                 /* TODO Improve validation */
                 /* TODO display error message */
                 return;
             }
-            else if (this.printer.getName() == "") {
+            else if (this.printer.getName().equals("")) {
                 /* TODO Improve validation */
                 /* TODO display error message */
                 return;
@@ -98,7 +77,7 @@ public class AddPrinterWindow extends Window {
             String status = printer.install();
 
             // Install succeeded so run the success handler if one has been set
-            if (status.startsWith("Error") == false) {
+            if (!status.startsWith("Error")) {
                 if (installSuccessHandler != null) {
                     installSuccessHandler.run();
                 }
