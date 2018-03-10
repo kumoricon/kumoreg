@@ -12,7 +12,7 @@ import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.BaseView;
-import org.kumoricon.site.attendee.FieldFactory;
+import static org.kumoricon.site.attendee.FieldFactory8.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 
@@ -29,11 +29,11 @@ public class OrderPaymentCashView extends BaseView implements View, PaymentView 
     public static final String TEMPLATE = "order/{orderId}/payment/addCash";
     public static final UriTemplate URI_TEMPLATE = new UriTemplate(TEMPLATE);
 
-    com.vaadin.v7.ui.TextField balance = FieldFactory.createDollarField("Balance Due", 1);
-    com.vaadin.v7.ui.TextField amount = FieldFactory.createDollarField("Amount", 2);
-    com.vaadin.v7.ui.TextField change = FieldFactory.createTextField("Change", 3);
-    Button save = new Button("Save");
-    Button cancel = new Button("Cancel");
+    private TextField balance = createDollarField("Balance Due", 1);
+    private TextField amount = createDollarField("Amount", 2);
+    private TextField change = createTextField("Change", 3);
+    private Button save = new Button("Save");
+    private Button cancel = new Button("Cancel");
 
     protected Integer orderId;
     protected Order order;
@@ -75,13 +75,13 @@ public class OrderPaymentCashView extends BaseView implements View, PaymentView 
     }
 
 
-    protected VerticalLayout buildButtons() {
+    private VerticalLayout buildButtons() {
         VerticalLayout buttons = new VerticalLayout();
         buttons.setSpacing(true);
         buttons.setWidth("15%");
         buttons.setMargin(new MarginInfo(false, true, false, true));
 
-        amount.addTextChangeListener(e -> updateChange(e.getText()));
+        amount.addValueChangeListener(e -> updateChange(e.getValue()));
 
         save.addClickListener(c -> {
             Payment p = new Payment();

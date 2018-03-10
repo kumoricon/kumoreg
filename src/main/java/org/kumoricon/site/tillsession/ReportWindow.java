@@ -4,11 +4,8 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.StreamResource;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
-import com.vaadin.v7.shared.ui.label.ContentMode;
-import com.vaadin.v7.ui.*;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.*;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;

@@ -6,13 +6,13 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
-import org.kumoricon.site.attendee.FieldFactory;
+import org.kumoricon.site.attendee.FieldFactory8;
 
 
 public class NewPasswordWindow extends Window {
 
-    private PasswordField password = FieldFactory.createPasswordField("New Password", 1);
-    private PasswordField verifyPassword = FieldFactory.createPasswordField("Verity Password", 2);
+    private PasswordField password = FieldFactory8.createPasswordField("New Password", 1);
+    private PasswordField verifyPassword = FieldFactory8.createPasswordField("Verity Password", 2);
     private Button save = new Button("Save");
 
     private LoginPresenter handler;

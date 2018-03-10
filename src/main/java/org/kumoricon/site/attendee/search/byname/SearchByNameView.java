@@ -43,7 +43,7 @@ public class SearchByNameView extends BaseGridView implements View {
         addComponent(txtSearch, 1, 0, 2, 0);
 
         btnSearch = new Button("Search");
-        btnSearch.addClickListener((Button.ClickListener) clickEvent -> handler.searchFor(this, txtSearch.getValue()));
+        btnSearch.addClickListener((Button.ClickListener) clickEvent -> navigateTo(VIEW_NAME + "/" + txtSearch.getValue()));
         btnSearch.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         addComponent(btnSearch, 3, 0);
 

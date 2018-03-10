@@ -1,9 +1,10 @@
 package org.kumoricon.site.attendee;
 
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.util.converter.Converter;
-import com.vaadin.v7.data.validator.RegexpValidator;
-import com.vaadin.v7.ui.*;
+import com.vaadin.data.validator.RegexpValidator;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.TextField;
 import org.kumoricon.service.FieldCleaner;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.GregorianCalendar;
 /**
  * Helpers for generating different Vaadin form fields
  */
-public class FieldFactory {
+public class FieldFactory8 {
     /**
      * Returns a TextField with the given name that will show an empty string instead of "null" for null values
      * @param name Field Name
@@ -20,7 +21,6 @@ public class FieldFactory {
      */
     public static TextField createTextField(String name) {
         TextField textField = new TextField(name);
-        textField.setNullRepresentation("");
         return textField;
     }
 
@@ -50,7 +50,7 @@ public class FieldFactory {
      */
     public static TextField createNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
-        textField.addValidator(new RegexpValidator("[0-9]+", "This is not a number"));
+//        textField.addValidator(new RegexpValidator("[0-9]+", "This is not a number"));
         textField.setTabIndex(tabIndex);
         return textField;
     }
@@ -63,7 +63,7 @@ public class FieldFactory {
      */
     public static TextField createNegativeNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
-        textField.addValidator(new RegexpValidator("-?[0-9]+", "This is not a number"));
+//        textField.addValidator(new RegexpValidator("-?[0-9]+", "This is not a number"));
         textField.setTabIndex(tabIndex);
         return textField;
     }
@@ -82,7 +82,7 @@ public class FieldFactory {
 
     public static TextField createDollarField(String name) {
         TextField textField = createTextField(name);
-        textField.addValidator(new RegexpValidator("\\$?[0-9]+?\\.?[0-9]?[0-9]?", "This is not a number"));
+//        textField.addValidator(new RegexpValidator("\\$?[0-9]+?\\.?[0-9]?[0-9]?", "This is not a number"));
         return textField;
     }
 
@@ -96,9 +96,10 @@ public class FieldFactory {
      */
     public static TextField createNameField(String name) {
         TextField textField = createTextField(name);
-        textField.addValueChangeListener((Property.ValueChangeListener) event -> {
-            if (event != null && event.getProperty() != null && event.getProperty().getValue() != null) {
-                String input = event.getProperty().getValue().toString();event.getProperty().setValue(FieldCleaner.cleanName(input));
+        textField.addValueChangeListener(event -> {
+            if (event != null && event.getValue() != null) {
+                String input = event.getValue();
+                textField.setValue(FieldCleaner.cleanName(input));
             }
         });
         return textField;
@@ -127,12 +128,12 @@ public class FieldFactory {
      */
     public static TextField createPhoneNumberField(String name, int tabIndex) {
         TextField textField = createTextField(name);
-        textField.addValidator(new RegexpValidator("[0-9 \\+\\-\\(\\)x]{10,25}",
-                "Must contain 10-25 characters, only numbers, dash, space, parenthesis, + or x"));
-        textField.addValueChangeListener((Property.ValueChangeListener) event -> {
-            if (event != null && event.getProperty() != null && event.getProperty().getValue() != null) {
-                String input = event.getProperty().getValue().toString();
-                    event.getProperty().setValue(FieldCleaner.cleanPhoneNumber(input));
+//        textField.addValidator(new RegexpValidator("[0-9 \\+\\-\\(\\)x]{10,25}",
+//                "Must contain 10-25 characters, only numbers, dash, space, parenthesis, + or x"));
+        textField.addValueChangeListener(event -> {
+            if (event != null && event.getValue() != null) {
+                String input = event.getValue();
+                    textField.setValue(FieldCleaner.cleanPhoneNumber(input));
             }
         });
         textField.setTabIndex(tabIndex);
@@ -147,7 +148,7 @@ public class FieldFactory {
      */
     public static TextField createDecimalField(String name) {
         TextField textField = createTextField(name);
-        textField.addValidator(new RegexpValidator("[0-9]*\\.?[0-9]+", "This is not a number"));
+//        textField.addValidator(new RegexpValidator("[0-9]*\\.?[0-9]+", "This is not a number"));
         return textField;
     }
 
@@ -185,51 +186,52 @@ public class FieldFactory {
      * @return DateField
      */
     public static DateField createDateField(String name, int tabIndex) {
-        PopupDateField dateField = new PopupDateField(name){
-            @Override
-            protected Date handleUnparsableDateString(String dateString) throws Converter.ConversionException {
-                Integer year = null;
-                Integer month = null;
-                Integer day = null;
-                // Try to parse date without delimiters -- MMDDYYYY format (must have leading zeros)
-                String dateDigits = dateString.trim();
-                if (dateDigits.matches("^\\d{8}$")) {
-                    year = Integer.parseInt(dateDigits.substring(4, 8));
-                    month = Integer.parseInt(dateDigits.substring(0, 2)) -1;
-                    day = Integer.parseInt(dateDigits.substring(2, 4));
-                } else {
-                    // Try to parse date with - instead of /
-                    String fields[] = dateString.split("-");
-                    if (fields.length >= 3) {
-                        try {
-                            year = Integer.parseInt(fields[2]);
-                            month = Integer.parseInt(fields[0]) - 1;
-                            day = Integer.parseInt(fields[1]);
-                        } catch (NumberFormatException e) {
-                            year = null;
-                            month = null;
-                            day = null;
-                        }
-                    }
-                }
+        DateField dateField = new DateField(name);
+        //{
+//            @Override
+//            protected LocalDate handleUnparsableDateString(String dateString) throws Converter.ConversionException {
+//                Integer year = null;
+//                Integer month = null;
+//                Integer day = null;
+//                // Try to parse date without delimiters -- MMDDYYYY format (must have leading zeros)
+//                String dateDigits = dateString.trim();
+//                if (dateDigits.matches("^\\d{8}$")) {
+//                    year = Integer.parseInt(dateDigits.substring(4, 8));
+//                    month = Integer.parseInt(dateDigits.substring(0, 2)) -1;
+//                    day = Integer.parseInt(dateDigits.substring(2, 4));
+//                } else {
+//                    // Try to parse date with - instead of /
+//                    String fields[] = dateString.split("-");
+//                    if (fields.length >= 3) {
+//                        try {
+//                            year = Integer.parseInt(fields[2]);
+//                            month = Integer.parseInt(fields[0]) - 1;
+//                            day = Integer.parseInt(fields[1]);
+//                        } catch (NumberFormatException e) {
+//                            year = null;
+//                            month = null;
+//                            day = null;
+//                        }
+//                    }
+//                }
 
-                if (year != null && month != null && day != null && month >= 0 && month <= 11 && day >= 1 && day <= 31) {
-                    try {
-                        GregorianCalendar c = new GregorianCalendar(year, month, day);
-                        return c.getTime();
-                    } catch (NumberFormatException e) {
-                        // Ignore, throw ConversionException below
-                    }
-                }
-
-                // Bad date
-                throw new Converter
-                        .ConversionException("Your date must be in MMDDYYYY, MM/DD/YYYY, or MM-DD-YYYY format");
-            }
-        };
+//                if (year != null && month != null && day != null && month >= 0 && month <= 11 && day >= 1 && day <= 31) {
+//                    try {
+//                        GregorianCalendar c = new GregorianCalendar(year, month, day);
+//                        return c.getTime();
+//                    } catch (NumberFormatException e) {
+//                        // Ignore, throw ConversionException below
+//                    }
+//                }
+//
+//                // Bad date
+//                throw new Converter
+//                        .ConversionException("Your date must be in MMDDYYYY, MM/DD/YYYY, or MM-DD-YYYY format");
+//            }
+//        };
 
         dateField.setTabIndex(tabIndex);
-        dateField.setInputPrompt("MMDDYYYY");
+        dateField.setPlaceholder("MMDDYYYY");
         return dateField;
     }
 

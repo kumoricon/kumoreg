@@ -4,7 +4,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.OrderRepository;
 import org.kumoricon.site.BaseView;
@@ -41,7 +41,9 @@ public class OrderListView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
-        addComponent(buildContent());
+        list.setWidth("100%");
+        list.setHeight("700px");
+        addComponent(list);
     }
 
     @Override
@@ -64,24 +66,8 @@ public class OrderListView extends BaseView implements View {
                          PAGESIZE);
     }
 
-    private VerticalLayout buildContent() {
-        VerticalLayout leftPanel = new VerticalLayout();
-        leftPanel.setMargin(true);
-        leftPanel.setSpacing(true);
-        leftPanel.addComponent(list);
-
-        return leftPanel;
-    }
-
-
     public void showOrder(Order order) {
         navigateTo(OrderView.VIEW_NAME + "/" + order.getId());
-    }
-
-
-    public void selectOrder(Order order) { list.select(order); }
-    public void clearSelection() {
-        list.select(null);
     }
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }

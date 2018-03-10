@@ -8,7 +8,6 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.attendee.AttendeeDetailView;
@@ -103,7 +102,7 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
                 form.commit();
                 handler.saveAttendee(this, form.getAttendee());
                 close();
-            } catch (FieldGroup.CommitException e) {
+            } catch (Exception e) {
                 notifyError(e.getMessage());
             }
         });

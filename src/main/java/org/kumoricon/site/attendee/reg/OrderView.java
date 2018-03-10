@@ -1,30 +1,23 @@
 package org.kumoricon.site.attendee.reg;
 
-import com.vaadin.ui.Button;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.v7.data.util.BeanItemContainer;
-import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.ui.*;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.v7.ui.*;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
-import org.kumoricon.site.attendee.FieldFactory;
+import org.kumoricon.site.attendee.FieldFactory8;
 import org.kumoricon.site.attendee.window.ConfirmationWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.site.attendee.window.WarningWindow;
-import org.kumoricon.site.fieldconverter.BadgeToStringConverter;
-import org.kumoricon.site.fieldconverter.UserToStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @ViewScope
@@ -36,20 +29,18 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
     @Autowired
     private OrderPresenter handler;
 
-    private TextField orderId = FieldFactory.createDisabledTextField("Order ID");
-    private TextField orderTotal = FieldFactory.createDisabledTextField("Order Total");
-    private TextField paymentTotal = FieldFactory.createDisabledTextField("Payment Total");
-    private TextArea notes = FieldFactory.createTextArea("Notes");
-    private Table attendeeList = new Table();
-    private Table paymentList = new Table();
+    private TextField orderId = FieldFactory8.createDisabledTextField("Order ID");
+    private TextField orderTotal = FieldFactory8.createDisabledTextField("Order Total");
+    private TextField paymentTotal = FieldFactory8.createDisabledTextField("Payment Total");
+    private com.vaadin.ui.TextArea notes = FieldFactory8.createTextArea("Notes");
+    private Grid<Attendee> attendeeList = new Grid<>();
+    private Grid<Payment> paymentList = new Grid<>();
     private Button addAttendee = new Button("Add Attendee");
     private Button orderComplete = new Button("Order Complete");
     private Button cancel = new Button("Cancel");
-    private BeanItemContainer<Attendee> attendeeBeanList;
-    private BeanItemContainer<Payment> paymentBeanList;
     private Button addPayment = new Button("Take Payment");
     private Order currentOrder;
-    String orderIdNumber;
+    private String orderIdNumber;
 
     @PostConstruct
     public void init() {
@@ -59,20 +50,23 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
         orderInfo.addComponent(orderId);
         addComponent(orderInfo);
 
-        attendeeBeanList = new BeanItemContainer<>(Attendee.class, new ArrayList<>());
-        attendeeList.setContainerDataSource(attendeeBeanList);
-        attendeeList.setPageLength(5);
         attendeeList.setWidth(600, Unit.PIXELS);
         attendeeList.addStyleName("kumoHandPointer");
 
-        paymentBeanList = new BeanItemContainer<>(Payment.class, new ArrayList<>());
-        paymentList.setContainerDataSource(paymentBeanList);
+        attendeeList.addColumn(Attendee::getFirstName).setCaption("First Name");
+        attendeeList.addColumn(Attendee::getLastName).setCaption("Last Name");
+        attendeeList.addColumn(attendee -> attendee.getBadge().getName()).setCaption("Badge Type");
+        attendeeList.addColumn(Attendee::getPaid).setCaption("Paid");
+        attendeeList.addColumn(Attendee::getPaidAmount).setCaption("Amount");
+
         paymentList.setWidth(500, Unit.PIXELS);
-        paymentList.setPageLength(3);
+        paymentList.addColumn(Payment::getPaymentType).setCaption("Payment Type");
+        paymentList.addColumn(Payment::getAmount).setCaption("Amount");
+        paymentList.addColumn(Payment::getPaymentTakenBy).setCaption("Taken By");
 
         orderInfo.addComponent(attendeeList);
-        attendeeList.addItemClickListener((ItemClickEvent.ItemClickListener) itemClickEvent -> {
-            Attendee attendee = (Attendee)itemClickEvent.getItemId();
+        attendeeList.addItemClickListener(itemClickEvent -> {
+            Attendee attendee = itemClickEvent.getItem();
             navigateTo(AttendeeRegDetailView.VIEW_NAME + "/" + orderIdNumber + "/" + attendee.getId());
         });
 
@@ -129,26 +123,12 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
     }
 
     public void showOrder(Order order) {
-        Object[] sortBy = {attendeeList.getSortContainerPropertyId()};
-        boolean[] sortOrder = {attendeeList.isSortAscending()};
-
         this.currentOrder = order;
         orderId.setValue(order.getOrderId());
         orderTotal.setValue(order.getTotalAmount().toString());
         notes.setValue(order.getNotes());
 
-        attendeeList.setContainerDataSource(new BeanItemContainer<>(Attendee.class, order.getAttendeeList()));
-        attendeeList.setVisibleColumns("firstName", "lastName", "badge", "paid", "paidAmount");
-        attendeeList.setColumnHeaders("First Name", "Last Name", "Badge Type", "Paid", "Cost");
-        attendeeList.setConverter("badge", new BadgeToStringConverter());
-
-        attendeeList.sort(sortBy, sortOrder);
-
-        paymentList.setContainerDataSource(new BeanItemContainer<>(Payment.class, order.getPayments()));
-        paymentList.setVisibleColumns("paymentType", "amount", "paymentTakenBy");
-        paymentList.setColumnHeaders("Payment Type", "Amount", "Taken By");
-        paymentList.setConverter("paymentTakenBy", new UserToStringConverter());
-
+        attendeeList.setItems(order.getAttendees());
         paymentTotal.setValue(order.getTotalPaid().toString());
 
         if (order.getTotalAmount().compareTo(order.getTotalPaid()) == 0 && order.getAttendees().size() > 0) {

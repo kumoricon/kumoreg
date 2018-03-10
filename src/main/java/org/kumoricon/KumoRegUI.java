@@ -13,8 +13,8 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.site.*;
 import org.kumoricon.site.attendee.reg.OrderListView;
 import org.kumoricon.site.attendee.reg.OrderView;
-import org.kumoricon.site.attendee.search.bybadge.AttendeeSearchByBadgeView;
-import org.kumoricon.site.attendee.search.byname.AttendeeSearchView;
+import org.kumoricon.site.attendee.search.bybadge.SearchByBadgeView;
+import org.kumoricon.site.attendee.search.byname.SearchByNameView;
 import org.kumoricon.site.badge.BadgeListView;
 import org.kumoricon.site.computer.ComputerView;
 import org.kumoricon.site.report.attendees.AttendeeReportView;
@@ -138,8 +138,8 @@ public class KumoRegUI extends UI {
                 registration.addItem("At-Con Check In", null, v -> getNavigator().navigateTo(OrderView.VIEW_NAME));
             }
             if (getLoggedInUser().hasRight("attendee_search")) {
-                registration.addItem("Attendee Search/Check In", null, v -> getNavigator().navigateTo(AttendeeSearchView.VIEW_NAME));
-                registration.addItem("Search by Badge Type", null, v -> getNavigator().navigateTo(AttendeeSearchByBadgeView.VIEW_NAME));
+                registration.addItem("Attendee Search/Check In", null, v -> getNavigator().navigateTo(SearchByNameView.VIEW_NAME));
+                registration.addItem("Search by Badge Type", null, v -> getNavigator().navigateTo(SearchByBadgeView.VIEW_NAME));
             }
 
             MenuBar.MenuItem admin = menu.addItem("Administration", null, null);

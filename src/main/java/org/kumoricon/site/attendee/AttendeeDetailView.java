@@ -6,11 +6,10 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
@@ -142,7 +141,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
                 form.commit();
                 handler.saveAttendee(this, form.getAttendee());
                 close();
-            } catch (FieldGroup.CommitException e) {
+            } catch (Exception e) {
                 notifyError(e.getMessage());
             }
         });
@@ -155,7 +154,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
             try {
                 form.commit();
                 handler.saveAttendeeAndPrePrintBadge(this, form.getAttendee());
-            } catch (FieldGroup.CommitException e) {
+            } catch (Exception e) {
                 notifyError(e.getMessage());
             }
         });
@@ -174,20 +173,20 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
     protected abstract void reprintClicked();
 
     protected PopupView buildCheckInPopupView() {
-        com.vaadin.v7.ui.CheckBox attendeeInformationVerified = new com.vaadin.v7.ui.CheckBox("Information Verified");
-        com.vaadin.v7.ui.CheckBox parentalConsentFormReceived = new com.vaadin.v7.ui.CheckBox("Parental Consent Form Received");
+        CheckBox attendeeInformationVerified = new CheckBox("Information Verified");
+        CheckBox parentalConsentFormReceived = new CheckBox("Parental Consent Form Received");
         Button btnInfoReceived = new Button("Save");
         btnInfoReceived.setEnabled(false);
-        com.vaadin.v7.ui.VerticalLayout layout = new com.vaadin.v7.ui.VerticalLayout();
+        VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
         layout.addComponent(attendeeInformationVerified);
         layout.addComponent(parentalConsentFormReceived);
         layout.addComponent(btnInfoReceived);
 
-        attendeeInformationVerified.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
+        attendeeInformationVerified.addValueChangeListener(valueChangeEvent ->
                 btnInfoReceived.setEnabled(validateCheckInFields()));
-        parentalConsentFormReceived.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent ->
+        parentalConsentFormReceived.addValueChangeListener(valueChangeEvent ->
                 btnInfoReceived.setEnabled(validateCheckInFields()));
         btnInfoReceived.addClickListener((Button.ClickListener) clickEvent -> attendeeInformationVerified());
 

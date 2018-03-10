@@ -1,36 +1,21 @@
 package org.kumoricon.site.attendee.form;
 
+import com.vaadin.data.Binder;
 import com.vaadin.ui.*;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.v7.data.fieldgroup.DefaultFieldGroupFieldFactory;
-import com.vaadin.v7.data.fieldgroup.FieldGroup;
-import com.vaadin.v7.data.util.BeanItem;
-import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.server.ServiceException;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.v7.ui.*;
-import com.vaadin.v7.ui.AbstractField;
-import com.vaadin.v7.ui.CheckBox;
-import com.vaadin.v7.ui.DateField;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.NativeSelect;
-import com.vaadin.v7.ui.TextField;
-import com.vaadin.v7.ui.VerticalLayout;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 
 import org.kumoricon.site.attendee.DetailFormHandler;
-import org.kumoricon.site.fieldconverter.DateToLocalDateConverter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 import java.util.*;
 
-import static org.kumoricon.site.attendee.FieldFactory.*;
+import static org.kumoricon.site.attendee.FieldFactory8.*;
 
 
 public class AttendeeDetailForm extends GridLayout {
@@ -52,14 +37,15 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField parentPhone = createPhoneNumberField("Parent Phone", 14);
     private CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 15);
     private CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
-    private NativeSelect badge = createNativeSelect("Pass Type*", 17);
+    private NativeSelect<Badge> badge = new NativeSelect<>();
     private TextField paidAmount = createTextField("Manual Price", 18);
     private CheckBox compedBadge = createCheckBox("Comped Badge", 19);
     private CheckBox checkedIn = createCheckBox("Attendee Checked In", 20);
-    private BeanItem<Attendee> attendeeBean;
+    private Attendee attendee;
+
+    Binder<Attendee> binder = new Binder<>();
 
     private VerticalLayout historyLayout = new VerticalLayout();
-    private FieldGroup fieldGroup;
     private DetailFormHandler handler;
 
     public void setParentFormReceivedVisible(boolean visible) {
@@ -70,7 +56,6 @@ public class AttendeeDetailForm extends GridLayout {
 
     public AttendeeDetailForm(DetailFormHandler handler) {
         this.handler = handler;
-        birthDate.setConverter(new DateToLocalDateConverter());
         setColumns(3);
         setRows(10);
         setMargin(new MarginInfo(false, true, true, true));
@@ -80,19 +65,43 @@ public class AttendeeDetailForm extends GridLayout {
         setColumnExpandRatio(1, 0);
         setColumnExpandRatio(2, 1);
 
-        fieldGroup = new BeanFieldGroup<>(Attendee.class);
-        fieldGroup.setFieldFactory(new CustomFieldGroupFieldFactory());
-        fieldGroup.bindMemberFields(this);
+
+        binder.bind(firstName, Attendee::getFirstName, Attendee::setFirstName);
+        binder.bind(lastName, Attendee::getLastName, Attendee::setLastName);
+        binder.bind(legalFirstName, Attendee::getLegalFirstName, Attendee::setLegalFirstName);
+        binder.bind(legalLastName, Attendee::getLegalLastName, Attendee::setLegalLastName);
+        binder.bind(nameIsLegalName, Attendee::getNameIsLegalName, Attendee::setNameIsLegalName);
+        binder.bind(fanName, Attendee::getFanName, Attendee::setFanName);
+        binder.bind(badgeNumber, Attendee::getBadgeNumber, Attendee::setBadgeNumber);
+        binder.bind(phoneNumber, Attendee::getPhoneNumber, Attendee::setPhoneNumber);
+        binder.bind(birthDate, Attendee::getBirthDate, Attendee::setBirthDate);
+        binder.bind(email, Attendee::getEmail, Attendee::setEmail);
+        binder.bind(zip, Attendee::getZip, Attendee::setZip);
+
+        binder.bind(emergencyContactFullName, Attendee::getEmergencyContactFullName, Attendee::setEmergencyContactFullName);
+        binder.bind(emergencyContactPhone, Attendee::getEmergencyContactPhone, Attendee::setEmergencyContactPhone);
+        binder.bind(parentFullName, Attendee::getParentFullName, Attendee::setParentFullName);
+        binder.bind(parentPhone, Attendee::getParentPhone, Attendee::setParentPhone);
+        binder.bind(parentIsEmergencyContact, Attendee::getParentIsEmergencyContact, Attendee::setParentIsEmergencyContact);
+        binder.bind(parentFormReceived, Attendee::getParentFormReceived, Attendee::setParentFormReceived);
+
+        binder.bind(badge, Attendee::getBadge, Attendee::setBadge);
+        binder.bind(paidAmount,
+                attendee -> attendee.getPaidAmount().toString(),
+                (attendee, formValue) -> attendee.setPaidAmount(new BigDecimal(formValue)));
+        binder.bind(compedBadge, Attendee::getCompedBadge, Attendee::setCompedBadge);
+        binder.bind(checkedIn, Attendee::getCheckedIn, Attendee::setCheckedIn);
+
 
         birthDate.setDateFormat("MM/dd/yyyy");
-        birthDate.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+        birthDate.addValueChangeListener(valueChangeEvent -> {
             Integer currentAge = getAgeFromDate(birthDate.getValue());
                 if (currentAge != null) {
                     age.setValue(String.format("(%s years old)", currentAge));
                     setMinorFieldsEnabled(currentAge < 18);
                     try {
                         if (!badge.isEmpty()) {
-                            Badge thisBadge = (Badge) badge.getConvertedValue();
+                            Badge thisBadge = badge.getValue();
                             paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
                         }
                     } catch(ServiceException e) {
@@ -100,14 +109,14 @@ public class AttendeeDetailForm extends GridLayout {
                     }
                 } else {
                     age.setValue("");
-                    paidAmount.setValue(null);
+                    paidAmount.clear();
                 }
         });
 
-        badge.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+        badge.addValueChangeListener(valueChangeEvent -> {
             // Field is read only when values are being added
             if (!badge.isReadOnly() && !badge.isEmpty() && !birthDate.isEmpty()) {
-                Badge thisBadge = (Badge) badge.getConvertedValue();
+                Badge thisBadge = badge.getValue();
                 // Don't change price automatically if attendee is already checked in
                 if (!checkedIn.getValue()) {
                     try {
@@ -145,13 +154,13 @@ public class AttendeeDetailForm extends GridLayout {
         addComponent(emergencyContactFullName, 0, 5);
         addComponent(emergencyContactPhone, 0, 6);
 
-        parentIsEmergencyContact.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+        parentIsEmergencyContact.addValueChangeListener(valueChangeEvent -> {
             if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
                 parentFullName.setValue(emergencyContactFullName.getValue());
                 parentPhone.setValue(emergencyContactPhone.getValue());
             } else {
-                parentFullName.setValue(null);
-                parentPhone.setValue(null);
+                parentFullName.clear();
+                parentPhone.clear();
                 parentFullName.focus();
             }
         });
@@ -161,21 +170,20 @@ public class AttendeeDetailForm extends GridLayout {
         addComponent(parentIsEmergencyContact, 1, 7);
 
         addComponent(badge, 0, 8);
-        badge.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        badge.setItemCaptionPropertyId("name");
-        badge.setNullSelectionAllowed(false);
+        badge.setItemCaptionGenerator(Badge::getName);
+        badge.setEmptySelectionAllowed(false);
         HorizontalLayout manualPrice = new HorizontalLayout();
         manualPrice.addComponent(paidAmount);
         manualPrice.addComponent(compedBadge);
         addComponent(manualPrice, 1, 8);
 
-        compedBadge.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
-            if (Boolean.TRUE.equals(valueChangeEvent.getProperty().getValue())) {
+        compedBadge.addValueChangeListener(valueChangeEvent -> {
+            if (Boolean.TRUE.equals(valueChangeEvent.getValue())) {
                 paidAmount.setValue("0");
             } else {
                 try {
                     if (!badge.isEmpty()) {
-                        Badge thisBadge = (Badge) badge.getConvertedValue();
+                        Badge thisBadge = badge.getValue();
                         paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
                     }
                 } catch (ServiceException e) {
@@ -208,7 +216,6 @@ public class AttendeeDetailForm extends GridLayout {
 
         nameIsLegalName.setVisible(true);
         nameIsLegalName.setValue(true);
-        nameIsLegalName.setImmediate(true);
         legalFirstName.setVisible(false);
         legalLastName.setVisible(false);
         nameIsLegalName.addValueChangeListener(e -> {
@@ -224,8 +231,8 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     public void show(Attendee attendee) {
-        attendeeBean = new BeanItem<>(attendee);
-        fieldGroup.setItemDataSource(attendeeBean);
+        binder.setBean(attendee);
+
         if (attendee.getPaidAmount() == null) {
             try {
                 paidAmount.setValue(attendee.getBadge().getCostForAge(attendee.getAge()).toString());
@@ -236,7 +243,7 @@ public class AttendeeDetailForm extends GridLayout {
         if (attendee.getNameIsLegalName()) {
             hideLegalNameFields();
         }
-        badge.select(attendee.getBadge());
+
         setMinorFieldsEnabled(attendee.isMinor());
         checkedIn.setVisible(attendee.getCheckedIn()); // Hide checked in checkbox if attendee is not checked in
         parentFormReceived.setVisible(attendee.getCheckedIn()); // Hide parentFormReceived if attendee is not checked in
@@ -265,42 +272,37 @@ public class AttendeeDetailForm extends GridLayout {
         AbstractField[] fields = {parentFullName, parentPhone, parentIsEmergencyContact, parentFormReceived};
         for (AbstractField f : fields) {
             f.setEnabled(isEnabled);
-            f.setValidationVisible(isEnabled);
+//            f.setValidationVisible(isEnabled);
         }
     }
 
     public void setManualPriceEnabled(boolean enabled) {
         paidAmount.setEnabled(enabled);
-        paidAmount.setValidationVisible(enabled);
+//        paidAmount.setValidationVisible(enabled);
         compedBadge.setEnabled(enabled);
-        compedBadge.setValidationVisible(enabled);
+//        compedBadge.setValidationVisible(enabled);
     }
 
     public Attendee getAttendee() {
-        try {
-            fieldGroup.commit();
-        } catch (FieldGroup.CommitException e) {
-            System.out.println(e);
-            StringBuilder sb = new StringBuilder();
-            for (Field f : e.getInvalidFields().keySet()) {
-                sb.append(e.getInvalidFields().get(f).getMessage());
-                sb.append("\n");
-            }
-            throw new RuntimeException(sb.toString());
-        }
-        return attendeeBean.getBean();
+//        Attendee attendee;
+//        try {
+//            attendee = binder.getBean();
+//        } catch (Exception e) {
+//            StringBuilder sb = new StringBuilder();
+//            throw new RuntimeException(sb.toString());
+//        }
+        return binder.getBean();
     }
 
     public void setAllFieldsButCheckInDisabled() {
         setEditableFields(EditableFields.NONE);
         parentFormReceived.setEnabled(true);
-        parentFormReceived.setValidationVisible(true);
+//        parentFormReceived.setValidationVisible(true);
     }
 
-    private static Integer getAgeFromDate(Date birthDate) {
+    private static Integer getAgeFromDate(LocalDate birthDate) {
         if (birthDate != null) {
-            LocalDate bd = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            Integer age = Period.between(bd, LocalDate.now()).getYears();
+            Integer age = Period.between(birthDate, LocalDate.now()).getYears();
             if (age < 0) { age = 0; }
             return age;
         } else {
@@ -308,12 +310,13 @@ public class AttendeeDetailForm extends GridLayout {
         }
     }
 
-    public void commit() throws FieldGroup.CommitException {
-        fieldGroup.commit();
+
+    public void commit() throws Exception {
+//        fieldGroup.commit();
     }
 
     public void setAvailableBadges(List<Badge> availableBadges) {
-        badge.setContainerDataSource(new BeanItemContainer<>(Badge.class, availableBadges));
+        badge.setItems(availableBadges);
     }
 
     public void selectFirstName() {
@@ -326,38 +329,20 @@ public class AttendeeDetailForm extends GridLayout {
      * @param fields EditableFields ENUM
      */
     public void setEditableFields(EditableFields fields) {
+        List<AbstractField> allFields = Arrays.asList(firstName, lastName);
         switch (fields) {
             case ALL:
-                for (Field field : fieldGroup.getFields()) {
-                    AbstractField af = (AbstractField)field;
-                    af.setEnabled(true);
-                    af.setValidationVisible(true);
+                for (AbstractField field : allFields) {
+                    field.setEnabled(true);
+//                    field.setValidationVisible(true);
                 }
                 badgeNumber.setEnabled(false);
                 break;
             case NONE:
-                for (Field field : fieldGroup.getFields()) {
-                    AbstractField af = (AbstractField)field;
-                    af.setEnabled(false);
-                    af.setValidationVisible(false);
+                for (AbstractField field : allFields) {
+                    field.setEnabled(false);
+//                    af.setValidationVisible(false);
                 }
         }
     }
-
-    static class CustomFieldGroupFieldFactory extends DefaultFieldGroupFieldFactory {
-        @Override
-        public <T extends Field> T createField(Class<?> dataType, Class<T> fieldType) {
-            if (LocalDate.class.isAssignableFrom(dataType)) {
-                T field;
-                DateField dateField = new DateField();
-                dateField.setConverter(new DateToLocalDateConverter());
-                field = (T) dateField;
-                return field;
-            }
-            return super.createField(dataType, fieldType);
-        }
-
-    }
-
-
 }

@@ -8,14 +8,14 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.ui.TextField;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.BaseView;
-import org.kumoricon.site.attendee.FieldFactory;
+import static org.kumoricon.site.attendee.FieldFactory8.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 
@@ -33,11 +33,11 @@ public class OrderPaymentCheckView extends BaseView implements View, PaymentView
     public static final UriTemplate URI_TEMPLATE = new UriTemplate(TEMPLATE);
 
 
-    TextField balance = FieldFactory.createDollarField("Balance Due");
-    TextField amount = FieldFactory.createDollarField("Amount", 1);
-    TextField checkNumber = FieldFactory.createTextField("Check Number");
-    Button save = new Button("Save");
-    Button cancel = new Button("Cancel");
+    private TextField balance = createDollarField("Balance Due");
+    private TextField amount = createDollarField("Amount", 1);
+    private TextField checkNumber = createTextField("Check Number");
+    private Button save = new Button("Save");
+    private Button cancel = new Button("Cancel");
 
     protected Integer orderId;
     protected Order order;
@@ -77,7 +77,7 @@ public class OrderPaymentCheckView extends BaseView implements View, PaymentView
     }
 
 
-    protected VerticalLayout buildButtons() {
+    private VerticalLayout buildButtons() {
         VerticalLayout buttons = new VerticalLayout();
         buttons.setSpacing(true);
         buttons.setWidth("15%");
