@@ -1,11 +1,14 @@
 Change Log
 ----------------
-- Version 3.0.1 (Pending)
+- Version 3.0.2 (Pending)
+
+- Version 3.0.1 (3/10/2018)
     - Moved most windows to their own views
     - Require both phone number and email address when registering at con
     - Don't show Fan Name field when registering at con
     - Hide legal first name and legal last name by default, added checkbox to display
       those fields
+    - Migrated Vaadin 7 controls to Vaadin 8
 
 - Version 3.0.0 (12/29/2017)
     - Layout change for speed (Base on CSSLayout)
