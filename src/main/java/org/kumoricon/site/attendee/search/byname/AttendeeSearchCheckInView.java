@@ -46,15 +46,15 @@ public class AttendeeSearchCheckInView extends CheckInView implements View {
     @Override
     protected void btnCheckInClicked() {
         handler.checkInAttendee(this, attendee);
-        navigateTo(AttendeeSearchView.VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendeeId + "/badge");
+        navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendeeId + "/badge");
     }
 
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
         } else {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString);
         }
     }
 

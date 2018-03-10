@@ -47,7 +47,7 @@ public class AttendeeSearchPrintBadgeView extends PrintBadgeView implements View
     @Override
     public void showAttendee(Attendee attendee) {
         if (!attendee.getCheckedIn()) {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
             notifyError("Error: This attendee hasn't checked in yet");
         } else {
             showBadge(attendee);
@@ -59,10 +59,10 @@ public class AttendeeSearchPrintBadgeView extends PrintBadgeView implements View
     public void close() {
         if (attendeeId != null) {
             if (attendee != null) {
-                navigateTo(AttendeeSearchView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+                navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
             }
         } else {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString);
         }
     }
 

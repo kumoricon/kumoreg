@@ -10,9 +10,9 @@ import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.*;
-import org.kumoricon.site.attendee.search.bybadge.AttendeeSearchByBadgeView;
+import org.kumoricon.site.attendee.search.bybadge.SearchByBadgeView;
 import org.kumoricon.site.attendee.search.byname.AttendeeSearchDetailView;
-import org.kumoricon.site.attendee.search.byname.AttendeeSearchView;
+import org.kumoricon.site.attendee.search.byname.SearchByNameView;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
 import org.kumoricon.site.attendee.window.PrintBadgeWindow;
@@ -32,9 +32,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     private AttendeeRepository attendeeRepository;
 
     @Autowired
-    private AttendeeSearchService attendeeSearchService;
-
-    @Autowired
     private BadgeRepository badgeRepository;
 
     @Autowired
@@ -45,7 +42,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
 
     private static final Logger log = LoggerFactory.getLogger(AttendeeSearchPresenter.class);
 
-    private AttendeeSearchView view;
+    private SearchByNameView view;
 
     public AttendeeSearchPresenter() {
     }
@@ -166,8 +163,8 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         }
     }
 
-    public AttendeeSearchView getView() { return view; }
-    public void setView(AttendeeSearchView view) { this.view = view; }
+    public SearchByNameView getView() { return view; }
+    public void setView(SearchByNameView view) { this.view = view; }
 
     @Override
     public void overrideLogin(OverrideRequiredWindow window, String username, String password, List<Attendee> targets) {
@@ -249,7 +246,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
 
     public void searchChanged(String searchString) {
         if (searchString != null) {
-            view.navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString.trim());
+            view.navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString.trim());
         }
     }
 
@@ -284,51 +281,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
                 attendeeRepository.save(attendee);
             }
         }
-    }
-
-
-    public void searchFor(String searchString) {
-        if (searchString != null && !searchString.trim().isEmpty()) {
-            searchString = searchString.trim();
-            long start = System.currentTimeMillis();
-            List<Attendee> attendees = attendeeSearchService.search(searchString);
-            long finish = System.currentTimeMillis();
-            log.info("{} searched Attendees for \"{}\" and got {} results in {} ms",
-                    view.getCurrentUsername(), searchString, attendees.size(), finish-start);
-            view.afterSuccessfulFetch(attendees);
-            if (attendees.size() == 0) {
-                view.notify("No matching attendees found");
-            }
-        }
-    }
-
-    public void showAttendeeList(AttendeeSearchByBadgeView view, Integer badgeId) {
-        if (badgeId != null) {
-            Badge badge = badgeRepository.findOne(badgeId);
-            if (badge == null) {
-                log.error("{} viewed attendees for badge id {} but it was not found",
-                        view.getCurrentUsername(), badgeId);
-                view.notifyError("Badge id " + badgeId.toString() + " not found");
-                view.navigateTo(AttendeeSearchByBadgeView.VIEW_NAME);
-            } else {
-                showAttendeeList(view, badge);
-            }
-        }
-
-    }
-
-    public void showAttendeeList(AttendeeSearchByBadgeView view, Badge badge) {
-        log.info("{} viewed attendees with badge {}", view.getCurrentUsername(), badge);
-        if (badge == null) {
-            view.afterAttendeeFetch(new ArrayList<>());
-        }
-        List<Attendee> attendees = attendeeRepository.findByBadgeType(badge);
-        view.afterAttendeeFetch(attendees);
-    }
-
-
-    public void showBadgeTypes(AttendeeSearchByBadgeView view) {
-        view.afterBadgeTypeFetch(badgeRepository.findByVisibleTrue());
     }
 
     @Override

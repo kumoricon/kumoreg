@@ -36,8 +36,8 @@ public class FieldFactory {
         return textField;
     }
 
-    public static PasswordField createPasswordField(String name, int tabIndex) {
-        PasswordField passwordField = new PasswordField(name);
+    public static com.vaadin.ui.PasswordField createPasswordField(String name, int tabIndex) {
+        com.vaadin.ui.PasswordField passwordField = new com.vaadin.ui.PasswordField(name);
         passwordField.setTabIndex(tabIndex);
         return passwordField;
     }
@@ -250,33 +250,9 @@ public class FieldFactory {
      * @param name Field Name
      * @return TextArea
      */
-    public static TextArea createTextArea(String name) {
+    public static com.vaadin.ui.TextArea createTextArea(String name) {
         // Creates TextArea object and sets it to show an empty string for null values
-        TextArea textArea = new TextArea(name);
-        textArea.setNullRepresentation("");
-        return textArea;
-    }
-
-    /**
-     * Returns a TextArea that shows as empty for null values
-     * @param name Field Name
-     * @param tabIndex Tab Index
-     * @return TextArea
-     */
-    public static TextArea createTextArea(String name, int tabIndex) {
-        TextArea textArea = createTextArea(name);
-        textArea.setTabIndex(tabIndex);
-        return textArea;
-    }
-
-    /**
-     * Returns a TextArea that shows as empty for null values and is disabled by default
-     * @param name Field Name
-     * @return TextArea
-     */
-    public static TextArea createDisabledTextArea(String name) {
-        TextArea textArea = createTextArea(name);
-        textArea.setEnabled(false);
+        com.vaadin.ui.TextArea textArea = new com.vaadin.ui.TextArea(name);
         return textArea;
     }
 }

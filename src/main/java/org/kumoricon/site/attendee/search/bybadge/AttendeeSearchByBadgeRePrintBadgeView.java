@@ -46,9 +46,9 @@ public class AttendeeSearchByBadgeRePrintBadgeView extends PrintBadgeView implem
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(AttendeeSearchByBadgeView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
+            navigateTo(SearchByBadgeView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
         } else {
-            navigateTo(AttendeeSearchByBadgeView.VIEW_NAME + "/" + searchString);
+            navigateTo(SearchByBadgeView.VIEW_NAME + "/" + searchString);
         }
     }
 

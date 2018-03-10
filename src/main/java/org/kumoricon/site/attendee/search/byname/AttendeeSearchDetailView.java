@@ -65,7 +65,7 @@ public class AttendeeSearchDetailView extends AttendeeDetailView implements View
 
     @Override
     public void close() {
-        navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
+        navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString);
     }
 
     @Override

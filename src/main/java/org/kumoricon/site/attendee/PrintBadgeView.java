@@ -35,7 +35,7 @@ public abstract class PrintBadgeView extends BaseView implements View {
     protected void showBadge(Attendee attendee) {
         this.attendee = attendee;
         StreamResource.StreamSource source = handler.getBadgeFormatter(this, Arrays.asList(attendee));
-        String filename = "testbadge" + System.currentTimeMillis() + ".pdf";
+        String filename = "badge" + System.currentTimeMillis() + ".pdf";
         StreamResource resource = new StreamResource(source, filename);
         pdf = new BrowserFrame("", resource);
 

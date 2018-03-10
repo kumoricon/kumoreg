@@ -46,7 +46,7 @@ public class AttendeeSearchByBadgeCheckInView extends CheckInView implements Vie
     @Override
     protected void btnCheckInClicked() {
         handler.checkInAttendee(this, attendee);
-        navigateTo(AttendeeSearchByBadgeView.VIEW_NAME + "/" + searchString);
+        navigateTo(SearchByBadgeView.VIEW_NAME + "/" + searchString);
     }
 
 

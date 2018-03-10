@@ -5,7 +5,7 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.site.attendee.PrintBadgeView;
-import org.kumoricon.site.attendee.search.byname.AttendeeSearchView;
+import org.kumoricon.site.attendee.search.byname.SearchByNameView;
 import org.kumoricon.site.attendee.search.PrintBadgePresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
@@ -49,9 +49,9 @@ public class AttendeeSearchByBadgePrintBadgeView extends PrintBadgeView implemen
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + badgeType + "/" + attendeeId);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + badgeType + "/" + attendeeId);
         } else {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + badgeType);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + badgeType);
         }
     }
 

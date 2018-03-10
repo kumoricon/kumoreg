@@ -69,6 +69,6 @@ public class AttendeeSearchByBadgeDetailView extends AttendeeDetailView implemen
 
     @Override
     public void close() {
-        navigateTo(AttendeeSearchByBadgeView.VIEW_NAME + "/" + searchString);
+        navigateTo(SearchByBadgeView.VIEW_NAME + "/" + searchString);
     }
 }

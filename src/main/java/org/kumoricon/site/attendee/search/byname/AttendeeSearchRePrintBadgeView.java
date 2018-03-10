@@ -46,9 +46,9 @@ public class AttendeeSearchRePrintBadgeView extends PrintBadgeView implements Vi
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
         } else {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString);
         }
     }
 

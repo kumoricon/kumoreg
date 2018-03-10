@@ -61,9 +61,9 @@ public class AttendeeSearchNoteView extends NoteView implements View {
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
         } else {
-            navigateTo(AttendeeSearchView.VIEW_NAME + "/" + searchString);
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString);
         }
     }
 
