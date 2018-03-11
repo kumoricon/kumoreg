@@ -1,5 +1,6 @@
 package org.kumoricon.site.attendee;
 
+import com.vaadin.data.Result;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
@@ -7,6 +8,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import org.kumoricon.service.FieldCleaner;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -186,49 +188,48 @@ public class FieldFactory8 {
      * @return DateField
      */
     public static DateField createDateField(String name, int tabIndex) {
-        DateField dateField = new DateField(name);
-        //{
-//            @Override
-//            protected LocalDate handleUnparsableDateString(String dateString) throws Converter.ConversionException {
-//                Integer year = null;
-//                Integer month = null;
-//                Integer day = null;
-//                // Try to parse date without delimiters -- MMDDYYYY format (must have leading zeros)
-//                String dateDigits = dateString.trim();
-//                if (dateDigits.matches("^\\d{8}$")) {
-//                    year = Integer.parseInt(dateDigits.substring(4, 8));
-//                    month = Integer.parseInt(dateDigits.substring(0, 2)) -1;
-//                    day = Integer.parseInt(dateDigits.substring(2, 4));
-//                } else {
-//                    // Try to parse date with - instead of /
-//                    String fields[] = dateString.split("-");
-//                    if (fields.length >= 3) {
-//                        try {
-//                            year = Integer.parseInt(fields[2]);
-//                            month = Integer.parseInt(fields[0]) - 1;
-//                            day = Integer.parseInt(fields[1]);
-//                        } catch (NumberFormatException e) {
-//                            year = null;
-//                            month = null;
-//                            day = null;
-//                        }
-//                    }
-//                }
+        DateField dateField = new DateField(name) {
+            @Override
+            protected Result<LocalDate> handleUnparsableDateString(String dateString) {
+                Integer year = null;
+                Integer month = null;
+                Integer day = null;
+                // Try to parse date without delimiters -- MMDDYYYY format (must have leading zeros)
+                String dateDigits = dateString.trim();
+                if (dateDigits.matches("^\\d{8}$")) {
+                    year = Integer.parseInt(dateDigits.substring(4, 8));
+                    month = Integer.parseInt(dateDigits.substring(0, 2)) -1;
+                    day = Integer.parseInt(dateDigits.substring(2, 4));
+                } else {
+                    // Try to parse date with - instead of /
+                    String fields[] = dateString.split("-");
+                    if (fields.length >= 3) {
+                        try {
+                            year = Integer.parseInt(fields[2]);
+                            month = Integer.parseInt(fields[0]) - 1;
+                            day = Integer.parseInt(fields[1]);
+                        } catch (NumberFormatException e) {
+                            year = null;
+                            month = null;
+                            day = null;
+                        }
+                    }
+                }
 
-//                if (year != null && month != null && day != null && month >= 0 && month <= 11 && day >= 1 && day <= 31) {
-//                    try {
-//                        GregorianCalendar c = new GregorianCalendar(year, month, day);
-//                        return c.getTime();
-//                    } catch (NumberFormatException e) {
-//                        // Ignore, throw ConversionException below
-//                    }
-//                }
-//
-//                // Bad date
-//                throw new Converter
-//                        .ConversionException("Your date must be in MMDDYYYY, MM/DD/YYYY, or MM-DD-YYYY format");
-//            }
-//        };
+                if (year != null && month != null && day != null && month >= 0 && month <= 11 && day >= 1 && day <= 31) {
+                    try {
+                        LocalDate l = LocalDate.of(year, month, day);
+                        return Result.ok(l);
+                    } catch (NumberFormatException e) {
+                        // Ignore, throw ConversionException below
+                    }
+                }
+
+                // Bad date
+                return Result.error("Your date must be in MMDDYYYY, MM/DD/YYYY, or MM-DD-YYYY format");
+            }
+        };
+        dateField.setDateFormat("MM/dd/yyyy");
 
         dateField.setTabIndex(tabIndex);
         dateField.setPlaceholder("MMDDYYYY");

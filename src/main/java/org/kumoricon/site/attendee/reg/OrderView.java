@@ -126,7 +126,9 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
         this.currentOrder = order;
         orderId.setValue(order.getOrderId());
         orderTotal.setValue(order.getTotalAmount().toString());
-        notes.setValue(order.getNotes());
+        if (order.getNotes() != null) {
+            notes.setValue(order.getNotes());
+        }
 
         attendeeList.setItems(order.getAttendees());
         paymentTotal.setValue(order.getTotalPaid().toString());

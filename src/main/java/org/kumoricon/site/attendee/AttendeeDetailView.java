@@ -30,7 +30,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     protected Integer attendeeId;
 
-    protected AttendeeDetailForm form = new AttendeeDetailForm(this);
+    protected AttendeeDetailForm form = new AttendeeDetailForm();
     protected Button btnSave;
     protected Button btnCancel;
     protected Button btnCheckIn;
@@ -38,7 +38,6 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
     protected Button btnPrePrintBadge;
     protected Button btnAddNote;
     protected Button btnEdit;
-    protected PopupView checkInPopup;
 
     @Autowired
     protected AttendeeSearchPresenter handler;
@@ -53,10 +52,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         btnSave.addStyleName(ValoTheme.BUTTON_PRIMARY);
 
         setButtonVisibility();
-
-        form.setAllFieldsButCheckInDisabled();
         addComponents(form, buttons);
-
     }
 
     @Override
@@ -147,7 +143,6 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         });
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> close());
         btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent -> reprintClicked());
-        checkInPopup = buildCheckInPopupView();
 
         btnPrePrintBadge = new Button("Pre-Print Badge");
         btnPrePrintBadge.addClickListener((Button.ClickListener) clickEvent -> {
@@ -164,7 +159,6 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         buttons.addComponent(btnSaveAndReprint);
         buttons.addComponent(btnAddNote);
         buttons.addComponent(btnCheckIn);
-        buttons.addComponent(checkInPopup);
         buttons.addComponent(btnPrePrintBadge);
         buttons.addComponent(btnCancel);
         return buttons;
@@ -172,43 +166,12 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     protected abstract void reprintClicked();
 
-    protected PopupView buildCheckInPopupView() {
-        CheckBox attendeeInformationVerified = new CheckBox("Information Verified");
-        CheckBox parentalConsentFormReceived = new CheckBox("Parental Consent Form Received");
-        Button btnInfoReceived = new Button("Save");
-        btnInfoReceived.setEnabled(false);
-        VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSpacing(true);
-        layout.addComponent(attendeeInformationVerified);
-        layout.addComponent(parentalConsentFormReceived);
-        layout.addComponent(btnInfoReceived);
-
-        attendeeInformationVerified.addValueChangeListener(valueChangeEvent ->
-                btnInfoReceived.setEnabled(validateCheckInFields()));
-        parentalConsentFormReceived.addValueChangeListener(valueChangeEvent ->
-                btnInfoReceived.setEnabled(validateCheckInFields()));
-        btnInfoReceived.addClickListener((Button.ClickListener) clickEvent -> attendeeInformationVerified());
-
-        return new PopupView(null, layout);
-    }
-
-    public abstract void btnCheckInClicked();
 
     protected void showCheckInWindow() {
+        throw new RuntimeException("This function must be overridden by another view");
     }
 
     protected void showAddNoteWindow() {
-
+        throw new RuntimeException("This function must be overridden by another view");
     }
-
-    private boolean validateCheckInFields() {
-
-        return false;
-    }
-
-    private void attendeeInformationVerified() {
-
-    }
-
 }

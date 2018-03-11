@@ -1,5 +1,6 @@
 package org.kumoricon.site.attendee;
 
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.service.print.formatter.BadgePrintFormatter;
@@ -27,6 +28,18 @@ public class BadgePrintingPresenter {
      * @param attendeeList Attendees to print badges for
      */
     protected void printBadges(BaseView view, List<Attendee> attendeeList) {
+        try {
+            String result = badgePrintService.printBadgesForAttendees(
+                    attendeeList, view.getCurrentClientIPAddress());
+            view.notify(result);
+            log.info(result + " during badge print for {}", view.getCurrentUsername());
+        } catch (PrintException e) {
+            log.error("Error printing badges for {}", view.getCurrentUsername(), e);
+            view.notifyError(e.getMessage());
+        }
+    }
+
+    protected void printBadges(BaseGridView view, List<Attendee> attendeeList) {
         try {
             String result = badgePrintService.printBadgesForAttendees(
                     attendeeList, view.getCurrentClientIPAddress());

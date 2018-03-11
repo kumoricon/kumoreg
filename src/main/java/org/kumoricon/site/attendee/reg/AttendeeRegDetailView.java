@@ -76,6 +76,12 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
         form.setAvailableBadges(all);
         form.show(attendee);
         form.hideFanNameField();
+        form.focusFirstName();
+
+        if (attendee.getId() == null) { // Attendee hasn't been saved to database yet
+            btnAddNote.setVisible(false);
+            btnDelete.setVisible(false);
+        }
     }
 
 
@@ -126,11 +132,6 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
     }
 
     @Override
-    public void btnCheckInClicked() {
-        // Not used in at-con registration
-    }
-
-    @Override
     protected void setButtonVisibility() {
         btnSave.setVisible(currentUserHasRight("at_con_registration"));
         btnAddNote.setVisible(currentUserHasRight("attendee_add_note"));
@@ -140,7 +141,7 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
     protected void showAddNoteWindow() {
         Attendee attendee = handler.saveAttendee(this, form.getAttendee());
         if (attendee != null) {
-            navigateTo(VIEW_NAME + "/" + attendee.getOrder().getId() + "/" + attendee.getId() + "/note/new");
+            navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
         }
     }
 

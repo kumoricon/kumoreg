@@ -8,8 +8,6 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 
-import org.kumoricon.site.attendee.DetailFormHandler;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
@@ -37,16 +35,14 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField parentPhone = createPhoneNumberField("Parent Phone", 14);
     private CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 15);
     private CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
-    private NativeSelect<Badge> badge = new NativeSelect<>();
+    private NativeSelect<Badge> badge = new NativeSelect<>("Badge Type");
     private TextField paidAmount = createTextField("Manual Price", 18);
     private CheckBox compedBadge = createCheckBox("Comped Badge", 19);
     private CheckBox checkedIn = createCheckBox("Attendee Checked In", 20);
-    private Attendee attendee;
 
     Binder<Attendee> binder = new Binder<>();
 
     private VerticalLayout historyLayout = new VerticalLayout();
-    private DetailFormHandler handler;
 
     public void setParentFormReceivedVisible(boolean visible) {
         parentFormReceived.setVisible(visible);
@@ -54,8 +50,7 @@ public class AttendeeDetailForm extends GridLayout {
 
     public enum EditableFields {ALL, NONE}
 
-    public AttendeeDetailForm(DetailFormHandler handler) {
-        this.handler = handler;
+    public AttendeeDetailForm() {
         setColumns(3);
         setRows(10);
         setMargin(new MarginInfo(false, true, true, true));
@@ -93,7 +88,6 @@ public class AttendeeDetailForm extends GridLayout {
         binder.bind(checkedIn, Attendee::getCheckedIn, Attendee::setCheckedIn);
 
 
-        birthDate.setDateFormat("MM/dd/yyyy");
         birthDate.addValueChangeListener(valueChangeEvent -> {
             Integer currentAge = getAgeFromDate(birthDate.getValue());
                 if (currentAge != null) {
@@ -112,6 +106,7 @@ public class AttendeeDetailForm extends GridLayout {
                     paidAmount.clear();
                 }
         });
+
 
         badge.addValueChangeListener(valueChangeEvent -> {
             // Field is read only when values are being added
@@ -250,6 +245,11 @@ public class AttendeeDetailForm extends GridLayout {
         badgeNumber.setEnabled(false);
         showHistory(attendee.getHistory());
         firstName.focus();
+        firstName.selectAll();
+    }
+
+    public void focusFirstName() {
+        firstName.selectAll();
     }
 
     public void showHistory(Set<AttendeeHistory> attendeeHistories) {
@@ -272,25 +272,15 @@ public class AttendeeDetailForm extends GridLayout {
         AbstractField[] fields = {parentFullName, parentPhone, parentIsEmergencyContact, parentFormReceived};
         for (AbstractField f : fields) {
             f.setEnabled(isEnabled);
-//            f.setValidationVisible(isEnabled);
         }
     }
 
     public void setManualPriceEnabled(boolean enabled) {
         paidAmount.setEnabled(enabled);
-//        paidAmount.setValidationVisible(enabled);
         compedBadge.setEnabled(enabled);
-//        compedBadge.setValidationVisible(enabled);
     }
 
     public Attendee getAttendee() {
-//        Attendee attendee;
-//        try {
-//            attendee = binder.getBean();
-//        } catch (Exception e) {
-//            StringBuilder sb = new StringBuilder();
-//            throw new RuntimeException(sb.toString());
-//        }
         return binder.getBean();
     }
 
@@ -317,10 +307,6 @@ public class AttendeeDetailForm extends GridLayout {
 
     public void setAvailableBadges(List<Badge> availableBadges) {
         badge.setItems(availableBadges);
-    }
-
-    public void selectFirstName() {
-        firstName.selectAll();
     }
 
     /**

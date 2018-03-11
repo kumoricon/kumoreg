@@ -44,14 +44,22 @@ public class AttendeeSearchByBadgePrintBadgeView extends PrintBadgeView implemen
         handler.showAttendee(this, attendeeId);
     }
 
+    @Override
+    protected void printedSuccessfullyClicked() {
+        navigateTo(SearchByBadgeView.VIEW_NAME + "/" + badgeType);
+    }
 
+    @Override
+    protected void reprintClicked() {
+        handler.reprintBadge(this, attendeeId);
+    }
 
     @Override
     public void close() {
         if (attendeeId != null) {
-            navigateTo(SearchByNameView.VIEW_NAME + "/" + badgeType + "/" + attendeeId);
+            navigateTo(SearchByBadgeView.VIEW_NAME + "/" + badgeType + "/" + attendeeId);
         } else {
-            navigateTo(SearchByNameView.VIEW_NAME + "/" + badgeType);
+            navigateTo(SearchByBadgeView.VIEW_NAME + "/" + badgeType);
         }
     }
 

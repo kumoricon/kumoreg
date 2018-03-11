@@ -4,6 +4,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import org.kumoricon.site.HomeView;
 import org.kumoricon.site.attendee.PrintBadgeView;
 import org.kumoricon.site.attendee.search.PrintBadgePresenter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,16 @@ public class AttendeeSearchRePrintBadgeView extends PrintBadgeView implements Vi
     @Autowired
     public AttendeeSearchRePrintBadgeView(PrintBadgePresenter handler) {
         super(handler);
+    }
+
+    @Override
+    protected void printedSuccessfullyClicked() {
+        navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId());
+    }
+
+    @Override
+    protected void reprintClicked() {
+
     }
 
     @Override

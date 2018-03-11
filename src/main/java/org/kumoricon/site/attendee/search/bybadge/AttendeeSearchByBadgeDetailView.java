@@ -44,13 +44,7 @@ public class AttendeeSearchByBadgeDetailView extends AttendeeDetailView implemen
         handler.saveAttendeeAndReprintBadge(this, form.getAttendee(), null);
         navigateTo(AttendeeSearchByBadgeRePrintBadgeView.VIEW_NAME + "/" + searchString + "/" + attendeeId + "/reprint");
     }
-
-    @Override
-    public void btnCheckInClicked() {
-        handler.saveAttendee(this, form.getAttendee());
-        navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/checkin");
-    }
-
+    
     @Override
     public void showAddNoteWindow() {
         navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/note/new");

@@ -5,6 +5,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.search.PrintBadgePresenter;
@@ -12,7 +13,7 @@ import org.kumoricon.site.attendee.search.PrintBadgePresenter;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
-public abstract class PrintBadgeView extends BaseView implements View {
+public abstract class PrintBadgeView extends BaseGridView implements View {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "print_badge";
 
@@ -30,7 +31,20 @@ public abstract class PrintBadgeView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
+        setColumns(3);
+        setRows(3);
+        setColumnExpandRatio(0, 10);
+        setRowExpandRatio(2, 10);
+
+        btnPrintedSuccessfully.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        btnPrintedSuccessfully.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        btnPrintedSuccessfully.addClickListener(e -> printedSuccessfullyClicked());
+        btnReprint.addClickListener(e -> reprintClicked());
     }
+
+    protected abstract void printedSuccessfullyClicked();
+
+    protected abstract void reprintClicked();
 
     protected void showBadge(Attendee attendee) {
         this.attendee = attendee;
@@ -44,28 +58,11 @@ public abstract class PrintBadgeView extends BaseView implements View {
 
         pdf.setWidth("700px");
         pdf.setHeight("500px");
-        addComponents(pdf, buildButtons());
+        addComponent(pdf, 0, 0, 0, 2);
+        addComponent(btnPrintedSuccessfully, 1, 0);
+        addComponent(btnReprint, 1, 1);
+
     }
-
-    protected VerticalLayout buildButtons() {
-        VerticalLayout layout = new VerticalLayout();
-
-        layout.addComponent(btnReprint);
-        layout.addComponent(btnPrintedSuccessfully);
-        btnReprint.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.reprintBadges(this, Arrays.asList(attendee));
-        });
-        btnPrintedSuccessfully.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.badgePrintSuccess(this, Arrays.asList(attendee));
-            close();
-        });
-
-        btnPrintedSuccessfully.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        btnPrintedSuccessfully.addStyleName(ValoTheme.BUTTON_PRIMARY);
-
-        return layout;
-    }
-
 
 
     @Override

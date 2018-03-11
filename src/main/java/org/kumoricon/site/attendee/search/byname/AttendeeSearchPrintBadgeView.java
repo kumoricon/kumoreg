@@ -30,6 +30,16 @@ public class AttendeeSearchPrintBadgeView extends PrintBadgeView implements View
     }
 
     @Override
+    protected void printedSuccessfullyClicked() {
+        navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+    }
+
+    @Override
+    protected void reprintClicked() {
+        handler.reprintBadge(this, attendeeId);
+    }
+
+    @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
 
         Map<String, String> map = URI_TEMPLATE.match(viewChangeEvent.getViewName());
