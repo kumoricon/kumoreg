@@ -83,6 +83,15 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         btnCheckIn.setEnabled(!attendee.getCheckedIn());
         btnSaveAndReprint.setEnabled(attendee.getCheckedIn());
         btnPrePrintBadge.setEnabled(!attendee.getCheckedIn());
+
+        if (currentUserHasRight("attendee_edit") ||
+                currentUserHasRight("pre_reg_check_in_edit") && !attendee.getCheckedIn()) {
+            form.setEditableFields(AttendeeDetailForm.EditableFields.ALL);
+            form.setManualPriceEnabled(currentUserHasRight("attendee_override_price"));
+        } else {
+            form.setEditableFields(AttendeeDetailForm.EditableFields.NONE);
+        }
+
     }
 
     @Override

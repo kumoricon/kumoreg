@@ -315,7 +315,11 @@ public class AttendeeDetailForm extends GridLayout {
      * @param fields EditableFields ENUM
      */
     public void setEditableFields(EditableFields fields) {
-        List<AbstractField> allFields = Arrays.asList(firstName, lastName);
+
+        List<AbstractField> allFields = Arrays.asList(firstName, lastName, legalFirstName, legalLastName,
+                nameIsLegalName, fanName, badgeNumber, phoneNumber, birthDate, email, zip, emergencyContactFullName,
+                emergencyContactPhone, parentFormReceived, parentFullName, parentPhone, paidAmount,
+                compedBadge, checkedIn);
         switch (fields) {
             case ALL:
                 for (AbstractField field : allFields) {
@@ -323,12 +327,14 @@ public class AttendeeDetailForm extends GridLayout {
 //                    field.setValidationVisible(true);
                 }
                 badgeNumber.setEnabled(false);
+                badge.setEnabled(true);
                 break;
             case NONE:
                 for (AbstractField field : allFields) {
                     field.setEnabled(false);
-//                    af.setValidationVisible(false);
                 }
+                badgeNumber.setEnabled(false);
+                badge.setEnabled(false);
         }
     }
 }
