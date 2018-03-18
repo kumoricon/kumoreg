@@ -6,6 +6,9 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.ComponentRenderer;
+import com.vaadin.ui.renderers.HtmlRenderer;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
@@ -26,6 +29,7 @@ public class SearchByNameView extends BaseGridView implements View {
     private TextField txtSearch = new TextField();
     private Button btnSearch = new Button("Search");
     private Grid<Attendee> tblResult = new Grid<>();
+    private Grid.Column<Attendee, String> checkInLinkColumn;
 
     @Autowired
     public SearchByNameView(SearchPresenter handler) {
@@ -59,17 +63,30 @@ public class SearchByNameView extends BaseGridView implements View {
         tblResult.addColumn(Attendee::getAge).setCaption("Age");
         tblResult.addColumn(Attendee::getZip).setCaption("Zip");
         tblResult.addColumn(Attendee::getCheckedIn).setCaption("Checked In");
+        if (currentUserHasRight("pre_reg_check_in")) {
+            checkInLinkColumn = tblResult.addColumn(attendee -> {
+                        if (!attendee.getCheckedIn()) {
+                            return "<a href='#!" + VIEW_NAME + "/" + txtSearch.getValue() + "/" + attendee.getId() + "/checkin'>Check In</a>";
+                        } else {
+                            return "";
+                        }},
+                    new HtmlRenderer());
+        }
 
         tblResult.addStyleName("kumoHandPointer");
         tblResult.addItemClickListener(itemClickEvent -> {
-            navigateTo(AttendeeSearchDetailView.VIEW_NAME +
-                    "/" + txtSearch.getValue() +
-                    "/" + itemClickEvent.getItem().getId());
+            // Don't navigate away if a link in the table was clicked, just follow that link
+            if (checkInLinkColumn != itemClickEvent.getColumn()) {
+                navigateTo(AttendeeSearchDetailView.VIEW_NAME +
+                        "/" + txtSearch.getValue() +
+                        "/" + itemClickEvent.getItem().getId());
+            }
         });
 
         addComponent(tblResult, 0, 1, 4, 1);
         txtSearch.focus();
     }
+
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {

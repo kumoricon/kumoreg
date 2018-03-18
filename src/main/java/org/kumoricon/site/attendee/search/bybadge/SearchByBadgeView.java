@@ -5,6 +5,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.ui.renderers.HtmlRenderer;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
@@ -27,6 +28,7 @@ public class SearchByBadgeView extends BaseGridView implements View {
     private Grid<Attendee> attendeeTable = new Grid<>();
     private String searchString;
     private List<Badge> availableBadgeTypes;
+    private Grid.Column<Attendee, String> checkInLinkColumn;
 
 
     @Autowired
@@ -67,11 +69,26 @@ public class SearchByBadgeView extends BaseGridView implements View {
         attendeeTable.addColumn(Attendee::getAge).setCaption("Age");
         attendeeTable.addColumn(Attendee::getCheckedIn).setCaption("Checked In");
         attendeeTable.addColumn(Attendee::getCheckInTime).setCaption("Check In Time");
+        if (currentUserHasRight("pre_reg_check_in")) {
+            checkInLinkColumn = attendeeTable.addColumn(attendee -> {
+                        if (!attendee.getCheckedIn()) {
+                            return "<a href='#!" + VIEW_NAME + "/" + badgeType.getValue().getId() + "/" + attendee.getId() + "/checkin'>Check In</a>";
+                        } else {
+                            return "";
+                        }},
+                    new HtmlRenderer());
+        }
+
         attendeeTable.addStyleName("kumoHandPointer");
 
-        attendeeTable.addItemClickListener(itemClickEvent -> navigateTo(AttendeeSearchByBadgeDetailView.VIEW_NAME +
-                "/" + searchString +
-                "/" + itemClickEvent.getItem().getId()));
+        attendeeTable.addItemClickListener(itemClickEvent -> {
+            // Don't navigate away if a link in the table was clicked, just follow that link
+            if (checkInLinkColumn != itemClickEvent.getColumn()) {
+                navigateTo(AttendeeSearchByBadgeDetailView.VIEW_NAME +
+                        "/" + searchString +
+                        "/" + itemClickEvent.getItem().getId());
+            }
+        });
 
         attendeeTable.setWidth("100%");
         attendeeTable.setHeight("90%");

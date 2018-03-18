@@ -1,6 +1,7 @@
 Change Log
 ----------------
 - Version 3.0.2 (Pending)
+    - Added Check In links to search by name/badge pages
 
 - Version 3.0.1 (3/10/2018)
     - Moved most windows to their own views
