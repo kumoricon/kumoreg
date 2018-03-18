@@ -13,6 +13,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.model.user.User;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
@@ -67,6 +68,9 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         btnCheckIn.setVisible(currentUserHasRight("pre_reg_check_in"));
         btnPrePrintBadge.setVisible(currentUserHasRight("pre_print_badges"));
         btnSaveAndReprint.setVisible(currentUserHasRight("reprint_badge") || currentUserHasRight("reprint_badge_with_override"));
+        if (currentUserHasRight("reprint_badge")) {
+            btnSaveAndReprint.setCaption("Reprint Badge");
+        }
         btnAddNote.setVisible(currentUserHasRight("attendee_add_note"));
     }
 
@@ -136,7 +140,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         btnAddNote.addClickListener((Button.ClickListener) clickEvent -> showAddNoteWindow());
 
         if (currentUserHasRight("reprint_badge")) {
-            btnSaveAndReprint = new Button("Save and Reprint Badge");
+            btnSaveAndReprint = new Button("Reprint Badge");
         } else {
             btnSaveAndReprint = new Button("Reprint Badge (Override)");
         }
@@ -152,6 +156,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
         });
         btnCancel.addClickListener((Button.ClickListener) clickEvent -> close());
         btnSaveAndReprint.addClickListener((Button.ClickListener) clickEvent -> reprintClicked());
+
 
         btnPrePrintBadge = new Button("Pre-Print Badge");
         btnPrePrintBadge.addClickListener((Button.ClickListener) clickEvent -> {
@@ -182,5 +187,21 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     protected void showAddNoteWindow() {
         throw new RuntimeException("This function must be overridden by another view");
+    }
+
+    public void enableEditFields(User overrideUser) {
+        if (currentUserHasRight("attendee_edit_with_override") && overrideUser.hasRight("attendee_edit")) {
+            form.setEditableFields(AttendeeDetailForm.EditableFields.ALL);
+            form.setManualPriceEnabled(overrideUser.hasRight("attendee_override_price"));
+            btnSave.setVisible(true);
+            btnSave.setEnabled(true);
+            btnSave.setCaption("Save");
+            if (form.getAttendee().getCheckedIn() && currentUserHasRight("reprint_badge_with_override") && overrideUser.hasRight("reprint_badge")) {
+                btnSaveAndReprint.setCaption("Reprint Badge");
+                btnSaveAndReprint.setEnabled(true);
+                btnSaveAndReprint.setVisible(true);
+            }
+            btnEdit.setEnabled(false);
+        }
     }
 }

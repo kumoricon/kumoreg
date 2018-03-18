@@ -284,12 +284,22 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
     }
 
     @Override
-    public void overrideEditLogin(OverrideRequiredForEditWindow window, String username, String password, AttendeeDetailView attendeeDetailWindow) {
-        // TODO
+    public void overrideEditLogin(OverrideRequiredForEditWindow window, String username, String password, AttendeeDetailView view) {
+        User overrideUser = userRepository.findOneByUsernameIgnoreCase(username);
+        if (overrideUser != null && overrideUser.checkPassword(password)) {
+            if (overrideUser.hasRight("attendee_edit")) {
+                window.close();
+                view.enableEditFields(overrideUser);
+            } else {
+                view.notifyError(overrideUser.getUsername() + "does not have the right \"attendee_edit\"");
+            }
+        } else {
+            view.notifyError("Bad username or ones/584password");
+        }
     }
 
     @Override
     public void overrideEditCancel(OverrideRequiredForEditWindow window) {
-        // TODO
+        window.close();
     }
 }

@@ -49,13 +49,14 @@ public class OverrideRequiredForEditWindow extends Window {
 
         override.addClickListener((Button.ClickListener) clickEvent ->
                 handler.overrideEditLogin(this, username.getValue(), password.getValue(), parentView));
-        cancel.addClickListener((Button.ClickListener) clickEvent -> handler.overrideEditCancel(this));
+        cancel.addClickListener((Button.ClickListener) clickEvent -> close());
 
         verticalLayout.addComponent(horizontalLayout);
         username.focus();
         setContent(verticalLayout);
 
         override.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
         override.addStyleName(ValoTheme.BUTTON_PRIMARY);
     }
 
