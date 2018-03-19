@@ -6,6 +6,7 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.site.attendee.CheckInView;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
+import org.kumoricon.site.attendee.search.byname.SearchByNameView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 
@@ -46,7 +47,7 @@ public class AttendeeSearchByBadgeCheckInView extends CheckInView implements Vie
     @Override
     protected void btnCheckInClicked() {
         handler.checkInAttendee(this, attendee);
-        navigateTo(SearchByBadgeView.VIEW_NAME + "/" + searchString);
+        navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendeeId + "/badge");
     }
 
 
