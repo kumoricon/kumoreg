@@ -11,6 +11,7 @@ import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.site.ButtonField;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 import org.kumoricon.site.attendee.search.SearchPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,7 @@ public class SearchByNameView extends BaseGridView implements View {
 
     private final SearchPresenter handler;
 
-    private TextField txtSearch = new TextField();
-    private Button btnSearch = new Button("Search");
+    private ButtonField txtSearch = new ButtonField();
     private Grid<Attendee> tblResult = new Grid<>();
     private Grid.Column<Attendee, String> checkInLinkColumn;
 
@@ -43,13 +43,12 @@ public class SearchByNameView extends BaseGridView implements View {
         setHeight("90%");
         setRowExpandRatio(1, 10);
 
-        txtSearch.setSizeFull();
         addComponent(txtSearch, 1, 0, 2, 0);
 
-        btnSearch = new Button("Search");
-        btnSearch.addClickListener((Button.ClickListener) clickEvent -> navigateTo(VIEW_NAME + "/" + txtSearch.getValue()));
-        btnSearch.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        addComponent(btnSearch, 3, 0);
+        txtSearch.addClickListener((Button.ClickListener) clickEvent -> navigateTo(VIEW_NAME + "/" + txtSearch.getValue()));
+        txtSearch.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        txtSearch.setButtonCaption("Search");
+        txtSearch.setPlaceholder("Search by name");
 
         tblResult.setWidth("95%");
         tblResult.setHeight("90%");

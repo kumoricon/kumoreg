@@ -1,13 +1,19 @@
 package org.kumoricon.site;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ServiceException;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.site.attendee.search.byname.SearchByNameView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -21,21 +27,39 @@ public class HomeView extends BaseGridView implements View {
     @Autowired
     private HomePresenter handler;
 
-    private Label welcome = new Label("Welcome to Kumoricon!");
     private Label priceList = new Label("");
+
+    private ButtonField txtSearch = new ButtonField();
 
     @PostConstruct
     void init() {
-        setColumns(3);
+        setColumns(5);
         setRows(2);
 
-        addComponent(welcome, 0, 0);
-        addComponent(priceList, 1, 1);
+        addComponent(txtSearch, 2, 0);
+        txtSearch.setButtonCaption("Search");
+
+        addComponent(priceList, 2, 1);
+
+        txtSearch.setPlaceholder("Search by Name...");
+        txtSearch.focus();
+
+        txtSearch.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+
+        txtSearch.addClickListener(e -> {
+            String searchString = txtSearch.getValue().trim();
+           if (!searchString.isEmpty()) {
+               navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString);
+           }
+        });
+
         priceList.setContentMode(ContentMode.HTML);
 
         setColumnExpandRatio(0, 1);
-        setColumnExpandRatio(1, 3);
-        setColumnExpandRatio(2, 1);
+        setColumnExpandRatio(1, 1);
+        setColumnExpandRatio(2, 5);
+        setColumnExpandRatio(3, 1);
+        setColumnExpandRatio(4, 1);
         handler.showBadges(this);
     }
 
