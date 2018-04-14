@@ -1,6 +1,7 @@
 package org.kumoricon.site.attendee.reg;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -285,7 +286,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, boolean printAll) {
         log.info("{} printing badge(s) for: {}", view.getCurrentUsername(), attendeeList);
-        printBadges((BaseView) view, attendeeList);
+        printBadges((BaseGridView) view, attendeeList);
         view.showPrintBadgeWindow(attendeeList);
     }
 

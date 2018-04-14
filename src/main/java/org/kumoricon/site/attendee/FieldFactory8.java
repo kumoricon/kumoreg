@@ -6,6 +6,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
+import org.kumoricon.model.badge.Badge;
 import org.kumoricon.service.FieldCleaner;
 
 import java.time.LocalDate;
@@ -242,8 +243,8 @@ public class FieldFactory8 {
         return checkBox;
     }
 
-    public static NativeSelect createNativeSelect(String name, int tabIndex) {
-        NativeSelect nativeSelect = new NativeSelect(name);
+    public static NativeSelect<Badge> createBadgeSelect(String name, int tabIndex) {
+        NativeSelect<Badge> nativeSelect = new NativeSelect<>(name);
         nativeSelect.setTabIndex(tabIndex);
         return nativeSelect;
     }

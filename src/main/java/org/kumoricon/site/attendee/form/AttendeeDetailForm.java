@@ -35,7 +35,7 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField parentPhone = createPhoneNumberField("Parent Phone", 14);
     private CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 15);
     private CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
-    private NativeSelect<Badge> badge = new NativeSelect<>("Badge Type");
+    private NativeSelect<Badge> badge = createBadgeSelect("Badge Type", 17);
     private TextField paidAmount = createTextField("Manual Price", 18);
     private CheckBox compedBadge = createCheckBox("Comped Badge", 19);
     private CheckBox checkedIn = createCheckBox("Attendee Checked In", 20);

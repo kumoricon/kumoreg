@@ -30,7 +30,7 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler, 
     private TextField amountPaid = new TextField("Amount paid");
     private TextField remaining = new TextField("Remaining");
     private Button btnTakeCash = new Button("Take cash");
-    private Button btnTakeCredit = new Button("Credit Card");
+    private Button btnTakeCredit = new Button("Take Credit Card");
     private Button btnTakeCheck = new Button("Take check/money order");
     private Button btnClose = new Button("Close");
     private Grid<Payment> paymentGrid = new Grid<>();
@@ -57,9 +57,9 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler, 
         paymentGrid.addItemClickListener(a -> {
             navigateTo(OrderPaymentRecordView.VIEW_NAME + "/" + orderId + "/payment/" + a.getItem().getId());
         });
-
+        paymentGrid.setWidth("700px");
         leftSide.addComponents(orderTotal, amountPaid, remaining, paymentGrid);
-        leftSide.setWidth("40%");
+        leftSide.setWidth("52%");
         leftSide.setSpacing(false);
         leftSide.setMargin(false);
         orderTotal.setEnabled(false);

@@ -5,6 +5,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @ViewScope
 @SpringView(name = OrderView.VIEW_NAME)
-public class OrderView extends BaseView implements View, AttendeePrintView, PaymentView {
+public class OrderView extends BaseGridView implements View, AttendeePrintView, PaymentView {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "at_con_registration";
 
@@ -32,7 +33,7 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
     private TextField orderId = FieldFactory8.createDisabledTextField("Order ID");
     private TextField orderTotal = FieldFactory8.createDisabledTextField("Order Total");
     private TextField paymentTotal = FieldFactory8.createDisabledTextField("Payment Total");
-    private com.vaadin.ui.TextArea notes = FieldFactory8.createTextArea("Notes");
+    private TextArea notes = FieldFactory8.createTextArea("Notes");
     private Grid<Attendee> attendeeList = new Grid<>();
     private Grid<Payment> paymentList = new Grid<>();
     private Button addAttendee = new Button("Add Attendee");
@@ -44,13 +45,10 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
 
     @PostConstruct
     public void init() {
-        FormLayout orderInfo = new FormLayout();
-        orderId.setWidth(400, Unit.PIXELS);
-        orderId.setVisible(false);
-        orderInfo.addComponent(orderId);
-        addComponent(orderInfo);
+        setColumns(3);
+        setRows(6);
 
-        attendeeList.setWidth(600, Unit.PIXELS);
+        attendeeList.setWidth(700, Unit.PIXELS);
         attendeeList.addStyleName("kumoHandPointer");
 
         attendeeList.addColumn(Attendee::getFirstName).setCaption("First Name");
@@ -58,32 +56,30 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
         attendeeList.addColumn(attendee -> attendee.getBadge().getName()).setCaption("Badge Type");
         attendeeList.addColumn(Attendee::getPaid).setCaption("Paid");
         attendeeList.addColumn(Attendee::getPaidAmount).setCaption("Amount");
-
-        paymentList.setWidth(500, Unit.PIXELS);
-        paymentList.addColumn(Payment::getPaymentType).setCaption("Payment Type");
-        paymentList.addColumn(Payment::getAmount).setCaption("Amount");
-        paymentList.addColumn(Payment::getPaymentTakenBy).setCaption("Taken By");
-
-        orderInfo.addComponent(attendeeList);
         attendeeList.addItemClickListener(itemClickEvent -> {
             Attendee attendee = itemClickEvent.getItem();
             navigateTo(AttendeeRegDetailView.VIEW_NAME + "/" + orderIdNumber + "/" + attendee.getId());
         });
 
-        orderInfo.addComponent(addAttendee);
-        orderInfo.addComponent(orderTotal);
-        orderInfo.addComponent(paymentTotal);
+        addComponent(attendeeList, 0, 0, 0, 3);
 
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setSpacing(true);
-        buttonLayout.addComponent(addPayment);
-        buttonLayout.addComponent(orderComplete);
-        buttonLayout.addComponent(cancel);
-        orderInfo.addComponent(buttonLayout);
+        paymentList.setWidth(700, Unit.PIXELS);
+        paymentList.setHeightByRows(2);
+        paymentList.addColumn(Payment::getPaymentType).setCaption("Payment Type");
+        paymentList.addColumn(Payment::getAmount).setCaption("Amount");
+        paymentList.addColumn(Payment::getPaymentTakenBy).setCaption("Taken By");
+        paymentList.addColumn(Payment::getPaymentTakenAt).setCaption("Time");
+        addComponent(paymentList, 0, 4);
 
-        orderInfo.addComponent(paymentList);
+        addComponent(addAttendee, 2, 0);
+        addComponent(orderTotal, 1, 0);
+        addComponent(paymentTotal, 1, 1);
 
-        orderInfo.addComponent(notes);
+        addComponent(addPayment, 2, 1);
+        addComponent(orderComplete, 2, 2);
+        addComponent(cancel, 2, 3);
+
+        addComponent(notes, 0, 5, 2, 5);
         notes.setSizeFull();
 
         addAttendee.addClickListener((Button.ClickListener) clickEvent -> navigateTo(AttendeeRegDetailView.VIEW_NAME + "/" + orderIdNumber + "/" + "new"));
@@ -135,8 +131,10 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
 
         if (order.getTotalAmount().compareTo(order.getTotalPaid()) == 0 && order.getAttendees().size() > 0) {
             orderComplete.setEnabled(true);
+            addAttendee.setEnabled(false);
         } else {
             orderComplete.setEnabled(false);
+            addAttendee.setEnabled(true);
         }
 
         if (order.getTotalAmount().compareTo(BigDecimal.ZERO) == 0) {
@@ -154,6 +152,8 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
             notes.setEnabled(false);
         }
 
+        paymentList.setItems(order.getPayments());
+
         if (!currentUserHasRight("manage_orders")) {
             setEnabled(!order.getPaid());   // Disable editing if the order has been paid
         }
@@ -168,8 +168,8 @@ public class OrderView extends BaseView implements View, AttendeePrintView, Paym
 
     @Override
     public void showPrintBadgeWindow(List<Attendee> attendeeList) {
-        PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
-        showWindow(printBadgeWindow);
+//        PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
+//        showWindow(printBadgeWindow);
     }
 
     public void showConfirmCancelWindow() {
