@@ -52,6 +52,16 @@
   bottom: 20px;
 }
 
+.kumoTable {
+  background-color: whitesmoke;
+  border: 1px solid #333333;
+  padding: 1em;
+}
+
+.kumoTable th {
+  font-weight: bold;
+}
+
 .kumoReport {
   margin-left: 1em;
 }

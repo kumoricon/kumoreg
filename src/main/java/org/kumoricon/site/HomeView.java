@@ -54,7 +54,6 @@ public class HomeView extends BaseGridView implements View {
         });
 
         priceList.setContentMode(ContentMode.HTML);
-
         setColumnExpandRatio(0, 1);
         setColumnExpandRatio(1, 1);
         setColumnExpandRatio(2, 5);
@@ -76,13 +75,13 @@ public class HomeView extends BaseGridView implements View {
         /* TODO: Make this look better. Border on the table, bold header row, right-align numbers, etc
           Add any CSS classes to styles.scss. */
         StringBuilder output = new StringBuilder();
-        output.append("<table>");
+        output.append("<table class=\"kumoTable\">");
         output.append("<tr>");
-        output.append("<td>Badge Type</td>");
-        output.append("<td>Adult (18+)</td>");
-        output.append("<td>Youth (13 - 17)</td>");
-        output.append("<td>Child (6 - 12)</td>");
-        output.append("<td>5 and Under</td>");
+        output.append("<th>Badge Type</td>");
+        output.append("<th>Adult (18+)</td>");
+        output.append("<th>Youth (13 - 17)</td>");
+        output.append("<th>Child (6 - 12)</td>");
+        output.append("<th>5 and Under</td>");
         output.append("</tr>");
         for (Badge badge : badges) {
             try {
