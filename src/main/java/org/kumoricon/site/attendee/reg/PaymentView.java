@@ -12,4 +12,5 @@ public interface PaymentView {
     void close();
     Boolean currentUserHasRight(String right);
     String getCurrentClientIPAddress();
+    void navigateTo(String viewName);
 }

@@ -12,6 +12,7 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.site.attendee.AttendeeDetailView;
 import org.kumoricon.site.attendee.DetailFormHandler;
+import org.kumoricon.site.attendee.window.WarningWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 
@@ -106,7 +107,7 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
                 form.commit();
-                handler.saveAttendee(this, form.getAttendee());
+                orderPresenter.saveAttendee(this, form.getAttendee());
                 close();
             } catch (Exception e) {
                 notifyError(e.getMessage());
@@ -144,6 +145,23 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
             navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
         }
     }
+
+    /**
+     * Message shown to users who do not have the right allowing them to check in someone on the blacklist
+     */
+    public void showBlacklistWarningWindow() {
+        WarningWindow window = new WarningWindow("Please send this person to the manager's booth right away");
+        showWindow(window);
+    }
+
+    /**
+     * Message shown to users who have the right allowing them to check in someone on the blacklist
+     */
+    public void showBlacklistConfirmationWindow() {
+        WarningWindow window = new WarningWindow("This person matches a name on the attendee blacklist");
+        showWindow(window);
+    }
+
 
     @Override
     public void close() {

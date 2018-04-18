@@ -99,7 +99,6 @@ public class OrderPaymentCreditView extends BaseView implements View, PaymentVie
             p.setAuthNumber(authNumber.getValue());
             try {
                 orderPresenter.savePayment(this, order, p);
-                close();
             } catch (ValidationException e) {
                 notifyError(e.getMessage());
             }

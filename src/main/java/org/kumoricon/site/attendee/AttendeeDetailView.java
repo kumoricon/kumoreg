@@ -6,8 +6,6 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
@@ -19,7 +17,6 @@ import org.kumoricon.site.attendee.form.AttendeeDetailForm;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.site.attendee.window.ViewNoteWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -96,12 +93,6 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
             form.setEditableFields(AttendeeDetailForm.EditableFields.NONE);
         }
 
-    }
-
-    @Override
-    public void showPrintBadgeWindow(List<Attendee> attendeeList) {
-        PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
-        showWindow(printBadgeWindow);
     }
 
     public void showOverrideRequiredWindow(AttendeeSearchPresenter presenter, List<Attendee> attendeeList)

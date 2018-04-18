@@ -105,7 +105,6 @@ public class OrderPaymentCheckView extends BaseView implements View, PaymentView
             p.setOrder(order);
             try {
                 orderPresenter.savePayment(this, order, p);
-                close();
             } catch (ValidationException e) {
                 notifyError(e.getMessage());
             }

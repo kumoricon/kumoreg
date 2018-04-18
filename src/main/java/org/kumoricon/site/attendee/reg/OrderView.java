@@ -9,17 +9,14 @@ import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
-import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.FieldFactory8;
 import org.kumoricon.site.attendee.window.ConfirmationWindow;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.kumoricon.site.attendee.window.WarningWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.List;
+
 
 @ViewScope
 @SpringView(name = OrderView.VIEW_NAME)
@@ -165,13 +162,6 @@ public class OrderView extends BaseGridView implements View, AttendeePrintView, 
 
     public String getRequiredRight() { return REQUIRED_RIGHT; }
 
-
-    @Override
-    public void showPrintBadgeWindow(List<Attendee> attendeeList) {
-//        PrintBadgeWindow printBadgeWindow = new PrintBadgeWindow(this, handler, attendeeList);
-//        showWindow(printBadgeWindow);
-    }
-
     public void showConfirmCancelWindow() {
         ConfirmationWindow window = new ConfirmationWindow(this, "Are you sure you want to cancel?");
         showWindow(window);
@@ -179,21 +169,5 @@ public class OrderView extends BaseGridView implements View, AttendeePrintView, 
 
     public void confirmCancelOrder() {
         handler.cancelOrder(this);
-    }
-
-    /**
-     * Message shown to users who do not have the right allowing them to check in someone on the blacklist
-     */
-    public void showBlacklistWarningWindow() {
-        WarningWindow window = new WarningWindow("Please send this person to the manager's booth right away");
-        showWindow(window);
-    }
-
-    /**
-     * Message shown to users who have the right allowing them to check in someone on the blacklist
-     */
-    public void showBlacklistConfirmationWindow() {
-        WarningWindow window = new WarningWindow("This person matches a name on the attendee blacklist");
-        showWindow(window);
     }
 }

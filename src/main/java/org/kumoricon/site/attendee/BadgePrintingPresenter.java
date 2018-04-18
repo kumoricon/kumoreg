@@ -5,7 +5,6 @@ import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.BaseView;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +48,6 @@ public class BadgePrintingPresenter {
             log.error("Error printing badges for {}", view.getCurrentUsername(), e);
             view.notifyError(e.getMessage());
         }
-    }
-
-    public BadgePrintFormatter getBadgeFormatter(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
-        return badgePrintService.getCurrentBadgeFormatter(attendees, printBadgeWindow.getParentView().getCurrentClientIPAddress());
     }
 
     public BadgePrintFormatter getBadgeFormatter(PrintBadgeView view, List<Attendee> attendees) {

@@ -6,6 +6,7 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.service.validate.ValidationException;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 @ViewScope
 @SpringView(name = OrderPaymentView.TEMPLATE)
-public class OrderPaymentView extends BaseView implements View, PaymentHandler, PaymentView {
+public class OrderPaymentView extends BaseGridView implements View, PaymentHandler, PaymentView {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "at_con_registration";
 
@@ -46,7 +47,14 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler, 
 
     @PostConstruct
     public void init() {
-        FormLayout leftSide = new FormLayout();
+        setColumns(5);
+        setRows(5);
+
+        setColumnExpandRatio(0, 10);
+        setColumnExpandRatio(1, 2);
+        setColumnExpandRatio(2, 1);
+        setColumnExpandRatio(3, 1);
+        setColumnExpandRatio(4, 10);
 
         paymentGrid.addColumn(Payment::getPaymentType).setCaption("Type");
         paymentGrid.addColumn(Payment::getAmount).setCaption("Amount");
@@ -58,10 +66,12 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler, 
             navigateTo(OrderPaymentRecordView.VIEW_NAME + "/" + orderId + "/payment/" + a.getItem().getId());
         });
         paymentGrid.setWidth("700px");
-        leftSide.addComponents(orderTotal, amountPaid, remaining, paymentGrid);
-        leftSide.setWidth("52%");
-        leftSide.setSpacing(false);
-        leftSide.setMargin(false);
+        addComponent(paymentGrid, 1, 0, 1, 3);
+
+        addComponent(orderTotal, 2, 0);
+        addComponent(amountPaid, 2, 1);
+        addComponent(remaining, 2, 2);
+
         orderTotal.setEnabled(false);
         amountPaid.setEnabled(false);
         remaining.setEnabled(false);
@@ -69,8 +79,10 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler, 
         amountPaid.addStyleName("align-right");
         remaining.addStyleName("align-right");
 
-        addComponent(leftSide);
-        addComponent(buildButtons());
+        addComponent(btnTakeCash, 3, 0);
+        addComponent(btnTakeCredit, 3, 1);
+        addComponent(btnTakeCheck, 3, 2);
+        addComponent(btnClose, 3, 3);
     }
 
     @Override
@@ -89,22 +101,9 @@ public class OrderPaymentView extends BaseView implements View, PaymentHandler, 
         btnTakeCash.addClickListener(c -> navigateTo(OrderPaymentCashView.VIEW_NAME + "/" + this.orderId + "/payment/addCash"));
         btnTakeCredit.addClickListener(c -> navigateTo(OrderPaymentCreditView.VIEW_NAME + "/" + this.orderId + "/payment/addCredit"));
         btnTakeCheck.addClickListener(c -> navigateTo(OrderPaymentCheckView.VIEW_NAME + "/" + this.orderId + "/payment/addCheck"));
+        btnClose.addClickListener((Button.ClickListener) clickEvent -> close());
         orderPresenter.showPayment(this, orderId);
     }
-
-
-    protected VerticalLayout buildButtons() {
-        VerticalLayout buttons = new VerticalLayout();
-        buttons.setSpacing(true);
-        buttons.setWidth("15%");
-        buttons.setMargin(new MarginInfo(false, true, false, true));
-
-        btnClose.addClickListener((Button.ClickListener) clickEvent -> close());
-
-        buttons.addComponents(btnTakeCash, btnTakeCredit, btnTakeCheck, btnClose);
-        return buttons;
-    }
-
 
     @Override
     public void close() {

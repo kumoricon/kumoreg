@@ -1,7 +1,6 @@
 package org.kumoricon.site.attendee.reg;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -18,12 +17,8 @@ import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.service.validate.PaymentValidator;
 import org.kumoricon.service.validate.ValidationException;
-import org.kumoricon.site.BaseView;
-import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.BadgePrintingPresenter;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
-import org.kumoricon.site.attendee.PrintBadgeView;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,36 +32,37 @@ import java.util.List;
 
 @Controller
 public class OrderPresenter extends BadgePrintingPresenter implements PrintBadgeHandler {
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    @Autowired
-    private BadgeRepository badgeRepository;
+    private final BadgeRepository badgeRepository;
 
-    @Autowired
-    private AttendeeRepository attendeeRepository;
+    private final AttendeeRepository attendeeRepository;
 
-    @Autowired
-    private AttendeeValidator attendeeValidator;
+    private final AttendeeValidator attendeeValidator;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private BlacklistService blacklistService;
+    private final BlacklistService blacklistService;
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
 
-    @Autowired
-    private SessionService sessionService;
+    private final SessionService sessionService;
 
-    @Autowired
-    private AttendeeHistoryRepository attendeeHistoryRepository;
+    private final AttendeeHistoryRepository attendeeHistoryRepository;
 
     private static final Logger log = LoggerFactory.getLogger(OrderPresenter.class);
 
-    public OrderPresenter() {
+    @Autowired
+    public OrderPresenter(OrderRepository orderRepository, BadgeRepository badgeRepository, AttendeeRepository attendeeRepository, AttendeeValidator attendeeValidator, UserRepository userRepository, BlacklistService blacklistService, PaymentRepository paymentRepository, SessionService sessionService, AttendeeHistoryRepository attendeeHistoryRepository) {
+        this.orderRepository = orderRepository;
+        this.badgeRepository = badgeRepository;
+        this.attendeeRepository = attendeeRepository;
+        this.attendeeValidator = attendeeValidator;
+        this.userRepository = userRepository;
+        this.blacklistService = blacklistService;
+        this.paymentRepository = paymentRepository;
+        this.sessionService = sessionService;
+        this.attendeeHistoryRepository = attendeeHistoryRepository;
     }
 
     public void createNewOrder(OrderView view) {
@@ -113,7 +109,12 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         log.info("{} saved payment {} to {}", view.getCurrentUsername(), payment, order);
         order.addPayment(payment);
         Order saved = orderRepository.save(order);
-        // TODO: If order paid, navigate to print badges screen
+
+        if (saved.getTotalAmount().compareTo(saved.getTotalPaid()) == 0) {
+            view.navigateTo(OrderView.VIEW_NAME + "/" + order.getId() + "/print");
+        } else {
+            view.close();
+        }
     }
 
     public void deletePayment(PaymentView view, int orderId, Payment payment) {
@@ -166,38 +167,6 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         view.showAttendee(newAttendee, badgeTypesUserCanSee);
     }
 
-    public void addAttendeeToOrder(OrderView view, Attendee attendee) {
-        Order order = view.getOrder();
-
-        if (!blacklistService.isOnBlacklist(attendee)) {
-            log.info("{} added attendee {} to order {}", view.getCurrentUsername(), attendee, order);
-            order.addAttendee(attendee);
-        } else {
-            if (view.currentUserHasRight("at_con_registration_blacklist")) {
-                log.info("{} added blacklisted attendee {} to order {}", view.getCurrentUsername(), attendee, order);
-                view.showBlacklistConfirmationWindow();
-                order.addAttendee(attendee);
-            } else {
-                view.showBlacklistWarningWindow();
-                log.info("{} tried to add {} to {} but attendee is on blacklist. Attendee not added.",
-                        view.getCurrentUser(), attendee, order);
-            }
-        }
-        order = orderRepository.save(order);
-        view.showOrder(order);
-
-    }
-
-    private static BigDecimal getOrderTotal(Order order) {
-        // Just get the total for all the attendees instead of keeping a running total
-        // and adding the latest amount to it. Keeping a running total made testing a pain
-        // if a value somehow got corrupt along the way
-        BigDecimal total = BigDecimal.ZERO;
-        for (Attendee a : order.getAttendeeList()) {
-            total = total.add(a.getPaidAmount());
-        }
-        return total;
-    }
 
     public void removeAttendeeFromOrder(AttendeeRegDetailView view, Attendee attendee) {
         if (attendee != null && !attendee.getCheckedIn()) {
@@ -248,7 +217,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         orderRepository.save(currentOrder);
 
         if (badgesToPrint.size() > 0) {
-            showAttendeeBadgeWindow(view, badgesToPrint, false);
+//            showAttendeeBadgeWindow(view, badgesToPrint, false);
         } else {
             view.navigateTo("/");
         }
@@ -265,15 +234,6 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         return badgeNumber;
     }
 
-    public void saveAuthNumberClicked(OrderView view, String value) {
-        Order order = view.getOrder();
-        log.info("{} set credit card authorization number {} for {}", view.getCurrentUsername(), value, order);
-        String oldNotes = "";
-        if (order.getNotes() != null) { oldNotes = order.getNotes(); }
-        order.setNotes("Credit card authorization number: " + value + "\n" + oldNotes);
-        orderComplete(view, order);
-    }
-
     public void validate(Attendee attendee) throws ValidationException {
         if (attendee.isMinor()) {   // Move parent form received in to attendeeValidator???
             if (attendee.getParentFormReceived() == null || !attendee.getParentFormReceived()) {
@@ -284,27 +244,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
     }
 
     @Override
-    public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, boolean printAll) {
-        log.info("{} printing badge(s) for: {}", view.getCurrentUsername(), attendeeList);
-        printBadges((BaseGridView) view, attendeeList);
-        view.showPrintBadgeWindow(attendeeList);
-    }
-
-    @Override
-    public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
-        BaseView view = printBadgeWindow.getParentView();
-        log.info("{} reported badge(s) printed successfully for {}",
-                printBadgeWindow.getParentView().getCurrentUser(), attendees);
-        printBadgeWindow.close();
-
-        // Attendees registering at-con should not have pre-printed badges, so don't bother
-        // resetting attendee.badgePrePrinted here.
-        view.notify("Order Complete");
-        view.navigateTo("/");
-    }
-
-    @Override
-    public void badgePrintSuccess(PrintBadgeView view, List<Attendee> attendees) {
+    public void badgePrintSuccess(OrderPrintView view, List<Attendee> attendees) {
         log.info("{} reported badge(s) printed successfully for {}",
                 view.getCurrentUser(), attendees);
 
@@ -315,19 +255,14 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
 
     }
 
-    @Override
-    public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
-        log.info("{} printing badge(s) for {} (reprint during order)",
-                printBadgeWindow.getParentView().getCurrentUser(), attendeeList);
-        printBadges(printBadgeWindow.getParentView(), attendeeList);
-    }
 
     @Override
-    public void reprintBadges(BaseView view, List<Attendee> attendees) {
+    public void reprintBadges(OrderPrintView view, List<Attendee> attendeeList) {
         log.info("{} printing badge(s) for {} (reprint during order)",
-                view.getCurrentUser(), attendees);
-        printBadges(view, attendees);
+                view.getCurrentUser(), attendeeList);
+        printBadges(view, attendeeList);
     }
+
 
     public void showPayment(OrderPaymentView view, Integer orderId) {
         log.info("{} viewed payment info for {}",
@@ -335,5 +270,40 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             orderId);
         Order order = orderRepository.findOne(orderId);
         view.showOrder(order);
+    }
+
+    public void showBadges(OrderPrintView view, Integer orderId) {
+        Order order = orderRepository.findOne(orderId);
+        view.showOrder(order);
+    }
+
+    public void saveAttendee(AttendeeRegDetailView view, Attendee attendee) {
+        Order order = attendee.getOrder();
+        if (!blacklistService.isOnBlacklist(attendee)) {
+            log.info("{} added attendee {} to order {}", view.getCurrentUsername(), attendee, order);
+        } else {
+            if (view.currentUserHasRight("at_con_registration_blacklist")) {
+                log.info("{} added blacklisted attendee {} to order {}", view.getCurrentUsername(), attendee, order);
+                view.showBlacklistConfirmationWindow();
+            } else {
+                view.showBlacklistWarningWindow();
+                log.info("{} tried to add {} to {} but attendee is on blacklist. Attendee not added.",
+                        view.getCurrentUser(), attendee, order);
+                return;
+            }
+        }
+
+        try {
+            attendeeValidator.validate(attendee);
+            attendee = attendeeRepository.save(attendee);
+            view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
+            log.info("{} saved {}", view.getCurrentUsername(), attendee);
+        } catch (ValidationException e) {
+            log.error("{} tried to save {} and got error {}",
+                    view.getCurrentUser(), attendee, e.getMessage());
+            view.notifyError(e.getMessage());
+        }
+
+
     }
 }

@@ -1,21 +1,17 @@
 package org.kumoricon.site.attendee.search;
 
 import org.kumoricon.model.attendee.*;
-import org.kumoricon.model.badge.Badge;
 import org.kumoricon.model.badge.BadgeRepository;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
-import org.kumoricon.service.AttendeeSearchService;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.*;
-import org.kumoricon.site.attendee.search.bybadge.SearchByBadgeView;
 import org.kumoricon.site.attendee.search.byname.AttendeeSearchDetailView;
 import org.kumoricon.site.attendee.search.byname.SearchByNameView;
 import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
-import org.kumoricon.site.attendee.window.PrintBadgeWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +23,7 @@ import java.util.List;
 
 @Controller
 @Scope("request")
-public class AttendeeSearchPresenter extends BadgePrintingPresenter implements PrintBadgeHandler, OverrideHandler, OverrideEditHandler {
+public class AttendeeSearchPresenter extends BadgePrintingPresenter implements OverrideHandler, OverrideEditHandler {
     @Autowired
     private AttendeeRepository attendeeRepository;
 
@@ -178,7 +174,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         }
     }
 
-    @Override
     public void showAttendeeBadgeWindow(AttendeePrintView view, List<Attendee> attendeeList, boolean forcePrintAll) {
         if (attendeeList != null) {
             if (forcePrintAll) {
@@ -192,61 +187,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
                 }
                 printBadges((BaseView)view, attendeesToPrint);
             }
-            view.showPrintBadgeWindow(attendeeList);
-        }
-    }
-
-    @Override
-    public void badgePrintSuccess(PrintBadgeWindow printBadgeWindow, List<Attendee> attendees) {
-        log.info("{} reported badge(s) printed successfully for {}",
-                printBadgeWindow.getParentView().getCurrentUser(), attendees);
-        if (printBadgeWindow != null) {
-            if (attendees.size() > 0) {
-                Attendee attendee = attendees.get(0);
-                if (attendee.getOrder() != null) {
-                    searchChanged(attendee.getOrder().getOrderId());
-                } else {
-                    printBadgeWindow.getParentView().refresh();
-                }
-            } else {
-                printBadgeWindow.getParentView().refresh();
-            }
-            printBadgeWindow.close();
-        }
-    }
-
-    @Override
-    public void badgePrintSuccess(PrintBadgeView view, List<Attendee> attendees) {
-        log.info("{} reported badge(s) printed successfully for {}",
-                view.getCurrentUser(), attendees);
-        if (attendees.size() > 0) {
-            Attendee attendee = attendees.get(0);
-        }
-    }
-
-    @Override
-    public void reprintBadges(PrintBadgeWindow printBadgeWindow, List<Attendee> attendeeList) {
-        if (attendeeList.size() > 0) {
-            log.info("{} reprinting badges due to error for {}", view.getCurrentUsername(), attendeeList);
-            printBadges(printBadgeWindow.getParentView(), attendeeList);
-        } else {
-            view.notify("No attendees selected");
-        }
-    }
-
-    @Override
-    public void reprintBadges(BaseView view, List<Attendee> attendees) {
-        if (attendees.size() > 0) {
-            log.info("{} reprinting badges due to error for {}", view.getCurrentUsername(), attendees);
-            printBadges(view, attendees);
-        } else {
-            view.notify("No attendees selected");
-        }
-    }
-
-    public void searchChanged(String searchString) {
-        if (searchString != null) {
-            view.navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString.trim());
+//            view.showPrintBadgeWindow(attendeeList);
         }
     }
 
@@ -269,7 +210,6 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements P
         }
         return true;
     }
-
 
     public void checkInAttendee(CheckInView view, Attendee attendee) {
         log.info("{} checked in preregistered attendee {}", view.getCurrentUser(), attendee);

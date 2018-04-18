@@ -163,7 +163,6 @@ public class OrderPaymentRecordView extends BaseView implements View, PaymentVie
             payment.setAuthNumber(authNumber.getValue());
             try {
                 orderPresenter.savePayment(this, order, payment);
-                close();
             } catch (ValidationException e) {
                 notifyError(e.getMessage());
             }
