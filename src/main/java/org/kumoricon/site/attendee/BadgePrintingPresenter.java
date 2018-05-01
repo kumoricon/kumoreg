@@ -50,7 +50,7 @@ public class BadgePrintingPresenter {
         }
     }
 
-    public BadgePrintFormatter getBadgeFormatter(PrintBadgeView view, List<Attendee> attendees) {
+    public BadgePrintFormatter getBadgeFormatter(BaseGridView view, List<Attendee> attendees) {
         return badgePrintService.getCurrentBadgeFormatter(attendees, view.getCurrentClientIPAddress());
     }
 

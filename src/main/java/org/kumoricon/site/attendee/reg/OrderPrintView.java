@@ -2,24 +2,20 @@ package org.kumoricon.site.attendee.reg;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.StreamResource;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.TextField;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.order.Order;
-import org.kumoricon.model.order.Payment;
-import org.kumoricon.service.validate.ValidationException;
-import org.kumoricon.site.attendee.PaymentHandler;
-import org.kumoricon.site.attendee.PrintBadgeView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +32,7 @@ public class OrderPrintView extends BaseGridView implements View {
     private Button btnReprint = new Button("Reprint Selected");
     private Button btnClose = new Button("Close");
     private Grid<Attendee> attendeeGrid = new Grid<>();
+    private BrowserFrame pdf;
 
     protected Integer orderId;
     protected Order order;
@@ -113,6 +110,20 @@ public class OrderPrintView extends BaseGridView implements View {
         for (Attendee attendee : order.getAttendees()) {
             attendeeGrid.select(attendee);
         }
+
+        StreamResource.StreamSource source = orderPresenter.getBadgeFormatter(this, order.getAttendees());
+        String filename = "badge" + System.currentTimeMillis() + ".pdf";
+        StreamResource resource = new StreamResource(source, filename);
+        pdf = new BrowserFrame("", resource);
+
+        resource.setMIMEType("application/pdf");
+        resource.getStream().setParameter("Content-Disposition", "attachment; filename=" + filename);
+
+        pdf.setWidth("400px");
+        pdf.setHeight("500px");
+
+        addComponent(pdf, 0, 0, 0, 4);
+
     }
 
     Order getOrder() {

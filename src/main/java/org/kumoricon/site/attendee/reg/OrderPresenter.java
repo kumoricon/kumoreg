@@ -14,11 +14,13 @@ import org.kumoricon.model.order.PaymentRepository;
 import org.kumoricon.model.session.SessionService;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserRepository;
+import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.service.validate.AttendeeValidator;
 import org.kumoricon.service.validate.PaymentValidator;
 import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.attendee.BadgePrintingPresenter;
 import org.kumoricon.site.attendee.PrintBadgeHandler;
+import org.kumoricon.site.attendee.PrintBadgeView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -270,6 +272,11 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         log.info("{} printing badge(s) for {} (reprint during order)",
                 view.getCurrentUser(), attendeeList);
         printBadges(view, attendeeList);
+    }
+
+    @Override
+    public BadgePrintFormatter getBadgeFormatter(PrintBadgeView printBadgeView, List<Attendee> attendees) {
+        return badgePrintService.getCurrentBadgeFormatter(attendees, printBadgeView.getCurrentClientIPAddress());
     }
 
 
