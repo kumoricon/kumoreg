@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -255,6 +254,16 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
 
     }
 
+
+    public void badgePrintSuccess(OrderPrintView view, Order currentOrder) {
+        log.info("{} reported badge(s) printed successfully for {}",
+                view.getCurrentUser(), currentOrder.getAttendees());
+        currentOrder.paymentComplete(view.getCurrentUser());
+
+        orderRepository.save(currentOrder);
+        view.notify("Order Complete");
+        view.navigateTo("/");
+    }
 
     @Override
     public void reprintBadges(OrderPrintView view, List<Attendee> attendeeList) {

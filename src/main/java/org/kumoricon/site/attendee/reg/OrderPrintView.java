@@ -73,7 +73,7 @@ public class OrderPrintView extends BaseGridView implements View {
     }
 
     protected void printedSuccessfullyClicked() {
-        orderPresenter.badgePrintSuccess(this, order.getAttendees());
+        orderPresenter.badgePrintSuccess(this, order);
     }
 
     protected void reprintClicked() {
