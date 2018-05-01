@@ -23,6 +23,9 @@ public class ButtonField extends CustomField<String> {
 
     @Override
     public void setValue(String newFieldValue) {
+        if (newFieldValue == null) {
+            newFieldValue = "";
+        }
         textField.setValue(newFieldValue);
         super.setValue(newFieldValue);
     }
