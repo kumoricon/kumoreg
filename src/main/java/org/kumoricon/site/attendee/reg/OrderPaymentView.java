@@ -2,7 +2,6 @@ package org.kumoricon.site.attendee.reg;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
@@ -10,7 +9,6 @@ import org.kumoricon.BaseGridView;
 import org.kumoricon.model.order.Order;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.service.validate.ValidationException;
-import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.PaymentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;

@@ -7,7 +7,6 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.search.PrintBadgePresenter;
 
 import javax.annotation.PostConstruct;

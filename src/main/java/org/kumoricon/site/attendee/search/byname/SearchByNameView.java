@@ -6,13 +6,10 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.ButtonField;
-import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 import org.kumoricon.site.attendee.search.SearchPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 

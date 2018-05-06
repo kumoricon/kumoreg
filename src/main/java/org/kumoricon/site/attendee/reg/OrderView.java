@@ -12,7 +12,6 @@ import org.kumoricon.model.order.Payment;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.FieldFactory8;
 import org.kumoricon.site.attendee.window.ConfirmationWindow;
-import org.kumoricon.site.attendee.window.WarningWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;

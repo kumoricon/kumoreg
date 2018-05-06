@@ -1,10 +1,7 @@
 package org.kumoricon.site.attendee;
 
 import com.vaadin.ui.Window;
-import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.user.User;
-
-import java.util.List;
 
 public interface AttendeePrintView {
     void notify(String message);

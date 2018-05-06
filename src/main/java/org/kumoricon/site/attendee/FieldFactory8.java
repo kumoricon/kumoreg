@@ -1,7 +1,6 @@
 package org.kumoricon.site.attendee;
 
 import com.vaadin.data.Result;
-import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.NativeSelect;
@@ -10,8 +9,6 @@ import org.kumoricon.model.badge.Badge;
 import org.kumoricon.service.FieldCleaner;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * Helpers for generating different Vaadin form fields

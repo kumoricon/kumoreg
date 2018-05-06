@@ -10,7 +10,6 @@ import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.computer.Computer;
 import org.kumoricon.model.printer.Printer;
-import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.util.List;
