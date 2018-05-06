@@ -1,6 +1,9 @@
 Change Log
 ----------------
-- Version 3.0.2 (Pending)
+- Version 3.0.3 (pending)
+    - Staff check in fixes
+
+- Version 3.0.2 (5/1/2018)
     - Added Check In links to search by name/badge pages
     - Added search to home page
 
