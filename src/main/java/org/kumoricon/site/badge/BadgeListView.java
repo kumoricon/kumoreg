@@ -44,9 +44,7 @@ public class BadgeListView extends BaseView implements View {
 
         badgeGrid.addItemClickListener((ItemClickListener<Badge>) itemClick -> navigateTo(BadgeEditView.VIEW_NAME + "/" + itemClick.getItem().getId()));
 
-        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
-            navigateTo(BadgeEditView.VIEW_NAME + "/");
-        });
+        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> navigateTo(BadgeEditView.VIEW_NAME + "/"));
     }
 
     @Override

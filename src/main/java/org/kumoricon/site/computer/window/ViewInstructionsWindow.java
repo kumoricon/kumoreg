@@ -35,8 +35,6 @@ public class ViewInstructionsWindow extends Window {
         labelInstructionText.setValue(instructions);
 
         btnClose.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        btnClose.addClickListener((Button.ClickListener) clickEvent -> {
-            this.close();
-        });
+        btnClose.addClickListener((Button.ClickListener) clickEvent -> this.close());
     }
 }

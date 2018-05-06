@@ -63,12 +63,9 @@ public class StaffImport {
     private ImportFile loadFile(Path filePath) throws Exception {
         try (BufferedReader br = Files.newBufferedReader(filePath))
         {
-            Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
-                @Override
-                public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-                    return LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ISO_LOCAL_DATE);
-                }
-            }).create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class,
+                    (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) ->
+                            LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ISO_LOCAL_DATE)).create();
             ImportFile importFile = gson.fromJson(br, ImportFile.class);
             br.close();
             return importFile;

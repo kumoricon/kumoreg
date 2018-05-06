@@ -44,9 +44,7 @@ public class RoleListView extends BaseView implements View {
         roleGrid.addItemClickListener((ItemClickListener<Role>) itemClick ->
                 navigateTo(RoleEditView.VIEW_NAME + "/" + itemClick.getItem().getId()));
 
-        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.addNewRole(this);
-        });
+        btnAddNew.addClickListener((Button.ClickListener) clickEvent -> handler.addNewRole(this));
     }
 
     @Override

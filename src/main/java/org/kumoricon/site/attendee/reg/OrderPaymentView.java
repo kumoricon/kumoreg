@@ -60,9 +60,8 @@ public class OrderPaymentView extends BaseGridView implements View, PaymentHandl
         paymentGrid.addColumn(Payment::getPaymentTakenAt).setCaption("Timestamp");
         paymentGrid.addStyleName("kumoHandPointer");
         paymentGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        paymentGrid.addItemClickListener(a -> {
-            navigateTo(OrderPaymentRecordView.VIEW_NAME + "/" + orderId + "/payment/" + a.getItem().getId());
-        });
+        paymentGrid.addItemClickListener(a ->
+                navigateTo(OrderPaymentRecordView.VIEW_NAME + "/" + orderId + "/payment/" + a.getItem().getId()));
         paymentGrid.setWidth("700px");
         addComponent(paymentGrid, 1, 0, 1, 3);
 

@@ -1,10 +1,7 @@
 package org.kumoricon.site.attendee;
 
 import com.vaadin.data.Result;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.service.FieldCleaner;
 
@@ -20,8 +17,7 @@ public class FieldFactory8 {
      * @return TextField
      */
     public static TextField createTextField(String name) {
-        TextField textField = new TextField(name);
-        return textField;
+        return new TextField(name);
     }
 
     /**
@@ -251,9 +247,8 @@ public class FieldFactory8 {
      * @param name Field Name
      * @return TextArea
      */
-    public static com.vaadin.ui.TextArea createTextArea(String name) {
+    public static TextArea createTextArea(String name) {
         // Creates TextArea object and sets it to show an empty string for null values
-        com.vaadin.ui.TextArea textArea = new com.vaadin.ui.TextArea(name);
-        return textArea;
+        return new TextArea(name);
     }
 }

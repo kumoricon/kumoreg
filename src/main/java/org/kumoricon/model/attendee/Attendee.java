@@ -78,11 +78,8 @@ public class Attendee extends Record {
      * @return minor status
      */
     public boolean isMinor() {
-        if (birthDate != null) {
-            return birthDate.isAfter(LocalDate.now().minusYears(18));
-        } else {
-            return true;    // If birthdate isn't set for some reason, treat them as a minor.
-        }
+        // If birthdate isn't set for some reason, treat them as a minor.
+        return birthDate == null || birthDate.isAfter(LocalDate.now().minusYears(18));
     }
 
     public String getFirstName() { return firstName; }

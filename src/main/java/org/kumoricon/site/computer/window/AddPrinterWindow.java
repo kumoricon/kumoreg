@@ -52,9 +52,7 @@ public class AddPrinterWindow extends Window {
         layout.addComponent(buttons);
         setContent(layout);
 
-        btnCancel.addClickListener((Button.ClickListener) clickEvent -> {
-            this.close();
-        });
+        btnCancel.addClickListener((Button.ClickListener) clickEvent -> this.close());
 
         btnInstall.addClickListener((Button.ClickListener) clickEvent -> {
             String model = (comboboxModel.getValue());

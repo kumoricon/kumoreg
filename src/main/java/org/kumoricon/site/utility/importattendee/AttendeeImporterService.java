@@ -210,12 +210,8 @@ class AttendeeImporterService {
     }
 
     private List<AttendeeRecord> loadFile(BufferedReader bufferedReader) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
-            @Override
-            public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-                return LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ISO_LOCAL_DATE);
-            }
-        }).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class,
+                (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ISO_LOCAL_DATE)).create();
         AttendeeRecord[] output = gson.fromJson(bufferedReader, AttendeeRecord[].class);
 
         return Arrays.asList(output);

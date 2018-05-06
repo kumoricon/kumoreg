@@ -90,13 +90,9 @@ public class ComputerView extends BaseGridView implements View {
         addComponent(btnDeleteComputer, 1, 4);
         addComponent(btnViewInstructions, 2, 4);
 
-        btnViewInstructions.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.showInstructions(this);
-        });
+        btnViewInstructions.addClickListener((Button.ClickListener) clickEvent -> handler.showInstructions(this));
 
-        btnAddComputer.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.addNewComputer(this);
-        });
+        btnAddComputer.addClickListener((Button.ClickListener) clickEvent -> handler.addNewComputer(this));
 
         btnDeleteComputer.addClickListener((Button.ClickListener) clickEvent -> {
             Set<Computer> selected = gridComputers.getSelectedItems();
@@ -134,9 +130,7 @@ public class ComputerView extends BaseGridView implements View {
 
         /* TEMPORARY */ btnEditPrinterModels.setEnabled(false); /* TODO implement printer model feature */
 
-        btnAddPrinter.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.addPrinter(this);
-        });
+        btnAddPrinter.addClickListener((Button.ClickListener) clickEvent -> handler.addPrinter(this));
 
         btnDeletePrinter.addClickListener((Button.ClickListener) clickEvent -> {
             Set<Printer> selected = gridPrinters.getSelectedItems();
@@ -145,9 +139,7 @@ public class ComputerView extends BaseGridView implements View {
             }
         });
 
-        btnAddPrinter.addClickListener((Button.ClickListener) clickEvent -> {
-            handler.refreshPrinterList(this);
-        });
+        btnAddPrinter.addClickListener((Button.ClickListener) clickEvent -> handler.refreshPrinterList(this));
 
 
         // Populate data
