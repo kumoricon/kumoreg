@@ -79,6 +79,12 @@ public class Person {
             attendee.setPhoneNumber("555-555-5555");
         }
 
+        // Email isn't in imported data, add dummy information
+        if (isDifferent(attendee.getEmail(), "seestaffsite@example.com")) {
+            updated = true;
+            attendee.setEmail("seestaffsite@example.com");
+        }
+
         // Emergency contact isn't in imported data, add dummy information
         if (isDifferent(attendee.getEmergencyContactFullName(), "See Staff site")) {
             updated = true;
