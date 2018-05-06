@@ -46,7 +46,12 @@ public class AttendeeSearchCheckInView extends CheckInView implements View {
     @Override
     protected void btnCheckInClicked() {
         handler.checkInAttendee(this, attendee);
-        navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendeeId + "/badge");
+        if (attendee.getOrder() != null) {
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendeeId + "/badge");
+        } else {
+            // TODO: if staff get an orderID set, remove this
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + "staff" + "/" + attendeeId + "/badge");
+        }
     }
 
     @Override
