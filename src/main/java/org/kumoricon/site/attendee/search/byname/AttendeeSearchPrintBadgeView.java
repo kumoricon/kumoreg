@@ -31,7 +31,11 @@ public class AttendeeSearchPrintBadgeView extends PrintBadgeView implements View
 
     @Override
     protected void printedSuccessfullyClicked() {
-        navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+        if (attendee.getOrder() != null) {
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+        } else {
+            navigateTo(SearchByNameView.VIEW_NAME);
+        }
     }
 
     @Override
@@ -67,10 +71,8 @@ public class AttendeeSearchPrintBadgeView extends PrintBadgeView implements View
 
     @Override
     public void close() {
-        if (attendeeId != null) {
-            if (attendee != null) {
-                navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
-            }
+        if (attendeeId != null && attendee != null && attendee.getOrder() != null) {
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
         } else {
             navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString);
         }

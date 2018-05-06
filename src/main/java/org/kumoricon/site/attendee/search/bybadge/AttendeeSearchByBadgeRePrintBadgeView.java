@@ -31,7 +31,11 @@ public class AttendeeSearchByBadgeRePrintBadgeView extends PrintBadgeView implem
 
     @Override
     protected void printedSuccessfullyClicked() {
-        navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+        if (attendee.getOrder() != null) {
+            navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+        } else {
+            navigateTo(SearchByNameView.VIEW_NAME);
+        }
     }
 
     @Override

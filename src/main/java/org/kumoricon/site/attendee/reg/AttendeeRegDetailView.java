@@ -141,7 +141,7 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
     @Override
     protected void showAddNoteWindow() {
         Attendee attendee = handler.saveAttendee(this, form.getAttendee());
-        if (attendee != null) {
+        if (attendee != null && attendee.getOrder() != null) {
             navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
         }
     }
