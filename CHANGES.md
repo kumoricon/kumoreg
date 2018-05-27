@@ -2,6 +2,9 @@ Change Log
 ----------------
 - Version 3.0.3 (pending)
     - Staff check in fixes
+    - Add dummy e-mail address when importing staff
+    - Don't show "*" on phone and email fields when they are not required per configuration
+    - Tweaked tabIndex on payment views
 
 - Version 3.0.2 (5/1/2018)
     - Added Check In links to search by name/badge pages

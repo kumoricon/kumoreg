@@ -15,7 +15,6 @@ import java.util.*;
 
 import static org.kumoricon.site.attendee.FieldFactory8.*;
 
-
 public class AttendeeDetailForm extends GridLayout {
     private TextField firstName = createNameField("First Name*", 1);
     private TextField lastName = createNameField("Last Name*", 2);
@@ -59,7 +58,6 @@ public class AttendeeDetailForm extends GridLayout {
         setColumnExpandRatio(0, 0);
         setColumnExpandRatio(1, 0);
         setColumnExpandRatio(2, 1);
-
 
         binder.bind(firstName, Attendee::getFirstName, Attendee::setFirstName);
         binder.bind(lastName, Attendee::getLastName, Attendee::setLastName);
@@ -201,6 +199,16 @@ public class AttendeeDetailForm extends GridLayout {
         historyLayout.setSpacing(true);
         hist.setContent(historyLayout);
         addComponent(hist, 2, 0, 2, 6);
+    }
+
+    public void setOpitionallyRequiredFieldNames(boolean requirePhoneAndEmail) {
+        if (requirePhoneAndEmail) {
+            email.setCaption("Email*");
+            phoneNumber.setCaption("Phone*");
+        } else {
+            email.setCaption("Email");
+            phoneNumber.setCaption("Phone");
+        }
     }
 
     public void hideLegalNameFields() {

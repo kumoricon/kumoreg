@@ -293,7 +293,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         view.showOrder(order);
     }
 
-    public void saveAttendee(AttendeeRegDetailView view, Attendee attendee) {
+    public void saveAttendee(AttendeeRegDetailView view, Attendee attendee) throws ValidationException {
         Order order = attendee.getOrder();
         if (!blacklistService.isOnBlacklist(attendee)) {
             log.info("{} added attendee {} to order {}", view.getCurrentUsername(), attendee, order);
@@ -317,7 +317,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         } catch (ValidationException e) {
             log.error("{} tried to save {} and got error {}",
                     view.getCurrentUser(), attendee, e.getMessage());
-            view.notifyError(e.getMessage());
+            throw e;
         }
 
 

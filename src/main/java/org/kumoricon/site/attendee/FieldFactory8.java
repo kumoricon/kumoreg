@@ -251,4 +251,14 @@ public class FieldFactory8 {
         // Creates TextArea object and sets it to show an empty string for null values
         return new TextArea(name);
     }
+
+    public static Button createButton(String name) {
+        return new Button(name);
+    }
+
+    public static Button createButton(String name, int tabIndex) {
+        Button button = createButton(name);
+        button.setTabIndex(tabIndex);
+        return button;
+    }
 }

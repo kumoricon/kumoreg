@@ -19,12 +19,15 @@ import org.kumoricon.site.attendee.window.OverrideRequiredForEditWindow;
 import org.kumoricon.site.attendee.window.OverrideRequiredWindow;
 import org.kumoricon.site.attendee.window.ViewNoteWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
 @ViewScope
 public abstract class AttendeeDetailView extends BaseView implements View, AttendeePrintView, DetailFormHandler {
+    @Value("${kumoreg.validation.attendee.requirePhoneAndEmail:true}")
+    protected Boolean requirePhoneAndEmail;
 
     protected Integer attendeeId;
 
@@ -44,6 +47,8 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
     @PostConstruct
     public void init() {
         setSizeFull();
+
+        form.setOpitionallyRequiredFieldNames(requirePhoneAndEmail);
 
         VerticalLayout buttons = buildSaveCancel();
         btnSave.setClickShortcut(ShortcutAction.KeyCode.ENTER);
