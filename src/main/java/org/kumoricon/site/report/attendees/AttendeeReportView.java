@@ -29,13 +29,13 @@ public class AttendeeReportView extends BaseGridView implements View, ReportView
 
     @PostConstruct
     public void init() {
-        setColumns(2);
+        setColumns(4);
         setRows(1);
         setColumnExpandRatio(0, 10);
-        setColumnExpandRatio(1, 1);
+        setColumnExpandRatio(3, 10);
         btnRefresh.addClickListener((Button.ClickListener) clickEvent -> handler.fetchReportData(this));
-        addComponent(data, 0, 0);
-        addComponent(btnRefresh, 1, 0);
+        addComponent(data, 1, 0);
+        addComponent(btnRefresh, 2, 0);
         data.setContentMode(ContentMode.HTML);
         data.setWidth("800px");
         handler.fetchReportData(this);

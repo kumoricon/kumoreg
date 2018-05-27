@@ -32,14 +32,14 @@ public class StaffReportView extends BaseGridView implements View {
 
     @PostConstruct
     public void init() {
-        setColumns(2);
+        setColumns(4);
         setRows(1);
         setColumnExpandRatio(0, 10);
-        setColumnExpandRatio(1, 1);
+        setColumnExpandRatio(3, 10);
         btnRefresh.addClickListener((Button.ClickListener) clickEvent -> handler.showUserList(this));
 
-        addComponent(dataGrid, 0, 0);
-        addComponent(btnRefresh, 1, 0);
+        addComponent(dataGrid, 1, 0);
+        addComponent(btnRefresh, 2, 0);
         handler.showUserList(this);
         dataGrid.addColumn(User::getLastName).setCaption("Last Name");
         dataGrid.addColumn(User::getFirstName).setCaption("First Name");
@@ -49,7 +49,7 @@ public class StaffReportView extends BaseGridView implements View {
         dataGrid.getEditor().setEnabled(false);
         dataGrid.setHeightMode(HeightMode.ROW);
         dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        dataGrid.setWidth("100%");
+        dataGrid.setWidth("600px");
         dataGrid.addStyleName("kumoHeaderOnlyHandPointer");
     }
 
