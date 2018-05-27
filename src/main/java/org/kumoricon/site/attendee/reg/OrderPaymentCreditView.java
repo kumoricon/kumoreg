@@ -33,11 +33,11 @@ public class OrderPaymentCreditView extends BaseView implements View, PaymentVie
     public static final UriTemplate URI_TEMPLATE = new UriTemplate(TEMPLATE);
 
 
-    private TextField balance = createDollarField("Balance Due", 1);
-    private TextField amount = createDollarField("Amount", 3);
-    private TextField authNumber = createTextField("Credit Card Authorization Number (6-7 characters)");
-    private Button save = new Button("Save");
-    private Button cancel = new Button("Cancel");
+    private TextField balance = createDollarField("Balance Due");
+    private TextField amount = createDollarField("Amount", 1);
+    private TextField authNumber = createTextField("Credit Card Authorization Number (6-7 characters)",2);
+    private Button save = createButton("Save", 3);
+    private Button cancel = createButton("Cancel", 4);
 
     protected Integer orderId;
     protected Order order;

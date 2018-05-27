@@ -29,11 +29,11 @@ public class OrderPaymentCashView extends BaseView implements View, PaymentView 
     public static final String TEMPLATE = "order/{orderId}/payment/addCash";
     public static final UriTemplate URI_TEMPLATE = new UriTemplate(TEMPLATE);
 
-    private TextField balance = createDollarField("Balance Due", 1);
-    private TextField amount = createDollarField("Amount", 2);
-    private TextField change = createTextField("Change", 3);
-    private Button save = new Button("Save");
-    private Button cancel = new Button("Cancel");
+    private TextField balance = createDollarField("Balance Due");
+    private TextField amount = createDollarField("Amount", 1);
+    private TextField change = createTextField("Change");
+    private Button save = createButton("Save", 2);
+    private Button cancel = createButton("Cancel", 3);
 
     protected Integer orderId;
     protected Order order;
