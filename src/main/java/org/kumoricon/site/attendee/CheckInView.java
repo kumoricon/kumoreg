@@ -2,17 +2,16 @@ package org.kumoricon.site.attendee;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
-import org.kumoricon.site.BaseView;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 
 import javax.annotation.PostConstruct;
 import java.time.format.DateTimeFormatter;
 
-public abstract class CheckInView extends BaseView implements View {
+public abstract class CheckInView extends BaseGridView implements View {
     public static final String VIEW_NAME = "order";
     public static final String REQUIRED_RIGHT = "pre_reg_check_in";
 
@@ -33,10 +32,31 @@ public abstract class CheckInView extends BaseView implements View {
 
     @PostConstruct
     public void init() {
+        setRows(3);
+        setColumns(5);
+        setRowExpandRatio(2, 10.0f);
+        setColumnExpandRatio(0, 10.0f);
+        setColumnExpandRatio(3, 2.0f);
+        setColumnExpandRatio(4, 10.0f);
+
         attendeeInfo.setEnabled(false);
         attendeeInfo.setWidth("500px");
         attendeeInfo.setHeight("300px");
-        addComponents(attendeeInfo, informationVerified, parentalConsentFormReceived, buildButtons());
+
+        addComponent(attendeeInfo, 1, 0, 1, 2);
+        addComponent(informationVerified, 2, 0);
+        addComponent(parentalConsentFormReceived, 2, 1);
+
+        btnCheckIn.addClickListener((Button.ClickListener) clickEvent -> btnCheckInClicked());
+        btnCancel.addClickListener(c -> close());
+
+        btnCheckIn.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        btnCheckIn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+
+        btnCheckIn.setEnabled(false);
+
+        addComponent(btnCheckIn, 3, 0);
+        addComponent(btnCancel, 3, 1);
 
         informationVerified.addValueChangeListener(e -> enableButtons());
         parentalConsentFormReceived.addValueChangeListener(e -> enableButtons());
@@ -54,24 +74,6 @@ public abstract class CheckInView extends BaseView implements View {
         } else {
             btnCheckIn.setEnabled(false);
         }
-    }
-
-    protected VerticalLayout buildButtons() {
-        VerticalLayout buttons = new VerticalLayout();
-        buttons.setSpacing(true);
-        buttons.setWidth("15%");
-        buttons.setMargin(new MarginInfo(false, true, false, true));
-
-        btnCheckIn.addClickListener((Button.ClickListener) clickEvent -> btnCheckInClicked());
-        btnCancel.addClickListener(c -> close());
-
-        btnCheckIn.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        btnCheckIn.addStyleName(ValoTheme.BUTTON_PRIMARY);
-
-        btnCheckIn.setEnabled(false);
-
-        buttons.addComponents(btnCheckIn, btnCancel);
-        return buttons;
     }
 
     protected void btnCheckInClicked() {

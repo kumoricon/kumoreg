@@ -30,9 +30,10 @@ public abstract class PrintBadgeView extends BaseGridView implements View {
 
     @PostConstruct
     public void init() {
-        setColumns(3);
+        setColumns(5);
         setRows(3);
         setColumnExpandRatio(0, 10);
+        setColumnExpandRatio(4, 10);
         setRowExpandRatio(2, 10);
 
         btnPrintedSuccessfully.setClickShortcut(ShortcutAction.KeyCode.ENTER);
@@ -57,9 +58,9 @@ public abstract class PrintBadgeView extends BaseGridView implements View {
 
         pdf.setWidth("700px");
         pdf.setHeight("500px");
-        addComponent(pdf, 0, 0, 0, 2);
-        addComponent(btnPrintedSuccessfully, 1, 0);
-        addComponent(btnReprint, 1, 1);
+        addComponent(pdf, 1, 0, 1, 2);
+        addComponent(btnPrintedSuccessfully, 2, 0);
+        addComponent(btnReprint, 2, 1);
 
     }
 
