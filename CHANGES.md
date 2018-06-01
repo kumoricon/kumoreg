@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 3.0.3 (pending)
+- Version 3.0.4 (pending)
+
+- Version 3.0.3 (5/31/2018)
     - Staff check in fixes
     - Add dummy e-mail address when importing staff
     - Don't show "*" on phone and email fields when they are not required per configuration
