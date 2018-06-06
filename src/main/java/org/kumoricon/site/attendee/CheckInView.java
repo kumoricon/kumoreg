@@ -67,6 +67,8 @@ public abstract class CheckInView extends BaseGridView implements View {
             if (attendee.isMinor()) {
                 if (parentalConsentFormReceived.getValue()) {
                     btnCheckIn.setEnabled(true);
+                } else {
+                    btnCheckIn.setEnabled(false);
                 }
             } else {
                 btnCheckIn.setEnabled(true);
