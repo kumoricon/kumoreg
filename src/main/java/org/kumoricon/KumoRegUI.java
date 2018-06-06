@@ -135,11 +135,13 @@ public class KumoRegUI extends UI {
             MenuBar.MenuItem registration = menu.addItem("Registration", null, null);
 
             if (getLoggedInUser().hasRight("at_con_registration")) {
-                registration.addItem("At-Con Check In", null, v -> getNavigator().navigateTo(OrderView.VIEW_NAME));
+                registration.addItem("New Registration", null, v -> getNavigator().navigateTo(OrderView.VIEW_NAME));
             }
             if (getLoggedInUser().hasRight("attendee_search")) {
-                registration.addItem("Attendee Search/Check In", null, v -> getNavigator().navigateTo(SearchByNameView.VIEW_NAME));
+                registration.addItem("Pre-Registered Check In", null, v -> getNavigator().navigateTo(SearchByNameView.VIEW_NAME));
+                registration.addItem("Attendee Search", null, v -> getNavigator().navigateTo(SearchByNameView.VIEW_NAME));
                 registration.addItem("Search by Badge Type", null, v -> getNavigator().navigateTo(SearchByBadgeView.VIEW_NAME));
+
             }
 
             MenuBar.MenuItem admin = menu.addItem("Administration", null, null);
