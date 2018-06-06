@@ -1,6 +1,10 @@
 Change Log
 ----------------
 - Version 3.0.4 (pending)
+    - Show parental consent form checkbox in detail form
+    - Fix enable/disable save button on checkin pages
+    - Added New Registration button to homepage
+    - Renamed "At-Con check in" to "New Registration"
 
 - Version 3.0.3 (5/31/2018)
     - Staff check in fixes
