@@ -192,6 +192,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements O
     }
 
     private Boolean validateBeforeCheckIn(CheckInView view, Attendee attendee) {
+        attendee.setParentFormReceived(view.parentalConsentFormReceived());
         try {
             attendeeValidator.validate(attendee);
         } catch (ValidationException e) {

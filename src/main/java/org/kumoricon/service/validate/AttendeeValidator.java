@@ -55,6 +55,9 @@ public class AttendeeValidator extends Validator {
             if (isNullOrEmpty(a.getParentPhone())) {
                 throw new ValidationException("Minors must have parent phone number entered");
             }
+            if (a.getParentFormReceived() == null || !a.getParentFormReceived()) {
+                throw new ValidationException("Parental Consent form has not been received");
+            }
         }
     }
 }

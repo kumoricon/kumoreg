@@ -30,9 +30,9 @@ public class AttendeeDetailForm extends GridLayout {
     private Label age = new Label("");
     private TextField emergencyContactFullName = createNameField("Emergency Contact Name*", 11);
     private TextField emergencyContactPhone = createPhoneNumberField("Emergency Contact Phone*", 12);
-    private TextField parentFullName = createNameField("Parent Name", 13);
-    private TextField parentPhone = createPhoneNumberField("Parent Phone", 14);
-    private CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 15);
+    private CheckBox parentIsEmergencyContact = createCheckBox("Parent is Emergency Contact", 13);
+    private TextField parentFullName = createNameField("Parent Name", 14);
+    private TextField parentPhone = createPhoneNumberField("Parent Phone", 15);
     private CheckBox parentFormReceived = createCheckBox("Parental Consent Form Received", 16);
     private NativeSelect<Badge> badge = createBadgeSelect("Badge Type", 17);
     private TextField paidAmount = createTextField("Manual Price", 18);
@@ -146,6 +146,7 @@ public class AttendeeDetailForm extends GridLayout {
 
         addComponent(emergencyContactFullName, 0, 5);
         addComponent(emergencyContactPhone, 0, 6);
+        addComponent(parentIsEmergencyContact, 0, 7);
 
         parentIsEmergencyContact.addValueChangeListener(valueChangeEvent -> {
             if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
@@ -160,7 +161,7 @@ public class AttendeeDetailForm extends GridLayout {
 
         addComponent(parentFullName, 1, 5);
         addComponent(parentPhone, 1, 6);
-        addComponent(parentIsEmergencyContact, 1, 7);
+        addComponent(parentFormReceived, 1, 7);
 
         addComponent(badge, 0, 8);
         badge.setItemCaptionGenerator(Badge::getName);
@@ -185,7 +186,6 @@ public class AttendeeDetailForm extends GridLayout {
             }
         });
 
-        addComponent(parentFormReceived, 0, 9);
         addComponent(checkedIn, 1, 9);
 
 
@@ -249,7 +249,6 @@ public class AttendeeDetailForm extends GridLayout {
 
         setMinorFieldsEnabled(attendee.isMinor());
         checkedIn.setVisible(attendee.getCheckedIn()); // Hide checked in checkbox if attendee is not checked in
-        parentFormReceived.setVisible(attendee.getCheckedIn()); // Hide parentFormReceived if attendee is not checked in
         badgeNumber.setEnabled(false);
         showHistory(attendee.getHistory());
         firstName.focus();
