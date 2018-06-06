@@ -6,9 +6,11 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ServiceException;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.site.attendee.reg.OrderView;
 import org.kumoricon.site.attendee.search.byname.SearchByNameView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,18 +28,21 @@ public class HomeView extends BaseGridView implements View {
     private Label priceList = new Label("");
 
     private ButtonField txtSearch = new ButtonField();
+    private Button btnNewReg = new Button("New Registration");
 
     @PostConstruct
     void init() {
         setColumns(5);
-        setRows(2);
+        setRows(3);
 
         addComponent(txtSearch, 2, 0);
         txtSearch.setButtonCaption("Search");
 
-        addComponent(priceList, 2, 1);
+        addComponent(btnNewReg, 3, 1);
+        addComponent(priceList, 2, 1, 2, 2);
 
-        txtSearch.setPlaceholder("Search by Name...");
+
+        txtSearch.setPlaceholder("Search Attendees by Name...");
         txtSearch.focus();
 
         txtSearch.setClickShortcut(ShortcutAction.KeyCode.ENTER);
@@ -49,12 +54,14 @@ public class HomeView extends BaseGridView implements View {
            }
         });
 
+        btnNewReg.addClickListener(e -> navigateTo(OrderView.VIEW_NAME));
+
         priceList.setContentMode(ContentMode.HTML);
-        setColumnExpandRatio(0, 1);
+        setColumnExpandRatio(0, 10);
         setColumnExpandRatio(1, 1);
         setColumnExpandRatio(2, 5);
         setColumnExpandRatio(3, 1);
-        setColumnExpandRatio(4, 1);
+        setColumnExpandRatio(4, 10);
         handler.showBadges(this);
     }
 
