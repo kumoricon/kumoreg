@@ -230,6 +230,13 @@ public class FieldFactory8 {
         return dateField;
     }
 
+    public static TextField createBirthdayField(String name, int tabIndex) {
+        TextField field = new TextField(name);
+        field.setPlaceholder("MMDDYYYY");
+        field.setTabIndex(tabIndex);
+        return field;
+    }
+
     public static CheckBox createCheckBox(String name, int tabIndex) {
         CheckBox checkBox = new CheckBox(name);
         checkBox.setTabIndex(tabIndex);

@@ -5,6 +5,7 @@ Change Log
     - Fix enable/disable save button on checkin pages
     - Added New Registration button to homepage
     - Renamed "At-Con check in" to "New Registration"
+    - Replaced birthdate field to fix bug in DateField control
 
 - Version 3.0.3 (5/31/2018)
     - Staff check in fixes

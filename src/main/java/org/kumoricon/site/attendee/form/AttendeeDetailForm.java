@@ -11,11 +11,17 @@ import org.kumoricon.model.badge.Badge;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static org.kumoricon.site.attendee.FieldFactory8.*;
 
 public class AttendeeDetailForm extends GridLayout {
+    private static final DateTimeFormatter DEFAULT = DateTimeFormatter.ofPattern("MMddyyyy");
+    private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+    private static final DateTimeFormatter SLASHES = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
     private TextField firstName = createNameField("First Name*", 1);
     private TextField lastName = createNameField("Last Name*", 2);
     private TextField legalFirstName = createNameField("Legal First Name", 3);
@@ -24,7 +30,8 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField fanName = createTextField("Fan Name", 5);
     private TextField badgeNumber = createTextField("Badge Number", 6);
     private TextField phoneNumber = createPhoneNumberField("Phone*", 7);
-    private DateField birthDate = createDateField("", 8);
+//    private DateField birthDate = createDateField("", 8);
+    private TextField birthDate = createBirthdayField("", 8);
     private TextField email = createTextField("Email*", 9);
     private TextField zip = createTextField("Zip", 10);
     private Label age = new Label("");
@@ -67,7 +74,9 @@ public class AttendeeDetailForm extends GridLayout {
         binder.bind(fanName, Attendee::getFanName, Attendee::setFanName);
         binder.bind(badgeNumber, Attendee::getBadgeNumber, Attendee::setBadgeNumber);
         binder.bind(phoneNumber, Attendee::getPhoneNumber, Attendee::setPhoneNumber);
-        binder.bind(birthDate, Attendee::getBirthDate, Attendee::setBirthDate);
+        binder.forField(birthDate)
+                .withConverter(new StringToLocalDateConverter("Must enter a date"))
+                .bind(Attendee::getBirthDate, Attendee::setBirthDate);
         binder.bind(email, Attendee::getEmail, Attendee::setEmail);
         binder.bind(zip, Attendee::getZip, Attendee::setZip);
 
@@ -307,6 +316,30 @@ public class AttendeeDetailForm extends GridLayout {
         }
     }
 
+    private static Integer getAgeFromDate(String date) {
+        if (date != null) {
+            LocalDate birthday = null;
+            try {
+                birthday = LocalDate.parse(date, DEFAULT);
+            } catch (DateTimeParseException ignored) {
+                try {
+                    birthday = LocalDate.parse(date, SLASHES);
+                } catch (DateTimeParseException ignored2) {
+                    try {
+                        birthday = LocalDate.parse(date, DASHES);
+                    } catch (DateTimeParseException ignored3) {
+                        return 0;
+                    }
+                }
+            }
+
+            Integer age = Period.between(birthday, LocalDate.now()).getYears();
+            if (age < 0) { age = 0; }
+            return age;
+        } else {
+            return 0;
+        }
+    }
 
     public void commit() throws Exception {
 //        fieldGroup.commit();
