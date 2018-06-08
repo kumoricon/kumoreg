@@ -4,6 +4,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.attendee.AttendeeDetailView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.DetailFormHandler;
@@ -52,8 +53,12 @@ public class AttendeeSearchByBadgeDetailView extends AttendeeDetailView implemen
 
     @Override
     protected void showCheckInWindow() {
-        handler.saveAttendee(this, form.getAttendee());
-        navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/checkin");
+        try {
+            handler.saveAttendee(this, form.getAttendee());
+            navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/checkin");
+        } catch (ValidationException ex) {
+            notifyError(ex.getMessage());
+        }
     }
 
     @Override

@@ -265,4 +265,59 @@ public class Attendee extends Record {
     public void setStaffImageFilename(String staffImageFilename) {
         this.staffImageFilename = staffImageFilename;
     }
+
+    public boolean fieldsSameAs(Attendee attendee) {
+        if (attendee == null) return false;
+
+        if (preRegistered != attendee.preRegistered) return false;
+        if (badgePrePrinted != attendee.badgePrePrinted) return false;
+        if (firstName != null ? !firstName.equals(attendee.firstName) : attendee.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(attendee.lastName) : attendee.lastName != null) return false;
+        if (legalFirstName != null ? !legalFirstName.equals(attendee.legalFirstName) : attendee.legalFirstName != null)
+            return false;
+        if (legalLastName != null ? !legalLastName.equals(attendee.legalLastName) : attendee.legalLastName != null)
+            return false;
+        if (nameIsLegalName != null ? !nameIsLegalName.equals(attendee.nameIsLegalName) : attendee.nameIsLegalName != null)
+            return false;
+        if (fanName != null ? !fanName.equals(attendee.fanName) : attendee.fanName != null) return false;
+        if (badgeNumber != null ? !badgeNumber.equals(attendee.badgeNumber) : attendee.badgeNumber != null)
+            return false;
+        if (zip != null ? !zip.equals(attendee.zip) : attendee.zip != null) return false;
+        if (country != null ? !country.equals(attendee.country) : attendee.country != null) return false;
+        if (phoneNumber != null ? !phoneNumber.equals(attendee.phoneNumber) : attendee.phoneNumber != null)
+            return false;
+        if (email != null ? !email.equals(attendee.email) : attendee.email != null) return false;
+        if (birthDate != null ? !birthDate.equals(attendee.birthDate) : attendee.birthDate != null) return false;
+        if (emergencyContactFullName != null ? !emergencyContactFullName.equals(attendee.emergencyContactFullName) : attendee.emergencyContactFullName != null)
+            return false;
+        if (emergencyContactPhone != null ? !emergencyContactPhone.equals(attendee.emergencyContactPhone) : attendee.emergencyContactPhone != null)
+            return false;
+        if (parentIsEmergencyContact != null ? !parentIsEmergencyContact.equals(attendee.parentIsEmergencyContact) : attendee.parentIsEmergencyContact != null)
+            return false;
+        if (parentFullName != null ? !parentFullName.equals(attendee.parentFullName) : attendee.parentFullName != null)
+            return false;
+        if (parentPhone != null ? !parentPhone.equals(attendee.parentPhone) : attendee.parentPhone != null)
+            return false;
+        if (parentFormReceived != null ? !parentFormReceived.equals(attendee.parentFormReceived) : attendee.parentFormReceived != null)
+            return false;
+        if (paid != null ? !paid.equals(attendee.paid) : attendee.paid != null) return false;
+        if (paidAmount != null ? !paidAmount.equals(attendee.paidAmount) : attendee.paidAmount != null) return false;
+        if (compedBadge != null ? !compedBadge.equals(attendee.compedBadge) : attendee.compedBadge != null)
+            return false;
+        if (badge != null ? !badge.equals(attendee.badge) : attendee.badge != null) return false;
+        if (order != null ? !order.equals(attendee.order) : attendee.order != null) return false;
+        if (checkedIn != null ? !checkedIn.equals(attendee.checkedIn) : attendee.checkedIn != null) return false;
+        if (checkInTime != null ? !checkInTime.equals(attendee.checkInTime) : attendee.checkInTime != null)
+            return false;
+        if (history != null ? !history.equals(attendee.history) : attendee.history != null) return false;
+        if (staffIDNumber != null ? !staffIDNumber.equals(attendee.staffIDNumber) : attendee.staffIDNumber != null)
+            return false;
+        if (staffPositions != null ? !staffPositions.equals(attendee.staffPositions) : attendee.staffPositions != null)
+            return false;
+        if (staffDepartment != null ? !staffDepartment.equals(attendee.staffDepartment) : attendee.staffDepartment != null)
+            return false;
+        if (staffDepartmentColor != null ? !staffDepartmentColor.equals(attendee.staffDepartmentColor) : attendee.staffDepartmentColor != null)
+            return false;
+        return staffImageFilename != null ? staffImageFilename.equals(attendee.staffImageFilename) : attendee.staffImageFilename == null;
+    }
 }

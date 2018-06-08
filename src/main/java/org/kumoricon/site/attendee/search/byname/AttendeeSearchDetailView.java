@@ -4,6 +4,8 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.attendee.AttendeeDetailView;
 import org.kumoricon.site.attendee.AttendeePrintView;
 import org.kumoricon.site.attendee.DetailFormHandler;
@@ -48,13 +50,27 @@ public class AttendeeSearchDetailView extends AttendeeDetailView implements View
 
     @Override
     public void showAddNoteWindow() {
+        Attendee attendee = form.getAttendee();
+        if (handler.attendeeHasChanged(attendee)) {
+            try {
+                attendee = handler.saveAttendee(this, attendee);
+                navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
+            } catch (ValidationException ex) {
+                notifyError(ex.getMessage());
+            }
+        }
+
         navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/note/new");
     }
 
     @Override
     protected void showCheckInWindow() {
-        handler.saveAttendee(this, form.getAttendee());
-        navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/checkin");
+        try {
+            handler.saveAttendee(this, form.getAttendee());
+            navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/checkin");
+        } catch (ValidationException ex) {
+            notifyError(ex.getMessage());
+        }
     }
 
     @Override

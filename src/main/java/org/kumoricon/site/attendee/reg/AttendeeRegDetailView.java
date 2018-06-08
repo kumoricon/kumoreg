@@ -10,6 +10,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.badge.Badge;
+import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.attendee.AttendeeDetailView;
 import org.kumoricon.site.attendee.DetailFormHandler;
 import org.kumoricon.site.attendee.window.WarningWindow;
@@ -140,9 +141,18 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
 
     @Override
     protected void showAddNoteWindow() {
-        Attendee attendee = handler.saveAttendee(this, form.getAttendee());
-        if (attendee != null && attendee.getOrder() != null) {
-            navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
+        Attendee attendee = form.getAttendee();
+        if (handler.attendeeHasChanged(attendee)) {
+            try {
+                attendee = handler.saveAttendee(this, attendee);
+                navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
+            } catch (ValidationException ex) {
+                notifyError(ex.getMessage());
+            }
+        } else {
+            if (attendee != null && attendee.getOrder() != null) {
+                navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
+            }
         }
     }
 

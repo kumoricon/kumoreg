@@ -143,7 +143,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
         btnSave.addClickListener((Button.ClickListener) clickEvent -> {
             try {
-                form.commit();
+//                form.commit();
                 handler.saveAttendee(this, form.getAttendee());
                 close();
             } catch (Exception e) {

@@ -76,19 +76,12 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements O
         }
     }
 
-    public Attendee saveAttendee(AttendeeDetailView view, Attendee attendee) {
-        try {
+    public Attendee saveAttendee(AttendeeDetailView view, Attendee attendee) throws ValidationException {
             attendeeValidator.validate(attendee);
             attendee = attendeeRepository.save(attendee);
             view.notify(String.format("Saved %s %s", attendee.getFirstName(), attendee.getLastName()));
             log.info("{} saved {}", view.getCurrentUsername(), attendee);
             return attendee;
-        } catch (ValidationException e) {
-            log.error("{} tried to save {} and got error {}",
-                    view.getCurrentUser(), attendee, e.getMessage());
-            view.notifyError(e.getMessage());
-            return null;
-        }
     }
 
     public void saveAttendeeAndReprintBadge(AttendeeDetailView view, Attendee attendee, User overrideUser) {
@@ -242,5 +235,10 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements O
     @Override
     public void overrideEditCancel(OverrideRequiredForEditWindow window) {
         window.close();
+    }
+
+    public boolean attendeeHasChanged(Attendee attendee) {
+        Attendee existing = attendeeRepository.findOne(attendee.getId());
+        return !existing.fieldsSameAs(attendee);
     }
 }
