@@ -1,6 +1,7 @@
 package org.kumoricon.site.user;
 
 import com.vaadin.data.Binder;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
@@ -59,10 +60,13 @@ class UserEditView extends BaseGridView implements View {
         firstName.focus();
         firstName.selectAll();
         firstName.addValueChangeListener(valueChangeEvent -> updateUsername());
+        firstName.setValueChangeMode(ValueChangeMode.BLUR);
+
         form.addComponent(firstName);
 
         binder.bind(lastName, User::getLastName, User::setLastName);
         lastName.addValueChangeListener(valueChangeEvent -> updateUsername());
+        lastName.setValueChangeMode(ValueChangeMode.BLUR);
         form.addComponent(lastName);
 
         binder.bind(role, User::getRole, User::setRole);

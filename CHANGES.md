@@ -7,6 +7,7 @@ Change Log
     - Renamed "At-Con check in" to "New Registration"
     - Replaced birthdate field to fix bug in DateField control
     - Fixed order notes getting lost on navigation
+    - Changed some fields to only validate after blur (won't remove spaces as you type)
 
 - Version 3.0.3 (5/31/2018)
     - Staff check in fixes

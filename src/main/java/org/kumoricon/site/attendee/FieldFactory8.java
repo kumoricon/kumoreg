@@ -99,6 +99,7 @@ public class FieldFactory8 {
                 textField.setValue(FieldCleaner.cleanName(input));
             }
         });
+        textField.setValueChangeMode(ValueChangeMode.BLUR);
         return textField;
     }
 
@@ -134,6 +135,7 @@ public class FieldFactory8 {
             }
         });
         textField.setTabIndex(tabIndex);
+        textField.setValueChangeMode(ValueChangeMode.BLUR);
         return textField;
     }
 
@@ -175,61 +177,6 @@ public class FieldFactory8 {
         return textField;
     }
 
-    /**
-     * Returns a DateField that will attempt to parse dates in MMDDYYYY and MM-DD-YYYY formats as well
-     * as the built-in MM/DD/YYYY format
-     * @param name Name of field
-     * @param tabIndex Tab Index
-     * @return DateField
-     */
-    public static DateField createDateField(String name, int tabIndex) {
-        DateField dateField = new DateField(name) {
-            @Override
-            protected Result<LocalDate> handleUnparsableDateString(String dateString) {
-                Integer year = null;
-                Integer month = null;
-                Integer day = null;
-                // Try to parse date without delimiters -- MMDDYYYY format (must have leading zeros)
-                String dateDigits = dateString.trim();
-                if (dateDigits.matches("^\\d{8}$")) {
-                    year = Integer.parseInt(dateDigits.substring(4, 8));
-                    month = Integer.parseInt(dateDigits.substring(0, 2)) -1;
-                    day = Integer.parseInt(dateDigits.substring(2, 4));
-                } else {
-                    // Try to parse date with - instead of /
-                    String fields[] = dateString.split("-");
-                    if (fields.length >= 3) {
-                        try {
-                            year = Integer.parseInt(fields[2]);
-                            month = Integer.parseInt(fields[0]) - 1;
-                            day = Integer.parseInt(fields[1]);
-                        } catch (NumberFormatException e) {
-                            year = null;
-                            month = null;
-                            day = null;
-                        }
-                    }
-                }
-
-                if (year != null && month != null && day != null && month >= 0 && month <= 11 && day >= 1 && day <= 31) {
-                    try {
-                        LocalDate l = LocalDate.of(year, month, day);
-                        return Result.ok(l);
-                    } catch (NumberFormatException e) {
-                        // Ignore, throw ConversionException below
-                    }
-                }
-
-                // Bad date
-                return Result.error("Your date must be in MMDDYYYY, MM/DD/YYYY, or MM-DD-YYYY format");
-            }
-        };
-        dateField.setDateFormat("MM/dd/yyyy");
-
-        dateField.setTabIndex(tabIndex);
-        dateField.setPlaceholder("MMDDYYYY");
-        return dateField;
-    }
 
     public static TextField createBirthdayField(String name, int tabIndex) {
         TextField field = new TextField(name);
