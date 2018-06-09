@@ -179,7 +179,7 @@ public class LoadBaseDataPresenter {
                                          "badge_type_panelist", "badge_type_industry", "pre_reg_check_in_edit"});
 
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                                               "badge_type_weekend", "badge_type_day",
+                                               "badge_type_weekend", "badge_type_day", "badge_type_panelist",
                                                "print_badge", "attendee_edit", "attendee_add_note",
                                                "reprint_badge", "view_staff_report",
                                                "view_check_in_by_hour_report", "pre_reg_check_in_edit"});
