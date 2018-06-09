@@ -78,14 +78,19 @@ public class OrderView extends BaseGridView implements View, AttendeePrintView, 
         addComponent(notes, 0, 5, 2, 5);
         notes.setSizeFull();
 
-        addAttendee.addClickListener((Button.ClickListener) clickEvent -> navigateTo(AttendeeRegDetailView.VIEW_NAME + "/" + orderIdNumber + "/" + "new"));
-        addPayment.addClickListener((Button.ClickListener) clickEvent -> navigateTo(OrderPaymentView.VIEW_NAME + "/" + orderIdNumber + "/payment"));
+        addAttendee.addClickListener((Button.ClickListener) clickEvent -> saveAndNavigateTo(AttendeeRegDetailView.VIEW_NAME + "/" + orderIdNumber + "/" + "new"));
+        addPayment.addClickListener((Button.ClickListener) clickEvent -> saveAndNavigateTo(OrderPaymentView.VIEW_NAME + "/" + orderIdNumber + "/payment"));
         orderComplete.addClickListener((Button.ClickListener) clickEvent -> handler.takeMoney(this));
         cancel.addClickListener((Button.ClickListener) clickEvent -> showConfirmCancelWindow());
 
         addAttendee.focus();
     }
 
+
+    private void saveAndNavigateTo(String path) {
+        handler.saveOrderNotes(currentOrder.getId(), notes.getValue());
+        navigateTo(path);
+    }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {

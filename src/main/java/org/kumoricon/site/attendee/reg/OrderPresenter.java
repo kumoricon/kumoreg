@@ -322,4 +322,12 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
 
 
     }
+
+    public void saveOrderNotes(Integer orderId, String notes) {
+        Order fromDatabase = orderRepository.findOne(orderId);
+        if (fromDatabase.getNotes() != notes) {
+            fromDatabase.setNotes(notes);
+            orderRepository.save(fromDatabase);
+        }
+    }
 }

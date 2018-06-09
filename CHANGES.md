@@ -6,6 +6,7 @@ Change Log
     - Added New Registration button to homepage
     - Renamed "At-Con check in" to "New Registration"
     - Replaced birthdate field to fix bug in DateField control
+    - Fixed order notes getting lost on navigation
 
 - Version 3.0.3 (5/31/2018)
     - Staff check in fixes
