@@ -10,8 +10,8 @@ import java.time.format.DateTimeParseException;
 
 public class StringToLocalDateConverter implements Converter<String, LocalDate> {
     private static final DateTimeFormatter DEFAULT = DateTimeFormatter.ofPattern("MMddyyyy");
-    private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-    private static final DateTimeFormatter SLASHES = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("M-d-yyyy");
+    private static final DateTimeFormatter SLASHES = DateTimeFormatter.ofPattern("M/d/yyyy");
     private final String message;
 
     public StringToLocalDateConverter(String message) {
@@ -35,7 +35,6 @@ public class StringToLocalDateConverter implements Converter<String, LocalDate> 
                 }
             }
         }
-        System.out.println(result);
         return result;
     }
 

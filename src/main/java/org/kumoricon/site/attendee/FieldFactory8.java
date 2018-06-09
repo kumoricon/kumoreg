@@ -1,6 +1,7 @@
 package org.kumoricon.site.attendee;
 
 import com.vaadin.data.Result;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
 import org.kumoricon.model.badge.Badge;
 import org.kumoricon.service.FieldCleaner;
@@ -234,6 +235,7 @@ public class FieldFactory8 {
         TextField field = new TextField(name);
         field.setPlaceholder("MMDDYYYY");
         field.setTabIndex(tabIndex);
+        field.setValueChangeMode(ValueChangeMode.BLUR);
         return field;
     }
 

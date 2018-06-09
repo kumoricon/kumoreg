@@ -19,8 +19,8 @@ import static org.kumoricon.site.attendee.FieldFactory8.*;
 
 public class AttendeeDetailForm extends GridLayout {
     private static final DateTimeFormatter DEFAULT = DateTimeFormatter.ofPattern("MMddyyyy");
-    private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-    private static final DateTimeFormatter SLASHES = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("M-d-yyyy");
+    private static final DateTimeFormatter SLASHES = DateTimeFormatter.ofPattern("M/d/yyyy");
 
     private TextField firstName = createNameField("First Name*", 1);
     private TextField lastName = createNameField("Last Name*", 2);
@@ -96,14 +96,24 @@ public class AttendeeDetailForm extends GridLayout {
 
 
         birthDate.addValueChangeListener(valueChangeEvent -> {
-            Integer currentAge = getAgeFromDate(birthDate.getValue());
+            LocalDate parsedDate = parseDate(valueChangeEvent.getValue());
+            if (parsedDate != null) {
+                String formattedDate = parsedDate.format(SLASHES);
+                if (!formattedDate.equals(valueChangeEvent.getValue())) {
+                    birthDate.setValue(parsedDate.format(SLASHES));
+                    return;
+                }
+            }
+
+            Integer currentAge = getAgeFromDate(parseDate(birthDate.getValue()));
                 if (currentAge != null) {
                     age.setValue(String.format("(%s years old)", currentAge));
                     setMinorFieldsEnabled(currentAge < 18);
                     try {
                         if (!badge.isEmpty()) {
                             Badge thisBadge = badge.getValue();
-                            paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                            LocalDate birthday = parseDate(birthDate.getValue());
+                            paidAmount.setValue(thisBadge.getCostForAge(getAgeFromDate(birthday)).toString());
                         }
                     } catch(ServiceException e) {
                         Notification.show(e.getMessage());
@@ -122,7 +132,8 @@ public class AttendeeDetailForm extends GridLayout {
                 // Don't change price automatically if attendee is already checked in
                 if (!checkedIn.getValue()) {
                     try {
-                        paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                        LocalDate birthday = parseDate(birthDate.getValue());
+                        paidAmount.setValue(thisBadge.getCostForAge(getAgeFromDate(birthday)).toString());
                     } catch(ServiceException e) {
                         Notification.show(e.getMessage());
                     }
@@ -187,7 +198,8 @@ public class AttendeeDetailForm extends GridLayout {
                 try {
                     if (!badge.isEmpty()) {
                         Badge thisBadge = badge.getValue();
-                        paidAmount.setValue(thisBadge.getCostForAge(Long.valueOf(getAgeFromDate(birthDate.getValue()))).toString());
+                        LocalDate birthday = parseDate(birthDate.getValue());
+                        paidAmount.setValue(thisBadge.getCostForAge(getAgeFromDate(birthday)).toString());
                     }
                 } catch (ServiceException e) {
                     Notification.show(e.getMessage());
@@ -316,29 +328,24 @@ public class AttendeeDetailForm extends GridLayout {
         }
     }
 
-    private static Integer getAgeFromDate(String date) {
-        if (date != null) {
-            LocalDate birthday = null;
+    private static LocalDate parseDate(String date) {
+        if (date == null) return null;
+        LocalDate birthday;
+        try {
+            birthday = LocalDate.parse(date, DEFAULT);
+        } catch (DateTimeParseException ignored) {
             try {
-                birthday = LocalDate.parse(date, DEFAULT);
-            } catch (DateTimeParseException ignored) {
+                birthday = LocalDate.parse(date, SLASHES);
+            } catch (DateTimeParseException ignored2) {
                 try {
-                    birthday = LocalDate.parse(date, SLASHES);
-                } catch (DateTimeParseException ignored2) {
-                    try {
-                        birthday = LocalDate.parse(date, DASHES);
-                    } catch (DateTimeParseException ignored3) {
-                        return 0;
-                    }
+                    birthday = LocalDate.parse(date, DASHES);
+                } catch (DateTimeParseException ignored3) {
+                    return null;
                 }
             }
-
-            Integer age = Period.between(birthday, LocalDate.now()).getYears();
-            if (age < 0) { age = 0; }
-            return age;
-        } else {
-            return 0;
         }
+        return birthday;
+
     }
 
     public void commit() throws Exception {

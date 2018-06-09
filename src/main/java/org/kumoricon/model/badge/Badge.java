@@ -90,6 +90,17 @@ public class Badge extends Record {
         throw new ServiceException(String.format(this.name, age));
     }
 
+    public BigDecimal getCostForAge(Integer age) throws ServiceException {
+        // No birthdate? Charge for adult badge
+        if (age == null) { return getCostForAge(40L); }
+        for (AgeRange ageRange : ageRanges) {
+            if (ageRange.isValidForAge(age)) {
+                return ageRange.getCost();
+            }
+        }
+        throw new ServiceException(String.format(this.name, age));
+    }
+
     public String toString() {
         if (id != null) {
             return String.format("[Badge %s: %s]", id, name);
