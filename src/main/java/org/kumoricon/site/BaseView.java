@@ -29,7 +29,11 @@ public class BaseView extends CssLayout implements View {
 
     public void navigateTo(String path) {
         KumoRegUI ui = (KumoRegUI) getUI();
-        ui.getNavigator().navigateTo(path);
+        if (ui != null) {
+            ui.getNavigator().navigateTo(path);
+        } else {
+            log.warn("Tried to get UI and it was null");
+        }
     }
 
     protected String getRequiredRight() {
