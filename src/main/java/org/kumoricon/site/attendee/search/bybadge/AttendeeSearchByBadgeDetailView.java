@@ -4,6 +4,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.service.validate.ValidationException;
 import org.kumoricon.site.attendee.AttendeeDetailView;
 import org.kumoricon.site.attendee.AttendeePrintView;
@@ -48,6 +49,20 @@ public class AttendeeSearchByBadgeDetailView extends AttendeeDetailView implemen
     
     @Override
     public void showAddNoteWindow() {
+        Attendee attendee = form.getAttendee();
+        if (handler.attendeeHasChanged(attendee)) {
+            try {
+                handler.saveAttendee(this, attendee);
+                navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/note/new");
+            } catch (ValidationException ex) {
+                notifyError(ex.getMessage());
+            }
+        } else {
+            if (attendee != null && attendee.getOrder() != null) {
+                navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/note/new");
+            }
+        }
+
         navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId + "/note/new");
     }
 
