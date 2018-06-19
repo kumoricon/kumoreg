@@ -119,7 +119,7 @@ public class Attendee extends Record {
     public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
     public Long getAge() {
         if (birthDate == null) { return 0L; }
-        LocalDate now = LocalDate.now(ZoneId.systemDefault());
+        LocalDate now = LocalDate.now(ZoneId.of("America/Los_Angeles"));
         return ChronoUnit.YEARS.between(birthDate, now);
     }
 

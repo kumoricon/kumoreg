@@ -8,6 +8,9 @@ import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.user.User;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.TimeZone;
 
 /**
  * UI Widget to display an AttendeeHistory record with nicer formatting
@@ -16,6 +19,7 @@ public class HistoryEntryLayout extends GridLayout {
     private static SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
     public HistoryEntryLayout(AttendeeHistory history) {
+        format.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
         configureLayout();
         addUserLabel(history);
         addTimestampLabel(history);
@@ -54,6 +58,11 @@ public class HistoryEntryLayout extends GridLayout {
     }
 
     private void addTimestampLabel(AttendeeHistory history) {
+        if (history.getTimestamp() != null) {
+            Instant instant = history.getTimestamp().toInstant();
+
+        }
+
         Label timestamp = new Label(format.format(history.getTimestamp()));
         timestamp.setStyleName(ValoTheme.LABEL_SMALL);
         timestamp.setSizeUndefined();
