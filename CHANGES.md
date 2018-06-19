@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 3.0.4 (pending)
+- Version 3.0.5 (pending)
+
+- Version 3.0.4 (6/18/2018)
     - Show parental consent form checkbox in detail form
     - Fix enable/disable save button on checkin pages
     - Added New Registration button to homepage
@@ -8,6 +10,7 @@ Change Log
     - Replaced birthdate field to fix bug in DateField control
     - Fixed order notes getting lost on navigation
     - Changed some fields to only validate after blur (won't remove spaces as you type)
+    - Set timezone explicitly
 
 - Version 3.0.3 (5/31/2018)
     - Staff check in fixes
