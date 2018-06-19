@@ -125,6 +125,7 @@ public class AttendeeValidatorTest {
         attendee.setParentFullName("Mom");
         attendee.setParentPhone("123-123-1234");
         attendee.setBirthDate(LocalDate.now().minusYears(6L));
+        attendee.setParentFormReceived(true);
         validator.validate(attendee);
     }
 
