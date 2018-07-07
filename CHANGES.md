@@ -4,6 +4,7 @@ Change Log
     - Added right check to manual price override
     - Added example test data to docs/testdata directory
     - Added reprint button to Order print view
+    - Updated lite badge price, day
 
 - Version 3.0.4 (6/18/2018)
     - Show parental consent form checkbox in detail form
