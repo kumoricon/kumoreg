@@ -62,11 +62,13 @@ public class OrderPrintView extends BaseGridView implements View {
         addComponent(attendeeGrid, 1, 0, 1, 3);
 
         btnPrintedSuccessfully.addClickListener(clickEvent -> printedSuccessfullyClicked());
-        btnReprint.addClickListener(clickEvent -> reprintClicked());
         addComponent(btnPrintedSuccessfully, 3, 0);
 
+        btnReprint.addClickListener(clickEvent -> reprintClicked());
+        addComponent(btnReprint, 3, 1);
+
         btnClose.addClickListener((Button.ClickListener) clickEvent -> close());
-        addComponent(btnClose, 3, 3);
+        addComponent(btnClose, 3, 2);
     }
 
     protected void printedSuccessfullyClicked() {
