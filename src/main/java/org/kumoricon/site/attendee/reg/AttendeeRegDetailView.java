@@ -78,6 +78,7 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
         form.setAvailableBadges(all);
         form.show(attendee);
         form.hideFanNameField();
+        form.setManualPriceEnabled(currentUserHasRight("attendee_override_price"));
         form.focusFirstName();
 
         if (attendee.getId() == null) { // Attendee hasn't been saved to database yet
