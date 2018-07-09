@@ -401,7 +401,7 @@ public class LoadBaseDataPresenter {
         results.append("Creating badges\n");
 
         log.info("Creating badge Kumoricon Lite");
-        Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Sunday", "#323E99", 10, 10, 10);
+        Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Saturday", "#323E99", 15, 15, 15);
         results.append("    Creating ").append(lite.toString()).append("\n");
         badgeRepository.save(lite);
 
