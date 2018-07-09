@@ -168,20 +168,17 @@ public class LoadBaseDataPresenter {
         results.append("Creating roles\n");
         HashMap<String, String[]> roles = new HashMap<>();
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
-                                        "badge_type_weekend", "badge_type_day", "badge_type_panelist",
-                                         "attendee_add_note", "attendee_edit_with_override",
-                                         "reprint_badge_with_override"});
+                                        "badge_type_weekend", "badge_type_day", "attendee_add_note",
+                                        "attendee_edit_with_override", "reprint_badge_with_override"});
         roles.put("Staff - Specialty Badges", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
                                          "attendee_add_note", "attendee_edit_with_override",
                                          "reprint_badge_with_override", "badge_type_artist",
                                          "badge_type_standard_press", "badge_type_emerging_press",
                                          "badge_type_exhibitor", "badge_type_guest", "badge_type_small_press",
                                          "badge_type_panelist", "badge_type_industry", "pre_reg_check_in_edit"});
-
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                                               "badge_type_weekend", "badge_type_day", "badge_type_panelist",
-                                               "print_badge", "attendee_edit", "attendee_add_note",
-                                               "reprint_badge", "view_staff_report",
+                                               "badge_type_weekend", "badge_type_day", "print_badge", "attendee_edit",
+                                                "attendee_add_note", "reprint_badge", "view_staff_report",
                                                "view_check_in_by_hour_report", "pre_reg_check_in_edit"});
         roles.put("Coordinator - VIP Badges", new String[] {"at_con_registration", "pre_reg_check_in",
                                                             "attendee_search", "print_badge", "attendee_edit",
@@ -200,7 +197,7 @@ public class LoadBaseDataPresenter {
         roles.put("MSO", new String[] {"pre_reg_check_in",
                 "attendee_search", "print_badge", "attendee_edit",
                 "attendee_add_note", "reprint_badge", "view_staff_report",
-                "view_check_in_by_hour_report", "badge_type_staff",
+                "view_check_in_by_hour_report", "badge_type_staff", "badge_type_panelist",
                 "pre_reg_check_in_edit"});
         roles.put("Manager", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
