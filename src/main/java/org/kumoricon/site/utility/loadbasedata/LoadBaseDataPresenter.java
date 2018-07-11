@@ -404,11 +404,6 @@ public class LoadBaseDataPresenter {
         Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Saturday", "#323E99", 15, 15, 15);
         results.append("    Creating ").append(lite.toString()).append("\n");
         badgeRepository.save(lite);
-
-        log.info("Creating badge Kumoricon Lite - Manga Donation");
-        Badge liteDonation = BadgeFactory.createBadge("Kumoricon Lite - Manga Donation", BadgeType.ATTENDEE, "Sunday", "#323E99", 0, 0, 0);
-        results.append("    Creating ").append(liteDonation.toString()).append("\n");
-        badgeRepository.save(liteDonation);
     }
 
 
