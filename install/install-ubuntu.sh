@@ -17,6 +17,11 @@ apt-get -y upgrade
 # Install server software
 apt-get -y install openjdk-8-jdk vim
 
+# Install fonts
+# (Installing all fonts is overkill but will make sure that the necessary fonts
+# get installed)
+apt-get -y install fonts-*
+
 # Install cups 
 apt-get -y install cups hplip cups-bsd
 systemctl stop cups
@@ -35,7 +40,7 @@ echo "Creating databases"
 mysql < script/database.sql
 
 # Install kumoreg
-useradd kumoreg -s /sbin/nologin
+useradd -m kumoreg -s /sbin/nologin
 usermod -a -G lpadmin kumoreg
 mkdir /usr/local/kumoreg/
 mv KumoReg-*.jar /usr/local/kumoreg/
