@@ -7,6 +7,8 @@ Change Log
     - Updated lite badge price, day
     - Kumo Lite 2018 badge format added
     - During at con reg, if only one badge type is available auto select it
+    - Added ability to parse MMDDYY dates. 00-18 will be 20xx, 19-99 will be
+      19xx. (Shifts automatically each year)
 
 - Version 3.0.4 (6/18/2018)
     - Show parental consent form checkbox in detail form

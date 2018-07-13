@@ -12,7 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.*;
 
 import static org.kumoricon.site.attendee.FieldFactory8.*;
@@ -21,6 +23,11 @@ public class AttendeeDetailForm extends GridLayout {
     private static final DateTimeFormatter DEFAULT = DateTimeFormatter.ofPattern("MMddyyyy");
     private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("M-d-yyyy");
     private static final DateTimeFormatter SLASHES = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static final DateTimeFormatter TWO_DIGIT_YEAR =
+            new DateTimeFormatterBuilder()
+                    .appendPattern("MMdd")
+                    .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now().minusYears(99))
+                    .toFormatter();
 
     private TextField firstName = createNameField("First Name*", 1);
     private TextField lastName = createNameField("Last Name*", 2);
@@ -349,7 +356,11 @@ public class AttendeeDetailForm extends GridLayout {
                 try {
                     birthday = LocalDate.parse(date, DASHES);
                 } catch (DateTimeParseException ignored3) {
-                    return null;
+                    try {
+                        birthday = LocalDate.parse(date, TWO_DIGIT_YEAR);
+                    } catch (DateTimeParseException ignored4) {
+                        return null;
+                    }
                 }
             }
         }

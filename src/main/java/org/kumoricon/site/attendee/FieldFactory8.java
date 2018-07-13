@@ -180,7 +180,7 @@ public class FieldFactory8 {
 
     public static TextField createBirthdayField(String name, int tabIndex) {
         TextField field = new TextField(name);
-        field.setPlaceholder("MMDDYYYY");
+        field.setPlaceholder("MMDDYY");
         field.setTabIndex(tabIndex);
         field.setValueChangeMode(ValueChangeMode.BLUR);
         return field;
