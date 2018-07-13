@@ -49,6 +49,7 @@ public class AttendeeDetailForm extends GridLayout {
     Binder<Attendee> binder = new Binder<>();
 
     private VerticalLayout historyLayout = new VerticalLayout();
+    private List<Badge> availableBadges;
 
     public void setParentFormReceivedVisible(boolean visible) {
         parentFormReceived.setVisible(visible);
@@ -274,6 +275,14 @@ public class AttendeeDetailForm extends GridLayout {
         showHistory(attendee.getHistory());
         firstName.focus();
         firstName.selectAll();
+
+        // If the attendee doesn't have a badge type and id (hasn't been saved), and there is only
+        // one available badge type, auto-select it
+        if (attendee.getBadge() == null && attendee.getId() == null) {
+            if (availableBadges != null && availableBadges.size() == 1) {
+                badge.setSelectedItem(availableBadges.get(0));
+            }
+        }
     }
 
     public void focusFirstName() {
@@ -353,6 +362,7 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     public void setAvailableBadges(List<Badge> availableBadges) {
+        this.availableBadges = availableBadges;
         badge.setItems(availableBadges);
     }
 
