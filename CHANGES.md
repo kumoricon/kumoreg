@@ -1,6 +1,9 @@
 Change Log
 ----------------
-- Version 3.0.5 (pending)
+- Version 3.0.6 (pending)
+
+
+- Version 3.0.5 (7/13/2018)
     - Added right check to manual price override
     - Added example test data to docs/testdata directory
     - Added reprint button to Order print view
