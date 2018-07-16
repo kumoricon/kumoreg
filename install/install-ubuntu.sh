@@ -31,6 +31,8 @@ chmod 644 /etc/cups/cupsd.conf
 chown root:lp /etc/cups/cupsd.conf
 systemctl enable cups
 systemctl start cups
+systemctl enable cups-browsed
+systemctl start cups-browsed
 
 # Install mariadb
 apt-get -y install mariadb-server
