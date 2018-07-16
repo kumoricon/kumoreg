@@ -61,7 +61,6 @@ public abstract class PrintBadgeView extends BaseGridView implements View {
         addComponent(pdf, 1, 0, 1, 2);
         addComponent(btnPrintedSuccessfully, 2, 0);
         addComponent(btnReprint, 2, 1);
-
     }
 
 

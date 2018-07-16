@@ -290,6 +290,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
 
     public void showBadges(OrderPrintView view, Integer orderId) {
         Order order = orderRepository.findOne(orderId);
+        printBadges(view, order.getAttendees());
         view.showOrder(order);
     }
 

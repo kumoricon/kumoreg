@@ -1,7 +1,8 @@
 Change Log
 ----------------
 - Version 3.0.6 (pending)
-
+    - Auto-print badges when entering check in and order print views
+    - Auto-detect network printers
 
 - Version 3.0.5 (7/13/2018)
     - Added right check to manual price override
