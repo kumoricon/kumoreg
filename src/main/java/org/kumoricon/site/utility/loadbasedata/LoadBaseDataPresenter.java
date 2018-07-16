@@ -318,14 +318,9 @@ public class LoadBaseDataPresenter {
 
     private void addStaffBadges(StringBuilder results) {
         log.info("Creating badge Staff");
-        Badge staff = BadgeFactory.createBadge("Staff", BadgeType.STAFF, "Staff", "#FFFFFF", 0f, 0f, 0f);
+        Badge staff = BadgeFactory.createBadge("Staff", BadgeType.STAFF, "Staff", "#000000", 0f, 0f, 0f);
         staff.setRequiredRight("badge_type_staff");
         staff.setWarningMessage("Staff check in. See your coordinator!");
-        // Clear stripe color and text - it's already printed
-        for (AgeRange a : staff.getAgeRanges()) {
-            a.setStripeColor("#FFFFFF");
-            a.setStripeText("Staff");
-        }
         results.append("    Creating ").append(staff.toString()).append("\n");
         badgeRepository.save(staff);
     }
