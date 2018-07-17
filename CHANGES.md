@@ -3,6 +3,9 @@ Change Log
 - Version 3.0.6 (pending)
     - Auto-print badges when entering check in and order print views
     - Auto-detect network printers
+    - Added Exhibitor w/Wifi, Artist w/Wifi, and extra badge types
+    - Added button on Print Test Badge view to test print troublesome fan
+      names (names that have caused issues in the past) for easy font testing
 
 - Version 3.0.5 (7/13/2018)
     - Added right check to manual price override
