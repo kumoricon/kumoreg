@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class BadgeCreatorLite2018 implements BadgeCreator {
-    private static final int DPI = 300;
+    private static final int DPI = 150;
     private static final int BADGE_WIDTH = 5*DPI;
     private static final int BADGE_HEIGHT = 4*DPI;
 
@@ -47,10 +47,10 @@ public class BadgeCreatorLite2018 implements BadgeCreator {
     private static void drawAgeColorStripe(BadgeImage b, AttendeeBadgeDTO attendee) {
         Color bgColor = Color.decode(attendee.getAgeStripeBackgroundColor());
         Color fgColor = getForegroundColor(attendee.getAgeStripeBackgroundColor());
-        Rectangle ageBackground = new Rectangle(142, 112, 190, 950);
+        Rectangle ageBackground = new Rectangle(71, 56, 95, 475);
         b.fillRect(ageBackground, bgColor);
 
-        Rectangle textArea = new Rectangle(172, 183, 133, 700);
+        Rectangle textArea = new Rectangle(86, 91, 66, 350);
         b.drawVerticalCenteredString(attendee.getAgeStripeText(), textArea, nameFont(), fgColor);
 
     }
@@ -59,7 +59,7 @@ public class BadgeCreatorLite2018 implements BadgeCreator {
         // If Fan Name is null, draw the full name in that spot instead
         String fanName = attendee.getFanName();
         if (fanName != null) {
-            Rectangle nameBg = new Rectangle(630, 660, 720, 80);
+            Rectangle nameBg = new Rectangle(315, 330, 360, 40);
             b.drawStretchedCenteredString(attendee.getFirstName() + " " + attendee.getLastName(), nameBg, nameFont(), Color.BLACK);
         }
     }
@@ -72,7 +72,7 @@ public class BadgeCreatorLite2018 implements BadgeCreator {
             name = attendee.getFirstName() + " " + attendee.getLastName();
         }
 
-        Rectangle fanNameBg = new Rectangle(610, 530, 740, 140);
+        Rectangle fanNameBg = new Rectangle(305, 265, 370, 70);
         b.drawStretchedLeftAlignedString(name, fanNameBg, nameFont(),Color.BLACK);
     }
 
@@ -80,7 +80,7 @@ public class BadgeCreatorLite2018 implements BadgeCreator {
         if (attendee != null) {
             Color bgColor = Color.decode(attendee.getBadgeTypeBackgroundColor());
             Color fgColor = getForegroundColor(attendee.getBadgeTypeBackgroundColor());
-            Rectangle badgeType = new Rectangle(332, 887, 1056, 180);
+            Rectangle badgeType = new Rectangle(166, 444, 528, 90);
             b.fillRect(badgeType, bgColor);
 
             b.drawStretchedCenteredString(attendee.getBadgeTypeText(), badgeType, nameFont(), fgColor);
@@ -93,12 +93,12 @@ public class BadgeCreatorLite2018 implements BadgeCreator {
         if (badgeNumber.length() == 8) {
             String badgeNumber1 = badgeNumber.substring(0, 3);
             String badgeNumber2 = badgeNumber.substring(3);
-            Rectangle badgeNumberBounds1 = new Rectangle(150, 907, 180, 70);
-            Rectangle badgeNumberBounds2 = new Rectangle(150, 947, 180, 90);
+            Rectangle badgeNumberBounds1 = new Rectangle(75, 453, 90, 35);
+            Rectangle badgeNumberBounds2 = new Rectangle(75, 473, 90, 45);
             b.drawStretchedCenteredString(badgeNumber1, badgeNumberBounds1, nameFont(), fgColor);
             b.drawStretchedCenteredString(badgeNumber2, badgeNumberBounds2, nameFont(), fgColor);
         } else {
-            Rectangle badgeNumberBounds = new Rectangle(150, 887, 180, 180);
+            Rectangle badgeNumberBounds = new Rectangle(75, 444, 90, 90);
             b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, nameFont(), fgColor);
 
         }
@@ -138,6 +138,4 @@ public class BadgeCreatorLite2018 implements BadgeCreator {
             return Color.WHITE;
         }
     }
-
-
 }
