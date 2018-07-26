@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 3.0.6 (pending)
+- Version 3.0.7 (pending)
+
+- Version 3.0.6 (7/25/2018)
     - Auto-print badges when entering check in and order print views
     - Auto-detect network printers
     - Added Exhibitor w/Wifi, Artist w/Wifi, and extra badge types
