@@ -5,6 +5,8 @@ Change Log
     - Automatically print badge on pre reg check in
     - Cut down on logging when entering views
     - Generate order ID if it is missing during attendee import (added for staff, but occurs for all imports)
+    - Added workaround for staff imported with missing information - checkin won't be allowed until emergency contact 
+      and birthdate is set. In imported data, 1/1/1900 is a "magic number" that represents a missing birthdate.
 
 - Version 3.0.6 (7/25/2018)
     - Auto-print badges when entering check in and order print views

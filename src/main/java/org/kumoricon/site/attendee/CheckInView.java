@@ -10,6 +10,7 @@ import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public abstract class CheckInView extends BaseGridView implements View {
@@ -67,6 +68,11 @@ public abstract class CheckInView extends BaseGridView implements View {
     }
 
     private void enableButtons() {
+        if (attendeeIsIncomplete(attendee)) {
+            btnCheckIn.setEnabled(false);
+            return;
+        }
+
         if (informationVerified.getValue()) {
             if (attendee.isMinor()) {
                 if (parentalConsentFormReceived.getValue()) {
@@ -121,7 +127,25 @@ public abstract class CheckInView extends BaseGridView implements View {
             sb.append(String.format("Parent Contact: \n\t%s \n\t%s\n", attendee.getParentFullName(), attendee.getParentPhone()));
         }
 
+        if (attendeeIsIncomplete(attendee)) {
+            sb.append("\n** MISSING EMERGENCY CONTACT OR BIRTHDATE **");
+        }
+
         return sb.toString();
+    }
+
+    private static boolean attendeeIsIncomplete(Attendee attendee) {
+        // Make sure emergency contact and birthdate exist. TODO: handle missing information more
+        // gracefully. Right now 1/1/1900 is kind of a "magic number" in that it was included
+        // in the import data as a default.
+        if (attendee.getEmergencyContactFullName().trim().isEmpty() ||
+                attendee.getEmergencyContactPhone().trim().isEmpty() ||
+                attendee.getBirthDate().equals(LocalDate.of(1900, 1, 1))) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public boolean parentalConsentFormReceived() {
