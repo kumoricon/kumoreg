@@ -12,8 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.util.UriTemplate;
@@ -21,10 +19,7 @@ import org.springframework.web.util.UriTemplate;
 import com.vaadin.spring.navigator.SpringViewProvider;
 
 public class UriTemplateViewProvider extends SpringViewProvider implements Serializable {
-
     private static final long serialVersionUID = -2310440004073323751L;
-    private static final Logger LOGGER = LoggerFactory.getLogger(UriTemplateViewProvider.class);
-
     static class ViewInfoComparator implements Comparator<ViewInfo> {
         private ViewNameComparator comp = new ViewNameComparator();
 
@@ -50,11 +45,9 @@ public class UriTemplateViewProvider extends SpringViewProvider implements Seria
 
     @Override
     protected String getViewName(String viewAndParameters, List<ViewInfo> views) {
-
-        // look for exact matches
+        // Look for exact match
         for (ViewInfo view : views) {
             if (view.getViewName().equals(viewAndParameters)) {
-                LOGGER.info("getViewName exact match - [{}] is a valid view", view.getViewName());
                 return view.getViewName();
             }
         }
@@ -62,11 +55,9 @@ public class UriTemplateViewProvider extends SpringViewProvider implements Seria
         // sort the names with regards to the number of path segments in
         // the string, so that longer ones take priority over the shorter ones
         // when matching templates
-
         Collections.sort(views, new ViewInfoComparator());
 
         // perform template matching
-
         for (ViewInfo view : views) {
             if (!view.getViewName().isEmpty() && new UriTemplate(view.getViewName()).matches(viewAndParameters)) {
                 return viewAndParameters;// view.getViewName();
