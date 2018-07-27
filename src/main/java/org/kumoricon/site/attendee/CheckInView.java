@@ -7,6 +7,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.PostConstruct;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +19,7 @@ public abstract class CheckInView extends BaseGridView implements View {
     private TextArea attendeeInfo = new TextArea("Attendee");
 
     private Button btnCheckIn = new Button("Continue");
+    private Button btnEdit = new Button("Edit");
     private Button btnCancel = new Button("Cancel");
     private CheckBox informationVerified = new CheckBox("Information Verified");
     private CheckBox parentalConsentFormReceived = new CheckBox("Parental Consent Form Received");
@@ -32,9 +34,9 @@ public abstract class CheckInView extends BaseGridView implements View {
 
     @PostConstruct
     public void init() {
-        setRows(3);
+        setRows(4);
         setColumns(5);
-        setRowExpandRatio(2, 10.0f);
+        setRowExpandRatio(3, 10.0f);
         setColumnExpandRatio(0, 10.0f);
         setColumnExpandRatio(3, 2.0f);
         setColumnExpandRatio(4, 10.0f);
@@ -48,6 +50,7 @@ public abstract class CheckInView extends BaseGridView implements View {
         addComponent(parentalConsentFormReceived, 2, 1);
 
         btnCheckIn.addClickListener((Button.ClickListener) clickEvent -> btnCheckInClicked());
+        btnEdit.addClickListener((Button.ClickListener) clickEvent -> btnEditClicked());
         btnCancel.addClickListener(c -> close());
 
         btnCheckIn.setClickShortcut(ShortcutAction.KeyCode.ENTER);
@@ -56,7 +59,8 @@ public abstract class CheckInView extends BaseGridView implements View {
         btnCheckIn.setEnabled(false);
 
         addComponent(btnCheckIn, 3, 0);
-        addComponent(btnCancel, 3, 1);
+        addComponent(btnEdit, 3, 1);
+        addComponent(btnCancel, 3, 2);
 
         informationVerified.addValueChangeListener(e -> enableButtons());
         parentalConsentFormReceived.addValueChangeListener(e -> enableButtons());
@@ -81,6 +85,10 @@ public abstract class CheckInView extends BaseGridView implements View {
     protected void btnCheckInClicked() {
         handler.checkInAttendee(this, attendee);
         close();
+    }
+
+    protected void btnEditClicked() {
+        throw new RuntimeException("Override btnEditClicked() in view");
     }
 
     @Override
