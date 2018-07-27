@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 3.0.7 (pending)
+- Version 3.0.8 (pending)
+
+- Version 3.0.7 (7/26/2018)
     - Added Edit button on check in views
     - Automatically print badge on pre reg check in
     - Cut down on logging when entering views
