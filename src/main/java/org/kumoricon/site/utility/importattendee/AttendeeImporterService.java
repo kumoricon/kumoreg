@@ -113,6 +113,11 @@ class AttendeeImporterService {
                 count++;
                 if (count % 1000 == 0) { log.info("Loading line " + count); }
 
+                // Auto-generate order ID if it doesn't exist
+                if (record.orderId == null || record.orderId.trim().isEmpty()) {
+                    record.orderId = Order.generateOrderId();
+                }
+
                 Attendee attendee = new Attendee();
                 attendee.setFirstName(record.firstName);
                 attendee.setLastName(record.lastName);

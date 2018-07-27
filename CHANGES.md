@@ -4,6 +4,7 @@ Change Log
     - Added Edit button on check in views
     - Automatically print badge on pre reg check in
     - Cut down on logging when entering views
+    - Generate order ID if it is missing during attendee import (added for staff, but occurs for all imports)
 
 - Version 3.0.6 (7/25/2018)
     - Auto-print badges when entering check in and order print views
