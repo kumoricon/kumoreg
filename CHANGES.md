@@ -2,6 +2,7 @@ Change Log
 ----------------
 - Version 3.0.7 (pending)
     - Added Edit button on check in views
+    - Automatically print badge on pre reg check in
 
 - Version 3.0.6 (7/25/2018)
     - Auto-print badges when entering check in and order print views
