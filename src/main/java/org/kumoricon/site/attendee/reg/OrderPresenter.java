@@ -218,6 +218,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         orderRepository.save(currentOrder);
 
         if (badgesToPrint.size() > 0) {
+            view.navigateTo(OrderPrintView.VIEW_NAME + "/" + currentOrder.getId() + "/" + "print");
 //            showAttendeeBadgeWindow(view, badgesToPrint, false);
         } else {
             view.navigateTo("/");
