@@ -1,6 +1,7 @@
 Change Log
 ----------------
 - Version 3.0.8 (pending)
+    - Fixed bug where you couldn't add attendees to an at con order with a zero-cost attendee
 
 - Version 3.0.7 (7/26/2018)
     - Added Edit button on check in views
