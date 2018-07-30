@@ -121,7 +121,7 @@ public abstract class CheckInView extends BaseGridView implements View {
         if (!attendee.getNameIsLegalName()) {
             sb.append(String.format("Legal Name: %s %s\n\n", attendee.getLegalFirstName(), attendee.getLegalLastName()));
         }
-        sb.append(String.format("Birthdate: %s (%s years old)\n", attendee.getBirthDate().format(DateTimeFormatter.ofPattern("M/d/Y")), attendee.getAge()));
+        sb.append(String.format("Birthdate: %s (%s years old)\n", attendee.getBirthDate().format(DateTimeFormatter.ofPattern("M/d/yyyy")), attendee.getAge()));
         sb.append(String.format("Emergency Contact: \n\t%s \n\t%s\n", attendee.getEmergencyContactFullName(), attendee.getEmergencyContactPhone()));
         if (attendee.isMinor()) {
             sb.append(String.format("Parent Contact: \n\t%s \n\t%s\n", attendee.getParentFullName(), attendee.getParentPhone()));
