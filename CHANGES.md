@@ -4,6 +4,9 @@ Change Log
     - Fixed bug where you couldn't add attendees to an at con order with a zero-cost attendee
     - Fixed bug where completing a zero-cost order wouldn't navigate to print badge screen
     - Fixed bug where birthdays on 12/31 would show up in the wrong year on check in screen
+    - When checking "Parent is Emergency Contact", copy data from which ever field has data to
+      which ever one is empty. (If both have data, copy emergency contact info to parent contact
+      fields)
 
 - Version 3.0.7 (7/26/2018)
     - Added Edit button on check in views

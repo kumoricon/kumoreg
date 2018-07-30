@@ -37,7 +37,6 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField fanName = createTextField("Fan Name", 5);
     private TextField badgeNumber = createTextField("Badge Number", 6);
     private TextField phoneNumber = createPhoneNumberField("Phone*", 7);
-//    private DateField birthDate = createDateField("", 8);
     private TextField birthDate = createBirthdayField("", 8);
     private TextField email = createTextField("Email*", 9);
     private TextField zip = createTextField("Zip", 10);
@@ -178,11 +177,23 @@ public class AttendeeDetailForm extends GridLayout {
 
         parentIsEmergencyContact.addValueChangeListener(valueChangeEvent -> {
             if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
-                parentFullName.setValue(emergencyContactFullName.getValue());
-                parentPhone.setValue(emergencyContactPhone.getValue());
+
+                // Of the parent fields and emergency fields, copy values from the field that's filled in to
+                // the field that isn't. Added this because some people would fill in the parent field, then
+                // click the parent is emergency contact button, which is backwards from the workflow I was
+                // expecting
+                if (emergencyContactFullName.getValue().trim().isEmpty() && !parentFullName.getValue().trim().isEmpty()) {
+                    emergencyContactFullName.setValue(parentFullName.getValue());
+                } else {
+                    parentFullName.setValue(emergencyContactFullName.getValue());
+                }
+
+                if (emergencyContactPhone.getValue().trim().isEmpty() && !parentPhone.getValue().trim().isEmpty()) {
+                    emergencyContactPhone.setValue(parentPhone.getValue());
+                } else {
+                    parentPhone.setValue(emergencyContactPhone.getValue());
+                }
             } else {
-                parentFullName.clear();
-                parentPhone.clear();
                 parentFullName.focus();
             }
         });
