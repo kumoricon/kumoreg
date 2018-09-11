@@ -5,7 +5,7 @@
 
 	<groupId>org.kumoricon</groupId>
 	<artifactId>KumoReg</artifactId>
-	<version>3.0.8</version>
+	<version>4.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>kumoreg</name>

@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -16,6 +18,9 @@ public class TillReportPresenter {
     private final SessionService sessionService;
 
     private static final Logger log = LoggerFactory.getLogger(TillReportPresenter.class);
+    private static final ZoneId PACIFIC = ZoneId.of("America/Los_Angeles");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a").withZone(PACIFIC);
+
 
     @Autowired
     public TillReportPresenter(SessionService sessionService) {
@@ -32,7 +37,7 @@ public class TillReportPresenter {
         // Header
         output.append("<div class=\"kumoReport\">");
         output.append("<h2>Till Report</h2>");
-        output.append(String.format("%s\n", LocalDateTime.now()));
+        output.append(String.format("%s\n", Instant.now().atZone(PACIFIC).format(DATE_TIME_FORMATTER)));
         output.append("<table border=\"1\" cellpadding=\"2\"><tr>");
         output.append("<td>User</td>");
         output.append("<td>Session</td>");
@@ -48,9 +53,9 @@ public class TillReportPresenter {
             output.append(String.format("<td>%s %s (%s: %s)</td>",
                     user.getFirstName(), user.getLastName(), user.getId(), user.getUsername()));
             output.append(String.format("<td align=\"right\">%s</td>", session.getId()));
-            output.append(String.format("<td align=\"right\">%s</td>", session.getStart()));
+            output.append(String.format("<td align=\"right\">%s</td>", session.getStart().atZone(PACIFIC).format(DATE_TIME_FORMATTER)));
             if (session.getEnd() != null) {
-                output.append(String.format("<td align=\"right\">%s</td>", session.getEnd()));
+                output.append(String.format("<td align=\"right\">%s</td>", session.getEnd().atZone(PACIFIC).format(DATE_TIME_FORMATTER)));
             } else {
                 output.append("<td align=\"right\">open</td>");
             }

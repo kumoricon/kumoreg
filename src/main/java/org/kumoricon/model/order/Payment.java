@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name="payments")
@@ -33,7 +33,7 @@ public class Payment extends Record {
 
     @NotNull
     private PaymentType paymentType;
-    private LocalDateTime paymentTakenAt;
+    private Instant paymentTakenAt;
     private String paymentLocation;
     private String authNumber;
 
@@ -106,10 +106,10 @@ public class Payment extends Record {
         this.paymentType = paymentType;
     }
 
-    public LocalDateTime getPaymentTakenAt() {
+    public Instant getPaymentTakenAt() {
         return paymentTakenAt;
     }
-    public void setPaymentTakenAt(LocalDateTime paymentTakenAt) {
+    public void setPaymentTakenAt(Instant paymentTakenAt) {
         this.paymentTakenAt = paymentTakenAt;
     }
 

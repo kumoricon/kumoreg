@@ -9,8 +9,10 @@ import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -347,7 +349,7 @@ public class AttendeeDetailForm extends GridLayout {
 
     private static Integer getAgeFromDate(LocalDate birthDate) {
         if (birthDate != null) {
-            Integer age = Period.between(birthDate, LocalDate.now()).getYears();
+            Integer age = Period.between(birthDate, LocalDate.now(ZoneId.of("America/Los_Angeles"))).getYears();
             if (age < 0) { age = 0; }
             return age;
         } else {

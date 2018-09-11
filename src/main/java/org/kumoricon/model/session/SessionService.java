@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -17,7 +18,8 @@ import java.util.List;
 public class SessionService {
     private SessionRepository repository;
     private PaymentRepository paymentRepository;
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
+    private static final ZoneId zoneId = ZoneId.of( "America/Los_Angeles" );
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a").withZone(zoneId);
 
     @Autowired
     public SessionService(SessionRepository repository, PaymentRepository paymentRepository) {
@@ -59,7 +61,7 @@ public class SessionService {
     public Session closeSession(Session session) {
         if (session != null) {
             if (session.isOpen()) {
-                session.setEnd(LocalDateTime.now());
+                session.setEnd(Instant.now());
                 session.setOpen(false);
                 session = repository.save(session);
             } else {
@@ -162,7 +164,7 @@ public class SessionService {
                     .append("</tr>");
             for (Payment payment : payments) {
                 output.append("<tr><td>")
-                        .append(payment.getPaymentTakenAt().format(DATE_TIME_FORMATTER))
+                        .append(payment.getPaymentTakenAt().atZone(zoneId).format(DATE_TIME_FORMATTER))
                         .append("</td>");
                 output.append(String.format("<td>%s</td><td>%s</td><td>%s</td><td align=\"right\">$%s</td></tr>",
                         payment.getPaymentLocation(),
@@ -189,7 +191,7 @@ public class SessionService {
                     .append("Amount")
                     .append("\n");
             for (Payment payment : payments) {
-                output.append(payment.getPaymentTakenAt().format(DATE_TIME_FORMATTER))
+                output.append(payment.getPaymentTakenAt().atZone(zoneId).format(DATE_TIME_FORMATTER))
                         .append("\t");
                 output.append(String.format("%s\t%s\t%s\t$%s\n",
                         payment.getPaymentLocation(),
@@ -227,10 +229,10 @@ public class SessionService {
                 .append(session.getId())
                 .append(": ");
         // Date range
-        output.append(session.getStart().format(DATE_TIME_FORMATTER));
+        output.append(session.getStart().atZone(zoneId).format(DATE_TIME_FORMATTER));
         output.append(" - ");
         if (session.getEnd() != null) {
-            output.append(session.getEnd().format(DATE_TIME_FORMATTER));
+            output.append(session.getEnd().atZone(zoneId).format(DATE_TIME_FORMATTER));
         } else {
             output.append("now");
         }
@@ -244,11 +246,11 @@ public class SessionService {
     }
 
     private String buildHTMLReportFooter() {
-        return "<br><p>Report generated at " + LocalDateTime.now().format(DATE_TIME_FORMATTER) + "</p>";
+        return "<br><p>Report generated at " + Instant.now().atZone(zoneId).format(DATE_TIME_FORMATTER) + "</p>";
     }
 
     private String buildTextReportFooter() {
-        return "Report generated at " + LocalDateTime.now().format(DATE_TIME_FORMATTER) + "\n";
+        return "Report generated at " + Instant.now().atZone(zoneId).format(DATE_TIME_FORMATTER) + "\n";
     }
 
 }

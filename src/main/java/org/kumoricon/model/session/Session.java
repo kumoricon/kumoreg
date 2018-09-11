@@ -7,14 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "sessions")
 public class Session extends Record {
-    private LocalDateTime start;
-    private LocalDateTime end;
-
+    private Instant start;
+    private Instant end;
     @NotNull
     @ManyToOne
     private User user;
@@ -28,19 +27,19 @@ public class Session extends Record {
      */
     public Session(User user) {
         setUser(user);
-        setStart(LocalDateTime.now());
+        setStart(Instant.now());
         setOpen(true);
     }
 
-    public LocalDateTime getStart() { return start; }
-    public void setStart(LocalDateTime start) {
+    public Instant getStart() { return start; }
+    public void setStart(Instant start) {
         if (this.start == null) {
             this.start = start;
         }
     }
 
-    public LocalDateTime getEnd() { return end; }
-    public void setEnd(LocalDateTime end) {
+    public Instant getEnd() { return end; }
+    public void setEnd(Instant end) {
         if (this.end == null) {
             this.end = end;
         }

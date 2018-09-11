@@ -19,8 +19,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -187,7 +187,7 @@ class AttendeeImporterService {
                     Payment p = new Payment();
                     p.setAmount(o.getTotalAmount());
                     p.setPaymentType(Payment.PaymentType.PREREG);
-                    p.setPaymentTakenAt(LocalDateTime.now());
+                    p.setPaymentTakenAt(Instant.now());
                     p.setPaymentLocation("kumoricon.org");
                     p.setPaymentTakenBy(currentUser);
                     p.setSession(session);

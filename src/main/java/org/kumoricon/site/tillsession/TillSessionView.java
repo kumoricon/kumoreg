@@ -7,10 +7,14 @@ import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.LocalDateTimeRenderer;
 import org.kumoricon.model.session.Session;
 import org.kumoricon.site.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -19,6 +23,7 @@ import java.util.List;
 public class TillSessionView extends BaseView implements View {
     public static final String VIEW_NAME = "tillSessions";
     public static final String REQUIRED_RIGHT = "manage_till_sessions";
+    private static final ZoneId PACIFIC = ZoneId.of("America/Los_Angeles");
 
     private final TillSessionPresenter handler;
 
@@ -38,11 +43,15 @@ public class TillSessionView extends BaseView implements View {
         btnShowAll.addClickListener((Button.ClickListener) clickEvent -> showAllClicked());
         sessionTable.addItemClickListener(itemClickEvent -> sessionClicked(itemClickEvent.getItem()));
 
-        sessionTable.addColumn(Session::getId).setCaption("ID");
+        sessionTable.addColumn(Session::getId).setCaption("ID").setWidth(75);
         sessionTable.addColumn(session -> session.getUser().getFirstName() + " " + session.getUser().getLastName()).setCaption("User");
-        sessionTable.addColumn(Session::getStart).setCaption("Start Time");
-        sessionTable.addColumn(Session::getEnd).setCaption("End Time");
-        sessionTable.addColumn(Session::isOpen).setCaption("Open");
+        sessionTable.addColumn(Session::getStart)
+                .setCaption("Start Time")
+                .setRenderer(zonedDT-> zonedDT.atZone(PACIFIC).toLocalDateTime(), new LocalDateTimeRenderer());
+        sessionTable.addColumn(Session::getEnd)
+                .setCaption("End Time")
+                .setRenderer(zonedDT-> zonedDT.atZone(PACIFIC).toLocalDateTime(), new LocalDateTimeRenderer());
+        sessionTable.addColumn(Session::isOpen).setCaption("Open").setWidth(75);
         sessionTable.addColumn(session -> "Close",
                 new ButtonRenderer(clickEvent -> {
                     Session s = (Session)clickEvent.getItem();

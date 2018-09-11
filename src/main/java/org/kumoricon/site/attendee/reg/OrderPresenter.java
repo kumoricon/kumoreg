@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +99,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             payment.setPaymentTakenBy(view.getCurrentUser());
         }
         if (payment.getPaymentTakenAt() == null) {
-            payment.setPaymentTakenAt(LocalDateTime.now());
+            payment.setPaymentTakenAt(Instant.now());
         }
         if (payment.getPaymentLocation() == null) {
             payment.setPaymentLocation(view.getCurrentClientIPAddress());
