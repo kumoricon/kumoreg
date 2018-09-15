@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class SessionServiceTest {
             p.setAmount(BigDecimal.TEN);
             p.setSession(s);
             p.setPaymentTakenBy(user);
-            p.setPaymentTakenAt(LocalDateTime.now());
+            p.setPaymentTakenAt(Instant.now());
             p.setPaymentType(Payment.PaymentType.CASH);
             p.setOrder(o);
             payments.add(p);
@@ -136,7 +137,7 @@ public class SessionServiceTest {
             p.setAmount(BigDecimal.ONE);
             p.setSession(s);
             p.setPaymentTakenBy(user);
-            p.setPaymentTakenAt(LocalDateTime.now());
+            p.setPaymentTakenAt(Instant.now());
 
             o = new Order();
             o.setOrderId(Order.generateOrderId());
@@ -151,7 +152,7 @@ public class SessionServiceTest {
             p.setAmount(BigDecimal.valueOf(5L));
             p.setSession(s);
             p.setPaymentTakenBy(user);
-            p.setPaymentTakenAt(LocalDateTime.now());
+            p.setPaymentTakenAt(Instant.now());
             p.setAuthNumber("1234");
             o = new Order();
             o.setOrderId(Order.generateOrderId());

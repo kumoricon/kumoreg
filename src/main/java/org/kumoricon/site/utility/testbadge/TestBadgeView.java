@@ -30,7 +30,7 @@ public class TestBadgeView extends BaseGridView implements View {
     @PostConstruct
     public void init() {
         setColumns(2);
-        setRows(7);
+        setRows(8);
         setColumnExpandRatio(0, 10);
 
         pdf = new BrowserFrame();
@@ -74,8 +74,12 @@ public class TestBadgeView extends BaseGridView implements View {
         printAllBadges.addClickListener(clickEvent -> handler.printBadges(this, getXOffset(), getYOffset()));
         addComponent(printAllBadges, 1, 5);
 
+        Button printTroublesomeNames = new Button("Print Troublesome Names");
+        printTroublesomeNames.addClickListener(clickEvent -> handler.printTroublesomeNames(this, badgeType.getValue(), getXOffset(), getYOffset()));
+        addComponent(printTroublesomeNames, 1, 6);
+
         Label notes = new Label("Note: Changed offsets will not be saved. Set them in Administration > Computers.");
-        addComponent(notes, 1, 6);
+        addComponent(notes, 1, 7);
         notes.setVisible(currentUserHasRight("manage_devices"));
 
         handler.showCurrentOffsets(this, getCurrentClientIPAddress());
@@ -123,7 +127,7 @@ public class TestBadgeView extends BaseGridView implements View {
         pdf = new BrowserFrame("", resource);
         pdf.setWidth("500px");
         pdf.setHeight("500px");
-        addComponent(pdf, 0, 0, 0, 5);
+        addComponent(pdf, 0, 0, 0, 7);
         resource.setMIMEType("application/pdf");
         resource.getStream().setParameter("Content-Disposition", "attachment; filename=" + filename);
 

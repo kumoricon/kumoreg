@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +99,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
             payment.setPaymentTakenBy(view.getCurrentUser());
         }
         if (payment.getPaymentTakenAt() == null) {
-            payment.setPaymentTakenAt(LocalDateTime.now());
+            payment.setPaymentTakenAt(Instant.now());
         }
         if (payment.getPaymentLocation() == null) {
             payment.setPaymentLocation(view.getCurrentClientIPAddress());
@@ -218,6 +218,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
         orderRepository.save(currentOrder);
 
         if (badgesToPrint.size() > 0) {
+            view.navigateTo(OrderPrintView.VIEW_NAME + "/" + currentOrder.getId() + "/" + "print");
 //            showAttendeeBadgeWindow(view, badgesToPrint, false);
         } else {
             view.navigateTo("/");
@@ -290,6 +291,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
 
     public void showBadges(OrderPrintView view, Integer orderId) {
         Order order = orderRepository.findOne(orderId);
+        printBadges(view, order.getAttendees());
         view.showOrder(order);
     }
 

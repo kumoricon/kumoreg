@@ -79,7 +79,8 @@ public class Attendee extends Record {
      */
     public boolean isMinor() {
         // If birthdate isn't set for some reason, treat them as a minor.
-        return birthDate == null || birthDate.isAfter(LocalDate.now().minusYears(18));
+        LocalDate now = LocalDate.now(ZoneId.of("America/Los_Angeles"));
+        return birthDate == null || birthDate.isAfter(now.minusYears(18));
     }
 
     public String getFirstName() { return firstName; }

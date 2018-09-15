@@ -70,6 +70,7 @@ public class LoadBaseDataPresenter {
             addLiteAttendeeBadges(results);
             addStaffBadges(results);
             addSpecialtyBadges(results);
+            addLiteSpecialityBadges(results);
             addBlacklistedNames(results);
         }
         view.addResult(results.toString());
@@ -318,14 +319,9 @@ public class LoadBaseDataPresenter {
 
     private void addStaffBadges(StringBuilder results) {
         log.info("Creating badge Staff");
-        Badge staff = BadgeFactory.createBadge("Staff", BadgeType.STAFF, "Staff", "#FFFFFF", 0f, 0f, 0f);
+        Badge staff = BadgeFactory.createBadge("Staff", BadgeType.STAFF, "Staff", "#000000", 0f, 0f, 0f);
         staff.setRequiredRight("badge_type_staff");
         staff.setWarningMessage("Staff check in. See your coordinator!");
-        // Clear stripe color and text - it's already printed
-        for (AgeRange a : staff.getAgeRanges()) {
-            a.setStripeColor("#FFFFFF");
-            a.setStripeText("Staff");
-        }
         results.append("    Creating ").append(staff.toString()).append("\n");
         badgeRepository.save(staff);
     }
@@ -336,14 +332,14 @@ public class LoadBaseDataPresenter {
      */
     private void addSpecialtyBadges(StringBuilder results) {
         log.info("Creating badge Artist");
-        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.OTHER, "Artist", "#800080", 0f, 0f, 0f);
+        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.OTHER, "Artist", "#800080", 75f, 75f, 75f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
         results.append("    Creating ").append(artist.toString()).append("\n");
         badgeRepository.save(artist);
 
         log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", "#00597c", 0f, 0f, 0f);
+        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", "#00597c", 250f, 250f, 250f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
         results.append("    Creating ").append(exhibitor.toString()).append("\n");
@@ -404,11 +400,36 @@ public class LoadBaseDataPresenter {
         Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Saturday", "#323E99", 15, 15, 15);
         results.append("    Creating ").append(lite.toString()).append("\n");
         badgeRepository.save(lite);
+    }
 
-        log.info("Creating badge Kumoricon Lite - Manga Donation");
-        Badge liteDonation = BadgeFactory.createBadge("Kumoricon Lite - Manga Donation", BadgeType.ATTENDEE, "Sunday", "#323E99", 0, 0, 0);
-        results.append("    Creating ").append(liteDonation.toString()).append("\n");
-        badgeRepository.save(liteDonation);
+
+    private void addLiteSpecialityBadges(StringBuilder results) {
+        Badge exhibitorWifi = BadgeFactory.createBadge("Exhibitor w/wifi", BadgeType.OTHER, "Exhibitor", "#00597c", 260f, 260f, 260f);
+        exhibitorWifi.setRequiredRight("badge_type_exhibitor");
+        exhibitorWifi.setWarningMessage("Exhibitor check in. See your coordinator!");
+        results.append("    Creating ").append(exhibitorWifi.toString()).append("\n");
+        badgeRepository.save(exhibitorWifi);
+
+        Badge exhibitorExtra = BadgeFactory.createBadge("Exhibitor Extra Badge", BadgeType.OTHER, "Exhibitor", "#00597c", 10f, 10f, 10f);
+        exhibitorExtra.setRequiredRight("badge_type_exhibitor");
+        exhibitorExtra.setWarningMessage("Exhibitor check in. See your coordinator!");
+        results.append("    Creating ").append(exhibitorExtra.toString()).append("\n");
+        badgeRepository.save(exhibitorExtra);
+
+
+        log.info("Creating badge Artist w/wifi");
+        Badge artistWifi = BadgeFactory.createBadge("Artist - w/wifi", BadgeType.OTHER, "Artist", "#800080", 85f, 85f, 85f);
+        artistWifi.setRequiredRight("badge_type_artist");
+        artistWifi.setWarningMessage("Artist check in. See your coordinator!");
+        results.append("    Creating ").append(artistWifi.toString()).append("\n");
+        badgeRepository.save(artistWifi);
+
+        log.info("Creating badge Artist Extra Badge");
+        Badge artistExtra = BadgeFactory.createBadge("Artist Extra Badge", BadgeType.OTHER, "Artist", "#800080", 10f, 10f, 10f);
+        artistExtra.setRequiredRight("badge_type_artist");
+        artistExtra.setWarningMessage("Artist check in. See your coordinator!");
+        results.append("    Creating ").append(artistExtra.toString()).append("\n");
+        badgeRepository.save(artistExtra);
     }
 
 

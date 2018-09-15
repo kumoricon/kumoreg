@@ -18,11 +18,9 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -59,126 +57,6 @@ class AttendeeImporterService {
             orders.put(o.getOrderId(), o);
         }
         return orders;
-    }
-
-    String importFromTSV(Reader inputReader, User user) throws Exception {
-        log.info("{} starting data import", user);
-        BufferedReader TSVFile = new BufferedReader(inputReader);
-        String dataRow = TSVFile.readLine(); // Skip the header row
-        Integer lineNumber = 1;
-        List<Attendee> attendeesToAdd = new ArrayList<>();
-        List<Order> ordersToAdd = new ArrayList<>();
-
-        HashMap<String, Badge> badges = getBadgeHashMap();
-        HashMap<String, Order> orders = getOrderHashMap();
-        User currentUser = userRepository.findOne(user.getId());
-
-        while (dataRow != null){
-            if (lineNumber % 1000 == 0) { log.info("Read " + lineNumber + " lines"); }
-            lineNumber++;
-            dataRow = TSVFile.readLine();
-            if (dataRow == null || dataRow.trim().length() == 0) { continue; }  // Skip blank lines
-            String[] dataArray = dataRow.split("\t");
-            if (dataArray.length < 20 || dataArray.length > 21) {
-                throw new Exception(String.format("Error: Line %s doesn't have 20 or 21 fields. Missing data?", lineNumber));
-            }
-            Attendee attendee = new Attendee();
-            attendee.setFirstName(dataArray[0]);
-            attendee.setLastName(dataArray[1]);
-            attendee.setLegalFirstName(dataArray[2]);
-            attendee.setLegalLastName(dataArray[3]);
-            attendee.setFanName(dataArray[4]);
-            if (dataArray[5].trim().equals("")) {
-                attendee.setBadgeNumber(generateBadgeNumber(currentUser.getNextBadgeNumber()));
-            } else {
-                attendee.setBadgeNumber(dataArray[5]);
-            }
-            attendee.setZip(dataArray[6]);
-            attendee.setCountry(dataArray[7]);
-            attendee.setPhoneNumber(FieldCleaner.cleanPhoneNumber(dataArray[8]));
-            attendee.setEmail(dataArray[9]);
-            attendee.setBirthDate(LocalDate.parse(dataArray[10], formatter));
-            attendee.setEmergencyContactFullName(dataArray[11]);
-            attendee.setEmergencyContactPhone(FieldCleaner.cleanPhoneNumber(dataArray[12]));
-            if (dataArray[13].toUpperCase().equals("Y")) {
-                attendee.setParentIsEmergencyContact(true);
-            } else {
-                attendee.setParentIsEmergencyContact(false);
-            }
-            attendee.setParentFullName(dataArray[14]);
-            attendee.setParentPhone(FieldCleaner.cleanPhoneNumber(dataArray[15]));
-            if (dataArray[16].toUpperCase().equals("Y")) {
-                attendee.setPaid(true);
-            } else {
-                attendee.setPaid(false);
-            }
-            try {
-                attendee.setPaidAmount(new BigDecimal(dataArray[17]));
-            } catch (NumberFormatException e) {
-                attendee.setPaidAmount(BigDecimal.ZERO);
-            }
-            if (badges.containsKey(dataArray[18])) {
-                attendee.setBadge(badges.get(dataArray[18]));
-            } else {
-                log.error("Badge type " + dataArray[18] + " not found on line " + lineNumber);
-                throw new Exception("Badge type " + dataArray[18] + " not found on line " + lineNumber);
-            }
-
-            if (orders.containsKey(dataArray[19])) {
-                Order currentOrder = orders.get(dataArray[19]);
-                attendee.setOrder(currentOrder);
-                currentOrder.addAttendee(attendee);
-            } else {
-                Order o = new Order();
-                o.setOrderTakenByUser(currentUser);
-                o.setOrderId(dataArray[19]);
-                o.addAttendee(attendee);
-                orders.put(o.getOrderId(), o);
-                ordersToAdd.add(o);
-                attendee.setOrder(o);
-            }
-            if (dataArray.length == 21 && !dataArray[20].isEmpty() && !dataArray[20].trim().isEmpty()) {
-                attendee.addHistoryEntry(currentUser, dataArray[20]);
-            }
-            attendee.setPreRegistered(true);
-            attendeesToAdd.add(attendee);
-        }
-        TSVFile.close();
-
-        log.info("Read " + lineNumber + " lines");
-        log.info("Setting paid/unpaid status in {} orders", ordersToAdd.size());
-
-        if (sessionService.userHasOpenSession(currentUser)) {
-            log.info("{} closed open session {} before import",
-                    currentUser, sessionService.getCurrentSessionForUser(currentUser));
-        }
-        Session session = sessionService.getNewSessionForUser(currentUser);
-        for (Order o : ordersToAdd) {
-            validatePaidStatus(o);
-            if (o.getPaid()) {
-                Payment p = new Payment();
-                p.setAmount(o.getTotalAmount());
-                p.setPaymentType(Payment.PaymentType.PREREG);
-                p.setPaymentTakenAt(LocalDateTime.now());
-                p.setPaymentLocation("kumoricon.org");
-                p.setPaymentTakenBy(currentUser);
-                p.setSession(session);
-                p.setOrder(o);
-                o.addPayment(p);
-            }
-        }
-
-
-        log.info("{} saving {} orders and {} attendees to database", user, ordersToAdd.size(), attendeesToAdd.size());
-        orderRepository.save(ordersToAdd);
-
-        userRepository.save(currentUser);
-
-        log.info("{} closing session used during import");
-        sessionService.closeSessionForUser(currentUser);
-
-        log.info("{} done importing data", user);
-        return String.format("Imported %s attendees and %s orders", attendeesToAdd.size(), ordersToAdd.size());
     }
 
     /**
@@ -234,6 +112,11 @@ class AttendeeImporterService {
             for (AttendeeRecord record : attendees) {
                 count++;
                 if (count % 1000 == 0) { log.info("Loading line " + count); }
+
+                // Auto-generate order ID if it doesn't exist
+                if (record.orderId == null || record.orderId.trim().isEmpty()) {
+                    record.orderId = Order.generateOrderId();
+                }
 
                 Attendee attendee = new Attendee();
                 attendee.setFirstName(record.firstName);
@@ -304,7 +187,7 @@ class AttendeeImporterService {
                     Payment p = new Payment();
                     p.setAmount(o.getTotalAmount());
                     p.setPaymentType(Payment.PaymentType.PREREG);
-                    p.setPaymentTakenAt(LocalDateTime.now());
+                    p.setPaymentTakenAt(Instant.now());
                     p.setPaymentLocation("kumoricon.org");
                     p.setPaymentTakenBy(currentUser);
                     p.setSession(session);

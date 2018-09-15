@@ -6,6 +6,7 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.site.attendee.PrintBadgeView;
+import org.kumoricon.site.attendee.reg.OrderView;
 import org.kumoricon.site.attendee.search.PrintBadgePresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriTemplate;
@@ -63,6 +64,9 @@ public class AttendeeSearchPrintBadgeView extends PrintBadgeView implements View
         if (!attendee.getCheckedIn()) {
             navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
             notifyError("Error: This attendee hasn't checked in yet");
+        } else if (!attendee.getPaid()) {
+            navigateTo(OrderView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+            notifyError("Error: Attendee hasn't paid yet!");
         } else {
             showBadge(attendee);
         }

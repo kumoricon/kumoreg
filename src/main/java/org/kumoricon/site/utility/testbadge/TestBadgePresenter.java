@@ -129,4 +129,23 @@ public class TestBadgePresenter {
 
         printAndShowPDF(view, attendees, xOffset, yOffset);
     }
+
+    public void printTroublesomeNames(TestBadgeView view, Badge badge, Integer xOffset, Integer yOffset) {
+        if (xOffset == null) { xOffset = 0; }
+        if (yOffset == null) { yOffset = 0; }
+
+        log.info("{} generating test badges for troublesome names horizontal offset {} vertical offset {}",
+                view.getCurrentUsername(), xOffset, yOffset);
+        List<Attendee> attendees = new ArrayList<>();
+        String[] names = {"I have a really long name here and it makes life miserable for text",
+            "しん ★", "オリビア • ベルトラン",  "キャサティ-", "2814.5", ":3", "クララ・コアラ", "ミラちゃん",
+                ">:(", "ಠ_ಠ", "∆$#", "( ͡° ͜ʖ ͡°)", "ひな", "もんど", "ルイ-ス", "高原・コーゲン"};
+        for (String name : names) {
+            Attendee attendee = attendeeFactory.generateDemoAttendee(badge);
+            attendee.setFanName(name);
+            attendees.add(attendee);
+        }
+
+        printAndShowPDF(view, attendees, xOffset, yOffset);
+    }
 }

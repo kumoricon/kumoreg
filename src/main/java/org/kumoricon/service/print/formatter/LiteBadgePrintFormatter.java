@@ -4,21 +4,23 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.service.print.formatter.badgeimage.AttendeeBadgeDTO;
+import org.kumoricon.service.print.formatter.badgeimage.BadgeCreator;
+import org.kumoricon.service.print.formatter.badgeimage.BadgeCreatorLite2018;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 
 
 public class LiteBadgePrintFormatter implements BadgePrintFormatter {
     private final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
+    private final BadgeCreator badgeCreator = new BadgeCreatorLite2018();
+    private static final Logger LOGGER = LoggerFactory.getLogger(LiteBadgePrintFormatter.class);
     private Integer xOffset = 0;
     private Integer yOffset = 0;
 
@@ -51,8 +53,9 @@ public class LiteBadgePrintFormatter implements BadgePrintFormatter {
             document.save(os);
             document.close();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.error("Error creating badge", e);
+            throw new RuntimeException(e);
         }
 
     }
@@ -60,41 +63,14 @@ public class LiteBadgePrintFormatter implements BadgePrintFormatter {
 
     private PDPage generatePage(Attendee attendee, PDDocument document) throws IOException {
         PDPage page = new PDPage(new PDRectangle(612f, 396f));
-        PDFont font = PDType1Font.HELVETICA_BOLD;
-        PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
-        // Positions are measured from the bottom left corner of the page at 72 DPI
+        final AttendeeBadgeDTO badgeDTO = AttendeeBadgeDTO.fromAttendee(attendee);
 
-        // Draw real name
-        contentStream.beginText();
-        contentStream.moveTextPositionByAmount(220+xOffset, 175+yOffset);
-        contentStream.setFont( font, 24 );
-        contentStream.drawString(attendee.getFirstName() + " " + attendee.getLastName());
-        contentStream.endText();
+        byte[] badgeImage = badgeCreator.createBadge(badgeDTO);
 
-        // Draw age color stripe
-        String stripeText = "VOID";
-        if (attendee.getCurrentAgeRange() != null) {
-            contentStream.setNonStrokingColor(Color.decode(attendee.getCurrentAgeRange().getStripeColor()));
-            stripeText = attendee.getCurrentAgeRange().getStripeText();
-        } else {
-            contentStream.setNonStrokingColor(Color.black);
-        }
-        contentStream.fillRect(150+xOffset, 90+yOffset, 310, 44);
-
-        contentStream.setLineWidth(0.5f);
-        contentStream.beginText();
-        contentStream.setFont(font, 24);
-        contentStream.setNonStrokingColor(Color.white);
-        contentStream.setStrokingColor(Color.black);
-        contentStream.moveTextPositionByAmount(297+xOffset, 102+yOffset);
-        contentStream.appendRawCommands("2 Tr ");       // Set text rendering mode
-
-        Float ageRangeWidth = ((font.getStringWidth(stripeText) / 1000.0f) * 18) / 2;
-        contentStream.moveTextPositionByAmount(-ageRangeWidth, 0);
-        contentStream.drawString(stripeText);
-        contentStream.endText();
-
+        PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.OVERWRITE, true, false);
+        PDImageXObject pdi = PDImageXObject.createFromByteArray(document, badgeImage, attendee.getId() + ".png");
+        contentStream.drawImage(pdi,126+xOffset,54+yOffset, 360, 288);
         contentStream.close();
 
         return page;
@@ -103,7 +79,6 @@ public class LiteBadgePrintFormatter implements BadgePrintFormatter {
 
     @Override
     public InputStream getStream() {
-        // Here we return the pdf contents as a byte-array
         return new ByteArrayInputStream(os.toByteArray());
     }
 

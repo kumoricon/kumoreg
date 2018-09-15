@@ -1,10 +1,39 @@
 Change Log
 ----------------
-- Version 3.0.5 (pending)
+- Version 4.0.0 (pending)
+    - Fixed bug where you couldn't add attendees to an at con order with a zero-cost attendee
+    - Fixed bug where completing a zero-cost order wouldn't navigate to print badge screen
+    - Fixed bug where birthdays on 12/31 would show up in the wrong year on check in screen
+    - When checking "Parent is Emergency Contact", copy data from which ever field has data to
+      which ever one is empty. (If both have data, copy emergency contact info to parent contact
+      fields)
+    - Timezone fixes on session and payment records (WARNING: not an actual schema change, but
+      this will likely break compatibility with older databases)
+
+- Version 3.0.7 (7/26/2018)
+    - Added Edit button on check in views
+    - Automatically print badge on pre reg check in
+    - Cut down on logging when entering views
+    - Generate order ID if it is missing during attendee import (added for staff, but occurs for all imports)
+    - Added workaround for staff imported with missing information - checkin won't be allowed until emergency contact 
+      and birthdate is set. In imported data, 1/1/1900 is a "magic number" that represents a missing birthdate.
+
+- Version 3.0.6 (7/25/2018)
+    - Auto-print badges when entering check in and order print views
+    - Auto-detect network printers
+    - Added Exhibitor w/Wifi, Artist w/Wifi, and extra badge types
+    - Added button on Print Test Badge view to test print troublesome fan
+      names (names that have caused issues in the past) for easy font testing
+
+- Version 3.0.5 (7/13/2018)
     - Added right check to manual price override
     - Added example test data to docs/testdata directory
     - Added reprint button to Order print view
     - Updated lite badge price, day
+    - Kumo Lite 2018 badge format added
+    - During at con reg, if only one badge type is available auto select it
+    - Added ability to parse MMDDYY dates. 00-18 will be 20xx, 19-99 will be
+      19xx. (Shifts automatically each year)
 
 - Version 3.0.4 (6/18/2018)
     - Show parental consent form checkbox in detail form

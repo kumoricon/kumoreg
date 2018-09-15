@@ -130,13 +130,13 @@ public class OrderView extends BaseGridView implements View, AttendeePrintView, 
         attendeeList.setItems(order.getAttendees());
         paymentTotal.setValue(order.getTotalPaid().toString());
 
-        if (order.getTotalAmount().compareTo(order.getTotalPaid()) == 0 && order.getAttendees().size() > 0) {
+        if (order.getTotalAmount().compareTo(order.getTotalPaid()) == 0 &&
+                order.getAttendees().size() > 0) {
             orderComplete.setEnabled(true);
-            addAttendee.setEnabled(false);
         } else {
             orderComplete.setEnabled(false);
-            addAttendee.setEnabled(true);
         }
+
 
         if (order.getTotalAmount().compareTo(BigDecimal.ZERO) == 0) {
             addPayment.setEnabled(false);

@@ -6,12 +6,20 @@ import com.vaadin.data.ValueContext;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 
 public class StringToLocalDateConverter implements Converter<String, LocalDate> {
     private static final DateTimeFormatter DEFAULT = DateTimeFormatter.ofPattern("MMddyyyy");
     private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("M-d-yyyy");
     private static final DateTimeFormatter SLASHES = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static final DateTimeFormatter TWO_DIGIT_YEAR =
+            new DateTimeFormatterBuilder()
+            .appendPattern("MMdd")
+            .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now().minusYears(99))
+            .toFormatter();
+
     private final String message;
 
     public StringToLocalDateConverter(String message) {
@@ -32,6 +40,11 @@ public class StringToLocalDateConverter implements Converter<String, LocalDate> 
                     result = Result.ok(LocalDate.parse(fieldValue, DASHES));
                 } catch (DateTimeParseException ignored3) {
 
+                    try {
+                        result = Result.ok(LocalDate.parse(fieldValue, TWO_DIGIT_YEAR));
+                    } catch (DateTimeParseException ignored4) {
+
+                    }
                 }
             }
         }

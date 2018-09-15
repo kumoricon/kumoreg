@@ -87,7 +87,8 @@ public class AttendeeTest {
     public void setCheckedInTrue() {
         attendee.setCheckedIn(true);
         assertTrue("checkedIn flag set", attendee.getCheckedIn());
-        assertEquals("check in date set", new Date(), attendee.getCheckInTime());
+        long seconds = (new Date().getTime()-attendee.getCheckInTime().getTime())/1000;
+        assertTrue("setCheckInTrue didn't complete in less than 2 seconds", seconds <= 2);
     }
 
     @Test

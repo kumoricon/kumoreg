@@ -4,7 +4,11 @@ import org.junit.Test;
 import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserFactory;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -13,9 +17,9 @@ public class SessionTest {
     public void setStartOnlyIfNull() {
         // Only allow setting the start time if it is null - it shouldn't change
         Session s = new Session();
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         s.setStart(now);
-        s.setStart(LocalDateTime.of(2015, 8, 1, 11, 11, 11));
+        s.setStart(Instant.now().plus(10, ChronoUnit.SECONDS));
         assertEquals(now, s.getStart());
     }
 
@@ -23,9 +27,9 @@ public class SessionTest {
     public void setEnd() {
         // Only allow setting the end time if it is null - it shouldn't change
         Session s = new Session();
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         s.setEnd(now);
-        s.setEnd(LocalDateTime.of(2015, 8, 1, 11, 11, 11));
+        s.setEnd(Instant.now().plus(10, ChronoUnit.SECONDS));
         assertEquals(now, s.getEnd());
     }
 

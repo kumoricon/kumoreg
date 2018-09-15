@@ -9,10 +9,14 @@ import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.model.badge.Badge;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.*;
 
 import static org.kumoricon.site.attendee.FieldFactory8.*;
@@ -21,6 +25,11 @@ public class AttendeeDetailForm extends GridLayout {
     private static final DateTimeFormatter DEFAULT = DateTimeFormatter.ofPattern("MMddyyyy");
     private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("M-d-yyyy");
     private static final DateTimeFormatter SLASHES = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static final DateTimeFormatter TWO_DIGIT_YEAR =
+            new DateTimeFormatterBuilder()
+                    .appendPattern("MMdd")
+                    .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now().minusYears(99))
+                    .toFormatter();
 
     private TextField firstName = createNameField("First Name*", 1);
     private TextField lastName = createNameField("Last Name*", 2);
@@ -30,7 +39,6 @@ public class AttendeeDetailForm extends GridLayout {
     private TextField fanName = createTextField("Fan Name", 5);
     private TextField badgeNumber = createTextField("Badge Number", 6);
     private TextField phoneNumber = createPhoneNumberField("Phone*", 7);
-//    private DateField birthDate = createDateField("", 8);
     private TextField birthDate = createBirthdayField("", 8);
     private TextField email = createTextField("Email*", 9);
     private TextField zip = createTextField("Zip", 10);
@@ -49,6 +57,7 @@ public class AttendeeDetailForm extends GridLayout {
     Binder<Attendee> binder = new Binder<>();
 
     private VerticalLayout historyLayout = new VerticalLayout();
+    private List<Badge> availableBadges;
 
     public void setParentFormReceivedVisible(boolean visible) {
         parentFormReceived.setVisible(visible);
@@ -170,11 +179,23 @@ public class AttendeeDetailForm extends GridLayout {
 
         parentIsEmergencyContact.addValueChangeListener(valueChangeEvent -> {
             if (parentIsEmergencyContact.getValue() && parentFullName.isEnabled()) {
-                parentFullName.setValue(emergencyContactFullName.getValue());
-                parentPhone.setValue(emergencyContactPhone.getValue());
+
+                // Of the parent fields and emergency fields, copy values from the field that's filled in to
+                // the field that isn't. Added this because some people would fill in the parent field, then
+                // click the parent is emergency contact button, which is backwards from the workflow I was
+                // expecting
+                if (emergencyContactFullName.getValue().trim().isEmpty() && !parentFullName.getValue().trim().isEmpty()) {
+                    emergencyContactFullName.setValue(parentFullName.getValue());
+                } else {
+                    parentFullName.setValue(emergencyContactFullName.getValue());
+                }
+
+                if (emergencyContactPhone.getValue().trim().isEmpty() && !parentPhone.getValue().trim().isEmpty()) {
+                    emergencyContactPhone.setValue(parentPhone.getValue());
+                } else {
+                    parentPhone.setValue(emergencyContactPhone.getValue());
+                }
             } else {
-                parentFullName.clear();
-                parentPhone.clear();
                 parentFullName.focus();
             }
         });
@@ -274,6 +295,14 @@ public class AttendeeDetailForm extends GridLayout {
         showHistory(attendee.getHistory());
         firstName.focus();
         firstName.selectAll();
+
+        // If the attendee doesn't have a badge type and id (hasn't been saved), and there is only
+        // one available badge type, auto-select it
+        if (attendee.getBadge() == null && attendee.getId() == null) {
+            if (availableBadges != null && availableBadges.size() == 1) {
+                badge.setSelectedItem(availableBadges.get(0));
+            }
+        }
     }
 
     public void focusFirstName() {
@@ -320,7 +349,7 @@ public class AttendeeDetailForm extends GridLayout {
 
     private static Integer getAgeFromDate(LocalDate birthDate) {
         if (birthDate != null) {
-            Integer age = Period.between(birthDate, LocalDate.now()).getYears();
+            Integer age = Period.between(birthDate, LocalDate.now(ZoneId.of("America/Los_Angeles"))).getYears();
             if (age < 0) { age = 0; }
             return age;
         } else {
@@ -340,7 +369,11 @@ public class AttendeeDetailForm extends GridLayout {
                 try {
                     birthday = LocalDate.parse(date, DASHES);
                 } catch (DateTimeParseException ignored3) {
-                    return null;
+                    try {
+                        birthday = LocalDate.parse(date, TWO_DIGIT_YEAR);
+                    } catch (DateTimeParseException ignored4) {
+                        return null;
+                    }
                 }
             }
         }
@@ -353,6 +386,7 @@ public class AttendeeDetailForm extends GridLayout {
     }
 
     public void setAvailableBadges(List<Badge> availableBadges) {
+        this.availableBadges = availableBadges;
         badge.setItems(availableBadges);
     }
 

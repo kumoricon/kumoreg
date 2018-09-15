@@ -50,6 +50,15 @@ public class AttendeeSearchByBadgeCheckInView extends CheckInView implements Vie
         navigateTo(SearchByNameView.VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendeeId + "/badge");
     }
 
+    @Override
+    public void btnEditClicked() {
+        if (attendeeId != null) {
+            navigateTo(VIEW_NAME + "/" + searchString + "/" + attendeeId);
+        } else {
+            navigateTo(VIEW_NAME + "/" + searchString);
+        }
+    }
+
 
     @Override
     public void close() {
