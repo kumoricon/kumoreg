@@ -9,6 +9,7 @@ Change Log
       fields)
     - Timezone fixes on session and payment records (WARNING: not an actual schema change, but
       this will likely break compatibility with older databases)
+    - Removed padding on Attendee detail form so it will fit better on 1366x768 screens (actual browser size: 1366x662)
 
 - Version 3.0.7 (7/26/2018)
     - Added Edit button on check in views
