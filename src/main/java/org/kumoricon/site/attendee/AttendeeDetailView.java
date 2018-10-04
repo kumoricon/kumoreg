@@ -46,7 +46,7 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     @PostConstruct
     public void init() {
-        setSizeFull();
+//        setSizeFull();
 
         form.setOpitionallyRequiredFieldNames(requirePhoneAndEmail);
 

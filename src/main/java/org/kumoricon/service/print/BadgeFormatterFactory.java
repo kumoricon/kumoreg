@@ -28,29 +28,18 @@ public class BadgeFormatterFactory {
      * @param attendees List of Attendees to generate badges for
      * @param xOffset Horizontal print offset in points (1/72 inch)
      * @param yOffset Vertical print offset in points (1/72 inch)
+     * @param ageAsOfDate Date to use when calculating adult/youth/child. *Ignored*
      * @return BadgePrintFormatter
      */
-    public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset) {
-        if ("lite".equals(currentFormatter)) {
-            return new LiteBadgePrintFormatter(attendees, xOffset, yOffset);
-        } else if("full".equals(currentFormatter)) {
-            return new FullBadgePrintFormatter(attendees, xOffset, yOffset, LocalDate.now());
-        } else {
-            log.warn("Tried to find badge formatter {}, using FullBadgePrintFormatter instead. " +
-                    "kumoreg.printing.badgeFormat not configured properly?", currentFormatter);
-            return new FullBadgePrintFormatter(attendees, xOffset, yOffset, LocalDate.now());
-        }
-    }
-
     public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, Integer xOffset, Integer yOffset, LocalDate ageAsOfDate) {
         if ("lite".equals(currentFormatter)) {
             return new LiteBadgePrintFormatter(attendees, xOffset, yOffset);
         } else if("full".equals(currentFormatter)) {
-            return new FullBadgePrintFormatter(attendees, xOffset, yOffset, ageAsOfDate);
+            return new FullBadgePrintFormatter(attendees, xOffset, yOffset);
         } else {
             log.warn("Tried to find badge formatter {}, using FullBadgePrintFormatter instead. " +
                     "kumoreg.printing.badgeFormat not configured properly?", currentFormatter);
-            return new FullBadgePrintFormatter(attendees, xOffset, yOffset, ageAsOfDate);
+            return new FullBadgePrintFormatter(attendees, xOffset, yOffset);
         }
     }
 }

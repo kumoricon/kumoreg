@@ -53,7 +53,7 @@ public class LoadBaseDataPresenter {
             addRoles(results);
             addUsers(results);
             addAttendeeBadges(results);
-            addStaffBadges(results);
+//            addStaffBadges(results);
             addSpecialtyBadges(results);
             addBlacklistedNames(results);
         }
@@ -68,7 +68,7 @@ public class LoadBaseDataPresenter {
             addRoles(results);
             addUsers(results);
             addLiteAttendeeBadges(results);
-            addStaffBadges(results);
+//            addStaffBadges(results);
             addSpecialtyBadges(results);
             addLiteSpecialityBadges(results);
             addBlacklistedNames(results);
@@ -81,7 +81,7 @@ public class LoadBaseDataPresenter {
         // Abort if there is more than one right, role, or user - it should just have the admin user
         // with the Admin role and super_admin right.
 
-        Integer errors = 0;
+        int errors = 0;
         if (rightRepository.count() > 1) {
             log.error("rights table is not empty");
             results.append("Error: rights table not empty.\n");
@@ -292,7 +292,7 @@ public class LoadBaseDataPresenter {
         String[][] badgeList = {
                 {"Friday", "#000000", "50", "50", "30"},
                 {"Saturday", "#000000", "50", "50", "30"},
-                {"Sunday", "#000000", "40", "40", "20"}};
+                {"Sunday", "#000000", "45", "45", "20"}};
         for (String[] currentBadge : badgeList) {
             log.info("Creating badge {}", currentBadge[0]);
             Badge badge = BadgeFactory.createBadge(currentBadge[0], BadgeType.ATTENDEE,
