@@ -41,7 +41,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
         b.fillRect(ageBackground, bgColor);
 
         Rectangle ageTextBoundingBox = new Rectangle(70, 450, 610, 80);
-        b.drawStretchedCenteredString(attendee.getAgeStripeText(), ageTextBoundingBox, nameFont(), fgColor);
+        b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getAgeStripeText()), ageTextBoundingBox, nameFont(), fgColor);
     }
 
     private void drawName(BadgeImage b, AttendeeBadgeDTO attendee) {
@@ -76,7 +76,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
             b.fillRect(badgeType, bgColor);
 
             Rectangle textBoundingBox = new Rectangle(80, 80, 610, 70);
-            b.drawStretchedCenteredString(attendee.getBadgeTypeText(), textBoundingBox, nameFont(), fgColor);
+            b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getBadgeTypeText()), textBoundingBox, nameFont(), fgColor);
         }
     }
 
