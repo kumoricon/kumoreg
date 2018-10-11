@@ -17,6 +17,8 @@ sudo add-apt-repository universe
 apt-get -y update
 #apt-get -y upgrade
 
+echo "Sleeping 20 seconds for package processing..."
+sleep 20
 # Disable automatic updates
 rm /etc/apt/apt.conf.d/20auto-upgrades
 echo 'APT::Periodic::Update-Package-Lists "0";' > /etc/apt/apt.conf.d/20auto-upgrades
