@@ -16,12 +16,13 @@ public class ReportPrintService extends PrintService {
      * @return String Result message
      */
     public String printReport(String reportText, String clientIPAddress) {
+        boolean isReport = true;
         if (enablePrintingFromServer != null && enablePrintingFromServer) {
             Computer client = computerService.findComputerByIP(clientIPAddress);
             ReportPrintFormatter formatter =
                     new ReportPrintFormatter(reportText, client.getxOffset(), client.getyOffset());
             try {
-                printDocument(formatter.getStream(), client.getPrinterName(), false);
+                printDocument(formatter.getStream(), client.getPrinterName(), false, isReport);
                 return "Printed to " + client.getPrinterName();
             } catch (PrintException e) {
                 log.error(String.format("Error printing report for %s: %s",

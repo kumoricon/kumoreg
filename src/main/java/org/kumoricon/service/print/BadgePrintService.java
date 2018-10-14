@@ -45,10 +45,11 @@ public class BadgePrintService extends PrintService {
             // will be printed double sided if the first attendee is staff, otherwise they
             // will all be printed single sided.
             boolean setDuplexOn = false;
+            boolean isReport = false;
             if (BadgeType.STAFF.equals(attendees.get(0).getBadge().getBadgeType())) {
                 setDuplexOn = true;
             }
-            printDocument(badgePrintFormatter.getStream(), printerName, setDuplexOn);
+            printDocument(badgePrintFormatter.getStream(), printerName, setDuplexOn, isReport);
             return String.format("Printed %s badges to %s.",
                     attendees.size(),
                     printerName);
