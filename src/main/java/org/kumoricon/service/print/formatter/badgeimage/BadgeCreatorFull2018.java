@@ -1,13 +1,12 @@
 package org.kumoricon.service.print.formatter.badgeimage;
 
-
-import org.w3c.dom.css.Rect;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -15,6 +14,9 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
     private static final int DPI = 150;
     private static final int BADGE_WIDTH = 5*DPI;
     private static final int BADGE_HEIGHT = 4*DPI;
+    private static Font badgeFont;
+    private static Font nameFont;
+    private static String badgeResourcePath = "/usr/local/kumoreg/badgeResources";
 
     @Override
     public byte[] createBadge(AttendeeBadgeDTO attendee) {
@@ -41,7 +43,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
         b.fillRect(ageBackground, bgColor);
 
         Rectangle ageTextBoundingBox = new Rectangle(70, 450, 610, 80);
-        b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getAgeStripeText()), ageTextBoundingBox, nameFont(), fgColor);
+        b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getAgeStripeText()), ageTextBoundingBox, getBadgeFont(), fgColor);
     }
 
     private void drawName(BadgeImage b, AttendeeBadgeDTO attendee) {
@@ -49,7 +51,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
         String fanName = attendee.getFanName();
         if (fanName != null) {
             Rectangle nameBg = new Rectangle(70, 340, 360, 40);
-            b.drawStretchedCenteredString(attendee.getFirstName() + " " + attendee.getLastName(), nameBg, nameFont(), Color.BLACK);
+            b.drawStretchedCenteredString(attendee.getFirstName() + " " + attendee.getLastName(), nameBg, getNameFont(), Color.BLACK);
         }
     }
 
@@ -65,7 +67,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
             name = attendee.getFirstName() + " " + attendee.getLastName();
         }
 
-        b.drawStretchedLeftAlignedString(name, fanNameBg, nameFont(),Color.BLACK);
+        b.drawStretchedLeftAlignedString(name, fanNameBg, getNameFont(),Color.BLACK);
     }
 
     private static void drawBadgeTypeStripe(BadgeImage b, AttendeeBadgeDTO attendee) {
@@ -76,7 +78,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
             b.fillRect(badgeType, bgColor);
 
             Rectangle textBoundingBox = new Rectangle(80, 80, 610, 70);
-            b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getBadgeTypeText()), textBoundingBox, nameFont(), fgColor);
+            b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getBadgeTypeText()), textBoundingBox, getBadgeFont(), fgColor);
         }
     }
 
@@ -88,18 +90,36 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
             String badgeNumber2 = badgeNumber.substring(3);
             Rectangle badgeNumberBounds1 = new Rectangle(85, 460, 90, 35);
             Rectangle badgeNumberBounds2 = new Rectangle(85, 480, 90, 45);
-            b.drawStretchedCenteredString(badgeNumber1, badgeNumberBounds1, nameFont(), fgColor);
-            b.drawStretchedCenteredString(badgeNumber2, badgeNumberBounds2, nameFont(), fgColor);
+            b.drawStretchedCenteredString(badgeNumber1, badgeNumberBounds1, getBadgeFont(), fgColor);
+            b.drawStretchedCenteredString(badgeNumber2, badgeNumberBounds2, getBadgeFont(), fgColor);
         } else {
             Rectangle badgeNumberBounds = new Rectangle(85, 460, 90, 90);
-            b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, nameFont(), fgColor);
+            b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, getBadgeFont(), fgColor);
         }
     }
 
 
-    private static Font nameFont() {
-        Font f = new Font("Dialog", Font.BOLD, 36);
-        return f;
+    /**
+     * Fallback font and font for fan name. Returns a font family to include as
+     * many foreign/weird characters as possible
+     */
+    private static Font getNameFont() {
+        if (nameFont == null) {
+            nameFont = new Font("Dialog", Font.BOLD, 36);
+        }
+        return nameFont;
+    }
+
+    private static Font getBadgeFont() {
+        if (badgeFont == null) {
+            Path fontPath = Paths.get(badgeResourcePath, "/Bitstream - BankGothic Md BT Medium.ttf");
+            try (InputStream stream = new FileInputStream(fontPath.toFile())) {
+                badgeFont = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(36f);
+            } catch (FontFormatException | IOException e) {
+                badgeFont = getNameFont();
+            }
+        }
+        return badgeFont;
     }
 
     private static void save(BufferedImage image, String filename) {
