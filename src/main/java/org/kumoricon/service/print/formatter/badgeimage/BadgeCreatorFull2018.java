@@ -49,7 +49,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
     private void drawName(BadgeImage b, AttendeeBadgeDTO attendee) {
         // If Fan Name is null, draw the full name in that spot instead in drawFanName()
         String fanName = attendee.getFanName();
-        if (fanName != null) {
+        if (fanName != null && !attendee.getFanName().trim().equals("")) {
             Rectangle nameBg = new Rectangle(70, 340, 360, 40);
             b.drawStretchedCenteredString(attendee.getFirstName() + " " + attendee.getLastName(), nameBg, getNameFont(), Color.BLACK);
         }
