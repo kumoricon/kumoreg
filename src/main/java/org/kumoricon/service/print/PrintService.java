@@ -21,6 +21,8 @@ public abstract class PrintService {
     static final Logger log = LoggerFactory.getLogger(PrintService.class);
     @Value("${kumoreg.printing.enablePrintingFromServer}")
     protected Boolean enablePrintingFromServer;
+    @Value("${kumoreg.printing.reportPrinter}")
+    private String reportPrinter;
     @Autowired
     ComputerService computerService;
 
@@ -32,17 +34,38 @@ public abstract class PrintService {
      * @param printerName Destination printer name (case insensitive)
      * @param duplex Print the job double-sided
      */
-    void printDocument(InputStream inputStream, String printerName, boolean duplex) throws PrintException {
-        javax.print.PrintService printService = findPrinter(printerName);
+    void printDocument(InputStream inputStream, String printerName, boolean duplex, boolean isReport) throws PrintException {
+        javax.print.PrintService printService;
+        DocPrintJob job;
 
         DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
-        DocPrintJob job = printService.createPrintJob();
         PrintRequestAttributeSet printRequestSet = new HashPrintRequestAttributeSet();
         if (duplex) {
             printRequestSet.add(Sides.DUPLEX);
         }
 
         Doc doc = new SimpleDoc(inputStream, flavor, null);
+
+        if (isReport == true) {
+            if (reportPrinter != null && !reportPrinter.equals("")) {
+                try {
+                    printService = findPrinter(reportPrinter);
+                    job = printService.createPrintJob();
+                }
+                catch (Exception ex) {
+                    printService = findPrinter(printerName);
+                    job = printService.createPrintJob();
+                }
+            }
+            else {
+                printService = findPrinter(printerName);
+                job = printService.createPrintJob();
+            }
+        }
+        else {
+            printService = findPrinter(printerName);
+            job = printService.createPrintJob();
+        }
         job.print(doc, printRequestSet);
     }
 
