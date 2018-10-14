@@ -4,7 +4,7 @@ To install a single instance of KumoReg, skip to Manual Installation below.
 
 ## Automatic installation via script
 Scripts to install a production and training instance of KumoReg and all its requirements 
-on a fresh Ubuntu 16.04 server. X-Y-Z is the version number.
+on a fresh Ubuntu 18.04 server. X-Y-Z is the version number.
 
 **This will install Java, CUPS, MariaDB and overwrite the default configurations.**
 

@@ -290,9 +290,9 @@ public class LoadBaseDataPresenter {
         badgeRepository.save(weekend);
 
         String[][] badgeList = {
-                {"Friday", "#000000", "50", "50", "30"},
-                {"Saturday", "#000000", "50", "50", "30"},
-                {"Sunday", "#000000", "45", "45", "20"}};
+                {"Friday", "#81f983", "50", "50", "30"},
+                {"Saturday", "#c897fc", "50", "50", "30"},
+                {"Sunday", "#fcc697;", "45", "45", "20"}};
         for (String[] currentBadge : badgeList) {
             log.info("Creating badge {}", currentBadge[0]);
             Badge badge = BadgeFactory.createBadge(currentBadge[0], BadgeType.ATTENDEE,

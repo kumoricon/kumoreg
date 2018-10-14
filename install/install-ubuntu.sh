@@ -10,17 +10,32 @@
 #     config/application-training.properties
 #     script/database.sql
 
+# Enable Universe repository for JDK 8
+sudo add-apt-repository universe
+
 # Update packages
 apt-get -y update
-apt-get -y upgrade
+#apt-get -y upgrade
+
+echo "Sleeping 20 seconds for package processing..."
+sleep 20
+# Disable automatic updates
+rm /etc/apt/apt.conf.d/20auto-upgrades
+echo 'APT::Periodic::Update-Package-Lists "0";' > /etc/apt/apt.conf.d/20auto-upgrades
+echo 'APT::Periodic::Unattended-Upgrade "0";' >> /etc/apt/apt.conf.d/20auto-upgrades
+systemctl stop apt-daily.timer
+systemctl disable apt-daily.timer
+systemctl disable apt-daily.service
+systemctl stop apt-daily-upgrade.timer
+systemctl disable apt-daily-upgrade.timer
+systemctl disable apt-daily-upgrade.service
 
 # Install server software
-apt-get -y install openjdk-8-jdk vim
+apt-get -y install openjdk-8-jdk-headless vim
 
 # Install fonts
-# (Installing all fonts is overkill but will make sure that the necessary fonts
-# get installed)
-apt-get -y install fonts-*
+apt-get -y install fonts-dejavu* fonts-hack* fonts-takao-mincho fonts-takao unifont ttf-unifont fonts-noto ttf-wqy-zenhei ttf-wqy-microhei
+
 
 # Install cups 
 apt-get -y install cups hplip cups-bsd

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Class for creating badge images in PNG format. Contains functions to do the drawing
@@ -193,5 +194,16 @@ public class BadgeImage {
                     letterBoundingBoxHeight);
             drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor);
         }
+    }
+
+    static String buildTitleString(String input) {
+        if (input == null) return "";
+        char[] characters = input.toUpperCase().toCharArray();
+        StringBuilder output = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            output.append(characters[i]);
+            if (i < characters.length-1) output.append(" ");
+        }
+        return output.toString();
     }
 }

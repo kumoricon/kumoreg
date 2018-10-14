@@ -1,6 +1,8 @@
 package org.kumoricon.service.print.formatter.badgeimage;
 
 
+import org.w3c.dom.css.Rect;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -38,14 +40,15 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
         Rectangle ageBackground = new Rectangle(60, 457, 630, 80);
         b.fillRect(ageBackground, bgColor);
 
-        b.drawStretchedCenteredString(attendee.getAgeStripeText(), ageBackground, nameFont(), fgColor);
+        Rectangle ageTextBoundingBox = new Rectangle(70, 450, 610, 80);
+        b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getAgeStripeText()), ageTextBoundingBox, nameFont(), fgColor);
     }
 
     private void drawName(BadgeImage b, AttendeeBadgeDTO attendee) {
         // If Fan Name is null, draw the full name in that spot instead in drawFanName()
         String fanName = attendee.getFanName();
         if (fanName != null) {
-            Rectangle nameBg = new Rectangle(65, 340, 360, 40);
+            Rectangle nameBg = new Rectangle(70, 340, 360, 40);
             b.drawStretchedCenteredString(attendee.getFirstName() + " " + attendee.getLastName(), nameBg, nameFont(), Color.BLACK);
         }
     }
@@ -54,11 +57,11 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
         String name;
         Rectangle fanNameBg;
         if (attendee.getFanName() != null && !attendee.getFanName().trim().equals("")) {
-            fanNameBg = new Rectangle(65, 275, 370, 70);
+            fanNameBg = new Rectangle(70, 275, 360, 70);
             name = attendee.getFanName();
         } else {
             // Draw regular name in the combined name and fan name spaces
-            fanNameBg = new Rectangle(65, 275, 370, 130);
+            fanNameBg = new Rectangle(70, 275, 360, 130);
             name = attendee.getFirstName() + " " + attendee.getLastName();
         }
 
@@ -72,7 +75,8 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
             Rectangle badgeType = new Rectangle(60, 70, 630, 80);
             b.fillRect(badgeType, bgColor);
 
-            b.drawStretchedCenteredString(attendee.getBadgeTypeText(), badgeType, nameFont(), fgColor);
+            Rectangle textBoundingBox = new Rectangle(80, 80, 610, 70);
+            b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getBadgeTypeText()), textBoundingBox, nameFont(), fgColor);
         }
     }
 
@@ -82,14 +86,13 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
         if (badgeNumber.length() == 8) {
             String badgeNumber1 = badgeNumber.substring(0, 3);
             String badgeNumber2 = badgeNumber.substring(3);
-            Rectangle badgeNumberBounds1 = new Rectangle(75, 463, 90, 35);
-            Rectangle badgeNumberBounds2 = new Rectangle(75, 483, 90, 45);
+            Rectangle badgeNumberBounds1 = new Rectangle(85, 460, 90, 35);
+            Rectangle badgeNumberBounds2 = new Rectangle(85, 480, 90, 45);
             b.drawStretchedCenteredString(badgeNumber1, badgeNumberBounds1, nameFont(), fgColor);
             b.drawStretchedCenteredString(badgeNumber2, badgeNumberBounds2, nameFont(), fgColor);
         } else {
-            Rectangle badgeNumberBounds = new Rectangle(75, 464, 90, 90);
+            Rectangle badgeNumberBounds = new Rectangle(85, 460, 90, 90);
             b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, nameFont(), fgColor);
-
         }
     }
 
