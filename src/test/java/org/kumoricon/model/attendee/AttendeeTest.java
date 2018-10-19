@@ -6,6 +6,7 @@ import org.kumoricon.model.user.User;
 import org.kumoricon.model.user.UserFactory;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -22,14 +23,14 @@ public class AttendeeTest {
 
     @Test
     public void isMinorChild() {
-        LocalDate birthDate = LocalDate.now().minusYears(5);
+        LocalDate birthDate = LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(5);
         attendee.setBirthDate(birthDate);
         assertTrue("Child attendee is minor", attendee.isMinor());
     }
 
     @Test
     public void isMinorAdult() {
-        LocalDate birthDate = LocalDate.now().minusYears(18);
+        LocalDate birthDate = LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(18);
         attendee.setBirthDate(birthDate);
         assertFalse("Adult attendee is not minor", attendee.isMinor());
     }
@@ -43,14 +44,14 @@ public class AttendeeTest {
 
     @Test
     public void getAge() {
-        LocalDate birthDate = LocalDate.now().minusYears(18);
+        LocalDate birthDate = LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(18);
         attendee.setBirthDate(birthDate);
         assertEquals("Age calculated correctly", (Long) 18L, attendee.getAge());
     }
 
     @Test
     public void getAgeMinor() {
-        LocalDate birthDate = LocalDate.now().minusYears(18).plusDays(1);
+        LocalDate birthDate = LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(18).plusDays(1);
         attendee.setBirthDate(birthDate);
         assertEquals("Age calculated correctly", (Long) 17L, attendee.getAge());
     }

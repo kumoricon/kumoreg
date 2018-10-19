@@ -89,15 +89,7 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements O
             if (view.currentUserHasRight("attendee_edit")) {
                 attendeeValidator.validate(attendee);        // Only validate fields if the user actually has the ability to edit them
             }
-            String historyMessage;
-            if (overrideUser != null) {
-                historyMessage = String.format("Badge reprinted with override by %s", overrideUser);
-            } else {
-                historyMessage = "Badge reprinted";
-            }
-            attendee.addHistoryEntry(view.getCurrentUser(), historyMessage);
-            attendee = attendeeRepository.save(attendee);
-            log.info("{} saved {}", view.getCurrentUsername(), attendee);
+            log.info("{} saved {} before reprinting badge", view.getCurrentUsername(), attendee);
         } catch (ValidationException e) {
             view.notifyError(e.getMessage());
             log.error("{} tried to save {} and got error {}", view.getCurrentUsername(), attendee, e.getMessage());

@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Class for creating badge images in PNG format. Contains functions to do the drawing
@@ -34,6 +33,9 @@ public class BadgeImage {
         }
         image = background;
         g2 = image.createGraphics();
+        g2.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
 
     /**
@@ -84,7 +86,6 @@ public class BadgeImage {
         // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
         int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
         g2.setFont(font);
-
         drawTextOutline(text, color, x, y);
 
         g2.setColor(color);
@@ -93,14 +94,14 @@ public class BadgeImage {
 
     void drawTextOutline(String text, Color color, int x, int y) {
         g2.setColor(getInverseColor(color));
-        g2.drawString(text, x-2, y);
-        g2.drawString(text, x+2, y);
-        g2.drawString(text, x, y-2);
-        g2.drawString(text, x, y+2);
-        g2.drawString(text, x-2, y-2);
-        g2.drawString(text, x-2, y+2);
-        g2.drawString(text, x+2, y-2);
-        g2.drawString(text, x+2, y+2);
+        g2.drawString(text, x-1, y);
+        g2.drawString(text, x+1, y);
+        g2.drawString(text, x, y-1);
+        g2.drawString(text, x, y+1);
+        g2.drawString(text, x-1, y-1);
+        g2.drawString(text, x-1, y+1);
+        g2.drawString(text, x+1, y-1);
+        g2.drawString(text, x+1, y+1);
     }
 
     void drawLeftAlignedString(String text, Rectangle rect, Font font, Color color) {
@@ -193,6 +194,28 @@ public class BadgeImage {
                     ageBackground.width,
                     letterBoundingBoxHeight);
             drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor);
+        }
+    }
+
+    void drawCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor) {
+
+        // Find initial line height
+        int lineHeight = (int) (boundingBox.getHeight() / text.length);
+
+        Rectangle lineBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, lineHeight);
+        Font sizedFont = scaleFont(text[0], lineBounds, font);
+
+
+        // Find the smallest font needed for each line and use it for all lines
+        for (int i = 1; i < text.length; i++) {
+            Font tmpFont = scaleFont(text[i], lineBounds, font);
+            if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
+        }
+        lineHeight = sizedFont.getSize();   // Make line height close to actual line size with padding
+
+        for (int i = 0; i < text.length; i++) {
+            Rectangle lineBoundingBox = new Rectangle(boundingBox.x, boundingBox.y + (i*lineHeight), boundingBox.width, lineHeight);
+            drawCenteredString(text[i], lineBoundingBox, sizedFont, fgColor);
         }
     }
 

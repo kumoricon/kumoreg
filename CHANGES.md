@@ -1,6 +1,18 @@
 Change Log
 ----------------
-- Version 4.0.0 (pending)
+- Version 4.0.3 (Pending)
+
+- Version 4.0.3 (10/24/2018)
+    - Added notes to check in screen
+
+- Version 4.0.2 (10/22/2018)
+    - Fixed times being misreported in reports (hardcoded to GMT-7 for now)
+
+- Version 4.0.1 (10/22/2018)
+    - Badge tweaks
+    - Install script now waits if package manager is busy
+
+- Version 4.0.0 (10/21/2018)
     - Fixed bug where you couldn't add attendees to an at con order with a zero-cost attendee
     - Fixed bug where completing a zero-cost order wouldn't navigate to print badge screen
     - Fixed bug where birthdays on 12/31 would show up in the wrong year on check in screen
@@ -12,6 +24,8 @@ Change Log
     - Removed padding on Attendee detail form so it will fit better on 1366x768 screens (actual browser size: 1366x662)
     - Added printer override for reports. Reports can be sent to a designated printer instead of the
       one assigned to a computer. This is most useful for till reports.
+    - Fixed bug where Till Session Admin page wouldn't show sessions if there was a session with no end time
+    - Track override user in notes when reprinting badge
 
 - Version 3.0.7 (7/26/2018)
     - Added Edit button on check in views

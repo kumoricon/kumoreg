@@ -6,6 +6,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -44,7 +45,7 @@ public abstract class CheckInView extends BaseGridView implements View {
 
         attendeeInfo.setEnabled(false);
         attendeeInfo.setWidth("500px");
-        attendeeInfo.setHeight("300px");
+        attendeeInfo.setHeight("500px");
 
         addComponent(attendeeInfo, 1, 0, 1, 2);
         addComponent(informationVerified, 2, 0);
@@ -129,6 +130,14 @@ public abstract class CheckInView extends BaseGridView implements View {
 
         if (attendeeIsIncomplete(attendee)) {
             sb.append("\n** MISSING EMERGENCY CONTACT OR BIRTHDATE **");
+        }
+
+        sb.append("\nNotes:\n");
+        for (AttendeeHistory history : attendee.getHistory()) {
+            if (history.getUser() != null && history.getUser().getUsername() != null) {
+                sb.append(history.getUser().getUsername() + ":  ");
+            }
+            sb.append(history.getMessage() + "\n");
         }
 
         return sb.toString();

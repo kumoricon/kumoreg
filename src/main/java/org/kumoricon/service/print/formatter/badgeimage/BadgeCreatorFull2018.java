@@ -39,7 +39,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
     private static void drawAgeColorStripe(BadgeImage b, AttendeeBadgeDTO attendee) {
         Color bgColor = Color.decode(attendee.getAgeStripeBackgroundColor());
         Color fgColor = getForegroundColor(attendee.getAgeStripeBackgroundColor());
-        Rectangle ageBackground = new Rectangle(60, 457, 630, 80);
+        Rectangle ageBackground = new Rectangle(60, 455, 630, 80);
         b.fillRect(ageBackground, bgColor);
 
         Rectangle ageTextBoundingBox = new Rectangle(70, 450, 610, 80);
@@ -49,7 +49,7 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
     private void drawName(BadgeImage b, AttendeeBadgeDTO attendee) {
         // If Fan Name is null, draw the full name in that spot instead in drawFanName()
         String fanName = attendee.getFanName();
-        if (fanName != null) {
+        if (fanName != null && !attendee.getFanName().trim().equals("")) {
             Rectangle nameBg = new Rectangle(70, 340, 360, 40);
             b.drawStretchedCenteredString(attendee.getFirstName() + " " + attendee.getLastName(), nameBg, getNameFont(), Color.BLACK);
         }
@@ -85,15 +85,12 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
     private static void drawBadgeNumber(BadgeImage b, AttendeeBadgeDTO attendee) {
         String badgeNumber = attendee.getBadgeNumber();
         Color fgColor = getForegroundColor(attendee.getAgeStripeBackgroundColor());
+        Rectangle badgeNumberBounds = new Rectangle(85, 465, 100, 80);
+
         if (badgeNumber.length() == 8) {
-            String badgeNumber1 = badgeNumber.substring(0, 3);
-            String badgeNumber2 = badgeNumber.substring(3);
-            Rectangle badgeNumberBounds1 = new Rectangle(85, 460, 90, 35);
-            Rectangle badgeNumberBounds2 = new Rectangle(85, 480, 90, 45);
-            b.drawStretchedCenteredString(badgeNumber1, badgeNumberBounds1, getBadgeFont(), fgColor);
-            b.drawStretchedCenteredString(badgeNumber2, badgeNumberBounds2, getBadgeFont(), fgColor);
+            String[] lines = {badgeNumber.substring(0, 3), badgeNumber.substring(3)};
+            b.drawCenteredStrings(lines, badgeNumberBounds, getBadgeFont(), fgColor);
         } else {
-            Rectangle badgeNumberBounds = new Rectangle(85, 460, 90, 90);
             b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, getBadgeFont(), fgColor);
         }
     }

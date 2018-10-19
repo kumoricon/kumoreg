@@ -10,15 +10,16 @@
 #     config/application-training.properties
 #     script/database.sql
 
+SERVER_PACKAGES="openjdk-8-jdk-headless vim"
+FONT_PACKAGES="fonts-dejavu* fonts-hack* fonts-takao-mincho fonts-takao unifont ttf-unifont fonts-noto ttf-wqy-zenhei ttf-wqy-microhei"
+CUPS_PACKAGES="cups hplip cups-bsd"
+DATABASE_PACKAGES="mariadb-server"
 # Enable Universe repository for JDK 8
 sudo add-apt-repository universe
 
 # Update packages
 apt-get -y update
-#apt-get -y upgrade
 
-echo "Sleeping 20 seconds for package processing..."
-sleep 20
 # Disable automatic updates
 rm /etc/apt/apt.conf.d/20auto-upgrades
 echo 'APT::Periodic::Update-Package-Lists "0";' > /etc/apt/apt.conf.d/20auto-upgrades
@@ -30,15 +31,20 @@ systemctl stop apt-daily-upgrade.timer
 systemctl disable apt-daily-upgrade.timer
 systemctl disable apt-daily-upgrade.service
 
-# Install server software
-apt-get -y install openjdk-8-jdk-headless vim
 
-# Install fonts
-apt-get -y install fonts-dejavu* fonts-hack* fonts-takao-mincho fonts-takao unifont ttf-unifont fonts-noto ttf-wqy-zenhei ttf-wqy-microhei
+# Wait for package managers to finish
+while fuser /var/lib/dpkg/lock >/dev/null 2>&1 ; do
+    echo -en "\rWaiting for other software managers to finish..."
+    sleep 0.5
+    ((i=i+1))
+done
+
+# Install software
+apt-get -y install ${SERVER_PACKAGES} ${FONT_PACKAGES} ${CUPS_PACKAGES} ${DATABASE_PACKAGES}
 
 
-# Install cups 
-apt-get -y install cups hplip cups-bsd
+# Configure CUPS
+paperconfig -p statement
 systemctl stop cups
 mv -n /etc/cups/cupsd.conf /etc/cups/cupsd.conf.orig
 mv config/cupsd.conf /etc/cups/
@@ -49,9 +55,7 @@ systemctl start cups
 systemctl enable cups-browsed
 systemctl start cups-browsed
 
-# Install mariadb
-apt-get -y install mariadb-server
-
+# Configure MySQL/MariaDB
 # Edit script/database.sql and change "password" to actual db password
 echo "Creating databases"
 mysql < script/database.sql

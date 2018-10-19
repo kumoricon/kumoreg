@@ -2,6 +2,8 @@ package org.kumoricon.site.attendee;
 
 import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
+import org.kumoricon.model.user.User;
+import org.kumoricon.model.user.UserRepository;
 import org.kumoricon.service.print.BadgePrintService;
 import org.kumoricon.service.print.formatter.BadgePrintFormatter;
 import org.kumoricon.site.BaseView;
@@ -20,6 +22,9 @@ public class BadgePrintingPresenter {
 
     @Autowired
     protected BadgePrintService badgePrintService;
+
+    @Autowired
+    protected UserRepository userRepository;
 
     /**
      * Print badges for the given attendees and display any error or result messages
@@ -54,4 +59,7 @@ public class BadgePrintingPresenter {
         return badgePrintService.getCurrentBadgeFormatter(attendees, view.getCurrentClientIPAddress());
     }
 
+    public User findUser(String username) {
+        return userRepository.findOneByUsernameIgnoreCase(username);
+    }
 }

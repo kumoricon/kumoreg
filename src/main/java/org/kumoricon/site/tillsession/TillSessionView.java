@@ -50,7 +50,12 @@ public class TillSessionView extends BaseView implements View {
                 .setRenderer(zonedDT-> zonedDT.atZone(PACIFIC).toLocalDateTime(), new LocalDateTimeRenderer());
         sessionTable.addColumn(Session::getEnd)
                 .setCaption("End Time")
-                .setRenderer(zonedDT-> zonedDT.atZone(PACIFIC).toLocalDateTime(), new LocalDateTimeRenderer());
+                .setRenderer(zonedDT-> {
+                    if (zonedDT != null) {
+                        return zonedDT.atZone(PACIFIC).toLocalDateTime();
+                    }
+                    return null;
+                }, new LocalDateTimeRenderer());
         sessionTable.addColumn(Session::isOpen).setCaption("Open").setWidth(75);
         sessionTable.addColumn(session -> "Close",
                 new ButtonRenderer(clickEvent -> {

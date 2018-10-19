@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -35,7 +36,7 @@ public class BaseTSVExportTest {
 
     @Test
     public void formatLocalDate() {
-        LocalDate date = LocalDate.now();
+        LocalDate date = LocalDate.now(ZoneId.of("America/Los_Angeles"));
         assertEquals(date.toString() + "\t", BaseTSVExport.format(date));
         assertEquals("\t", BaseTSVExport.format((LocalDate)null));
     }

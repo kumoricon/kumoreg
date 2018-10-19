@@ -14,6 +14,7 @@ import javax.imageio.IIOException;
 import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 public class StaffBadge2017 extends FormatterBase  {
@@ -30,7 +31,7 @@ public class StaffBadge2017 extends FormatterBase  {
         bankGothic = BadgeLib.loadFont(document);
         frontBackground = BadgeLib.loadBackground("2017_staff_badge_front.pdf");
         backBackground = BadgeLib.loadBackground("2017_staff_badge_back.pdf");
-        this.currentDateForAgeCalculation = LocalDate.now();
+        this.currentDateForAgeCalculation = LocalDate.now(ZoneId.of("America/Los_Angeles"));
     }
 
     public StaffBadge2017(PDDocument document, LocalDate currentDateForAgeCalculation) {

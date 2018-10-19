@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.print.PrintException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -68,7 +69,7 @@ public class BadgePrintService extends PrintService {
      * @throws PrintException Printer Error
      */
     public String printBadgesForAttendees(List<Attendee> attendees, String clientIPAddress) throws PrintException {
-        return printBadgesForAttendees(attendees, clientIPAddress, 0, 0, LocalDate.now());
+        return printBadgesForAttendees(attendees, clientIPAddress, 0, 0, LocalDate.now(ZoneId.of("America/Los_Angeles")));
     }
 
     /**
@@ -77,7 +78,7 @@ public class BadgePrintService extends PrintService {
      * @return BadgePrintFormatter
      */
     public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees) {
-        return getCurrentBadgeFormatter(attendees, 0, 0, LocalDate.now());
+        return getCurrentBadgeFormatter(attendees, 0, 0, LocalDate.now(ZoneId.of("America/Los_Angeles")));
     }
 
     /**
@@ -88,7 +89,7 @@ public class BadgePrintService extends PrintService {
      */
     public BadgePrintFormatter getCurrentBadgeFormatter(List<Attendee> attendees, String ipAddress) {
         Computer client = computerService.findComputerByIP(ipAddress);
-        return getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset(), LocalDate.now());
+        return getCurrentBadgeFormatter(attendees, client.getxOffset(), client.getyOffset(), LocalDate.now(ZoneId.of("America/Los_Angeles")));
     }
 
     /**
