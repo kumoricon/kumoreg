@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 4.0.0 (pending)
+- Version 4.0.1 (Pending)
+
+- Version 4.0.0 (10/21/2018)
     - Fixed bug where you couldn't add attendees to an at con order with a zero-cost attendee
     - Fixed bug where completing a zero-cost order wouldn't navigate to print badge screen
     - Fixed bug where birthdays on 12/31 would show up in the wrong year on check in screen
