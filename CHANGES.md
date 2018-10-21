@@ -1,6 +1,8 @@
 Change Log
 ----------------
 - Version 4.0.1 (Pending)
+    - Badge tweaks
+    - Install script now waits if package manager is busy
 
 - Version 4.0.0 (10/21/2018)
     - Fixed bug where you couldn't add attendees to an at con order with a zero-cost attendee

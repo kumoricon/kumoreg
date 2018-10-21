@@ -85,15 +85,12 @@ public class BadgeCreatorFull2018 implements BadgeCreator {
     private static void drawBadgeNumber(BadgeImage b, AttendeeBadgeDTO attendee) {
         String badgeNumber = attendee.getBadgeNumber();
         Color fgColor = getForegroundColor(attendee.getAgeStripeBackgroundColor());
+        Rectangle badgeNumberBounds = new Rectangle(85, 470, 100, 80);
+
         if (badgeNumber.length() == 8) {
-            String badgeNumber1 = badgeNumber.substring(0, 3);
-            String badgeNumber2 = badgeNumber.substring(3);
-            Rectangle badgeNumberBounds1 = new Rectangle(85, 460, 90, 35);
-            Rectangle badgeNumberBounds2 = new Rectangle(85, 480, 90, 45);
-            b.drawStretchedCenteredString(badgeNumber1, badgeNumberBounds1, getBadgeFont(), fgColor);
-            b.drawStretchedCenteredString(badgeNumber2, badgeNumberBounds2, getBadgeFont(), fgColor);
+            String[] lines = {badgeNumber.substring(0, 3), badgeNumber.substring(3)};
+            b.drawCenteredStrings(lines, badgeNumberBounds, getBadgeFont(), fgColor);
         } else {
-            Rectangle badgeNumberBounds = new Rectangle(85, 460, 90, 90);
             b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, getBadgeFont(), fgColor);
         }
     }
