@@ -2,6 +2,7 @@ package org.kumoricon.site.attendee.search;
 
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeRepository;
+import org.kumoricon.model.user.User;
 import org.kumoricon.site.attendee.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,17 @@ public class PrintBadgePresenter extends BadgePrintingPresenter {
         }
     }
 
+    public void showAttendeeWithoutPrinting(PrintBadgeView view, int id) {
+        Attendee attendee = attendeeRepository.findOne(id);
+        if (attendee != null) {
+            log.info("{} displayed Attendee {}", view.getCurrentUsername(), attendee);
+            view.showAttendee(attendee);
+        } else {
+            log.error("{} tried to display Attendee id {} and it was not found", view.getCurrentUsername(), id);
+            view.notify("Error: attendee " + id + " not found.");
+        }
+    }
+
     public void badgePrintSuccess(PrintBadgeView view, List<Attendee> attendees) {
         log.info("{} reported badge(s) printed successfully for {}",
                 view.getCurrentUser(), attendees);
@@ -50,6 +62,23 @@ public class PrintBadgePresenter extends BadgePrintingPresenter {
         } else {
             view.notify("No attendees selected");
         }
+    }
+
+    public void reprintLostBadge(PrintBadgeView view, Integer attendeeId, User overrideUser) {
+        Attendee attendee = attendeeRepository.findOne(attendeeId);
+        if (attendee == null) {
+            log.error("{} tried to reprint badge for attendee {} but they weren't found", view.getCurrentUser(), attendeeId);
+            return;
+        }
+        String historyMessage;
+        if (overrideUser != null) {
+            historyMessage = String.format("Badge reprinted with override by %s", overrideUser);
+        } else {
+            historyMessage = "Badge reprinted";
+        }
+        attendee.addHistoryEntry(view.getCurrentUser(), historyMessage);
+        attendee = attendeeRepository.save(attendee);
+        printBadges(view, Arrays.asList(attendee));
     }
 
     public void reprintBadge(PrintBadgeView view, Integer attendeeId) {

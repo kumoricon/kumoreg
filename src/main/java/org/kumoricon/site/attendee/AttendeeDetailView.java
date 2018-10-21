@@ -100,12 +100,6 @@ public abstract class AttendeeDetailView extends BaseView implements View, Atten
 
     }
 
-    public void showOverrideRequiredWindow(AttendeeSearchPresenter presenter, List<Attendee> attendeeList)
-    {
-        OverrideRequiredWindow overrideRequiredWindow = new OverrideRequiredWindow(presenter, "reprint_badge", attendeeList);
-        showWindow(overrideRequiredWindow);
-    }
-
     public void showOverrideEditWindow(AttendeeSearchPresenter presenter, AttendeeDetailView attendeeDetailWindow) {
         OverrideRequiredForEditWindow window = new OverrideRequiredForEditWindow(presenter, "attendee_edit", attendeeDetailWindow);
         showWindow(window);

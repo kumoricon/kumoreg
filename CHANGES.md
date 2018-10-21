@@ -13,6 +13,7 @@ Change Log
     - Added printer override for reports. Reports can be sent to a designated printer instead of the
       one assigned to a computer. This is most useful for till reports.
     - Fixed bug where Till Session Admin page wouldn't show sessions if there was a session with no end time
+    - Track override user in notes when reprinting badge
 
 - Version 3.0.7 (7/26/2018)
     - Added Edit button on check in views

@@ -13,7 +13,7 @@ import java.util.Map;
 @ViewScope
 @SpringView(name = AttendeeSearchByBadgeNoteView.TEMPLATE)
 public class AttendeeSearchByBadgeNoteView extends NoteView implements View {
-    public static final String VIEW_NAME = "attendeeSearch";
+    public static final String VIEW_NAME = "attendeeSearchByBadge";
     public static final String REQUIRED_RIGHT = "attendee_search";
 
     public static final String TEMPLATE = "attendeeSearchByBadge/{badgeType}/{attendeeId}/note/{noteId}";
