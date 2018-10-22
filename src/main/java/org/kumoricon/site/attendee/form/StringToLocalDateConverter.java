@@ -5,6 +5,7 @@ import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -17,7 +18,7 @@ public class StringToLocalDateConverter implements Converter<String, LocalDate> 
     private static final DateTimeFormatter TWO_DIGIT_YEAR =
             new DateTimeFormatterBuilder()
             .appendPattern("MMdd")
-            .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now().minusYears(99))
+            .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(99))
             .toFormatter();
 
     private final String message;

@@ -28,7 +28,7 @@ public class AttendeeDetailForm extends GridLayout {
     private static final DateTimeFormatter TWO_DIGIT_YEAR =
             new DateTimeFormatterBuilder()
                     .appendPattern("MMdd")
-                    .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now().minusYears(99))
+                    .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(99))
                     .toFormatter();
 
     private TextField firstName = createNameField("First Name*", 1);

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 /**
  * Validates an attendee object. Can be configured with options set in the configuration file.
@@ -36,7 +37,7 @@ public class AttendeeValidator extends Validator {
         if (a.getBirthDate() == null || a.getBirthDate().isBefore(LocalDate.of(1900, 1, 1))) {
             throw new ValidationException("Birth date may not be before 1/1/1900");
         }
-        if (a.getBirthDate() == null || a.getBirthDate().isAfter(LocalDate.now())) {
+        if (a.getBirthDate() == null || a.getBirthDate().isAfter(LocalDate.now(ZoneId.of("America/Los_Angeles")))) {
             throw new ValidationException("Birth date may not be after today");
         }
         if (isNullOrEmpty(a.getEmergencyContactFullName())) {

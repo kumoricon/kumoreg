@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -36,7 +37,7 @@ public class AttendeeFactory {
         attendee.setCheckedIn(true);
         attendee.setEmergencyContactFullName("Mom");
         attendee.setEmergencyContactPhone("321-321-4321");
-        attendee.setBirthDate(LocalDate.now().minusYears(30L));
+        attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(30L));
         attendee.setPaid(true);
         attendee.setStaffDepartment("Membership");
         List<String> positions = new ArrayList<>();
@@ -56,7 +57,7 @@ public class AttendeeFactory {
         attendee.setFirstName("Firstname");
         attendee.setFanName("Fan Name - Youth");
         attendee.setBadgeNumber("TST12341");
-        attendee.setBirthDate(LocalDate.now().minusYears(13L));
+        attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(13L));
         attendee.setParentFullName(attendee.getEmergencyContactFullName());
         attendee.setParentPhone(attendee.getEmergencyContactPhone());
         attendee.setParentIsEmergencyContact(true);
@@ -73,7 +74,7 @@ public class AttendeeFactory {
         Attendee attendee = generateDemoAttendee(badge);
         attendee.setFirstName("Firstname");
         attendee.setFanName("Fan Name - Child");
-        attendee.setBirthDate(LocalDate.now().minusYears(7L));
+        attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(7L));
         attendee.setBadgeNumber("TST12342");
         try {
             attendee.setPaidAmount(attendee.getBadge().getCostForAge(attendee.getAge()));

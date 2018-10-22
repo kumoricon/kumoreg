@@ -7,6 +7,7 @@ import org.kumoricon.model.badge.Badge;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import static org.junit.Assert.assertTrue;
 
@@ -100,7 +101,7 @@ public class AttendeeValidatorTest {
 
     @Test(expected = ValidationException.class)
     public void birthdateAfterToday() throws Exception {
-        attendee.setBirthDate(LocalDate.now().plusDays(1L));
+        attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).plusDays(1L));
         validator.validate(attendee);
     }
 
@@ -108,7 +109,7 @@ public class AttendeeValidatorTest {
     public void minorMissingParentContact() throws Exception {
         attendee.setParentFullName(null);
         attendee.setParentPhone("123-123-1234");
-        attendee.setBirthDate(LocalDate.now().minusYears(6L));
+        attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(6L));
         validator.validate(attendee);
     }
 
@@ -116,7 +117,7 @@ public class AttendeeValidatorTest {
     public void minorMissingParentPhone() throws Exception {
         attendee.setParentFullName("Mom");
         attendee.setParentPhone(null);
-        attendee.setBirthDate(LocalDate.now().minusYears(6L));
+        attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(6L));
         validator.validate(attendee);
     }
 
@@ -124,7 +125,7 @@ public class AttendeeValidatorTest {
     public void minorHasParentContact() throws Exception {
         attendee.setParentFullName("Mom");
         attendee.setParentPhone("123-123-1234");
-        attendee.setBirthDate(LocalDate.now().minusYears(6L));
+        attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(6L));
         attendee.setParentFormReceived(true);
         validator.validate(attendee);
     }
@@ -163,7 +164,7 @@ public class AttendeeValidatorTest {
         attendee.setCheckedIn(true);
         attendee.setEmergencyContactFullName("Mom");
         attendee.setEmergencyContactPhone("321-321-4321");
-        attendee.setBirthDate(LocalDate.now().minusYears(30L));
+        attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(30L));
         attendee.setPaid(true);
         attendee.setPaidAmount(new BigDecimal(45));
         attendee.setBadge(new Badge("Test"));

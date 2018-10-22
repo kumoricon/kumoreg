@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @SpringView(name = PreprintBadgeView.VIEW_NAME)
@@ -61,7 +62,7 @@ public class PreprintBadgeView extends BaseGridView implements View {
 
         ageAsOfDate = new DateField("Calculate age as of");
         ageAsOfDate.setDateFormat("MM/dd/yyyy");
-        ageAsOfDate.setValue(LocalDate.now());
+        ageAsOfDate.setValue(LocalDate.now(ZoneId.of("America/Los_Angeles")));
         addComponent(ageAsOfDate, 2, 4);
 
         Label notes = new Label("Warning: all attendees in the system with the selected badge type will " +
@@ -111,7 +112,7 @@ public class PreprintBadgeView extends BaseGridView implements View {
     }
 
     public LocalDate getDateForAgeCalculation() {
-        if (ageAsOfDate.getValue() == null) { return LocalDate.now(); }
+        if (ageAsOfDate.getValue() == null) { return LocalDate.now(ZoneId.of("America/Los_Angeles")); }
         return ageAsOfDate.getValue();
     }
 

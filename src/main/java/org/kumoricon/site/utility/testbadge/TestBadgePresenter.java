@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.print.PrintException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class TestBadgePresenter {
 
 
     public BadgePrintFormatter getBadgeFormatter(TestBadgeView view, List<Attendee> attendees) {
-        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset(), LocalDate.now());
+        return badgePrintService.getCurrentBadgeFormatter(attendees, view.getXOffset(), view.getYOffset(), LocalDate.now(ZoneId.of("America/Los_Angeles")));
     }
 
     /**
@@ -67,7 +68,7 @@ public class TestBadgePresenter {
     private void printBadges(TestBadgeView view, List<Attendee> attendeeList, Integer xOffset, Integer yOffset) {
         try {
             String result = badgePrintService.printBadgesForAttendees(
-                    attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset, LocalDate.now());
+                    attendeeList, view.getCurrentClientIPAddress(), xOffset, yOffset, LocalDate.now(ZoneId.of("America/Los_Angeles")));
             view.notify(result);
         } catch (PrintException e) {
             log.error("Error printing badges for {}", view.getCurrentUsername(), e);
