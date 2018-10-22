@@ -10,6 +10,7 @@ import javax.print.*;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaSizeName;
+import javax.print.attribute.standard.OrientationRequested;
 import javax.print.attribute.standard.Sides;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -67,6 +68,7 @@ public abstract class PrintService {
             printService = findPrinter(printerName);
             job = printService.createPrintJob();
             printRequestSet.add(MediaSizeName.INVOICE);
+            printRequestSet.add(OrientationRequested.LANDSCAPE);
         }
         job.print(doc, printRequestSet);
     }
