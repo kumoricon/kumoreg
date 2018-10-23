@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 4.0.1 (Pending)
+- Version 4.0.2 (Pending)
+
+- Version 4.0.1 (10/22/2018)
     - Badge tweaks
     - Install script now waits if package manager is busy
 
