@@ -1,6 +1,9 @@
 Change Log
 ----------------
-- Version 4.0.2 (Pending)
+- Version 4.0.3 (Pending)
+
+- Version 4.0.2 (10/22/2018)
+    - Fixed times being misreported in reports (hardcoded to GMT-7 for now)
 
 - Version 4.0.1 (10/22/2018)
     - Badge tweaks
