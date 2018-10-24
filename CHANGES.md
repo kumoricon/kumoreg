@@ -2,6 +2,9 @@ Change Log
 ----------------
 - Version 4.0.3 (Pending)
 
+- Version 4.0.3 (10/24/2018)
+    - Added notes to check in screen
+
 - Version 4.0.2 (10/22/2018)
     - Fixed times being misreported in reports (hardcoded to GMT-7 for now)
 
