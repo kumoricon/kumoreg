@@ -90,14 +90,14 @@ public class SessionService {
         final User user = session.getUser();
         if (user == null) { return "User not found for session " + session; }
 
-        return "<h1>Till Report</h1>" +
-                buildTextReportUserLine(user) +
-                buildTextReportSessionLine(session) +
+        return "Till Report" + "\n" +
+                buildTextReportUserLine(user) + "\n" +
+                buildTextReportSessionLine(session) + "\n" +
                 "\n\n" +
-                buildTextTotalsForSession(session) +
+                buildTextTotalsForSession(session) + "\n" +
                 "Credit Card and Check Transactions\n" +
-                buildTextDetailsForSession(session, Payment.PaymentType.CREDIT) +
-                buildTextDetailsForSession(session, Payment.PaymentType.CHECK) +
+                buildTextDetailsForSession(session, Payment.PaymentType.CREDIT) + "\n" +
+                buildTextDetailsForSession(session, Payment.PaymentType.CHECK) + "\n" +
                 buildTextReportFooter();
     }
 
@@ -230,7 +230,7 @@ public class SessionService {
                 .append(": ");
         // Date range
         output.append(session.getStart().atZone(zoneId).format(DATE_TIME_FORMATTER));
-        output.append(" - ");
+        output.append(" -\n");
         if (session.getEnd() != null) {
             output.append(session.getEnd().atZone(zoneId).format(DATE_TIME_FORMATTER));
         } else {
