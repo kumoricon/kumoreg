@@ -27,7 +27,11 @@ public class PrintBadgePresenter extends BadgePrintingPresenter {
         Attendee attendee = attendeeRepository.findOne(id);
         if (attendee != null) {
             log.info("{} displayed Attendee {}", view.getCurrentUsername(), attendee);
-            printBadges(view, Arrays.asList(attendee));
+            if (!attendee.isBadgePrePrinted()) {
+                printBadges(view, Arrays.asList(attendee));
+            } else {
+                view.notify("Badge is preprinted, not printing");
+            }
             view.showAttendee(attendee);
         } else {
             log.error("{} tried to display Attendee id {} and it was not found", view.getCurrentUsername(), id);

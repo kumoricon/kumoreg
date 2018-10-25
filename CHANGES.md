@@ -1,6 +1,7 @@
 Change Log
 ----------------
 - Version 4.0.3 (Pending)
+    - On badge print screens, don't print on load if badge is preprinted
 
 - Version 4.0.3 (10/24/2018)
     - Added notes to check in screen
