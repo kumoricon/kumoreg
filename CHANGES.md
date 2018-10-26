@@ -1,9 +1,10 @@
 Change Log
 ----------------
-- Version 4.0.3 (Pending)
+- Version 4.0.4 (Pending)
     - On badge print screens, don't print on load if badge is preprinted
     - Fix parsing "null" on order screen
     - Block checking in an attendee if the user doesn't have the required right for that badge type
+    - Changed formatting on till report to fit on a narrower page
 
 - Version 4.0.3 (10/24/2018)
     - Added notes to check in screen
