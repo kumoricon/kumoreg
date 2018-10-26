@@ -2,6 +2,8 @@ Change Log
 ----------------
 - Version 4.0.3 (Pending)
     - On badge print screens, don't print on load if badge is preprinted
+    - Fix parsing "null" on order screen
+    - Block checking in an attendee if the user doesn't have the required right for that badge type
 
 - Version 4.0.3 (10/24/2018)
     - Added notes to check in screen

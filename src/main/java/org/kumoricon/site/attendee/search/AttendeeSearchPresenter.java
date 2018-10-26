@@ -68,11 +68,21 @@ public class AttendeeSearchPresenter extends BadgePrintingPresenter implements O
     public void showAttendee(CheckInView cView, Integer id) {
         Attendee attendee = attendeeRepository.findOne(id);
         if (attendee != null) {
+
+            if (attendee.getBadge() != null) {
+                String requiredRight = attendee.getBadge().getRequiredRight();
+                if (!cView.currentUserHasRight(requiredRight)) {
+                    log.error("{} tried to check in {} but did not have the right {}", cView.getCurrentUser(), attendee, requiredRight);
+                    cView.showErrorMessage("Error: you do not have access to check in badge type " + attendee.getBadge().getBadgeTypeText());
+                    return;
+                }
+            }
+
             cView.showAttendee(attendee);
             log.info("{} displayed Attendee {}", cView.getCurrentUsername(), attendee);
         } else {
             log.error("{} tried to display Attendee id {} and it was not found", view.getCurrentUsername(), id);
-            cView.notify("Error: attendee " + id + " not found.");
+            cView.notifyError("Error: attendee " + id + " not found.");
         }
     }
 

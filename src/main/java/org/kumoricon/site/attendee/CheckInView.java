@@ -115,6 +115,17 @@ public abstract class CheckInView extends BaseGridView implements View {
         }
     }
 
+    /**
+     * Instead of showing attendee information, show a warning message and disable all the controls.
+     * @param message Error message
+     */
+    public void showErrorMessage(String message) {
+        attendeeInfo.setValue(message);
+        parentalConsentFormReceived.setEnabled(false);
+        informationVerified.setEnabled(false);
+        btnCheckIn.setEnabled(false);
+        btnEdit.setEnabled(false);
+    }
 
     protected String dumpAttendeeToString(Attendee attendee) {
         StringBuilder sb = new StringBuilder();
