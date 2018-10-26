@@ -146,13 +146,13 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
         if (handler.attendeeHasChanged(attendee)) {
             try {
                 attendee = handler.saveAttendee(this, attendee);
-                navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
+                navigateTo(VIEW_NAME + "/" + attendee.getOrder().getId() + "/" + attendee.getId() + "/note/new");
             } catch (ValidationException ex) {
                 notifyError(ex.getMessage());
             }
         } else {
             if (attendee != null && attendee.getOrder() != null) {
-                navigateTo(VIEW_NAME + "/" + attendee.getOrder().getOrderId() + "/" + attendee.getId() + "/note/new");
+                navigateTo(VIEW_NAME + "/" + attendee.getOrder().getId() + "/" + attendee.getId() + "/note/new");
             }
         }
     }
