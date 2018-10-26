@@ -5,6 +5,8 @@ Change Log
     - Block checking in an attendee if the user doesn't have the required right for that badge type
     - Changed formatting on till report to fit on a narrower page
     - Fixed adding a note to an attendee during at-con registration
+    - Fixed checking in prereg user after searching for an attendee's full name using Chrome on Windows. 
+      Ex: searching for "John Doe" and then clicking check in would cause a java.net.URISyntaxException
 
 - Version 4.0.3 (10/24/2018)
     - Added notes to check in screen

@@ -62,7 +62,7 @@ public class SearchByNameView extends BaseGridView implements View {
         if (currentUserHasRight("pre_reg_check_in")) {
             checkInLinkColumn = tblResult.addColumn(attendee -> {
                         if (!attendee.getCheckedIn()) {
-                            return "<a href='#!" + VIEW_NAME + "/" + txtSearch.getValue() + "/" + attendee.getId() + "/checkin'>Check In</a>";
+                            return "<a href='#!" + VIEW_NAME + "/" + txtSearch.getValue().replace(" ", "%20") + "/" + attendee.getId() + "/checkin'>Check In</a>";
                         } else {
                             return "";
                         }},
