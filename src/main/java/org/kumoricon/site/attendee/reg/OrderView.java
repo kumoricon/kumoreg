@@ -96,7 +96,7 @@ public class OrderView extends BaseGridView implements View, AttendeePrintView, 
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         super.enter(viewChangeEvent);
         String parameters = viewChangeEvent.getParameters();
-        if (parameters == null || parameters.equals("")) {
+        if (parameters == null || parameters.equals("") || "null".equals(parameters)) {
             // If no parameters, create a new order and navigate to it
             handler.createNewOrder(this);
         } else {
