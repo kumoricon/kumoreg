@@ -55,33 +55,7 @@ public class Printer extends Record {
 
     public String getName() { return this.name; }
     public void setName(String name) {
-
-        // The name being assigned to the printer is an IP address
-        if (name.trim().matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-            try {
-                /* TODO validate that the IP address is reachable */
-                this.name = name;
-            }
-            catch (Exception e) {
-            }
-        }
-
-        // The name being assigned to the printer is a DNS hostname
-        else if (name.trim().matches("([a-zA-Z0-9\\.\\-_ ])*")) {
-            try {
-                /* TODO validate that the printer exists in DNS */
-                this.name = name;
-            }
-            catch (Exception e) {
-            }
-        }
-
-        // The name being assigned to the printer is not valid
-        else {
-            String errorString = "Error: Unable to validate the name that was assigned to a printer";
-            this.setStatus(errorString);
-            log.error(errorString);
-        }
+        this.name = name;
     }
 
     public String getModel() { return this.model; }

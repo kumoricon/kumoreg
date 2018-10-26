@@ -7,6 +7,7 @@ Change Log
     - Fixed adding a note to an attendee during at-con registration
     - Fixed checking in prereg user after searching for an attendee's full name using Chrome on Windows. 
       Ex: searching for "John Doe" and then clicking check in would cause a java.net.URISyntaxException
+    - Removed validating IP address format in printer names (not used any more)
 
 - Version 4.0.3 (10/24/2018)
     - Added notes to check in screen
