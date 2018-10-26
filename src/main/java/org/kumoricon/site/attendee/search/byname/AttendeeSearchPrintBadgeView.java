@@ -65,7 +65,7 @@ public class AttendeeSearchPrintBadgeView extends PrintBadgeView implements View
             navigateTo(SearchByNameView.VIEW_NAME + "/" + searchString + "/" + attendeeId);
             notifyError("Error: This attendee hasn't checked in yet");
         } else if (!attendee.getPaid()) {
-            navigateTo(OrderView.VIEW_NAME + "/" + attendee.getOrder().getOrderId());
+            navigateTo(OrderView.VIEW_NAME + "/" + attendee.getOrder().getId());
             notifyError("Error: Attendee hasn't paid yet!");
         } else {
             showBadge(attendee);
