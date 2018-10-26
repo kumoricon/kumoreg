@@ -77,7 +77,7 @@ public class AttendeeRegDetailView extends AttendeeDetailView implements View, D
         }
         form.setAvailableBadges(all);
         form.show(attendee);
-        form.hideFanNameField();
+        if (!currentUserHasRight("fan_name_at_con_checkin")) form.hideFanNameField();
         form.setManualPriceEnabled(currentUserHasRight("attendee_override_price"));
         form.focusFirstName();
 

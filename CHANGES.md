@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 4.0.4 (Pending)
+- Version 4.0.5 (pending)
+
+- Version 4.0.4 (10/25/2018)
     - On badge print screens, don't print on load if badge is preprinted
     - Block checking in an attendee if the user doesn't have the required right for that badge type
     - Changed formatting on till report to fit on a narrower page
@@ -9,6 +11,8 @@ Change Log
       Ex: searching for "John Doe" and then clicking check in would cause a java.net.URISyntaxException
     - Removed validating IP address format in printer names (not used any more)
     - Removed Staff - Specialty Badges role
+    - Added fan_name_at_con_checkin right, allowing speciality coordinators, managers and directors to set fan name 
+      during at con checkin
 
 - Version 4.0.3 (10/24/2018)
     - Added notes to check in screen

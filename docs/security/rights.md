@@ -49,7 +49,7 @@ Available rights are:
 | import_pre_reg_data           | Import pre-registered attendees and orders                      |
 | load_base_data                | Load default data (users, roles, rights)                        |
 | pre_print_badges              | Pre-generate badges for all attendees with a given badge type   |
-
+| fan_name_at_con_checkin       | Set fan name during at-con checkin                              |
 
 <a name="footnote1">1</a>: When an override is entered, the user gets all edit rights that the overriding user has in
 a single attendee edit window. For example, attendee_override_price.
