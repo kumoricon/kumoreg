@@ -158,7 +158,7 @@ public class OrderPaymentRecordView extends BaseView implements View, PaymentVie
 
     private void saveClicked() {
         try {
-            payment.setAmount(new BigDecimal(amount.getValue()));
+            payment.setAmount(new BigDecimal(amount.getValue().replaceAll("[^\\d.]", "")));
             payment.setPaymentType(paymentType.getValue());
             payment.setAuthNumber(authNumber.getValue());
             try {

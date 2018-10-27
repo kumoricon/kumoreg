@@ -100,7 +100,7 @@ public class AttendeeDetailForm extends GridLayout {
         binder.bind(badge, Attendee::getBadge, Attendee::setBadge);
         binder.bind(paidAmount,
                 attendee -> attendee.getPaidAmount().toString(),
-                (attendee, formValue) -> attendee.setPaidAmount(new BigDecimal(formValue)));
+                (attendee, formValue) -> attendee.setPaidAmount(new BigDecimal(formValue.replaceAll("[^\\d.]", ""))));
         binder.bind(compedBadge, Attendee::getCompedBadge, Attendee::setCompedBadge);
         binder.bind(checkedIn, Attendee::getCheckedIn, Attendee::setCheckedIn);
 

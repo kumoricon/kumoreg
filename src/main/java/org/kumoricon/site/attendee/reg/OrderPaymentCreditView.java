@@ -86,7 +86,7 @@ public class OrderPaymentCreditView extends BaseView implements View, PaymentVie
         save.addClickListener(c -> {
             Payment p = new Payment();
             p.setPaymentType(Payment.PaymentType.CREDIT);
-            BigDecimal amountPaid = new BigDecimal(amount.getValue());
+            BigDecimal amountPaid = new BigDecimal(amount.getValue().replaceAll("[^\\d.]", ""));
             BigDecimal amountDue = order.getTotalAmount().subtract(order.getTotalPaid());
             if (amountPaid.compareTo(amountDue) > 0) {  // If change was given, only count payment of the amount due
                 notifyError("Amount paid can not be more than the balance due");

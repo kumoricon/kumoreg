@@ -86,7 +86,7 @@ public class OrderPaymentCashView extends BaseView implements View, PaymentView 
         save.addClickListener(c -> {
             Payment p = new Payment();
             p.setPaymentType(Payment.PaymentType.CASH);
-            BigDecimal amountPaid = new BigDecimal(amount.getValue());
+            BigDecimal amountPaid = new BigDecimal(amount.getValue().replaceAll("[^\\d.]", ""));
             BigDecimal amountDue = order.getTotalAmount().subtract(order.getTotalPaid());
             if (amountPaid.compareTo(amountDue) > 0) {  // If change was given, only count payment of the amount due
                 p.setAmount(amountDue);
@@ -111,7 +111,7 @@ public class OrderPaymentCashView extends BaseView implements View, PaymentView 
 
     private void updateChange(String inputText) {
         try {
-            BigDecimal amountPaid = new BigDecimal(inputText);
+            BigDecimal amountPaid = new BigDecimal(inputText.replaceAll("[^\\d.]", ""));
             BigDecimal changeDue = amountPaid.subtract(order.getBalanceDue());
             if (changeDue.compareTo(BigDecimal.ZERO) >= 0) {
                 change.setValue(String.format("$%s", changeDue));
