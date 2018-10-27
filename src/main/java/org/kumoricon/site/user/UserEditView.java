@@ -143,4 +143,6 @@ class UserEditView extends BaseGridView implements View {
         handler.showUser(this, parameters);
     }
 
+    public String getRequiredRight() { return REQUIRED_RIGHT; }
+
 }

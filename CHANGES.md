@@ -1,6 +1,7 @@
 Change Log
 ----------------
 - Version 4.0.5 (pending)
+    - Fixed bug where non-admins couldn't edit users
 
 - Version 4.0.4 (10/25/2018)
     - On badge print screens, don't print on load if badge is preprinted
