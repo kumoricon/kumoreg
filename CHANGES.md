@@ -1,6 +1,8 @@
 Change Log
 ----------------
-- Version 4.0.5 (pending)
+- Version 4.0.6 (pending)
+
+- Version 4.0.5 (10/26/2018)
     - Fixed bug where non-admins couldn't edit users
     - Fixed errors when people would enter "$" in amount input boxes
 
