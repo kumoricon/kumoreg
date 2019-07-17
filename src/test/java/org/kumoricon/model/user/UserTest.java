@@ -1,6 +1,6 @@
 package org.kumoricon.model.user;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.kumoricon.model.role.Right;
@@ -33,12 +33,12 @@ public class UserTest {
         assertEquals("774b7441f3d230f4d8761c45c890e766b8f4b5acc8b42fc680f2936e333fdfd7", user.getPassword());
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = RuntimeException.class)
     public void setPasswordThrowsExceptionForNull() {
         user.setPassword(null);
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = RuntimeException.class)
     public void setPasswordThrowsExceptionForEmpty() {
         user.setPassword(" ");
     }

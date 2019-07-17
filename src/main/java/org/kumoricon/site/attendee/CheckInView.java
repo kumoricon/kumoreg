@@ -8,7 +8,7 @@ import org.kumoricon.BaseGridView;
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistory;
 import org.kumoricon.site.attendee.search.AttendeeSearchPresenter;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;

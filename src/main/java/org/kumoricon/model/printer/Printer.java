@@ -101,7 +101,8 @@ public class Printer extends Record {
          Class<?>[] classes = PrintServiceLookup.class.getDeclaredClasses();
         for (int i = 0; i < classes.length; i++) {
             if ("javax.print.PrintServiceLookup$Services".equals(classes[i].getName())) {
-                sun.awt.AppContext.getAppContext().remove(classes[i]);
+                // TODO: sun.awt.AppContext is not in JDK 11. Some better way to do this?
+//                sun.awt.AppContext.getAppContext().remove(classes[i]);
                 break;
             }
         }

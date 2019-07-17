@@ -1,6 +1,5 @@
 package org.kumoricon.model.session;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.kumoricon.model.order.Payment;
 import org.kumoricon.model.order.PaymentRepository;
 import org.kumoricon.model.user.User;
@@ -28,7 +27,7 @@ public class SessionService {
     }
 
     public Session getCurrentSessionForUser(User user) {
-        if (user == null) { throw new ValueException("getCurrentSessionForUser called with null user"); }
+        if (user == null) { throw new RuntimeException("getCurrentSessionForUser called with null user"); }
         Session session = repository.getOpenSessionForUser(user);
         if (session == null) {
             session = repository.save(new Session(user));
@@ -37,7 +36,7 @@ public class SessionService {
     }
 
     public Session getNewSessionForUser(User user) {
-        if (user == null) { throw new ValueException("getNewSessionForUser called with null user"); }
+        if (user == null) { throw new RuntimeException("getNewSessionForUser called with null user"); }
         Session session = repository.getOpenSessionForUser(user);
         if (session != null) {
             closeSession(session);
@@ -47,13 +46,13 @@ public class SessionService {
     }
 
     public boolean userHasOpenSession(User user) {
-        if (user == null) { throw new ValueException("userHasOpenSession called with null user"); }
+        if (user == null) { throw new RuntimeException("userHasOpenSession called with null user"); }
         Session session = repository.getOpenSessionForUser(user);
         return session != null;
     }
 
     public Session closeSessionForUser(User user) {
-        if (user == null) { throw new ValueException("closeSessionForUser called with null user"); }
+        if (user == null) { throw new RuntimeException("closeSessionForUser called with null user"); }
         Session session = repository.getOpenSessionForUser(user);
         return closeSession(session.getId());
     }

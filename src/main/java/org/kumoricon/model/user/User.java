@@ -1,6 +1,6 @@
 package org.kumoricon.model.user;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+
 import org.kumoricon.model.Record;
 import org.kumoricon.model.role.Role;
 
@@ -51,7 +51,7 @@ public class User extends Record {
     public String getPassword() { return password; }
     public void setPassword(String newPassword) {
         if (newPassword == null || newPassword.trim().equals("")) {
-            throw new ValueException("Password cannot be blank");
+            throw new RuntimeException("Password cannot be blank");
         }
         this.password = hashPassword(newPassword, salt);
     }

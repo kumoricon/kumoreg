@@ -1,6 +1,6 @@
 package org.kumoricon.site.attendee.reg;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+
 import org.kumoricon.model.attendee.Attendee;
 import org.kumoricon.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.model.attendee.AttendeeRepository;
@@ -89,7 +89,7 @@ public class OrderPresenter extends BadgePrintingPresenter implements PrintBadge
 
     public void savePayment(PaymentView view, Order order, Payment payment) throws ValidationException {
         if (Payment.PaymentType.PREREG.equals(payment.getPaymentType()) && !view.currentUserHasRight("import_pre_reg_data")) {
-            throw new ValueException("Only users with import_pre_reg_data right can select the PreReg payment type");
+            throw new RuntimeException("Only users with import_pre_reg_data right can select the PreReg payment type");
         }
         PaymentValidator.validate(payment);
 

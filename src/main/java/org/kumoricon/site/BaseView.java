@@ -7,7 +7,7 @@ import org.kumoricon.KumoRegUI;
 import org.kumoricon.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 import javax.annotation.PostConstruct;
 
@@ -89,7 +89,7 @@ public class BaseView extends CssLayout implements View {
      * Refresh any data in the current view. Override this!
      */
     public void refresh() {
-        throw new NotImplementedException();
+        throw new RuntimeException("Not implemented!");
     }
 
     public void showWindow(Window window) {
