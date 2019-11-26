@@ -2,6 +2,14 @@
 
 Convention Registration Management
 
+**OUTDATED**
+This software was used at Kumoricon from 2016 through 2018. It has been replaced by
+the software in the [Registration](https://github.com/kumoregdev/registration) repository
+due to large architectural changes.
+
+This repository will not be updated, but is left for historic purposes.
+
+---
 - At-Convention and pre-registered attendee check in
 - Badge printing                                              
 - Reporting                                                      
